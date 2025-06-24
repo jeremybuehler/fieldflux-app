@@ -27,7 +27,7 @@ export default function Landing() {
     if (loginData.username === "admin" && loginData.password === "demo123") {
       toast({
         title: "Login Successful",
-        description: "Welcome back to Dave AI!",
+        description: "Welcome back to HVAC Pro AI!",
       });
       setTimeout(() => {
         window.location.href = "/dashboard";
@@ -54,7 +54,7 @@ export default function Landing() {
     // Simulate signup for demo
     toast({
       title: "Account Created",
-      description: "Welcome to Dave AI! You can now log in with your credentials.",
+      description: "Welcome to HVAC Pro AI! You can now log in with your credentials.",
     });
     
     // Reset form and switch to login tab
@@ -78,8 +78,8 @@ export default function Landing() {
               <Bot className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-hvac-gray">Dave AI</h1>
-              <p className="text-lg text-gray-600">HVAC Marketing Agent</p>
+              <h1 className="text-4xl font-bold text-hvac-gray">HVAC Pro AI</h1>
+              <p className="text-lg text-gray-600">Marketing Automation Platform</p>
             </div>
           </div>
           <h2 className="text-3xl font-bold text-hvac-gray mb-4">
@@ -143,7 +143,7 @@ export default function Landing() {
                 Ready to Transform Your HVAC Marketing?
               </h3>
               <p className="text-blue-100 mb-6">
-                Join Dave AI and experience intelligent marketing automation designed specifically for HVAC contractors in Winter Haven, FL and beyond.
+                Join HVAC Pro AI and experience intelligent marketing automation designed specifically for HVAC contractors in Winter Haven, FL and beyond.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
@@ -159,7 +159,7 @@ export default function Landing() {
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle className="text-center text-2xl font-bold text-hvac-gray">
-                        Access Dave AI
+                        Access HVAC Pro AI
                       </DialogTitle>
                     </DialogHeader>
                     <Tabs defaultValue="login" className="w-full">
