@@ -1,0 +1,118 @@
+import { pgTable, text, serial, integer, boolean, timestamp } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
+});
+
+export const wordpressPosts = pgTable("wordpress_posts", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  status: text("status").notNull().default("draft"),
+  publishedAt: timestamp("published_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const socialPosts = pgTable("social_posts", {
+  id: serial("id").primaryKey(),
+  platform: text("platform").notNull(),
+  content: text("content").notNull(),
+  status: text("status").notNull().default("scheduled"),
+  scheduledFor: timestamp("scheduled_for"),
+  publishedAt: timestamp("published_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const leads = pgTable("leads", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  email: text("email"),
+  phone: text("phone"),
+  service: text("service").notNull(),
+  location: text("location").notNull(),
+  priority: text("priority").notNull().default("medium"),
+  status: text("status").notNull().default("new"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const tasks = pgTable("tasks", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description"),
+  type: text("type").notNull(),
+  status: text("status").notNull().default("pending"),
+  progress: integer("progress").default(0),
+  createdAt: timestamp("created_at").defaultNow(),
+  completedAt: timestamp("completed_at"),
+});
+
+export const activities = pgTable("activities", {
+  id: serial("id").primaryKey(),
+  type: text("type").notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const seoKeywords = pgTable("seo_keywords", {
+  id: serial("id").primaryKey(),
+  keyword: text("keyword").notNull(),
+  position: integer("position"),
+  previousPosition: integer("previous_position"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertUserSchema = createInsertSchema(users).pick({
+  username: true,
+  password: true,
+});
+
+export const insertWordPressPostSchema = createInsertSchema(wordpressPosts).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertSocialPostSchema = createInsertSchema(socialPosts).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertLeadSchema = createInsertSchema(leads).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertTaskSchema = createInsertSchema(tasks).omit({
+  id: true,
+  createdAt: true,
+  completedAt: true,
+});
+
+export const insertActivitySchema = createInsertSchema(activities).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertSeoKeywordSchema = createInsertSchema(seoKeywords).omit({
+  id: true,
+  createdAt: true,
+});
+
+export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type WordPressPost = typeof wordpressPosts.$inferSelect;
+export type InsertWordPressPost = z.infer<typeof insertWordPressPostSchema>;
+export type SocialPost = typeof socialPosts.$inferSelect;
+export type InsertSocialPost = z.infer<typeof insertSocialPostSchema>;
+export type Lead = typeof leads.$inferSelect;
+export type InsertLead = z.infer<typeof insertLeadSchema>;
+export type Task = typeof tasks.$inferSelect;
+export type InsertTask = z.infer<typeof insertTaskSchema>;
+export type Activity = typeof activities.$inferSelect;
+export type InsertActivity = z.infer<typeof insertActivitySchema>;
+export type SeoKeyword = typeof seoKeywords.$inferSelect;
+export type InsertSeoKeyword = z.infer<typeof insertSeoKeywordSchema>;
