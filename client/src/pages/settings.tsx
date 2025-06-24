@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { Globe, BarChart3, CheckCircle, AlertCircle, Settings, Key, ExternalLink } from "lucide-react";
+import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, Key, ExternalLink } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 
@@ -163,7 +163,7 @@ export default function Settings() {
               </CardHeader>
               <CardContent className="space-y-6">
                 <Alert>
-                  <Settings className="h-4 w-4" />
+                  <SettingsIcon className="h-4 w-4" />
                   <AlertDescription>
                     <strong>Before you start:</strong> You'll need to create an Application Password in your WordPress admin panel.
                     This is different from your regular login password and provides secure API access.
