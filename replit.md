@@ -1,8 +1,8 @@
-# HVAC Marketing Dashboard
+# HVAC Pro AI Marketing Platform
 
 ## Overview
 
-This is a full-stack HVAC marketing automation platform built for service contractors. The application helps HVAC businesses manage their digital marketing activities through content generation, social media scheduling, lead management, and SEO optimization.
+This is HVAC Pro AI, a full-stack marketing automation platform built specifically for HVAC service contractors. The application helps HVAC businesses manage their digital marketing activities through AI-powered content generation, social media scheduling, lead management, and SEO optimization.
 
 ## System Architecture
 
@@ -92,7 +92,7 @@ The application is configured for Replit deployment with:
 
 ## Recent Changes
 - June 24, 2025: Initial HVAC marketing dashboard setup with basic components
-- June 24, 2025: Enhanced Dave AI agent with comprehensive features:
+- June 24, 2025: Enhanced HVAC Pro AI agent with comprehensive features:
   - Added reviews management system with AI-powered response generation
   - Integrated GoDaddy WordPress publishing capabilities  
   - Enhanced analytics reporting with comprehensive metrics and charts
@@ -113,6 +113,10 @@ The application is configured for Replit deployment with:
   - Created professional marketing landing page as default entry point
   - Implemented login/signup system with demo access (admin/demo123)
   - Added proper navigation flow between landing page and dashboard
+- June 24, 2025: Rebranded from "Dave AI" to "HVAC Pro AI" for professional presentation:
+  - Updated all branding throughout the application
+  - Switched to in-memory storage to resolve database connection issues
+  - Prepared for personalized UI with user's first name integration
 
 ## Architecture Updates
 - **Database Schema**: Added `reviews` and `analytics_reports` tables with PostgreSQL backend
@@ -128,3 +132,5 @@ The application is configured for Replit deployment with:
 
 Preferred communication style: Simple, everyday language.
 API Keys: Will provide Google Analytics ID in the morning.
+Branding: Changed from "Dave AI" to "HVAC Pro AI" for more professional presentation.
+Personalization: UI should reflect logged-in user's first name instead of generic "Dave" references.
