@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Code, Plus, Eye } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Code, Plus, Eye, Lightbulb, RefreshCw, Check, X } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
@@ -14,6 +15,9 @@ import type { WordPressPost } from "@shared/schema";
 export default function WordPressIntegration() {
   const [topic, setTopic] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isGeneratingIdea, setIsGeneratingIdea] = useState(false);
+  const [suggestedTopic, setSuggestedTopic] = useState("");
+  const [showSuggestion, setShowSuggestion] = useState(false);
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -46,6 +50,47 @@ export default function WordPressIntegration() {
       });
     },
   });
+
+  const generateIdeaMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/ai/generate-topic", { 
+        type: "blog",
+        industry: "HVAC"
+      });
+      return response.json();
+    },
+    onSuccess: (data) => {
+      setSuggestedTopic(data.topic);
+      setShowSuggestion(true);
+      setIsGeneratingIdea(false);
+      trackEvent('topic_suggestion_generated', 'content', 'wordpress');
+    },
+    onError: () => {
+      setIsGeneratingIdea(false);
+      toast({
+        title: "Idea Generation Failed",
+        description: "Failed to generate topic idea. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleGenerateIdea = () => {
+    setIsGeneratingIdea(true);
+    generateIdeaMutation.mutate();
+  };
+
+  const handleUseSuggestion = () => {
+    setTopic(suggestedTopic);
+    setShowSuggestion(false);
+    trackEvent('topic_suggestion_accepted', 'content', 'wordpress');
+  };
+
+  const handleRejectSuggestion = () => {
+    setShowSuggestion(false);
+    setSuggestedTopic("");
+    trackEvent('topic_suggestion_rejected', 'content', 'wordpress');
+  };
 
   const handleGeneratePost = async () => {
     if (!topic.trim()) {
@@ -147,12 +192,68 @@ export default function WordPressIntegration() {
                 <label className="text-sm font-medium text-gray-700">
                   Blog Post Topic
                 </label>
-                <Input
-                  value={topic}
-                  onChange={(e) => setTopic(e.target.value)}
-                  placeholder="e.g., Winter HVAC maintenance tips"
-                  className="mt-1"
-                />
+                <div className="mt-1 space-y-3">
+                  <div className="flex space-x-2">
+                    <Input
+                      value={topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                      placeholder="e.g., Winter HVAC maintenance tips"
+                      className="flex-1"
+                    />
+                    <Button
+                      onClick={handleGenerateIdea}
+                      disabled={isGeneratingIdea}
+                      variant="outline"
+                      size="sm"
+                      className="shrink-0"
+                    >
+                      {isGeneratingIdea ? <RefreshCw className="w-4 h-4 animate-spin" /> : <Lightbulb className="w-4 h-4" />}
+                      {isGeneratingIdea ? "..." : "Need an idea?"}
+                    </Button>
+                  </div>
+                  
+                  {showSuggestion && (
+                    <Alert className="border-blue-200 bg-blue-50">
+                      <Lightbulb className="h-4 w-4 text-blue-600" />
+                      <AlertDescription>
+                        <div className="space-y-3">
+                          <div>
+                            <p className="text-sm font-medium text-blue-900 mb-1">AI Suggestion:</p>
+                            <p className="text-sm text-blue-800">{suggestedTopic}</p>
+                          </div>
+                          <div className="flex space-x-2">
+                            <Button
+                              onClick={handleUseSuggestion}
+                              size="sm"
+                              className="bg-blue-600 hover:bg-blue-700 text-white"
+                            >
+                              <Check className="w-3 h-3 mr-1" />
+                              Use This
+                            </Button>
+                            <Button
+                              onClick={handleGenerateIdea}
+                              disabled={isGeneratingIdea}
+                              size="sm"
+                              variant="outline"
+                              className="border-blue-300"
+                            >
+                              <RefreshCw className="w-3 h-3 mr-1" />
+                              Try Another
+                            </Button>
+                            <Button
+                              onClick={handleRejectSuggestion}
+                              size="sm"
+                              variant="ghost"
+                            >
+                              <X className="w-3 h-3 mr-1" />
+                              No Thanks
+                            </Button>
+                          </div>
+                        </div>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
               </div>
               <Button
                 onClick={handleGeneratePost}
