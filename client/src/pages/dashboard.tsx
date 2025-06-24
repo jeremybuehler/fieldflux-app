@@ -12,6 +12,7 @@ import LeadsPanel from "@/components/dashboard/leads-panel";
 import ReviewsPanel from "@/components/dashboard/reviews-panel";
 import GoDaddyIntegration from "@/components/dashboard/godaddy-integration";
 import AnalyticsReports from "@/components/dashboard/analytics-reports";
+import WeatherWidget from "@/components/dashboard/weather-widget";
 import { Button } from "@/components/ui/button";
 import { Wand2, MapPin } from "lucide-react";
 
@@ -44,6 +45,7 @@ export default function Dashboard() {
                 <MapPin className="w-4 h-4 text-primary" />
                 <span className="text-sm font-medium text-primary">Winter Haven, FL</span>
               </div>
+              <WeatherWidget />
               <Button 
                 onClick={handleGenerateContent}
                 className="bg-hvac-orange hover:bg-hvac-orange/90 text-white"
