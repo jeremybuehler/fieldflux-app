@@ -154,3 +154,7 @@ export type Activity = typeof activities.$inferSelect;
 export type InsertActivity = z.infer<typeof insertActivitySchema>;
 export type SeoKeyword = typeof seoKeywords.$inferSelect;
 export type InsertSeoKeyword = z.infer<typeof insertSeoKeywordSchema>;
+export type Review = typeof reviews.$inferSelect;
+export type InsertReview = z.infer<typeof insertReviewSchema>;
+export type AnalyticsReport = typeof analyticsReports.$inferSelect;
+export type InsertAnalyticsReport = z.infer<typeof insertAnalyticsReportSchema>;
