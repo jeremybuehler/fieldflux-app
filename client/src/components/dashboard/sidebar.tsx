@@ -36,7 +36,7 @@ export default function Sidebar() {
           </div>
           <div>
             <h1 className="text-lg font-bold text-hvac-gray">FieldPulse</h1>
-            <p className="text-sm text-gray-500">AI-Powered Marketing</p>
+            <p className="text-sm text-gray-500">Smart Marketing for Field Service</p>
           </div>
         </div>
       </div>

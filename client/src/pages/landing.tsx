@@ -79,14 +79,14 @@ export default function Landing() {
             </div>
             <div>
               <h1 className="text-4xl font-bold text-hvac-gray">FieldPulse</h1>
-              <p className="text-lg text-gray-600">AI-Powered Social Media Content & Marketing</p>
+              <p className="text-lg text-gray-600">Where Field Service Meets Smart Marketing</p>
             </div>
           </div>
           <h2 className="text-3xl font-bold text-hvac-gray mb-4">
-            AI-Powered Social Media Content & Marketing for Field Service Providers
+            Transform Your Field Service Business with Intelligent Marketing Automation
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Let FieldPulse handle your content creation, social media scheduling, SEO optimization, and lead management while you focus on delivering exceptional service to your customers.
+            From wrench to web presence - FieldPulse creates compelling content, manages social media, tracks leads, and grows your reputation while you focus on what you do best: serving customers.
           </p>
         </div>
 
@@ -97,11 +97,11 @@ export default function Landing() {
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                 <BarChart3 className="w-6 h-6 text-primary" />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">Analytics & Reporting</CardTitle>
+              <CardTitle className="text-xl text-hvac-gray">Performance Insights</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                Track your marketing performance with comprehensive analytics and automated reporting from Google Analytics integration.
+                See what's working with crystal-clear analytics. Track leads, measure engagement, and discover which content brings in the most customers.
               </p>
             </CardContent>
           </Card>
@@ -111,11 +111,11 @@ export default function Landing() {
               <div className="w-12 h-12 bg-hvac-orange/10 rounded-lg flex items-center justify-center mb-4">
                 <Zap className="w-6 h-6 text-hvac-orange" />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">AI Content Generation</CardTitle>
+              <CardTitle className="text-xl text-hvac-gray">Content That Converts</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                Generate engaging blog posts, social media content, and marketing materials tailored specifically for field service businesses.
+                Never stare at a blank page again. Our AI creates professional posts, helpful tips, and customer stories that showcase your expertise and attract new business.
               </p>
             </CardContent>
           </Card>
@@ -125,11 +125,11 @@ export default function Landing() {
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                 <Shield className="w-6 h-6 text-green-600" />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">Lead Management</CardTitle>
+              <CardTitle className="text-xl text-hvac-gray">Smart Lead Pipeline</CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                Automatically track, qualify, and manage leads from multiple sources with intelligent scoring and follow-up reminders.
+                Turn inquiries into appointments effortlessly. Smart follow-ups, automated reminders, and lead scoring help you close more deals without the hassle.
               </p>
             </CardContent>
           </Card>
@@ -140,10 +140,10 @@ export default function Landing() {
           <Card className="max-w-2xl mx-auto bg-gradient-to-r from-primary to-hvac-orange border-0">
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold text-white mb-4">
-                Ready to Transform Your Field Service Marketing?
+                Ready to Turn Service Calls into Success Stories?
               </h3>
               <p className="text-blue-100 mb-6">
-                Join FieldPulse and experience intelligent AI-powered social media content and marketing designed specifically for field service providers across all industries.
+                Join thousands of field service professionals who've discovered that great work deserves great marketing. FieldPulse makes it effortless to showcase your expertise and attract more customers.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
