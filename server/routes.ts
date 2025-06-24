@@ -741,6 +741,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // TikTok Video Generation endpoint (conceptual)
+  app.post("/api/tiktok/generate-video", async (req, res) => {
+    try {
+      const { content, style, duration } = req.body;
+
+      // This is a conceptual implementation - TikTok video generation would require:
+      // 1. Text-to-speech for narration
+      // 2. Image/video generation AI (like DALL-E, Midjourney, or Runway)
+      // 3. Video editing capabilities
+      // 4. TikTok API integration for posting
+
+      // For now, we'll return a conceptual response
+      res.json({
+        success: true,
+        message: "TikTok video generation is a conceptual feature that would require:",
+        requirements: [
+          "Text-to-speech API (OpenAI, ElevenLabs)",
+          "Video generation AI (Runway, Pika Labs)",
+          "Video editing capabilities (FFmpeg)",
+          "TikTok Business API access",
+          "Template system for field service content"
+        ],
+        conceptualFlow: [
+          "1. Generate script from GPT content",
+          "2. Create voiceover with text-to-speech",
+          "3. Generate visuals with AI video tools",
+          "4. Combine audio + visuals with editing",
+          "5. Upload to TikTok via API"
+        ],
+        estimatedCost: "High - multiple AI services required",
+        timeline: "Complex feature requiring significant development"
+      });
+    } catch (error) {
+      console.error("TikTok generation error:", error);
+      res.status(500).json({ message: "Failed to process TikTok video request" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

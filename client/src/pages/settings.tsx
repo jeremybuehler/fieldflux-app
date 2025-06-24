@@ -133,14 +133,18 @@ export default function Settings() {
         </div>
 
         <Tabs defaultValue="wordpress" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="wordpress" className="flex items-center space-x-2">
               <Globe className="w-4 h-4" />
-              <span>WordPress Integration</span>
+              <span>WordPress</span>
             </TabsTrigger>
             <TabsTrigger value="analytics" className="flex items-center space-x-2">
               <BarChart3 className="w-4 h-4" />
-              <span>Google Analytics</span>
+              <span>Analytics</span>
+            </TabsTrigger>
+            <TabsTrigger value="twilio" className="flex items-center space-x-2">
+              <MessageSquare className="w-4 h-4" />
+              <span>SMS</span>
             </TabsTrigger>
           </TabsList>
 
@@ -382,6 +386,101 @@ export default function Settings() {
                     <p>• Conversion tracking for leads</p>
                     <p>• Custom events for marketing activities</p>
                   </div>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="twilio" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                      <MessageSquare className="w-5 h-5 text-red-600" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-xl">Twilio SMS Configuration</CardTitle>
+                      <p className="text-sm text-gray-600 mt-1">Configure SMS communication for customer engagement</p>
+                    </div>
+                  </div>
+                  <Badge variant="secondary">
+                    <AlertCircle className="w-3 h-3 mr-1" />
+                    Setup Required
+                  </Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <Alert>
+                  <SettingsIcon className="h-4 w-4" />
+                  <AlertDescription>
+                    To enable SMS features, add your Twilio credentials to the Replit Secrets tab. These credentials are stored securely and only used for SMS functionality.
+                  </AlertDescription>
+                </Alert>
+
+                <div className="space-y-4">
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <h4 className="text-sm font-semibold text-blue-900 mb-3">Required Environment Variables</h4>
+                    <div className="space-y-2 text-sm text-blue-800">
+                      <div className="flex items-center justify-between">
+                        <code className="bg-blue-100 px-2 py-1 rounded">TWILIO_ACCOUNT_SID</code>
+                        <span className="text-xs">Your Twilio Account SID</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <code className="bg-blue-100 px-2 py-1 rounded">TWILIO_AUTH_TOKEN</code>
+                        <span className="text-xs">Your Twilio Auth Token</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <code className="bg-blue-100 px-2 py-1 rounded">TWILIO_PHONE_NUMBER</code>
+                        <span className="text-xs">Your Twilio phone number (+1234567890)</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-green-50 rounded-lg p-4">
+                    <h4 className="text-sm font-semibold text-green-900 mb-3">How to Get Your Twilio Credentials</h4>
+                    <ol className="text-sm text-green-800 space-y-2">
+                      <li className="flex items-start">
+                        <span className="w-5 h-5 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">1</span>
+                        <span>Log in to your <a href="https://console.twilio.com" target="_blank" rel="noopener noreferrer" className="underline">Twilio Console</a></span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-5 h-5 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">2</span>
+                        <span>Find your Account SID and Auth Token on the main dashboard</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-5 h-5 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">3</span>
+                        <span>Get a phone number from Phone Numbers → Manage → Active numbers</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="w-5 h-5 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">4</span>
+                        <span>Add these values to your Replit Secrets tab</span>
+                      </li>
+                    </ol>
+                  </div>
+
+                  <div className="bg-orange-50 rounded-lg p-4">
+                    <h4 className="text-sm font-semibold text-orange-900 mb-2">
+                      SMS Features Once Configured
+                    </h4>
+                    <div className="text-sm text-orange-800 space-y-1">
+                      <p>• Automated lead follow-up messages</p>
+                      <p>• Appointment confirmation and reminders</p>
+                      <p>• Service completion notifications</p>
+                      <p>• Emergency alerts to customers</p>
+                      <p>• Review request automation</p>
+                      <p>• Weather delay notifications</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-center py-4">
+                  <Button asChild>
+                    <a href="https://console.twilio.com" target="_blank" rel="noopener noreferrer">
+                      <Phone className="w-4 h-4 mr-2" />
+                      Open Twilio Console
+                    </a>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
