@@ -120,6 +120,14 @@ export default function Settings() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto p-6">
         <div className="mb-8">
+          <div className="flex items-center space-x-4 mb-4">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Dashboard
+              </Button>
+            </Link>
+          </div>
           <h1 className="text-2xl font-bold text-hvac-gray mb-2">Settings & Configuration</h1>
           <p className="text-gray-600">Configure your integrations and preferences for Dave AI Marketing Agent</p>
         </div>
