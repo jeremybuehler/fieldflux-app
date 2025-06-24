@@ -345,4 +345,213 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Database Storage Implementation
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+
+  // WordPress methods
+  async getAllWordPressPosts(): Promise<WordPressPost[]> {
+    return await db.select().from(wordpressPosts).orderBy(wordpressPosts.createdAt);
+  }
+
+  async getWordPressPost(id: number): Promise<WordPressPost | undefined> {
+    const [post] = await db.select().from(wordpressPosts).where(eq(wordpressPosts.id, id));
+    return post || undefined;
+  }
+
+  async createWordPressPost(insertPost: InsertWordPressPost): Promise<WordPressPost> {
+    const [post] = await db
+      .insert(wordpressPosts)
+      .values(insertPost)
+      .returning();
+    return post;
+  }
+
+  async updateWordPressPost(id: number, updates: Partial<InsertWordPressPost>): Promise<WordPressPost | undefined> {
+    const [post] = await db
+      .update(wordpressPosts)
+      .set(updates)
+      .where(eq(wordpressPosts.id, id))
+      .returning();
+    return post || undefined;
+  }
+
+  // Social Media methods
+  async getAllSocialPosts(): Promise<SocialPost[]> {
+    return await db.select().from(socialPosts).orderBy(socialPosts.scheduledFor);
+  }
+
+  async getSocialPost(id: number): Promise<SocialPost | undefined> {
+    const [post] = await db.select().from(socialPosts).where(eq(socialPosts.id, id));
+    return post || undefined;
+  }
+
+  async createSocialPost(insertPost: InsertSocialPost): Promise<SocialPost> {
+    const [post] = await db
+      .insert(socialPosts)
+      .values(insertPost)
+      .returning();
+    return post;
+  }
+
+  async updateSocialPost(id: number, updates: Partial<InsertSocialPost>): Promise<SocialPost | undefined> {
+    const [post] = await db
+      .update(socialPosts)
+      .set(updates)
+      .where(eq(socialPosts.id, id))
+      .returning();
+    return post || undefined;
+  }
+
+  // Lead methods
+  async getAllLeads(): Promise<Lead[]> {
+    return await db.select().from(leads).orderBy(leads.createdAt);
+  }
+
+  async getLead(id: number): Promise<Lead | undefined> {
+    const [lead] = await db.select().from(leads).where(eq(leads.id, id));
+    return lead || undefined;
+  }
+
+  async createLead(insertLead: InsertLead): Promise<Lead> {
+    const [lead] = await db
+      .insert(leads)
+      .values(insertLead)
+      .returning();
+    return lead;
+  }
+
+  async updateLead(id: number, updates: Partial<InsertLead>): Promise<Lead | undefined> {
+    const [lead] = await db
+      .update(leads)
+      .set(updates)
+      .where(eq(leads.id, id))
+      .returning();
+    return lead || undefined;
+  }
+
+  // Task methods
+  async getAllTasks(): Promise<Task[]> {
+    return await db.select().from(tasks).orderBy(tasks.createdAt);
+  }
+
+  async getTask(id: number): Promise<Task | undefined> {
+    const [task] = await db.select().from(tasks).where(eq(tasks.id, id));
+    return task || undefined;
+  }
+
+  async createTask(insertTask: InsertTask): Promise<Task> {
+    const [task] = await db
+      .insert(tasks)
+      .values(insertTask)
+      .returning();
+    return task;
+  }
+
+  async updateTask(id: number, updates: Partial<InsertTask>): Promise<Task | undefined> {
+    const [task] = await db
+      .update(tasks)
+      .set(updates)
+      .where(eq(tasks.id, id))
+      .returning();
+    return task || undefined;
+  }
+
+  // Activity methods
+  async getAllActivities(): Promise<Activity[]> {
+    return await db.select().from(activities).orderBy(activities.createdAt);
+  }
+
+  async createActivity(insertActivity: InsertActivity): Promise<Activity> {
+    const [activity] = await db
+      .insert(activities)
+      .values(insertActivity)
+      .returning();
+    return activity;
+  }
+
+  // SEO methods
+  async getAllSeoKeywords(): Promise<SeoKeyword[]> {
+    return await db.select().from(seoKeywords).orderBy(seoKeywords.createdAt);
+  }
+
+  async createSeoKeyword(insertKeyword: InsertSeoKeyword): Promise<SeoKeyword> {
+    const [keyword] = await db
+      .insert(seoKeywords)
+      .values(insertKeyword)
+      .returning();
+    return keyword;
+  }
+
+  async updateSeoKeyword(id: number, updates: Partial<InsertSeoKeyword>): Promise<SeoKeyword | undefined> {
+    const [keyword] = await db
+      .update(seoKeywords)
+      .set(updates)
+      .where(eq(seoKeywords.id, id))
+      .returning();
+    return keyword || undefined;
+  }
+
+  // Review methods
+  async getAllReviews(): Promise<Review[]> {
+    return await db.select().from(reviews).orderBy(reviews.createdAt);
+  }
+
+  async getReview(id: number): Promise<Review | undefined> {
+    const [review] = await db.select().from(reviews).where(eq(reviews.id, id));
+    return review || undefined;
+  }
+
+  async createReview(insertReview: InsertReview): Promise<Review> {
+    const [review] = await db
+      .insert(reviews)
+      .values(insertReview)
+      .returning();
+    return review;
+  }
+
+  async updateReview(id: number, updates: Partial<InsertReview>): Promise<Review | undefined> {
+    const [review] = await db
+      .update(reviews)
+      .set(updates)
+      .where(eq(reviews.id, id))
+      .returning();
+    return review || undefined;
+  }
+
+  // Analytics methods
+  async getAllAnalyticsReports(): Promise<AnalyticsReport[]> {
+    return await db.select().from(analyticsReports).orderBy(analyticsReports.generatedAt);
+  }
+
+  async getAnalyticsReport(id: number): Promise<AnalyticsReport | undefined> {
+    const [report] = await db.select().from(analyticsReports).where(eq(analyticsReports.id, id));
+    return report || undefined;
+  }
+
+  async createAnalyticsReport(insertReport: InsertAnalyticsReport): Promise<AnalyticsReport> {
+    const [report] = await db
+      .insert(analyticsReports)
+      .values(insertReport)
+      .returning();
+    return report;
+  }
+}
+
+export const storage = new DatabaseStorage();
