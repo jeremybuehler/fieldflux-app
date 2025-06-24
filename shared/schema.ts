@@ -14,7 +14,35 @@ export const wordpressPosts = pgTable("wordpress_posts", {
   content: text("content").notNull(),
   status: text("status").notNull().default("draft"),
   publishedAt: timestamp("published_at"),
+  metaDescription: text("meta_description"),
+  categories: text("categories").array(),
+  tags: text("tags").array(),
+  featuredImage: text("featured_image"),
+  seoScore: integer("seo_score"),
   createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const reviews = pgTable("reviews", {
+  id: serial("id").primaryKey(),
+  customerName: text("customer_name").notNull(),
+  rating: integer("rating").notNull(),
+  content: text("content").notNull(),
+  platform: text("platform").notNull(),
+  status: text("status").notNull().default("pending"),
+  aiResponse: text("ai_response"),
+  responseStatus: text("response_status").default("draft"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const analyticsReports = pgTable("analytics_reports", {
+  id: serial("id").primaryKey(),
+  period: text("period").notNull(),
+  traffic: integer("traffic").notNull(),
+  conversions: integer("conversions").notNull(),
+  topKeywords: text("top_keywords").array(),
+  topPages: text("top_pages").array(),
+  trafficSources: text("traffic_sources").array(),
+  generatedAt: timestamp("generated_at").defaultNow(),
 });
 
 export const socialPosts = pgTable("social_posts", {
@@ -74,6 +102,16 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export const insertWordPressPostSchema = createInsertSchema(wordpressPosts).omit({
   id: true,
   createdAt: true,
+});
+
+export const insertReviewSchema = createInsertSchema(reviews).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertAnalyticsReportSchema = createInsertSchema(analyticsReports).omit({
+  id: true,
+  generatedAt: true,
 });
 
 export const insertSocialPostSchema = createInsertSchema(socialPosts).omit({
