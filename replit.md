@@ -90,9 +90,23 @@ The application is configured for Replit deployment with:
 - **Database**: PostgreSQL 16 module enabled
 - **Build Process**: Vite for client, esbuild for server
 
-## Changelog
-- June 24, 2025. Initial setup
+## Recent Changes
+- June 24, 2025: Initial HVAC marketing dashboard setup with basic components
+- June 24, 2025: Enhanced Dave AI agent with comprehensive features:
+  - Added reviews management system with AI-powered response generation
+  - Integrated GoDaddy WordPress publishing capabilities  
+  - Enhanced analytics reporting with comprehensive metrics and charts
+  - Added lead qualification system with automated scoring
+  - Extended database schema for reviews and analytics reports
+  - Improved UI with additional dashboard panels
+
+## Architecture Updates
+- **Database Schema**: Added `reviews` and `analytics_reports` tables
+- **API Endpoints**: Extended with review management, GoDaddy integration, and analytics reporting
+- **UI Components**: Added ReviewsPanel, GoDaddyIntegration, and AnalyticsReports components
+- **AI Features**: Enhanced OpenAI integration for review responses and content generation
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+API Keys: Will provide Google Analytics ID in the morning.
