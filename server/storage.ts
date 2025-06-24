@@ -6,6 +6,8 @@ import {
   tasks,
   activities,
   seoKeywords,
+  reviews,
+  analyticsReports,
   type User,
   type InsertUser,
   type WordPressPost,
@@ -20,6 +22,10 @@ import {
   type InsertActivity,
   type SeoKeyword,
   type InsertSeoKeyword,
+  type Review,
+  type InsertReview,
+  type AnalyticsReport,
+  type InsertAnalyticsReport,
 } from "@shared/schema";
 
 export interface IStorage {
@@ -60,6 +66,17 @@ export interface IStorage {
   getAllSeoKeywords(): Promise<SeoKeyword[]>;
   createSeoKeyword(keyword: InsertSeoKeyword): Promise<SeoKeyword>;
   updateSeoKeyword(id: number, keyword: Partial<InsertSeoKeyword>): Promise<SeoKeyword | undefined>;
+
+  // Review methods
+  getAllReviews(): Promise<Review[]>;
+  getReview(id: number): Promise<Review | undefined>;
+  createReview(review: InsertReview): Promise<Review>;
+  updateReview(id: number, review: Partial<InsertReview>): Promise<Review | undefined>;
+
+  // Analytics methods
+  getAllAnalyticsReports(): Promise<AnalyticsReport[]>;
+  getAnalyticsReport(id: number): Promise<AnalyticsReport | undefined>;
+  createAnalyticsReport(report: InsertAnalyticsReport): Promise<AnalyticsReport>;
 }
 
 export class MemStorage implements IStorage {
@@ -70,6 +87,8 @@ export class MemStorage implements IStorage {
   private tasks: Map<number, Task>;
   private activities: Map<number, Activity>;
   private seoKeywords: Map<number, SeoKeyword>;
+  private reviews: Map<number, Review>;
+  private analyticsReports: Map<number, AnalyticsReport>;
   private currentId: number;
 
   constructor() {
@@ -80,6 +99,8 @@ export class MemStorage implements IStorage {
     this.tasks = new Map();
     this.activities = new Map();
     this.seoKeywords = new Map();
+    this.reviews = new Map();
+    this.analyticsReports = new Map();
     this.currentId = 1;
   }
 
@@ -268,6 +289,59 @@ export class MemStorage implements IStorage {
     const updated = { ...existing, ...updates };
     this.seoKeywords.set(id, updated);
     return updated;
+  }
+
+  // Review methods
+  async getAllReviews(): Promise<Review[]> {
+    return Array.from(this.reviews.values()).sort((a, b) => 
+      new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+    );
+  }
+
+  async getReview(id: number): Promise<Review | undefined> {
+    return this.reviews.get(id);
+  }
+
+  async createReview(insertReview: InsertReview): Promise<Review> {
+    const id = this.currentId++;
+    const review: Review = {
+      ...insertReview,
+      id,
+      createdAt: new Date(),
+    };
+    this.reviews.set(id, review);
+    return review;
+  }
+
+  async updateReview(id: number, updates: Partial<InsertReview>): Promise<Review | undefined> {
+    const existing = this.reviews.get(id);
+    if (!existing) return undefined;
+    
+    const updated = { ...existing, ...updates };
+    this.reviews.set(id, updated);
+    return updated;
+  }
+
+  // Analytics methods
+  async getAllAnalyticsReports(): Promise<AnalyticsReport[]> {
+    return Array.from(this.analyticsReports.values()).sort((a, b) => 
+      new Date(b.generatedAt!).getTime() - new Date(a.generatedAt!).getTime()
+    );
+  }
+
+  async getAnalyticsReport(id: number): Promise<AnalyticsReport | undefined> {
+    return this.analyticsReports.get(id);
+  }
+
+  async createAnalyticsReport(insertReport: InsertAnalyticsReport): Promise<AnalyticsReport> {
+    const id = this.currentId++;
+    const report: AnalyticsReport = {
+      ...insertReport,
+      id,
+      generatedAt: new Date(),
+    };
+    this.analyticsReports.set(id, report);
+    return report;
   }
 }
 

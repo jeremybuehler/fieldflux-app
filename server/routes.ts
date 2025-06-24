@@ -8,6 +8,8 @@ import {
   insertTaskSchema,
   insertActivitySchema,
   insertSeoKeywordSchema,
+  insertReviewSchema,
+  insertAnalyticsReportSchema,
 } from "@shared/schema";
 import OpenAI from "openai";
 
