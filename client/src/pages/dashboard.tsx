@@ -47,12 +47,12 @@ export default function Dashboard() {
               </div>
               <WeatherWidget />
               <Button 
-                onClick={() => window.location.href = '/login'}
+                onClick={() => window.location.href = '/'}
                 variant="outline"
                 size="sm"
                 className="text-gray-600 hover:text-gray-900"
               >
-                Secure Access
+                Logout
               </Button>
               <Button 
                 onClick={handleGenerateContent}
