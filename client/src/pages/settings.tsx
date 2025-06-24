@@ -7,9 +7,10 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, Key, ExternalLink } from "lucide-react";
+import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, Key, ExternalLink, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
+import { Link } from "wouter";
 
 interface WordPressConfig {
   siteUrl: string;
