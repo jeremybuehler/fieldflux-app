@@ -9,7 +9,7 @@ import {
   Star, 
   UserPlus,
   Bot,
-  Settings
+  Settings as SettingsIcon
 } from "lucide-react";
 
 const navigation = [
@@ -20,7 +20,7 @@ const navigation = [
   { name: "SEO Optimization", href: "/seo", icon: Search },
   { name: "Reviews", href: "/reviews", icon: Star },
   { name: "Lead Generation", href: "/leads", icon: UserPlus },
-  { name: "Settings", href: "/settings", icon: Settings },
+  { name: "Settings", href: "/settings", icon: SettingsIcon },
 ];
 
 export default function Sidebar() {
@@ -45,22 +45,23 @@ export default function Sidebar() {
       <nav className="flex-1 p-4 space-y-2">
         {navigation.map((item) => {
           const Icon = item.icon;
+          const isActive = location === item.href;
           return (
-            <a
+            <Link
               key={item.name}
               href={item.href}
               className={cn(
                 "flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors",
-                item.current
+                isActive
                   ? "bg-primary/10 text-primary border-l-4 border-primary"
                   : "text-gray-600 hover:bg-gray-50"
               )}
             >
               <Icon className="w-5 h-5" />
-              <span className={cn("font-medium", item.current && "font-semibold")}>
+              <span className={cn("font-medium", isActive && "font-semibold")}>
                 {item.name}
               </span>
-            </a>
+            </Link>
           );
         })}
       </nav>
