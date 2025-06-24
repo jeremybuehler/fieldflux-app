@@ -9,6 +9,9 @@ import SocialScheduler from "@/components/dashboard/social-scheduler";
 import SEOPerformance from "@/components/dashboard/seo-performance";
 import TasksList from "@/components/dashboard/tasks-list";
 import LeadsPanel from "@/components/dashboard/leads-panel";
+import ReviewsPanel from "@/components/dashboard/reviews-panel";
+import GoDaddyIntegration from "@/components/dashboard/godaddy-integration";
+import AnalyticsReports from "@/components/dashboard/analytics-reports";
 import { Button } from "@/components/ui/button";
 import { Wand2, MapPin } from "lucide-react";
 
@@ -69,10 +72,17 @@ export default function Dashboard() {
             <SEOPerformance />
           </div>
 
-          {/* Current Tasks & Lead Management */}
+          {/* WordPress & Analytics Integration */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <GoDaddyIntegration />
+            <AnalyticsReports />
+          </div>
+
+          {/* Customer Management */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <TasksList />
             <LeadsPanel />
+            <ReviewsPanel />
           </div>
         </main>
       </div>
