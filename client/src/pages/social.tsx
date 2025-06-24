@@ -1,7 +1,7 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import SocialScheduler from "@/components/dashboard/social-scheduler";
+import EnhancedScheduler from "@/components/social/enhanced-scheduler";
 import { ArrowLeft, Share2 } from "lucide-react";
 
 export default function Social() {
@@ -28,53 +28,71 @@ export default function Social() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2">
-            <SocialScheduler />
-          </div>
+        <div className="space-y-6">
+          <EnhancedScheduler />
           
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Quick Stats</CardTitle>
+                <CardTitle className="text-lg">Performance Overview</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Posts This Month</span>
-                  <span className="font-semibold">12</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Scheduled Posts</span>
-                  <span className="font-semibold">5</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Engagement Rate</span>
-                  <span className="font-semibold">4.2%</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-blue-50 rounded-lg">
+                    <div className="text-2xl font-bold text-blue-600">12</div>
+                    <div className="text-sm text-blue-800">Posts This Month</div>
+                  </div>
+                  <div className="text-center p-3 bg-green-50 rounded-lg">
+                    <div className="text-2xl font-bold text-green-600">5</div>
+                    <div className="text-sm text-green-800">Scheduled Posts</div>
+                  </div>
+                  <div className="text-center p-3 bg-purple-50 rounded-lg">
+                    <div className="text-2xl font-bold text-purple-600">4.2%</div>
+                    <div className="text-sm text-purple-800">Engagement Rate</div>
+                  </div>
+                  <div className="text-center p-3 bg-orange-50 rounded-lg">
+                    <div className="text-2xl font-bold text-orange-600">847</div>
+                    <div className="text-sm text-orange-800">Total Reach</div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Popular Platforms</CardTitle>
+                <CardTitle className="text-lg">Platform Performance</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Facebook</span>
-                  <div className="w-16 bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: '85%' }}></div>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
+                      <span className="text-sm font-medium">Facebook</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold">85%</div>
+                      <div className="text-xs text-gray-500">engagement</div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Instagram</span>
-                  <div className="w-16 bg-gray-200 rounded-full h-2">
-                    <div className="bg-pink-600 h-2 rounded-full" style={{ width: '72%' }}></div>
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-pink-600 rounded-full"></div>
+                      <span className="text-sm font-medium">Instagram</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold">72%</div>
+                      <div className="text-xs text-gray-500">engagement</div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">LinkedIn</span>
-                  <div className="w-16 bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-800 h-2 rounded-full" style={{ width: '58%' }}></div>
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-3 h-3 bg-blue-800 rounded-full"></div>
+                      <span className="text-sm font-medium">LinkedIn</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-sm font-bold">58%</div>
+                      <div className="text-xs text-gray-500">engagement</div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
