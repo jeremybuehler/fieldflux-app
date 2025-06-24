@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Plus, Facebook, Instagram, Twitter } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Calendar, Plus, Facebook, Instagram, Twitter, Lightbulb, RefreshCw, Check, X } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
@@ -42,6 +43,9 @@ export default function SocialScheduler() {
   const [topic, setTopic] = useState("");
   const [platform, setPlatform] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isGeneratingIdea, setIsGeneratingIdea] = useState(false);
+  const [suggestedTopic, setSuggestedTopic] = useState("");
+  const [showSuggestion, setShowSuggestion] = useState(false);
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -75,6 +79,48 @@ export default function SocialScheduler() {
       });
     },
   });
+
+  const generateIdeaMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest("POST", "/api/ai/generate-topic", { 
+        type: "social",
+        industry: "HVAC",
+        platform: platform || "general"
+      });
+      return response.json();
+    },
+    onSuccess: (data) => {
+      setSuggestedTopic(data.topic);
+      setShowSuggestion(true);
+      setIsGeneratingIdea(false);
+      trackEvent('topic_suggestion_generated', 'content', 'social');
+    },
+    onError: () => {
+      setIsGeneratingIdea(false);
+      toast({
+        title: "Idea Generation Failed",
+        description: "Failed to generate topic idea. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const handleGenerateIdea = () => {
+    setIsGeneratingIdea(true);
+    generateIdeaMutation.mutate();
+  };
+
+  const handleUseSuggestion = () => {
+    setTopic(suggestedTopic);
+    setShowSuggestion(false);
+    trackEvent('topic_suggestion_accepted', 'content', 'social');
+  };
+
+  const handleRejectSuggestion = () => {
+    setShowSuggestion(false);
+    setSuggestedTopic("");
+    trackEvent('topic_suggestion_rejected', 'content', 'social');
+  };
 
   const handleGeneratePost = async () => {
     if (!topic.trim() || !platform) {
