@@ -414,7 +414,7 @@ export default function Settings() {
                 <Alert>
                   <SettingsIcon className="h-4 w-4" />
                   <AlertDescription>
-                    To enable SMS features, add your Twilio credentials to the Replit Secrets tab. These credentials are stored securely and only used for SMS functionality.
+                    To enable SMS features, add your Twilio credentials as environment variables in your hosting platform. These credentials are stored securely and only used for SMS functionality.
                   </AlertDescription>
                 </Alert>
 
@@ -454,7 +454,7 @@ export default function Settings() {
                       </li>
                       <li className="flex items-start">
                         <span className="w-5 h-5 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">4</span>
-                        <span>Add these values to your Replit Secrets tab</span>
+                        <span>Add these values as environment variables in your hosting platform</span>
                       </li>
                     </ol>
                   </div>
