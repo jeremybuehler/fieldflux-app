@@ -27,7 +27,7 @@ export default function Landing() {
     if (loginData.username === "admin" && loginData.password === "demo123") {
       toast({
         title: "Login Successful",
-        description: "Welcome back to HVAC Pro AI!",
+        description: "Welcome back to FieldPro AI!",
       });
       setTimeout(() => {
         window.location.href = "/dashboard";
@@ -54,7 +54,7 @@ export default function Landing() {
     // Simulate signup for demo
     toast({
       title: "Account Created",
-      description: "Welcome to HVAC Pro AI! You can now log in with your credentials.",
+      description: "Welcome to FieldPro AI! You can now log in with your credentials.",
     });
     
     // Reset form and switch to login tab
@@ -78,15 +78,15 @@ export default function Landing() {
               <Bot className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-hvac-gray">HVAC Pro AI</h1>
-              <p className="text-lg text-gray-600">Marketing Automation Platform</p>
+              <h1 className="text-4xl font-bold text-hvac-gray">FieldPro AI</h1>
+              <p className="text-lg text-gray-600">Social Media Content Marketing Platform</p>
             </div>
           </div>
           <h2 className="text-3xl font-bold text-hvac-gray mb-4">
-            Intelligent Marketing Automation for HVAC Contractors
+            Social Media Content Marketing for Field Service Providers
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Let HVAC Pro AI handle your content creation, social media scheduling, SEO optimization, and lead management while you focus on what you do best.
+            Let FieldPro AI handle your content creation, social media scheduling, SEO optimization, and lead management while you focus on delivering exceptional service to your customers.
           </p>
         </div>
 
@@ -140,10 +140,10 @@ export default function Landing() {
           <Card className="max-w-2xl mx-auto bg-gradient-to-r from-primary to-hvac-orange border-0">
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold text-white mb-4">
-                Ready to Transform Your HVAC Marketing?
+                Ready to Transform Your Field Service Marketing?
               </h3>
               <p className="text-blue-100 mb-6">
-                Join HVAC Pro AI and experience intelligent marketing automation designed specifically for HVAC contractors in Winter Haven, FL and beyond.
+                Join FieldPro AI and experience intelligent social media content marketing designed specifically for field service providers across all industries.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
@@ -159,7 +159,7 @@ export default function Landing() {
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle className="text-center text-2xl font-bold text-hvac-gray">
-                        Access HVAC Pro AI
+                        Access FieldPro AI
                       </DialogTitle>
                     </DialogHeader>
                     <Tabs defaultValue="login" className="w-full">
@@ -293,7 +293,7 @@ export default function Landing() {
         {/* Footer */}
         <div className="text-center mt-16 text-gray-500">
           <p className="text-sm">
-            Secure platform designed for HVAC professionals. Your business data is protected and private.
+            Secure platform designed for field service professionals. Your business data is protected and private.
           </p>
           <p className="text-xs mt-2">
             Already have an account? Click "Get Started" to sign in.

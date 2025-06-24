@@ -215,7 +215,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages: [
           {
             role: "system",
-            content: "You are an expert marketing content strategist specializing in HVAC businesses. Generate compelling, industry-specific topics that would engage homeowners and business owners in Winter Haven, FL and similar markets."
+            content: "You are an expert marketing content strategist specializing in field service businesses. Generate compelling, industry-specific topics that would engage homeowners and business owners across various service sectors including HVAC, plumbing, electrical, landscaping, pest control, and other field service industries."
           },
           {
             role: "user",
@@ -226,7 +226,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         temperature: 0.8,
       });
 
-      const topic = response.choices[0].message.content?.trim() || "HVAC System Maintenance Tips";
+      const topic = response.choices[0].message.content?.trim() || "Field Service Maintenance Tips";
       
       res.json({ topic });
     } catch (error) {

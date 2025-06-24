@@ -1,8 +1,8 @@
-# HVAC Pro AI Marketing Platform
+# FieldPro AI Marketing Platform
 
 ## Overview
 
-This is HVAC Pro AI, a full-stack marketing automation platform built specifically for HVAC service contractors. The application helps HVAC businesses manage their digital marketing activities through AI-powered content generation, social media scheduling, lead management, and SEO optimization.
+This is FieldPro AI, a universal social media content marketing platform built for field service providers across all industries. The application helps field service businesses manage their digital marketing activities through AI-powered content generation, social media scheduling, lead management, and SEO optimization.
 
 ## System Architecture
 
@@ -92,7 +92,7 @@ The application is configured for Replit deployment with:
 
 ## Recent Changes
 - June 24, 2025: Initial HVAC marketing dashboard setup with basic components
-- June 24, 2025: Enhanced HVAC Pro AI agent with comprehensive features:
+- June 24, 2025: Enhanced FieldPro AI agent with comprehensive features:
   - Added reviews management system with AI-powered response generation
   - Integrated GoDaddy WordPress publishing capabilities  
   - Enhanced analytics reporting with comprehensive metrics and charts
@@ -117,6 +117,10 @@ The application is configured for Replit deployment with:
   - Updated all branding throughout the application
   - Switched to in-memory storage to resolve database connection issues
   - Prepared for personalized UI with user's first name integration
+- June 24, 2025: Rebranded to universal Field Service Providers platform:
+  - Changed from HVAC-specific to "FieldPro AI" for broader market appeal
+  - Updated messaging to focus on social media content marketing for all field service industries
+  - Repositioned as universal platform for HVAC, plumbing, electrical, landscaping, pest control, etc.
 
 ## Architecture Updates
 - **Database Schema**: Added `reviews` and `analytics_reports` tables with PostgreSQL backend
@@ -132,5 +136,6 @@ The application is configured for Replit deployment with:
 
 Preferred communication style: Simple, everyday language.
 API Keys: Will provide Google Analytics ID in the morning.
-Branding: Changed from "Dave AI" to "HVAC Pro AI" for more professional presentation.
+Branding: Changed from "Dave AI" to "HVAC Pro AI" for more professional presentation, then to "FieldPro AI" for universal field service appeal.
 Personalization: UI should reflect logged-in user's first name instead of generic "Dave" references.
+Market Focus: Universal platform for all field service providers - HVAC, plumbing, electrical, landscaping, pest control, etc.
