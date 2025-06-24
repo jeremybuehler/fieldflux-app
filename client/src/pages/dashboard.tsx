@@ -47,6 +47,14 @@ export default function Dashboard() {
               </div>
               <WeatherWidget />
               <Button 
+                onClick={() => window.location.href = '/api/logout'}
+                variant="outline"
+                size="sm"
+                className="text-gray-600 hover:text-gray-900"
+              >
+                Logout
+              </Button>
+              <Button 
                 onClick={handleGenerateContent}
                 className="bg-hvac-orange hover:bg-hvac-orange/90 text-white"
               >

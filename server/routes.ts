@@ -33,7 +33,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   // Dashboard Analytics
-  app.get("/api/dashboard/metrics", async (req, res) => {
+  app.get("/api/dashboard/metrics", isAuthenticated, async (req, res) => {
     try {
       const leads = await storage.getAllLeads();
       const tasks = await storage.getAllTasks();
@@ -78,7 +78,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // WordPress Posts
-  app.get("/api/wordpress/posts", async (req, res) => {
+  app.get("/api/wordpress/posts", isAuthenticated, async (req, res) => {
     try {
       const posts = await storage.getAllWordPressPosts();
       res.json(posts);
@@ -87,7 +87,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/wordpress/posts", async (req, res) => {
+  app.post("/api/wordpress/posts", isAuthenticated, async (req, res) => {
     try {
       const data = insertWordPressPostSchema.parse(req.body);
       const post = await storage.createWordPressPost(data);
@@ -97,7 +97,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/wordpress/generate-post", async (req, res) => {
+  app.post("/api/wordpress/generate-post", isAuthenticated, async (req, res) => {
     try {
       const { topic, type = "blog" } = req.body;
       
@@ -143,7 +143,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Social Media Posts
-  app.get("/api/social/posts", async (req, res) => {
+  app.get("/api/social/posts", isAuthenticated, async (req, res) => {
     try {
       const posts = await storage.getAllSocialPosts();
       res.json(posts);
@@ -152,7 +152,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/social/posts", async (req, res) => {
+  app.post("/api/social/posts", isAuthenticated, async (req, res) => {
     try {
       const data = insertSocialPostSchema.parse(req.body);
       const post = await storage.createSocialPost(data);
@@ -162,7 +162,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/social/generate-post", async (req, res) => {
+  app.post("/api/social/generate-post", isAuthenticated, async (req, res) => {
     try {
       const { topic, platform, tone = "professional" } = req.body;
       
