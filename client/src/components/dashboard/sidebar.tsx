@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Link, useLocation } from "wouter";
 import { 
   LayoutDashboard, 
   Share2, 
@@ -7,20 +8,24 @@ import {
   Search, 
   Star, 
   UserPlus,
-  Bot
+  Bot,
+  Settings
 } from "lucide-react";
 
 const navigation = [
-  { name: "Dashboard", href: "#", icon: LayoutDashboard, current: true },
-  { name: "Social Media", href: "#", icon: Share2, current: false },
-  { name: "Website Updates", href: "#", icon: Code, current: false },
-  { name: "Analytics", href: "#", icon: TrendingUp, current: false },
-  { name: "SEO Optimization", href: "#", icon: Search, current: false },
-  { name: "Reviews", href: "#", icon: Star, current: false },
-  { name: "Lead Generation", href: "#", icon: UserPlus, current: false },
+  { name: "Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Social Media", href: "/social", icon: Share2 },
+  { name: "Website Updates", href: "/website", icon: Code },
+  { name: "Analytics", href: "/analytics", icon: TrendingUp },
+  { name: "SEO Optimization", href: "/seo", icon: Search },
+  { name: "Reviews", href: "/reviews", icon: Star },
+  { name: "Lead Generation", href: "/leads", icon: UserPlus },
+  { name: "Settings", href: "/settings", icon: Settings },
 ];
 
 export default function Sidebar() {
+  const [location] = useLocation();
+
   return (
     <div className="w-64 bg-white shadow-lg border-r border-gray-200 flex flex-col">
       {/* Header */}
