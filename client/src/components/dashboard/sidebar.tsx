@@ -35,8 +35,8 @@ export default function Sidebar() {
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-hvac-gray">HVAC Pro AI</h1>
-            <p className="text-sm text-gray-500">Marketing Automation</p>
+            <h1 className="text-lg font-bold text-hvac-gray">FieldPro AI</h1>
+            <p className="text-sm text-gray-500">Content Marketing</p>
           </div>
         </div>
       </div>
