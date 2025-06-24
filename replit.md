@@ -121,6 +121,11 @@ The application is configured for Replit deployment with:
   - Changed from HVAC-specific to "FieldPro AI" for broader market appeal
   - Updated messaging to focus on social media content marketing for all field service industries
   - Repositioned as universal platform for HVAC, plumbing, electrical, landscaping, pest control, etc.
+- June 24, 2025: Enhanced navigation and added Twilio SMS integration:
+  - Fixed sidebar navigation links to properly route to dedicated pages
+  - Created Social Media and Lead Management pages with dedicated functionality
+  - Added comprehensive Twilio SMS service for customer communication
+  - Implemented SMS templates for lead follow-ups, appointment confirmations, and emergency alerts
 
 ## Architecture Updates
 - **Database Schema**: Added `reviews` and `analytics_reports` tables with PostgreSQL backend
@@ -139,3 +144,4 @@ API Keys: Will provide Google Analytics ID in the morning.
 Branding: Changed from "Dave AI" to "HVAC Pro AI" for more professional presentation, then to "FieldPro AI" for universal field service appeal.
 Personalization: UI should reflect logged-in user's first name instead of generic "Dave" references.
 Market Focus: Universal platform for all field service providers - HVAC, plumbing, electrical, landscaping, pest control, etc.
+Twilio Integration: User has Twilio account - implementing SMS features for lead follow-ups, appointment confirmations, and customer notifications.
