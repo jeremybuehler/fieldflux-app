@@ -35,8 +35,8 @@ export default function Sidebar() {
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-hvac-gray">Dave AI</h1>
-            <p className="text-sm text-gray-500">HVAC Marketing Agent</p>
+            <h1 className="text-lg font-bold text-hvac-gray">HVAC Pro AI</h1>
+            <p className="text-sm text-gray-500">Marketing Automation</p>
           </div>
         </div>
       </div>
@@ -71,9 +71,9 @@ export default function Sidebar() {
         <div className="bg-green-50 border border-green-200 rounded-lg p-3">
           <div className="flex items-center space-x-2">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span className="text-sm font-medium text-green-800">Dave is Online</span>
+            <span className="text-sm font-medium text-green-800">AI Agent Active</span>
           </div>
-          <p className="text-xs text-green-600 mt-1">Processing 3 tasks...</p>
+          <p className="text-xs text-green-600 mt-1">Processing marketing tasks...</p>
         </div>
       </div>
     </div>

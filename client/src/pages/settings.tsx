@@ -129,7 +129,7 @@ export default function Settings() {
             </Link>
           </div>
           <h1 className="text-2xl font-bold text-hvac-gray mb-2">Settings & Configuration</h1>
-          <p className="text-gray-600">Configure your integrations and preferences for Dave AI Marketing Agent</p>
+          <p className="text-gray-600">Configure your integrations and preferences for HVAC Pro AI</p>
         </div>
 
         <Tabs defaultValue="wordpress" className="space-y-6">
@@ -154,7 +154,7 @@ export default function Settings() {
                     </div>
                     <div>
                       <CardTitle className="text-xl">GoDaddy WordPress Integration</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">Connect Dave to your GoDaddy-hosted WordPress site</p>
+                      <p className="text-sm text-gray-600 mt-1">Connect HVAC Pro AI to your GoDaddy-hosted WordPress site</p>
                     </div>
                   </div>
                   {wpConfig.isConfigured ? (
@@ -373,7 +373,7 @@ export default function Settings() {
 
                 <div className="bg-blue-50 rounded-lg p-4">
                   <h4 className="text-sm font-semibold text-blue-900 mb-2">
-                    What Dave Tracks with Google Analytics
+                    What HVAC Pro AI Tracks with Google Analytics
                   </h4>
                   <div className="text-sm text-blue-800 space-y-1">
                     <p>• Page views and session data</p>

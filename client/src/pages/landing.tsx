@@ -86,7 +86,7 @@ export default function Landing() {
             Intelligent Marketing Automation for HVAC Contractors
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Let Dave handle your content creation, social media scheduling, SEO optimization, and lead management while you focus on what you do best.
+            Let HVAC Pro AI handle your content creation, social media scheduling, SEO optimization, and lead management while you focus on what you do best.
           </p>
         </div>
 
