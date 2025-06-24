@@ -27,7 +27,7 @@ export default function Landing() {
     if (loginData.username === "admin" && loginData.password === "demo123") {
       toast({
         title: "Login Successful",
-        description: "Welcome back to FieldPro AI!",
+        description: "Welcome back to FieldPulse!",
       });
       setTimeout(() => {
         window.location.href = "/dashboard";
@@ -54,7 +54,7 @@ export default function Landing() {
     // Simulate signup for demo
     toast({
       title: "Account Created",
-      description: "Welcome to FieldPro AI! You can now log in with your credentials.",
+      description: "Welcome to FieldPulse! You can now log in with your credentials.",
     });
     
     // Reset form and switch to login tab
@@ -78,15 +78,15 @@ export default function Landing() {
               <Bot className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-hvac-gray">FieldPro AI</h1>
-              <p className="text-lg text-gray-600">Social Media Content Marketing Platform</p>
+              <h1 className="text-4xl font-bold text-hvac-gray">FieldPulse</h1>
+              <p className="text-lg text-gray-600">AI-Powered Social Media Content & Marketing</p>
             </div>
           </div>
           <h2 className="text-3xl font-bold text-hvac-gray mb-4">
-            Social Media Content Marketing for Field Service Providers
+            AI-Powered Social Media Content & Marketing for Field Service Providers
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Let FieldPro AI handle your content creation, social media scheduling, SEO optimization, and lead management while you focus on delivering exceptional service to your customers.
+            Let FieldPulse handle your content creation, social media scheduling, SEO optimization, and lead management while you focus on delivering exceptional service to your customers.
           </p>
         </div>
 
@@ -115,7 +115,7 @@ export default function Landing() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                Generate engaging blog posts, social media content, and marketing materials tailored specifically for HVAC businesses.
+                Generate engaging blog posts, social media content, and marketing materials tailored specifically for field service businesses.
               </p>
             </CardContent>
           </Card>
@@ -143,7 +143,7 @@ export default function Landing() {
                 Ready to Transform Your Field Service Marketing?
               </h3>
               <p className="text-blue-100 mb-6">
-                Join FieldPro AI and experience intelligent social media content marketing designed specifically for field service providers across all industries.
+                Join FieldPulse and experience intelligent AI-powered social media content and marketing designed specifically for field service providers across all industries.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
@@ -159,7 +159,7 @@ export default function Landing() {
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle className="text-center text-2xl font-bold text-hvac-gray">
-                        Access FieldPro AI
+                        Access FieldPulse
                       </DialogTitle>
                     </DialogHeader>
                     <Tabs defaultValue="login" className="w-full">

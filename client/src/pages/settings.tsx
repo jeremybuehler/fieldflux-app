@@ -129,7 +129,7 @@ export default function Settings() {
             </Link>
           </div>
           <h1 className="text-2xl font-bold text-hvac-gray mb-2">Settings & Configuration</h1>
-          <p className="text-gray-600">Configure your integrations and preferences for FieldPro AI</p>
+          <p className="text-gray-600">Configure your integrations and preferences for FieldPulse</p>
         </div>
 
         <Tabs defaultValue="wordpress" className="space-y-6">
@@ -158,7 +158,7 @@ export default function Settings() {
                     </div>
                     <div>
                       <CardTitle className="text-xl">GoDaddy WordPress Integration</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">Connect FieldPro AI to your GoDaddy-hosted WordPress site</p>
+                      <p className="text-sm text-gray-600 mt-1">Connect FieldPulse to your GoDaddy-hosted WordPress site</p>
                     </div>
                   </div>
                   {wpConfig.isConfigured ? (
@@ -377,7 +377,7 @@ export default function Settings() {
 
                 <div className="bg-blue-50 rounded-lg p-4">
                   <h4 className="text-sm font-semibold text-blue-900 mb-2">
-                    What FieldPro AI Tracks with Google Analytics
+                    What FieldPulse Tracks with Google Analytics
                   </h4>
                   <div className="text-sm text-blue-800 space-y-1">
                     <p>• Page views and session data</p>
