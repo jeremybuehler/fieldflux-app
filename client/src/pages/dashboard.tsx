@@ -38,7 +38,7 @@ export default function Dashboard() {
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-2xl font-bold text-hvac-gray">HVAC Marketing Dashboard</h2>
-              <p className="text-gray-600 mt-1">Welcome back! Here's what Dave has been working on.</p>
+              <p className="text-gray-600 mt-1">Welcome back! Here's your marketing automation activity.</p>
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2 bg-primary/10 rounded-lg px-3 py-2">
