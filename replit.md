@@ -1,8 +1,8 @@
-# FieldPro AI Marketing Platform
+# FieldPulse - AI-Powered Marketing Platform
 
 ## Overview
 
-This is FieldPro AI, a universal social media content marketing platform built for field service providers across all industries. The application helps field service businesses manage their digital marketing activities through AI-powered content generation, social media scheduling, lead management, and SEO optimization.
+This is FieldPulse, a universal AI-powered social media content and marketing platform built for field service providers across all industries. The application helps field service businesses manage their digital marketing activities through intelligent content generation, social media scheduling, lead management, and SEO optimization.
 
 ## System Architecture
 
@@ -92,7 +92,7 @@ The application is configured for Replit deployment with:
 
 ## Recent Changes
 - June 24, 2025: Initial HVAC marketing dashboard setup with basic components
-- June 24, 2025: Enhanced FieldPro AI agent with comprehensive features:
+- June 24, 2025: Enhanced FieldPulse AI agent with comprehensive features:
   - Added reviews management system with AI-powered response generation
   - Integrated GoDaddy WordPress publishing capabilities  
   - Enhanced analytics reporting with comprehensive metrics and charts
@@ -121,6 +121,10 @@ The application is configured for Replit deployment with:
   - Changed from HVAC-specific to "FieldPro AI" for broader market appeal
   - Updated messaging to focus on social media content marketing for all field service industries
   - Repositioned as universal platform for HVAC, plumbing, electrical, landscaping, pest control, etc.
+- June 24, 2025: Final rebrand to "FieldPulse":
+  - Changed to "FieldPulse - AI-Powered Social Media Content & Marketing"
+  - Emphasizes AI-powered capabilities and comprehensive marketing solutions
+  - Maintains focus on field service providers across all industries
 - June 24, 2025: Enhanced navigation and added Twilio SMS integration:
   - Fixed sidebar navigation links to properly route to dedicated pages
   - Created Social Media and Lead Management pages with dedicated functionality
@@ -141,7 +145,7 @@ The application is configured for Replit deployment with:
 
 Preferred communication style: Simple, everyday language.
 API Keys: Will provide Google Analytics ID in the morning.
-Branding: Changed from "Dave AI" to "HVAC Pro AI" for more professional presentation, then to "FieldPro AI" for universal field service appeal.
+Branding: Changed from "Dave AI" to "HVAC Pro AI" for more professional presentation, then to "FieldPro AI" for universal field service appeal, and finally to "FieldPulse" for AI-powered marketing focus.
 Personalization: UI should reflect logged-in user's first name instead of generic "Dave" references.
 Market Focus: Universal platform for all field service providers - HVAC, plumbing, electrical, landscaping, pest control, etc.
 Twilio Integration: User has Twilio account - implementing SMS features for lead follow-ups, appointment confirmations, and customer notifications.
