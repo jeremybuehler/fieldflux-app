@@ -12,10 +12,17 @@ import {
   insertAnalyticsReportSchema,
 } from "@shared/schema";
 import OpenAI from "openai";
+import twilio from "twilio";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "default_key",
 });
+
+// Initialize Twilio client if credentials are available
+let twilioClient: any = null;
+if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
+  twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+}
 
 // Simple authentication middleware for now
 const isAuthenticated = (req: any, res: any, next: any) => {
@@ -615,6 +622,122 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       res.status(400).json({ message: "Failed to qualify lead" });
+    }
+  });
+
+  // Twilio SMS endpoints
+  app.post("/api/sms/send", async (req, res) => {
+    try {
+      const { to, message, type } = req.body;
+
+      if (!twilioClient) {
+        return res.status(400).json({ 
+          message: "Twilio not configured. Please add TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and TWILIO_PHONE_NUMBER to your environment." 
+        });
+      }
+
+      if (!process.env.TWILIO_PHONE_NUMBER) {
+        return res.status(400).json({ 
+          message: "TWILIO_PHONE_NUMBER not configured" 
+        });
+      }
+
+      // Validate phone number format
+      const phoneRegex = /^\+?[1-9]\d{1,14}$/;
+      if (!phoneRegex.test(to.replace(/\s+/g, ''))) {
+        return res.status(400).json({ 
+          message: "Invalid phone number format" 
+        });
+      }
+
+      const twilioMessage = await twilioClient.messages.create({
+        body: message,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: to.startsWith('+') ? to : `+1${to.replace(/\D/g, '')}`
+      });
+
+      // Log the SMS activity
+      await storage.createActivity({
+        type: "sms",
+        description: `SMS sent to ${to}: ${type || 'general'}`,
+        status: "completed",
+        metadata: { messageId: twilioMessage.sid, type }
+      });
+
+      res.json({ 
+        success: true, 
+        messageId: twilioMessage.sid,
+        status: twilioMessage.status 
+      });
+    } catch (error) {
+      console.error("SMS send error:", error);
+      res.status(500).json({ 
+        message: "Failed to send SMS", 
+        error: error.message 
+      });
+    }
+  });
+
+  app.get("/api/sms/templates", async (req, res) => {
+    try {
+      const templates = [
+        {
+          type: 'lead_followup',
+          name: 'Lead Follow-up',
+          template: 'Hi {customerName}! Thanks for your interest in {businessName}. We\'ll contact you within 24 hours to discuss your {serviceType} needs. Reply STOP to opt out.',
+          description: 'Automatic response to new leads from website forms'
+        },
+        {
+          type: 'appointment_confirmation',
+          name: 'Appointment Confirmation',
+          template: 'Hi {customerName}, your {serviceType} appointment is confirmed for {appointmentDate}. We\'ll text you when our technician is on the way. Reply STOP to opt out.',
+          description: 'Sent when appointments are scheduled'
+        },
+        {
+          type: 'technician_enroute',
+          name: 'Technician En Route',
+          template: 'Hi {customerName}, {technicianName} is on the way and should arrive around {estimatedTime}. Call us at {businessPhone} with questions.',
+          description: 'Sent when technician leaves for appointment'
+        },
+        {
+          type: 'service_complete',
+          name: 'Service Complete',
+          template: 'Hi {customerName}, your {serviceType} service is complete. Thanks for choosing {businessName}! Any questions? Call {businessPhone}.',
+          description: 'Sent when service work is finished'
+        },
+        {
+          type: 'review_request',
+          name: 'Review Request',
+          template: 'Hi {customerName}, thanks for choosing {businessName}! We\'d love your feedback: {reviewLink} Reply STOP to opt out.',
+          description: 'Sent 24 hours after service completion'
+        },
+        {
+          type: 'emergency_alert',
+          name: 'Emergency Alert',
+          template: 'URGENT - {customerName}: {alertMessage} Please call us immediately at {businessPhone} for assistance.',
+          description: 'For urgent notifications about emergencies or critical issues'
+        }
+      ];
+
+      res.json(templates);
+    } catch (error) {
+      console.error("Error fetching SMS templates:", error);
+      res.status(500).json({ message: "Failed to fetch SMS templates" });
+    }
+  });
+
+  app.get("/api/sms/status", async (req, res) => {
+    try {
+      const isConfigured = !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER);
+      
+      res.json({
+        configured: isConfigured,
+        accountSid: process.env.TWILIO_ACCOUNT_SID ? process.env.TWILIO_ACCOUNT_SID.substring(0, 8) + '...' : null,
+        phoneNumber: process.env.TWILIO_PHONE_NUMBER || null
+      });
+    } catch (error) {
+      console.error("Error checking Twilio status:", error);
+      res.status(500).json({ message: "Failed to check Twilio status" });
     }
   });
 

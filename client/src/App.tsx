@@ -10,6 +10,10 @@ import { useAnalytics } from "./hooks/use-analytics";
 import Dashboard from "@/pages/dashboard";
 import Settings from "@/pages/settings";
 import Landing from "@/pages/landing";
+import Social from "@/pages/social";
+import Leads from "@/pages/leads";
+import Reviews from "@/pages/reviews";
+import Analytics from "@/pages/analytics";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -20,6 +24,10 @@ function Router() {
     <Switch>
       <Route path="/" component={Landing} />
       <Route path="/dashboard" component={Dashboard} />
+      <Route path="/social" component={Social} />
+      <Route path="/leads" component={Leads} />
+      <Route path="/reviews" component={Reviews} />
+      <Route path="/analytics" component={Analytics} />
       <Route path="/settings" component={Settings} />
       <Route component={NotFound} />
     </Switch>
