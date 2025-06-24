@@ -15,14 +15,12 @@ import NotFound from "@/pages/not-found";
 function Router() {
   // Track page views when routes change
   useAnalytics();
-  // const { isAuthenticated, isLoading } = useAuth();
   
   return (
     <Switch>
-      <Route path="/" component={Dashboard} />
+      <Route path="/" component={Landing} />
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/settings" component={Settings} />
-      <Route path="/login" component={Landing} />
       <Route component={NotFound} />
     </Switch>
   );
