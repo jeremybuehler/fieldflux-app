@@ -121,7 +121,7 @@ export default function Settings() {
       <div className="max-w-6xl mx-auto p-6">
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-4">
-            <Link href="/">
+            <Link href="/dashboard">
               <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Dashboard
@@ -143,7 +143,7 @@ export default function Settings() {
               <span>Analytics</span>
             </TabsTrigger>
             <TabsTrigger value="twilio" className="flex items-center space-x-2">
-              <MessageSquare className="w-4 h-4" />
+              <Phone className="w-4 h-4" />
               <span>SMS</span>
             </TabsTrigger>
           </TabsList>
