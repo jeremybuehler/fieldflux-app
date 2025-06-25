@@ -20,7 +20,7 @@ export default function Dashboard() {
         <MobileSidebar />
         
         <main className="flex-1 lg:ml-64">
-          <div className="p-4 lg:p-6 pt-16 lg:pt-6 lg:pl-8">
+          <div className="p-4 lg:p-6 pt-16 lg:pt-6">
             {/* Dashboard Header */}
             <div className="mb-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
