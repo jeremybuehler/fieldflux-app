@@ -176,7 +176,7 @@ export default function Settings() {
         <MobileSidebar />
         
         <main className="flex-1 lg:ml-64">
-          <div className="p-4 lg:p-6 pt-16 lg:pt-6">
+          <div className="p-6 pt-16 lg:pt-6">
             <div className="mb-6 lg:mb-8">
               <div className="flex items-center space-x-4 mb-4">
                 <Link href="/dashboard">
