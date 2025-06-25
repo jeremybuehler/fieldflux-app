@@ -4,7 +4,7 @@
  */
 
 export interface SpacingConfig {
-  component: 'card' | 'section' | 'header' | 'content' | 'nav' | 'form';
+  component: 'card' | 'section' | 'header' | 'nav';
   size: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   context: 'desktop' | 'mobile' | 'tablet';
 }
@@ -70,7 +70,7 @@ export class UIOptimizer {
       base: 'transition-colors duration-200',
       spacing: { mobile: 'px-3 py-2', tablet: 'px-4 py-3', desktop: 'px-5 py-3' }
     }
-  };
+  } as const;
 
   /**
    * Get optimized spacing classes
