@@ -28,10 +28,10 @@ export default function Social() {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 lg:space-y-6">
           <EnhancedScheduler />
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Performance Overview</CardTitle>
