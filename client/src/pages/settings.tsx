@@ -24,6 +24,39 @@ interface GoogleAnalyticsConfig {
   isConfigured: boolean;
 }
 
+interface TwilioConfig {
+  accountSid: string;
+  authToken: string;
+  phoneNumber: string;
+  isConfigured: boolean;
+}
+
+interface SocialPlatformConfig {
+  facebook: {
+    appId: string;
+    appSecret: string;
+    accessToken: string;
+    isConfigured: boolean;
+  };
+  instagram: {
+    accessToken: string;
+    isConfigured: boolean;
+  };
+  twitter: {
+    apiKey: string;
+    apiSecret: string;
+    accessToken: string;
+    accessTokenSecret: string;
+    isConfigured: boolean;
+  };
+  linkedin: {
+    clientId: string;
+    clientSecret: string;
+    accessToken: string;
+    isConfigured: boolean;
+  };
+}
+
 export default function Settings() {
   const [wpConfig, setWpConfig] = useState<WordPressConfig>({
     siteUrl: "",
@@ -35,6 +68,39 @@ export default function Settings() {
   const [gaConfig, setGaConfig] = useState<GoogleAnalyticsConfig>({
     measurementId: "",
     isConfigured: false,
+  });
+
+  const [twilioConfig, setTwilioConfig] = useState<TwilioConfig>({
+    accountSid: "",
+    authToken: "",
+    phoneNumber: "",
+    isConfigured: false,
+  });
+
+  const [socialConfig, setSocialConfig] = useState<SocialPlatformConfig>({
+    facebook: {
+      appId: "",
+      appSecret: "",
+      accessToken: "",
+      isConfigured: false,
+    },
+    instagram: {
+      accessToken: "",
+      isConfigured: false,
+    },
+    twitter: {
+      apiKey: "",
+      apiSecret: "",
+      accessToken: "",
+      accessTokenSecret: "",
+      isConfigured: false,
+    },
+    linkedin: {
+      clientId: "",
+      clientSecret: "",
+      accessToken: "",
+      isConfigured: false,
+    },
   });
 
   const { toast } = useToast();
@@ -484,6 +550,318 @@ export default function Settings() {
                 </div>
               </CardContent>
             </Card>
+          </TabsContent>
+
+          {/* Twilio Configuration */}
+          <TabsContent value="twilio" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <MessageSquare className="w-5 h-5 text-red-600" />
+                  <span>Twilio SMS Configuration</span>
+                  {twilioConfig.isConfigured && (
+                    <Badge variant="default" className="bg-green-100 text-green-800">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Configured
+                    </Badge>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Alert>
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>
+                    Configure your Twilio account to enable SMS notifications for lead follow-ups, appointment confirmations, and customer communication.
+                  </AlertDescription>
+                </Alert>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Account SID</label>
+                    <Input
+                      placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                      value={twilioConfig.accountSid}
+                      onChange={(e) => setTwilioConfig(prev => ({...prev, accountSid: e.target.value}))}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Auth Token</label>
+                    <Input
+                      type="password"
+                      placeholder="Your Twilio Auth Token"
+                      value={twilioConfig.authToken}
+                      onChange={(e) => setTwilioConfig(prev => ({...prev, authToken: e.target.value}))}
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Phone Number</label>
+                    <Input
+                      placeholder="+1234567890"
+                      value={twilioConfig.phoneNumber}
+                      onChange={(e) => setTwilioConfig(prev => ({...prev, phoneNumber: e.target.value}))}
+                    />
+                  </div>
+
+                  <Button onClick={saveTwilioConfig} className="w-full">
+                    Save Twilio Configuration
+                  </Button>
+                </div>
+
+                <Separator />
+
+                <div className="space-y-3">
+                  <h4 className="font-medium">Setup Instructions:</h4>
+                  <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
+                    <li>Create a Twilio account at <a href="https://www.twilio.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">twilio.com</a></li>
+                    <li>Get your Account SID and Auth Token from the Twilio Console</li>
+                    <li>Purchase a phone number in the Twilio Console</li>
+                    <li>Add these credentials to your Replit Secrets:
+                      <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
+                        <li><code className="bg-gray-100 px-1 rounded">TWILIO_ACCOUNT_SID</code></li>
+                        <li><code className="bg-gray-100 px-1 rounded">TWILIO_AUTH_TOKEN</code></li>
+                        <li><code className="bg-gray-100 px-1 rounded">TWILIO_PHONE_NUMBER</code></li>
+                      </ul>
+                    </li>
+                  </ol>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Social Media Configuration */}
+          <TabsContent value="social" className="space-y-6">
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                Configure your social media platform credentials to enable automated posting and content sharing.
+              </AlertDescription>
+            </Alert>
+
+            {/* Facebook Configuration */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <div className="w-5 h-5 bg-blue-600 rounded"></div>
+                  <span>Facebook</span>
+                  {socialConfig.facebook.isConfigured && (
+                    <Badge variant="default" className="bg-green-100 text-green-800">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Configured
+                    </Badge>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">App ID</label>
+                    <Input
+                      placeholder="Your Facebook App ID"
+                      value={socialConfig.facebook.appId}
+                      onChange={(e) => setSocialConfig(prev => ({
+                        ...prev,
+                        facebook: {...prev.facebook, appId: e.target.value}
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">App Secret</label>
+                    <Input
+                      type="password"
+                      placeholder="Your Facebook App Secret"
+                      value={socialConfig.facebook.appSecret}
+                      onChange={(e) => setSocialConfig(prev => ({
+                        ...prev,
+                        facebook: {...prev.facebook, appSecret: e.target.value}
+                      }))}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Access Token</label>
+                  <Input
+                    placeholder="Your Facebook Page Access Token"
+                    value={socialConfig.facebook.accessToken}
+                    onChange={(e) => setSocialConfig(prev => ({
+                      ...prev,
+                      facebook: {...prev.facebook, accessToken: e.target.value}
+                    }))}
+                  />
+                </div>
+                <Button onClick={() => saveSocialConfig('Facebook')} className="w-full">
+                  Save Facebook Configuration
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Instagram Configuration */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <div className="w-5 h-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded"></div>
+                  <span>Instagram</span>
+                  {socialConfig.instagram.isConfigured && (
+                    <Badge variant="default" className="bg-green-100 text-green-800">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Configured
+                    </Badge>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Access Token</label>
+                  <Input
+                    placeholder="Your Instagram Access Token"
+                    value={socialConfig.instagram.accessToken}
+                    onChange={(e) => setSocialConfig(prev => ({
+                      ...prev,
+                      instagram: {...prev.instagram, accessToken: e.target.value}
+                    }))}
+                  />
+                </div>
+                <Button onClick={() => saveSocialConfig('Instagram')} className="w-full">
+                  Save Instagram Configuration
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Twitter Configuration */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <div className="w-5 h-5 bg-blue-400 rounded"></div>
+                  <span>Twitter/X</span>
+                  {socialConfig.twitter.isConfigured && (
+                    <Badge variant="default" className="bg-green-100 text-green-800">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Configured
+                    </Badge>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">API Key</label>
+                    <Input
+                      placeholder="Your Twitter API Key"
+                      value={socialConfig.twitter.apiKey}
+                      onChange={(e) => setSocialConfig(prev => ({
+                        ...prev,
+                        twitter: {...prev.twitter, apiKey: e.target.value}
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">API Secret</label>
+                    <Input
+                      type="password"
+                      placeholder="Your Twitter API Secret"
+                      value={socialConfig.twitter.apiSecret}
+                      onChange={(e) => setSocialConfig(prev => ({
+                        ...prev,
+                        twitter: {...prev.twitter, apiSecret: e.target.value}
+                      }))}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Access Token</label>
+                    <Input
+                      placeholder="Your Twitter Access Token"
+                      value={socialConfig.twitter.accessToken}
+                      onChange={(e) => setSocialConfig(prev => ({
+                        ...prev,
+                        twitter: {...prev.twitter, accessToken: e.target.value}
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Access Token Secret</label>
+                    <Input
+                      type="password"
+                      placeholder="Your Twitter Access Token Secret"
+                      value={socialConfig.twitter.accessTokenSecret}
+                      onChange={(e) => setSocialConfig(prev => ({
+                        ...prev,
+                        twitter: {...prev.twitter, accessTokenSecret: e.target.value}
+                      }))}
+                    />
+                  </div>
+                </div>
+                <Button onClick={() => saveSocialConfig('Twitter')} className="w-full">
+                  Save Twitter Configuration
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* LinkedIn Configuration */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <div className="w-5 h-5 bg-blue-700 rounded"></div>
+                  <span>LinkedIn</span>
+                  {socialConfig.linkedin.isConfigured && (
+                    <Badge variant="default" className="bg-green-100 text-green-800">
+                      <CheckCircle className="w-3 h-3 mr-1" />
+                      Configured
+                    </Badge>
+                  )}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Client ID</label>
+                    <Input
+                      placeholder="Your LinkedIn Client ID"
+                      value={socialConfig.linkedin.clientId}
+                      onChange={(e) => setSocialConfig(prev => ({
+                        ...prev,
+                        linkedin: {...prev.linkedin, clientId: e.target.value}
+                      }))}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Client Secret</label>
+                    <Input
+                      type="password"
+                      placeholder="Your LinkedIn Client Secret"
+                      value={socialConfig.linkedin.clientSecret}
+                      onChange={(e) => setSocialConfig(prev => ({
+                        ...prev,
+                        linkedin: {...prev.linkedin, clientSecret: e.target.value}
+                      }))}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Access Token</label>
+                  <Input
+                    placeholder="Your LinkedIn Access Token"
+                    value={socialConfig.linkedin.accessToken}
+                    onChange={(e) => setSocialConfig(prev => ({
+                      ...prev,
+                      linkedin: {...prev.linkedin, accessToken: e.target.value}
+                    }))}
+                  />
+                </div>
+                <Button onClick={() => saveSocialConfig('LinkedIn')} className="w-full">
+                  Save LinkedIn Configuration
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Alert>
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>
+                After configuring each platform, add the credentials to your Replit Secrets using the appropriate environment variable names (e.g., FACEBOOK_APP_ID, TWITTER_API_KEY, etc.) for the integrations to work properly.
+              </AlertDescription>
+            </Alert>
           </TabsContent>
         </Tabs>
       </div>

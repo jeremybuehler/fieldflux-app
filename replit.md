@@ -136,6 +136,13 @@ The application is configured for Replit deployment with:
   - Added proper mobile overlay and touch-friendly navigation
   - Enhanced landing page responsiveness with optimized spacing and text sizing
   - Improved dashboard and social media page layouts for mobile devices
+- June 25, 2025: Landing page and credential management improvements:
+  - Fixed difficult-to-read gradient on landing page by switching from dark blue to light slate theme
+  - Improved text contrast and readability with darker text on lighter background
+  - Added comprehensive credential management interfaces in Settings page
+  - Created Twilio SMS configuration section with Account SID, Auth Token, and Phone Number fields
+  - Added social media platform credential management for Facebook, Instagram, Twitter, and LinkedIn
+  - Included detailed setup instructions for each integration with proper secret environment variable names
 
 ## Architecture Updates
 - **Database Schema**: Added `reviews` and `analytics_reports` tables with PostgreSQL backend
