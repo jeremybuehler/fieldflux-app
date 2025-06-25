@@ -77,12 +77,15 @@ export default function Landing() {
             <div className="text-2xl font-bold text-slate-800">
               FieldPulse
             </div>
-            <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" className="border-slate-300 text-slate-700 hover:bg-slate-100">
-                  Sign In
-                </Button>
-              </DialogTrigger>
+            <Button 
+              variant="outline" 
+              className="border-slate-300 text-slate-700 hover:bg-slate-100"
+              onClick={() => setIsAuthOpen(true)}
+            >
+              Sign In
+            </Button>
+          </div>
+        </header>
 
         {/* Hero Section */}
         <main className="flex-1 flex items-center justify-center px-4 lg:px-6">
@@ -185,186 +188,103 @@ export default function Landing() {
         </section>
       </div>
 
-          <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <Shield className="w-6 h-6 text-green-600" />
+      {/* Auth Dialog */}
+      <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-center text-2xl font-bold text-slate-900">
+              Join FieldPulse
+            </DialogTitle>
+          </DialogHeader>
+          <Tabs defaultValue="login" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="login">Sign In</TabsTrigger>
+              <TabsTrigger value="signup">Create Account</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="login" className="space-y-4">
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm font-medium text-slate-700">Username</label>
+                  <Input
+                    type="text"
+                    placeholder="Enter your username"
+                    value={loginData.username}
+                    onChange={(e) => setLoginData({...loginData, username: e.target.value})}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-slate-700">Password</label>
+                  <Input
+                    type="password"
+                    placeholder="Enter your password"
+                    value={loginData.password}
+                    onChange={(e) => setLoginData({...loginData, password: e.target.value})}
+                    className="mt-1"
+                  />
+                </div>
               </div>
-              <CardTitle className="text-xl text-hvac-gray">Smart Lead Pipeline</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">
-                Turn inquiries into appointments effortlessly. Smart follow-ups, automated reminders, and lead scoring help you close more deals without the hassle.
-              </p>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* CTA Section */}
-        <div className="text-center px-2">
-          <Card className="max-w-2xl mx-auto bg-gradient-to-r from-primary to-hvac-orange border-0">
-            <CardContent className="p-6 lg:p-8">
-              <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">
-                Ready to Turn Service Calls into Success Stories?
-              </h3>
-              <p className="text-blue-100 mb-4 lg:mb-6 text-sm lg:text-base">
-                Join thousands of field service professionals who've discovered that great work deserves great marketing. FieldPulse makes it effortless to showcase your expertise and attract more customers.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
-                  <DialogTrigger asChild>
-                    <Button 
-                      size="lg"
-                      className="bg-white text-primary hover:bg-gray-50 font-semibold px-8"
-                    >
-                      Get Started
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                      <DialogTitle className="text-center text-2xl font-bold text-hvac-gray">
-                        Access FieldPulse
-                      </DialogTitle>
-                    </DialogHeader>
-                    <Tabs defaultValue="login" className="w-full">
-                      <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="login">Login</TabsTrigger>
-                        <TabsTrigger value="signup">Sign Up</TabsTrigger>
-                      </TabsList>
-                      
-                      <TabsContent value="login" className="space-y-4">
-                        <div className="space-y-4">
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Username
-                            </label>
-                            <div className="relative">
-                              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <Input
-                                type="text"
-                                placeholder="Enter your username"
-                                value={loginData.username}
-                                onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
-                                className="pl-10"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Password
-                            </label>
-                            <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <Input
-                                type="password"
-                                placeholder="Enter your password"
-                                value={loginData.password}
-                                onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                                className="pl-10"
-                                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                              />
-                            </div>
-                          </div>
-                          <div className="text-xs text-gray-500 bg-blue-50 p-2 rounded">
-                            Demo access: Use <strong>admin</strong> / <strong>demo123</strong>
-                          </div>
-                          <Button onClick={handleLogin} className="w-full bg-primary hover:bg-primary/90">
-                            Sign In
-                          </Button>
-                        </div>
-                      </TabsContent>
-                      
-                      <TabsContent value="signup" className="space-y-4">
-                        <div className="space-y-4">
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Full Name
-                            </label>
-                            <Input
-                              type="text"
-                              placeholder="Enter your full name"
-                              value={signupData.name}
-                              onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
-                            />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Email
-                            </label>
-                            <div className="relative">
-                              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <Input
-                                type="email"
-                                placeholder="Enter your email"
-                                value={signupData.email}
-                                onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
-                                className="pl-10"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Username
-                            </label>
-                            <div className="relative">
-                              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <Input
-                                type="text"
-                                placeholder="Choose a username"
-                                value={signupData.username}
-                                onChange={(e) => setSignupData({ ...signupData, username: e.target.value })}
-                                className="pl-10"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Password
-                            </label>
-                            <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <Input
-                                type="password"
-                                placeholder="Create a password"
-                                value={signupData.password}
-                                onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
-                                className="pl-10"
-                              />
-                            </div>
-                          </div>
-                          <Button onClick={handleSignup} className="w-full bg-hvac-orange hover:bg-hvac-orange/90">
-                            Create Account
-                          </Button>
-                        </div>
-                      </TabsContent>
-                    </Tabs>
-                  </DialogContent>
-                </Dialog>
-                
-                <Button 
-                  onClick={handleDemoAccess}
-                  size="lg"
-                  variant="outline"
-                  className="bg-white/20 text-white border-white hover:bg-white/30 font-semibold px-8"
-                >
-                  View Demo
-                </Button>
+              <Button onClick={handleLogin} className="w-full bg-primary hover:bg-primary/90">
+                Sign In
+              </Button>
+              <div className="text-center">
+                <p className="text-sm text-slate-600">
+                  Demo: admin / demo123
+                </p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            </TabsContent>
 
-        {/* Footer */}
-        <div className="text-center mt-16 text-gray-500">
-          <p className="text-sm">
-            Secure platform designed for field service professionals. Your business data is protected and private.
-          </p>
-          <p className="text-xs mt-2">
-            Already have an account? Click "Get Started" to sign in.
-          </p>
-        </div>
-      </div>
+            <TabsContent value="signup" className="space-y-4">
+              <div className="space-y-3">
+                <div>
+                  <label className="text-sm font-medium text-slate-700">Full Name</label>
+                  <Input
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={signupData.name}
+                    onChange={(e) => setSignupData({...signupData, name: e.target.value})}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-slate-700">Email</label>
+                  <Input
+                    type="email"
+                    placeholder="Enter your email"
+                    value={signupData.email}
+                    onChange={(e) => setSignupData({...signupData, email: e.target.value})}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-slate-700">Username</label>
+                  <Input
+                    type="text"
+                    placeholder="Choose a username"
+                    value={signupData.username}
+                    onChange={(e) => setSignupData({...signupData, username: e.target.value})}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-slate-700">Password</label>
+                  <Input
+                    type="password"
+                    placeholder="Create a password"
+                    value={signupData.password}
+                    onChange={(e) => setSignupData({...signupData, password: e.target.value})}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+              <Button onClick={handleSignup} className="w-full bg-primary hover:bg-primary/90">
+                Create Account
+              </Button>
+            </TabsContent>
+          </Tabs>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
