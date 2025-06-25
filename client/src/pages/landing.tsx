@@ -91,12 +91,20 @@ export default function Landing() {
         <main className="flex-1 flex items-center justify-center px-4 lg:px-6">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-8">
-              <h1 className="text-4xl lg:text-6xl font-bold text-slate-900 mb-6">
-                Where Field Service Meets 
-                <span className="text-primary"> Smart Marketing</span>
-              </h1>
-              <p className="text-xl lg:text-2xl text-slate-700 mb-8 max-w-3xl mx-auto">
-                Transform your service calls into success stories. From intelligent content creation to automated lead management, FieldPulse helps service professionals showcase their expertise and grow their business effortlessly.
+              <div className="flex items-center justify-center space-x-3 mb-6">
+                <div className="w-16 h-16 bg-gradient-to-br from-primary to-blue-600 rounded-2xl flex items-center justify-center">
+                  <Bot className="w-8 h-8 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-4xl font-bold text-slate-900">FieldPulse</h1>
+                  <p className="text-lg text-slate-600">Where Field Service Meets Smart Marketing</p>
+                </div>
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4">
+                Transform Your Field Service Business with Intelligent Marketing Automation
+              </h2>
+              <p className="text-xl text-slate-700 mb-8 max-w-3xl mx-auto">
+                From wrench to web presence - FieldPulse creates compelling content, manages social media, tracks leads, and grows your reputation while you focus on what you do best: serving customers.
               </p>
             </div>
 
