@@ -22,13 +22,15 @@ export default function Dashboard() {
         <main className="flex-1 lg:ml-64">
           <div className="p-6 pt-16 lg:pt-6">
             {/* Dashboard Header */}
-            <div className="mb-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
-                <div>
-                  <h1 className="text-xl lg:text-2xl font-bold text-hvac-gray mb-2">
+            <div className={ui.component('header', 'lg')}>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+                <div className="space-y-2">
+                  <h1 className={ui.typography({ level: 'display', weight: 'bold', context: 'header' })}>
                     Field Service Marketing Dashboard
                   </h1>
-                  <p className="text-gray-600 text-sm lg:text-base">Welcome back! Here's your social media content marketing activity.</p>
+                  <p className={ui.typography({ level: 'body', weight: 'normal', context: 'content' })}>
+                    Welcome back! Here's your social media content marketing activity.
+                  </p>
                 </div>
                 
                 <div className="flex items-center space-x-3 mt-4 sm:mt-0">
