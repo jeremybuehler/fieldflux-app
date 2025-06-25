@@ -20,7 +20,7 @@ export default function Dashboard() {
         <MobileSidebar />
         
         <main className="flex-1 lg:ml-64">
-          <div className="p-4 lg:p-6 pt-16 lg:pt-6">
+          <div className="p-4 lg:p-6 pt-16 lg:pt-6 lg:pl-8">
             {/* Dashboard Header */}
             <div className="mb-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
@@ -43,15 +43,6 @@ export default function Dashboard() {
                     className="text-gray-600 hover:text-gray-900"
                   >
                     Logout
-                  </Button>
-                  <Button 
-                    onClick={handleGenerateContent}
-                    className="bg-gradient-to-r from-primary to-hvac-orange hover:from-primary/90 hover:to-hvac-orange/90 text-white text-sm lg:text-base"
-                    size="sm"
-                  >
-                    <Wand2 className="w-4 h-4 mr-2" />
-                    <span className="hidden sm:inline">Generate Content</span>
-                    <span className="sm:hidden">Generate</span>
                   </Button>
                 </div>
               </div>

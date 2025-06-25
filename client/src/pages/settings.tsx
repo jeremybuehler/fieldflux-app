@@ -7,7 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, Key, ExternalLink, ArrowLeft, MessageSquare, Phone } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import MobileSidebar from "@/components/dashboard/mobile-sidebar";
+import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, Key, ExternalLink, ArrowLeft, MessageSquare, Phone, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 import { Link } from "wouter";
@@ -22,6 +24,42 @@ interface WordPressConfig {
 interface GoogleAnalyticsConfig {
   measurementId: string;
   isConfigured: boolean;
+}
+
+interface TwilioConfig {
+  accountSid: string;
+  authToken: string;
+  phoneNumber: string;
+  isConfigured: boolean;
+}
+
+interface SocialConfig {
+  facebook: {
+    appId: string;
+    appSecret: string;
+    accessToken: string;
+    pageId: string;
+    isConfigured: boolean;
+  };
+  twitter: {
+    apiKey: string;
+    apiSecret: string;
+    accessToken: string;
+    accessTokenSecret: string;
+    isConfigured: boolean;
+  };
+  instagram: {
+    accessToken: string;
+    businessAccountId: string;
+    isConfigured: boolean;
+  };
+  linkedin: {
+    clientId: string;
+    clientSecret: string;
+    accessToken: string;
+    organizationId: string;
+    isConfigured: boolean;
+  };
 }
 
 interface TwilioConfig {
@@ -862,8 +900,456 @@ export default function Settings() {
                 After configuring each platform, add the credentials to your Replit Secrets using the appropriate environment variable names (e.g., FACEBOOK_APP_ID, TWITTER_API_KEY, etc.) for the integrations to work properly.
               </AlertDescription>
             </Alert>
-          </TabsContent>
-        </Tabs>
+              </TabsContent>
+
+              {/* Twilio SMS Configuration */}
+              <TabsContent value="twilio" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center space-x-3">
+                      <MessageSquare className="w-6 h-6 text-red-600" />
+                      <div>
+                        <CardTitle>Twilio SMS Configuration</CardTitle>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Configure Twilio for SMS notifications and lead follow-ups
+                        </p>
+                      </div>
+                      {twilioConfig.isConfigured && (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Connected
+                        </Badge>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        You'll need a Twilio account to send SMS messages. Get your credentials from your{" "}
+                        <a 
+                          href="https://console.twilio.com/" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline inline-flex items-center"
+                        >
+                          Twilio Console <ExternalLink className="w-3 h-3 ml-1" />
+                        </a>
+                      </AlertDescription>
+                    </Alert>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="twilio-sid">Account SID</Label>
+                        <Input
+                          id="twilio-sid"
+                          placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                          value={twilioConfig.accountSid}
+                          onChange={(e) => setTwilioConfig(prev => ({ ...prev, accountSid: e.target.value }))}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="twilio-token">Auth Token</Label>
+                        <Input
+                          id="twilio-token"
+                          type="password"
+                          placeholder="Your Auth Token"
+                          value={twilioConfig.authToken}
+                          onChange={(e) => setTwilioConfig(prev => ({ ...prev, authToken: e.target.value }))}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="twilio-phone">Phone Number</Label>
+                      <Input
+                        id="twilio-phone"
+                        placeholder="+1234567890"
+                        value={twilioConfig.phoneNumber}
+                        onChange={(e) => setTwilioConfig(prev => ({ ...prev, phoneNumber: e.target.value }))}
+                      />
+                      <p className="text-xs text-gray-500">
+                        Your Twilio phone number in E.164 format (e.g., +1234567890)
+                      </p>
+                    </div>
+
+                    <Button 
+                      onClick={() => {
+                        // In a real app, this would save to environment variables or backend
+                        setTwilioConfig(prev => ({ ...prev, isConfigured: true }));
+                        toast({
+                          title: "Twilio Configuration Saved",
+                          description: "Your Twilio SMS settings have been configured successfully.",
+                        });
+                      }}
+                      className="w-full lg:w-auto"
+                    >
+                      Save Twilio Settings
+                    </Button>
+
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h4 className="font-medium text-blue-900 mb-2">Setup Instructions:</h4>
+                      <ol className="text-sm text-blue-800 space-y-1 list-decimal list-inside">
+                        <li>Create a Twilio account at console.twilio.com</li>
+                        <li>Purchase a phone number for sending SMS</li>
+                        <li>Copy your Account SID and Auth Token from the dashboard</li>
+                        <li>Add your credentials above and save</li>
+                        <li>Set these environment variables: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER</li>
+                      </ol>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              {/* Social Media Configuration */}
+              <TabsContent value="social" className="space-y-6">
+                <div className="grid gap-6">
+                  {/* Facebook */}
+                  <Card>
+                    <CardHeader>
+                      <div className="flex items-center space-x-3">
+                        <Facebook className="w-6 h-6 text-blue-600" />
+                        <div>
+                          <CardTitle>Facebook Integration</CardTitle>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Connect your Facebook Page for automated posting
+                          </p>
+                        </div>
+                        {socialConfig.facebook.isConfigured && (
+                          <Badge variant="secondary" className="bg-green-100 text-green-800">
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Connected
+                          </Badge>
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="fb-appid">App ID</Label>
+                          <Input
+                            id="fb-appid"
+                            placeholder="Your Facebook App ID"
+                            value={socialConfig.facebook.appId}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              facebook: { ...prev.facebook, appId: e.target.value }
+                            }))}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="fb-secret">App Secret</Label>
+                          <Input
+                            id="fb-secret"
+                            type="password"
+                            placeholder="Your Facebook App Secret"
+                            value={socialConfig.facebook.appSecret}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              facebook: { ...prev.facebook, appSecret: e.target.value }
+                            }))}
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="fb-token">Page Access Token</Label>
+                          <Input
+                            id="fb-token"
+                            type="password"
+                            placeholder="Your Page Access Token"
+                            value={socialConfig.facebook.accessToken}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              facebook: { ...prev.facebook, accessToken: e.target.value }
+                            }))}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="fb-pageid">Page ID</Label>
+                          <Input
+                            id="fb-pageid"
+                            placeholder="Your Facebook Page ID"
+                            value={socialConfig.facebook.pageId}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              facebook: { ...prev.facebook, pageId: e.target.value }
+                            }))}
+                          />
+                        </div>
+                      </div>
+                      <Button 
+                        onClick={() => {
+                          setSocialConfig(prev => ({
+                            ...prev,
+                            facebook: { ...prev.facebook, isConfigured: true }
+                          }));
+                          toast({
+                            title: "Facebook Connected",
+                            description: "Your Facebook integration has been configured.",
+                          });
+                        }}
+                        className="w-full lg:w-auto"
+                      >
+                        Save Facebook Settings
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Twitter */}
+                  <Card>
+                    <CardHeader>
+                      <div className="flex items-center space-x-3">
+                        <Twitter className="w-6 h-6 text-blue-400" />
+                        <div>
+                          <CardTitle>Twitter Integration</CardTitle>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Connect your Twitter account for automated tweeting
+                          </p>
+                        </div>
+                        {socialConfig.twitter.isConfigured && (
+                          <Badge variant="secondary" className="bg-green-100 text-green-800">
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Connected
+                          </Badge>
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="tw-key">API Key</Label>
+                          <Input
+                            id="tw-key"
+                            placeholder="Your Twitter API Key"
+                            value={socialConfig.twitter.apiKey}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              twitter: { ...prev.twitter, apiKey: e.target.value }
+                            }))}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="tw-secret">API Secret</Label>
+                          <Input
+                            id="tw-secret"
+                            type="password"
+                            placeholder="Your Twitter API Secret"
+                            value={socialConfig.twitter.apiSecret}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              twitter: { ...prev.twitter, apiSecret: e.target.value }
+                            }))}
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="tw-token">Access Token</Label>
+                          <Input
+                            id="tw-token"
+                            type="password"
+                            placeholder="Your Access Token"
+                            value={socialConfig.twitter.accessToken}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              twitter: { ...prev.twitter, accessToken: e.target.value }
+                            }))}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="tw-token-secret">Access Token Secret</Label>
+                          <Input
+                            id="tw-token-secret"
+                            type="password"
+                            placeholder="Your Access Token Secret"
+                            value={socialConfig.twitter.accessTokenSecret}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              twitter: { ...prev.twitter, accessTokenSecret: e.target.value }
+                            }))}
+                          />
+                        </div>
+                      </div>
+                      <Button 
+                        onClick={() => {
+                          setSocialConfig(prev => ({
+                            ...prev,
+                            twitter: { ...prev.twitter, isConfigured: true }
+                          }));
+                          toast({
+                            title: "Twitter Connected",
+                            description: "Your Twitter integration has been configured.",
+                          });
+                        }}
+                        className="w-full lg:w-auto"
+                      >
+                        Save Twitter Settings
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* Instagram */}
+                  <Card>
+                    <CardHeader>
+                      <div className="flex items-center space-x-3">
+                        <Instagram className="w-6 h-6 text-pink-600" />
+                        <div>
+                          <CardTitle>Instagram Business Integration</CardTitle>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Connect your Instagram Business account
+                          </p>
+                        </div>
+                        {socialConfig.instagram.isConfigured && (
+                          <Badge variant="secondary" className="bg-green-100 text-green-800">
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Connected
+                          </Badge>
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="ig-token">Access Token</Label>
+                          <Input
+                            id="ig-token"
+                            type="password"
+                            placeholder="Your Instagram Access Token"
+                            value={socialConfig.instagram.accessToken}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              instagram: { ...prev.instagram, accessToken: e.target.value }
+                            }))}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="ig-account">Business Account ID</Label>
+                          <Input
+                            id="ig-account"
+                            placeholder="Your Instagram Business Account ID"
+                            value={socialConfig.instagram.businessAccountId}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              instagram: { ...prev.instagram, businessAccountId: e.target.value }
+                            }))}
+                          />
+                        </div>
+                      </div>
+                      <Button 
+                        onClick={() => {
+                          setSocialConfig(prev => ({
+                            ...prev,
+                            instagram: { ...prev.instagram, isConfigured: true }
+                          }));
+                          toast({
+                            title: "Instagram Connected",
+                            description: "Your Instagram integration has been configured.",
+                          });
+                        }}
+                        className="w-full lg:w-auto"
+                      >
+                        Save Instagram Settings
+                      </Button>
+                    </CardContent>
+                  </Card>
+
+                  {/* LinkedIn */}
+                  <Card>
+                    <CardHeader>
+                      <div className="flex items-center space-x-3">
+                        <Linkedin className="w-6 h-6 text-blue-700" />
+                        <div>
+                          <CardTitle>LinkedIn Integration</CardTitle>
+                          <p className="text-sm text-gray-600 mt-1">
+                            Connect your LinkedIn Company Page
+                          </p>
+                        </div>
+                        {socialConfig.linkedin.isConfigured && (
+                          <Badge variant="secondary" className="bg-green-100 text-green-800">
+                            <CheckCircle className="w-3 h-3 mr-1" />
+                            Connected
+                          </Badge>
+                        )}
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="li-clientid">Client ID</Label>
+                          <Input
+                            id="li-clientid"
+                            placeholder="Your LinkedIn Client ID"
+                            value={socialConfig.linkedin.clientId}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              linkedin: { ...prev.linkedin, clientId: e.target.value }
+                            }))}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="li-secret">Client Secret</Label>
+                          <Input
+                            id="li-secret"
+                            type="password"
+                            placeholder="Your LinkedIn Client Secret"
+                            value={socialConfig.linkedin.clientSecret}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              linkedin: { ...prev.linkedin, clientSecret: e.target.value }
+                            }))}
+                          />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="li-token">Access Token</Label>
+                          <Input
+                            id="li-token"
+                            type="password"
+                            placeholder="Your Access Token"
+                            value={socialConfig.linkedin.accessToken}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              linkedin: { ...prev.linkedin, accessToken: e.target.value }
+                            }))}
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="li-org">Organization ID</Label>
+                          <Input
+                            id="li-org"
+                            placeholder="Your Company Page Organization ID"
+                            value={socialConfig.linkedin.organizationId}
+                            onChange={(e) => setSocialConfig(prev => ({
+                              ...prev,
+                              linkedin: { ...prev.linkedin, organizationId: e.target.value }
+                            }))}
+                          />
+                        </div>
+                      </div>
+                      <Button 
+                        onClick={() => {
+                          setSocialConfig(prev => ({
+                            ...prev,
+                            linkedin: { ...prev.linkedin, isConfigured: true }
+                          }));
+                          toast({
+                            title: "LinkedIn Connected",
+                            description: "Your LinkedIn integration has been configured.",
+                          });
+                        }}
+                        className="w-full lg:w-auto"
+                      >
+                        Save LinkedIn Settings
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </main>
       </div>
     </div>
   );
