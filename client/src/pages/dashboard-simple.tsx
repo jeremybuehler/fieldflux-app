@@ -34,6 +34,10 @@ export default function Dashboard() {
                 </div>
                 
                 <div className="flex items-center space-x-3 mt-4 sm:mt-0">
+                  <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 px-4 py-2">
+                    <Zap className="w-4 h-4 mr-2" />
+                    AI Powered
+                  </Badge>
                   <div className="flex items-center space-x-2 bg-primary/10 rounded-lg px-3 py-2">
                     <MapPin className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-primary">Winter Haven, FL</span>
