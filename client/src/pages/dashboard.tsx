@@ -28,71 +28,79 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen flex bg-hvac-light">
-      <Sidebar />
-      
-      {/* Main Content Area */}
-      <div className="flex-1 overflow-auto">
-        {/* Top Header Bar */}
-        <header className="bg-white shadow-sm border-b border-gray-200 p-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h2 className="text-2xl font-bold text-hvac-gray">Field Service Marketing Dashboard</h2>
-              <p className="text-gray-600 mt-1">Welcome back! Here's your social media content marketing activity.</p>
-            </div>
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2 bg-primary/10 rounded-lg px-3 py-2">
-                <MapPin className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium text-primary">Winter Haven, FL</span>
+    <div className="min-h-screen bg-gray-50">
+      <div className="flex min-h-screen">
+        <MobileSidebar />
+        
+        <main className="flex-1 lg:ml-64">
+          <div className="p-4 lg:p-6 pt-16 lg:pt-6">
+            {/* Dashboard Header */}
+            <div className="mb-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
+                <div>
+                  <h1 className="text-xl lg:text-2xl font-bold text-hvac-gray mb-2">
+                    Field Service Marketing Dashboard
+                  </h1>
+                  <p className="text-gray-600 text-sm lg:text-base">Welcome back! Here's your social media content marketing activity.</p>
+                </div>
+                
+                <div className="flex items-center space-x-3 mt-4 sm:mt-0">
+                  <div className="flex items-center space-x-2 bg-primary/10 rounded-lg px-3 py-2">
+                    <MapPin className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-medium text-primary">Winter Haven, FL</span>
+                  </div>
+                  <WeatherWidget />
+                  <Button 
+                    onClick={() => window.location.href = '/'}
+                    variant="outline"
+                    size="sm"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
+                    Logout
+                  </Button>
+                  <Button 
+                    onClick={handleGenerateContent}
+                    className="bg-gradient-to-r from-primary to-hvac-orange hover:from-primary/90 hover:to-hvac-orange/90 text-white text-sm lg:text-base"
+                    size="sm"
+                  >
+                    <Wand2 className="w-4 h-4 mr-2" />
+                    <span className="hidden sm:inline">Generate Content</span>
+                    <span className="sm:hidden">Generate</span>
+                  </Button>
+                </div>
               </div>
-              <WeatherWidget />
-              <Button 
-                onClick={() => window.location.href = '/'}
-                variant="outline"
-                size="sm"
-                className="text-gray-600 hover:text-gray-900"
-              >
-                Logout
-              </Button>
-              <Button 
-                onClick={handleGenerateContent}
-                className="bg-hvac-orange hover:bg-hvac-orange/90 text-white"
-              >
-                <Wand2 className="w-4 h-4 mr-2" />
-                Generate Content
-              </Button>
             </div>
-          </div>
-        </header>
 
-        {/* Dashboard Content */}
-        <main className="p-6 space-y-6">
-          <MetricsGrid />
+            {/* Dashboard Content */}
+            <div className="space-y-4 lg:space-y-6">
+              <MetricsGrid />
 
-          {/* Dave's Activity & Analytics Row */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ActivityFeed />
-            <AnalyticsChart />
-          </div>
+              {/* Activity & Analytics Row */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+                <ActivityFeed />
+                <AnalyticsChart />
+              </div>
 
-          {/* Content Management & SEO Tools */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <WordPressIntegration />
-            <SocialScheduler />
-            <SEOPerformance />
-          </div>
+              {/* Content Management & SEO Tools */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+                <WordPressIntegration />
+                <SocialScheduler />
+                <SEOPerformance />
+              </div>
 
-          {/* WordPress & Analytics Integration */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <GoDaddyIntegration />
-            <AnalyticsReports />
-          </div>
+              {/* WordPress & Analytics Integration */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
+                <GoDaddyIntegration />
+                <AnalyticsReports />
+              </div>
 
-          {/* Customer Management */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <TasksList />
-            <LeadsPanel />
-            <ReviewsPanel />
+              {/* Customer Management */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+                <TasksList />
+                <LeadsPanel />
+                <ReviewsPanel />
+              </div>
+            </div>
           </div>
         </main>
       </div>
