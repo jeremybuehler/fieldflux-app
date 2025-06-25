@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
 // import { useAuth } from "@/hooks/useAuth";
-import Dashboard from "@/pages/dashboard";
+import Dashboard from "@/pages/dashboard-simple";
 import Settings from "@/pages/settings";
 import Landing from "@/pages/landing";
 import Social from "@/pages/social";
