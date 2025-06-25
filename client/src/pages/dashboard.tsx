@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { trackEvent } from "@/lib/analytics";
-import Sidebar from "@/components/dashboard/sidebar";
+import MobileSidebar from "@/components/dashboard/mobile-sidebar";
 import MetricsGrid from "@/components/dashboard/metrics-grid";
 import ActivityFeed from "@/components/dashboard/activity-feed";
 import AnalyticsChart from "@/components/dashboard/analytics-chart";
