@@ -69,56 +69,121 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-      <div className="container mx-auto px-4 py-16">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen flex flex-col">
         {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center space-x-3 mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-hvac-orange rounded-2xl flex items-center justify-center">
-              <Bot className="w-8 h-8 text-white" />
+        <header className="p-4 lg:p-6">
+          <div className="flex justify-between items-center">
+            <div className="text-2xl font-bold text-slate-800">
+              FieldPulse
             </div>
-            <div>
-              <h1 className="text-4xl font-bold text-hvac-gray">FieldPulse</h1>
-              <p className="text-lg text-gray-600">Where Field Service Meets Smart Marketing</p>
+            <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="border-slate-300 text-slate-700 hover:bg-slate-100">
+                  Sign In
+                </Button>
+              </DialogTrigger>
+
+        {/* Hero Section */}
+        <main className="flex-1 flex items-center justify-center px-4 lg:px-6">
+          <div className="max-w-4xl mx-auto text-center">
+            <div className="mb-8">
+              <h1 className="text-4xl lg:text-6xl font-bold text-slate-900 mb-6">
+                Where Field Service Meets 
+                <span className="text-primary"> Smart Marketing</span>
+              </h1>
+              <p className="text-xl lg:text-2xl text-slate-700 mb-8 max-w-3xl mx-auto">
+                Transform your service calls into success stories. From intelligent content creation to automated lead management, FieldPulse helps service professionals showcase their expertise and grow their business effortlessly.
+              </p>
+            </div>
+
+            {/* Feature Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mb-12">
+              <Card className="bg-white/80 backdrop-blur-sm border-slate-200 shadow-lg">
+                <CardContent className="p-4 lg:p-6 text-center">
+                  <Bot className="w-8 h-8 lg:w-12 lg:h-12 text-primary mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">AI Content Creation</h3>
+                  <p className="text-slate-600 text-sm">Generate engaging social media posts and blog content instantly</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white/80 backdrop-blur-sm border-slate-200 shadow-lg">
+                <CardContent className="p-4 lg:p-6 text-center">
+                  <Shield className="w-8 h-8 lg:w-12 lg:h-12 text-primary mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">Lead Management</h3>
+                  <p className="text-slate-600 text-sm">Capture, qualify, and nurture leads with automated workflows</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white/80 backdrop-blur-sm border-slate-200 shadow-lg">
+                <CardContent className="p-4 lg:p-6 text-center">
+                  <BarChart3 className="w-8 h-8 lg:w-12 lg:h-12 text-primary mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">Analytics Dashboard</h3>
+                  <p className="text-slate-600 text-sm">Track performance with comprehensive reporting and insights</p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white/80 backdrop-blur-sm border-slate-200 shadow-lg">
+                <CardContent className="p-4 lg:p-6 text-center">
+                  <Zap className="w-8 h-8 lg:w-12 lg:h-12 text-primary mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">Automation</h3>
+                  <p className="text-slate-600 text-sm">Streamline your marketing with smart automation tools</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* CTA */}
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <Button 
+                size="lg" 
+                className="bg-primary hover:bg-primary/90 text-white text-lg px-8 py-3"
+                onClick={() => setIsAuthOpen(true)}
+              >
+                Get Started Free
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-slate-300 text-slate-700 hover:bg-slate-100 text-lg px-8 py-3"
+                onClick={() => setIsAuthOpen(true)}
+              >
+                Try Demo
+              </Button>
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-hvac-gray mb-4">
-            Transform Your Field Service Business with Intelligent Marketing Automation
-          </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            From wrench to web presence - FieldPulse creates compelling content, manages social media, tracks leads, and grows your reputation while you focus on what you do best: serving customers.
-          </p>
-        </div>
+        </main>
 
-        {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <BarChart3 className="w-6 h-6 text-primary" />
-              </div>
-              <CardTitle className="text-xl text-hvac-gray">Performance Insights</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">
-                See what's working with crystal-clear analytics. Track leads, measure engagement, and discover which content brings in the most customers.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-hvac-orange/10 rounded-lg flex items-center justify-center mb-4">
-                <Zap className="w-6 h-6 text-hvac-orange" />
-              </div>
-              <CardTitle className="text-xl text-hvac-gray">Content That Converts</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-600">
-                Never stare at a blank page again. Our AI creates professional posts, helpful tips, and customer stories that showcase your expertise and attract new business.
-              </p>
-            </CardContent>
-          </Card>
+        {/* Social Proof Section */}
+        <section className="py-16 px-4 lg:px-6 bg-white/60 backdrop-blur-sm">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-2xl lg:text-3xl font-bold text-slate-900 mb-4">
+              Ready to Turn Service Calls into Success Stories?
+            </h2>
+            <p className="text-lg text-slate-700 mb-8 max-w-2xl mx-auto">
+              Join thousands of field service professionals who've discovered your business deserves great marketing. FieldPulse makes it effortless to showcase your expertise and attract more customers.
+            </p>
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+              <Button 
+                size="lg" 
+                className="bg-primary hover:bg-primary/90 text-white text-lg px-8 py-3"
+                onClick={() => setIsAuthOpen(true)}
+              >
+                Get Started
+                <ArrowRight className="w-5 h-5 ml-2" />
+              </Button>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="border-slate-300 text-slate-700 hover:bg-slate-100 text-lg px-8 py-3"
+                onClick={() => setIsAuthOpen(true)}
+              >
+                View Demo
+              </Button>
+            </div>
+          </div>
+        </section>
+      </div>
 
           <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300">
             <CardHeader>
