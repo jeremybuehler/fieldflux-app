@@ -136,13 +136,13 @@ export default function Landing() {
         </div>
 
         {/* CTA Section */}
-        <div className="text-center">
+        <div className="text-center px-2">
           <Card className="max-w-2xl mx-auto bg-gradient-to-r from-primary to-hvac-orange border-0">
-            <CardContent className="p-8">
-              <h3 className="text-2xl font-bold text-white mb-4">
+            <CardContent className="p-6 lg:p-8">
+              <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">
                 Ready to Turn Service Calls into Success Stories?
               </h3>
-              <p className="text-blue-100 mb-6">
+              <p className="text-blue-100 mb-4 lg:mb-6 text-sm lg:text-base">
                 Join thousands of field service professionals who've discovered that great work deserves great marketing. FieldPulse makes it effortless to showcase your expertise and attract more customers.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
