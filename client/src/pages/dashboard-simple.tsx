@@ -1,9 +1,11 @@
 import { useEffect } from "react";
-import { trackEvent } from "@/lib/analytics";
 import MobileSidebar from "@/components/dashboard/mobile-sidebar";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Wand2, MapPin, Users, TrendingUp, Heart, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { TrendingUp, Calendar, Users, MessageSquare, Star, Target, Zap, CheckCircle, BarChart3, Globe, MapPin } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
 
 export default function Dashboard() {
   useEffect(() => {
@@ -15,20 +17,20 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
       <div className="flex min-h-screen">
         <MobileSidebar />
         
         <main className="flex-1 lg:ml-64">
           <div className="p-6 pt-16 lg:pt-6">
             {/* Dashboard Header */}
-            <div className={ui.component('header', 'lg')}>
+            <div className="mb-8 border-b border-gray-100 bg-white/80 backdrop-blur-sm rounded-xl p-6">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
                 <div className="space-y-2">
-                  <h1 className={ui.typography({ level: 'display', weight: 'bold', context: 'header' })}>
+                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
                     Field Service Marketing Dashboard
                   </h1>
-                  <p className={ui.typography({ level: 'body', weight: 'normal', context: 'content' })}>
+                  <p className="text-sm md:text-base text-gray-600">
                     Welcome back! Here's your social media content marketing activity.
                   </p>
                 </div>
@@ -54,135 +56,214 @@ export default function Dashboard() {
               </div>
             </div>
 
-            {/* Dashboard Content */}
-            <div className="space-y-4 lg:space-y-6">
-              {/* Metrics Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-                <Card>
-                  <CardContent className="p-4 lg:p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Website Traffic</p>
-                        <p className="text-2xl font-bold text-hvac-gray">2,847</p>
-                        <p className="text-xs text-green-600">+12.5% this month</p>
-                      </div>
-                      <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                        <Users className="w-4 h-4 text-primary" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-4 lg:p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Social Engagement</p>
-                        <p className="text-2xl font-bold text-hvac-gray">4,251</p>
-                        <p className="text-xs text-green-600">+8.3% this month</p>
-                      </div>
-                      <div className="w-8 h-8 bg-pink-100 rounded-full flex items-center justify-center">
-                        <Heart className="w-4 h-4 text-pink-600" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-4 lg:p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">New Leads</p>
-                        <p className="text-2xl font-bold text-hvac-gray">156</p>
-                        <p className="text-xs text-green-600">+23.1% this month</p>
-                      </div>
-                      <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                        <TrendingUp className="w-4 h-4 text-green-600" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardContent className="p-4 lg:p-6">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm font-medium text-gray-600">Review Score</p>
-                        <p className="text-2xl font-bold text-hvac-gray">4.8</p>
-                        <p className="text-xs text-gray-500">42 reviews</p>
-                      </div>
-                      <div className="w-8 h-8 bg-yellow-100 rounded-full flex items-center justify-center">
-                        <Star className="w-4 h-4 text-yellow-600" />
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Quick Actions */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Social Media</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">Create and schedule your next social media post</p>
-                    <Button className="w-full" onClick={() => window.location.href = '/social'}>
-                      Create Post
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Lead Management</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">Manage and follow up with your leads</p>
-                    <Button className="w-full" onClick={() => window.location.href = '/leads'}>
-                      View Leads
-                    </Button>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Analytics</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">View detailed performance metrics</p>
-                    <Button className="w-full" onClick={() => window.location.href = '/analytics'}>
-                      View Analytics
-                    </Button>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Recent Activity */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Recent Activity</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-lg">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                      <span className="text-sm">New social media post scheduled for tomorrow</span>
-                      <span className="text-xs text-gray-500 ml-auto">2 hours ago</span>
-                    </div>
-                    <div className="flex items-center space-x-3 p-3 bg-green-50 rounded-lg">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <span className="text-sm">New lead received from website</span>
-                      <span className="text-xs text-gray-500 ml-auto">4 hours ago</span>
-                    </div>
-                    <div className="flex items-center space-x-3 p-3 bg-yellow-50 rounded-lg">
-                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                      <span className="text-sm">5-star review received on Google</span>
-                      <span className="text-xs text-gray-500 ml-auto">1 day ago</span>
-                    </div>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <Card className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                  <CardTitle className="text-sm font-medium">Website Traffic</CardTitle>
+                  <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                    <TrendingUp className="h-5 w-5 text-blue-600" />
                   </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="text-2xl font-bold">2,847</div>
+                  <p className="text-xs text-gray-600">
+                    <span className="text-green-600 font-medium">+12.5%</span> from last month
+                  </p>
                 </CardContent>
               </Card>
+
+              <Card className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                  <CardTitle className="text-sm font-medium">Social Media Engagement</CardTitle>
+                  <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                    <Users className="h-5 w-5 text-green-600" />
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="text-2xl font-bold">1,284</div>
+                  <p className="text-xs text-gray-600">
+                    <span className="text-green-600 font-medium">+8.3%</span> from last month
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                  <CardTitle className="text-sm font-medium">Customer Reviews</CardTitle>
+                  <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                    <Star className="h-5 w-5 text-yellow-600" />
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="text-2xl font-bold">4.8</div>
+                  <p className="text-xs text-gray-600">
+                    Average rating (47 reviews)
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 hover:scale-[1.02]">
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
+                  <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
+                  <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <Target className="h-5 w-5 text-purple-600" />
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                  <div className="text-2xl font-bold">3.2%</div>
+                  <p className="text-xs text-gray-600">
+                    <span className="text-green-600 font-medium">+0.8%</span> from last month
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Main Content Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              {/* Social Media Management */}
+              <div className="lg:col-span-2 space-y-8">
+                <Card className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
+                  <CardHeader className="space-y-3 p-6">
+                    <CardTitle className="text-xl font-semibold flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <MessageSquare className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <span>Social Media Management</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6 p-6">
+                    <p className="text-gray-600">
+                      Create and schedule social media posts to boost your online presence and engage with customers.
+                    </p>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-100">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                            <CheckCircle className="w-4 h-4 text-green-600" />
+                          </div>
+                          <span className="font-medium">Facebook Post Scheduled</span>
+                        </div>
+                        <Badge variant="secondary" className="bg-white/80 border-green-200">Today 2:00 PM</Badge>
+                      </div>
+                      
+                      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <Calendar className="w-4 h-4 text-blue-600" />
+                          </div>
+                          <span className="font-medium">Instagram Story Ready</span>
+                        </div>
+                        <Badge variant="secondary" className="bg-white/80 border-blue-200">Draft</Badge>
+                      </div>
+                      
+                      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl border border-purple-100">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <TrendingUp className="w-4 h-4 text-purple-600" />
+                          </div>
+                          <span className="font-medium">LinkedIn Article</span>
+                        </div>
+                        <Badge variant="secondary" className="bg-white/80 border-purple-200">Tomorrow</Badge>
+                      </div>
+                    </div>
+                    
+                    <Button className="w-full py-3 bg-primary text-white hover:bg-primary/90 font-medium rounded-lg transition-all duration-200" onClick={handleGenerateContent}>
+                      <Zap className="w-4 h-4 mr-2" />
+                      Create New Post
+                    </Button>
+                  </CardContent>
+                </Card>
+
+                {/* Performance Analytics */}
+                <Card className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
+                  <CardHeader className="space-y-3 p-6">
+                    <CardTitle className="text-xl font-semibold flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        <BarChart3 className="w-5 h-5 text-green-600" />
+                      </div>
+                      <span>Performance Analytics</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-6 p-6">
+                    <div className="space-y-5">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium">Content Engagement</span>
+                          <span className="font-semibold text-green-600">87%</span>
+                        </div>
+                        <Progress value={87} className="h-3 bg-gray-100" />
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium">Lead Generation</span>
+                          <span className="font-semibold text-blue-600">72%</span>
+                        </div>
+                        <Progress value={72} className="h-3 bg-gray-100" />
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium">Customer Satisfaction</span>
+                          <span className="font-semibold text-purple-600">95%</span>
+                        </div>
+                        <Progress value={95} className="h-3 bg-gray-100" />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Recent Activity Sidebar */}
+              <div className="space-y-8">
+                <Card className="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200">
+                  <CardHeader className="space-y-3 p-6">
+                    <CardTitle className="text-xl font-semibold flex items-center space-x-3">
+                      <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <Globe className="w-5 h-5 text-orange-600" />
+                      </div>
+                      <span>Recent Activity</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4 p-6">
+                    <div className="space-y-4">
+                      <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div className="w-3 h-3 bg-green-500 rounded-full mt-2 shadow-sm"></div>
+                        <div className="flex-1 space-y-1">
+                          <p className="font-medium">Blog post published</p>
+                          <p className="text-xs text-gray-600">2 hours ago</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div className="w-3 h-3 bg-blue-500 rounded-full mt-2 shadow-sm"></div>
+                        <div className="flex-1 space-y-1">
+                          <p className="font-medium">Social media scheduled</p>
+                          <p className="text-xs text-gray-600">4 hours ago</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div className="w-3 h-3 bg-purple-500 rounded-full mt-2 shadow-sm"></div>
+                        <div className="flex-1 space-y-1">
+                          <p className="font-medium">New review received</p>
+                          <p className="text-xs text-gray-600">1 day ago</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                        <div className="w-3 h-3 bg-orange-500 rounded-full mt-2 shadow-sm"></div>
+                        <div className="flex-1 space-y-1">
+                          <p className="font-medium">SEO optimization complete</p>
+                          <p className="text-xs text-gray-600">2 days ago</p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </div>
         </main>
