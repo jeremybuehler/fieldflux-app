@@ -9,7 +9,7 @@ import { ArrowLeft, Share2, Zap, Calendar } from "lucide-react";
 
 export default function Social() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
       <div className="flex min-h-screen">
         <MobileSidebar />
         
@@ -30,7 +30,7 @@ export default function Social() {
                   <Share2 className="w-5 h-5 text-blue-600" />
                 </div>
                 <div>
-                  <h1 className="text-xl lg:text-2xl font-bold text-hvac-gray">Social Media Management</h1>
+                  <h1 className="text-xl lg:text-2xl font-bold text-gray-900">Social Media Management</h1>
                   <p className="text-gray-600 text-sm lg:text-base">Create, schedule, and manage your social media content</p>
                 </div>
               </div>
