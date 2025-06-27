@@ -1,9 +1,11 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EnhancedScheduler from "@/components/social/enhanced-scheduler";
+import MultiPlatformWizard from "@/components/social/multi-platform-wizard";
 import MobileSidebar from "@/components/dashboard/mobile-sidebar";
-import { ArrowLeft, Share2 } from "lucide-react";
+import { ArrowLeft, Share2, Zap, Calendar } from "lucide-react";
 
 export default function Social() {
   return (
@@ -35,7 +37,24 @@ export default function Social() {
             </div>
 
             <div className="space-y-4 lg:space-y-6">
-              <EnhancedScheduler />
+              <Tabs defaultValue="wizard" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="wizard" className="flex items-center space-x-2">
+                    <Calendar className="w-4 h-4" />
+                    <span>Multi-Platform Wizard</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="quick" className="flex items-center space-x-2">
+                    <Zap className="w-4 h-4" />
+                    <span>Quick Post</span>
+                  </TabsTrigger>
+                </TabsList>
+                <TabsContent value="wizard" className="mt-4">
+                  <MultiPlatformWizard />
+                </TabsContent>
+                <TabsContent value="quick" className="mt-4">
+                  <EnhancedScheduler />
+                </TabsContent>
+              </Tabs>
               
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
                 <Card>
