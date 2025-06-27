@@ -25,7 +25,7 @@ export default function Dashboard() {
           <div className="p-6 pt-16 lg:pt-6">
             {/* Dashboard Header */}
             <div className="mb-8 border-b border-gray-100 bg-white/80 backdrop-blur-sm rounded-xl p-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+              <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between text-center sm:text-left">
                 <div className="space-y-2">
                   <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
                     Field Service Marketing Dashboard
@@ -36,11 +36,11 @@ export default function Dashboard() {
                 </div>
                 
                 <div className="flex items-center space-x-3 mt-4 sm:mt-0">
-                  <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 px-4 py-2">
+                  <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 px-4 py-2 hidden sm:flex">
                     <Zap className="w-4 h-4 mr-2" />
                     AI Powered
                   </Badge>
-                  <div className="flex items-center space-x-2 bg-primary/10 rounded-lg px-3 py-2">
+                  <div className="flex items-center space-x-2 bg-primary/10 rounded-lg px-3 py-2 hidden sm:flex">
                     <MapPin className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-primary">Winter Haven, FL</span>
                   </div>
