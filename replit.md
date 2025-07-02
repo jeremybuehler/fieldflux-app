@@ -170,6 +170,11 @@ The application is configured for Replit deployment with:
   - Updated sidebar navigation to route to /social with proper breadcrumbs
   - Enhanced social media page with tabbed interface (Multi-Platform Wizard and Quick Post)
   - Updated button labels from "Need an idea?" to "Get Ideas" and "Generate Content" to "Generate Post"
+- June 29, 2025: Mobile responsiveness improvements:
+  - Hidden header badges (AI Powered, Winter Haven FL) on mobile screens to center text better
+  - Changed dashboard header alignment to center on mobile, left-align on larger screens
+  - Improved mobile user experience with cleaner, focused header layout
+  - Maintained logout button visibility across all screen sizes
 
 ## Architecture Updates
 - **Database Schema**: Added `reviews` and `analytics_reports` tables with PostgreSQL backend
