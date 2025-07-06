@@ -24,7 +24,7 @@ import {
   Settings
 } from "lucide-react";
 import { format } from "date-fns";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface Platform {
   id: string;
