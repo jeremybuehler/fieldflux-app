@@ -3,8 +3,9 @@ import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { Link, useLocation } from "wouter";
-import { Bot, MapPin, TrendingUp, Users, MessageSquare, Star, LogOut, Calendar, Share2, Code, Search, UserPlus, Settings as SettingsIcon, LayoutDashboard } from "lucide-react";
+import { Bot, MapPin, TrendingUp, Users, MessageSquare, Star, LogOut, Calendar, Share2, Code, Search, UserPlus, Settings as SettingsIcon, LayoutDashboard, CheckCircle, Globe, Target } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -35,6 +36,13 @@ export default function Dashboard() {
     setTimeout(() => {
       window.location.href = "/";
     }, 1000);
+  };
+
+  const handleGenerateContent = () => {
+    toast({
+      title: "Generate Content",
+      description: "Content generation feature coming soon!",
+    });
   };
 
   return (
