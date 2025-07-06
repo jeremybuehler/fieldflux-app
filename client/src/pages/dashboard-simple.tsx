@@ -28,10 +28,10 @@ export default function Dashboard() {
               <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between text-center sm:text-left">
                 <div className="space-y-2">
                   <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
-                    Field Service Marketing Dashboard
+                    Marketing Dashboard
                   </h1>
                   <p className="text-sm md:text-base text-gray-600">
-                    Welcome back! Here's your social media content marketing activity.
+                    Welcome back! Here's your marketing performance and activity overview.
                   </p>
                 </div>
                 
