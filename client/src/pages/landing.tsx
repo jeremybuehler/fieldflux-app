@@ -2,15 +2,35 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Bot, Shield, BarChart3, Zap, ArrowRight, User, Lock, Mail } from "lucide-react";
+import {
+  Bot,
+  Shield,
+  BarChart3,
+  Zap,
+  ArrowRight,
+  User,
+  Lock,
+  Mail,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Landing() {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [loginData, setLoginData] = useState({ username: "", password: "" });
-  const [signupData, setSignupData] = useState({ name: "", email: "", username: "", password: "" });
+  const [signupData, setSignupData] = useState({
+    name: "",
+    email: "",
+    username: "",
+    password: "",
+  });
   const { toast } = useToast();
 
   const handleLogin = async () => {
@@ -27,7 +47,7 @@ export default function Landing() {
     if (loginData.username === "admin" && loginData.password === "demo123") {
       toast({
         title: "Login Successful",
-        description: "Welcome back to FieldPulse!",
+        description: "Welcome back to KasamaAI!",
       });
       setTimeout(() => {
         window.location.href = "/dashboard";
@@ -35,14 +55,20 @@ export default function Landing() {
     } else {
       toast({
         title: "Login Failed",
-        description: "Invalid username or password. Try admin/demo123 for demo access.",
+        description:
+          "Invalid username or password. Try admin/demo123 for demo access.",
         variant: "destructive",
       });
     }
   };
 
   const handleSignup = async () => {
-    if (!signupData.name || !signupData.email || !signupData.username || !signupData.password) {
+    if (
+      !signupData.name ||
+      !signupData.email ||
+      !signupData.username ||
+      !signupData.password
+    ) {
       toast({
         title: "Missing Information",
         description: "Please fill in all fields to create your account.",
@@ -54,9 +80,10 @@ export default function Landing() {
     // Simulate signup for demo
     toast({
       title: "Account Created",
-      description: "Welcome to FieldPulse! You can now log in with your credentials.",
+      description:
+        "Welcome to KasamaAI! You can now log in with your credentials.",
     });
-    
+
     // Reset form and switch to login tab
     setSignupData({ name: "", email: "", username: "", password: "" });
     setTimeout(() => {
@@ -78,15 +105,17 @@ export default function Landing() {
               <Bot className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-hvac-gray">FieldPulse</h1>
-              <p className="text-lg text-gray-600">Where Field Service Meets Smart Marketing</p>
+              <h1 className="text-4xl font-bold text-hvac-gray">KasamaAI</h1>
+              <p className="text-lg text-gray-600">Intelligent Marketing</p>
             </div>
           </div>
           <h2 className="text-3xl font-bold text-hvac-gray mb-4">
-            Transform Your Field Service Business with Intelligent Marketing Automation
+            Transform Your Business with Intelligent Marketing Automation
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            From wrench to web presence - FieldPulse creates compelling content, manages social media, tracks leads, and grows your reputation while you focus on what you do best: serving customers.
+            KasamaAI creates compelling content, manages social media, tracks
+            leads, and grows your reputation while you focus on what you do
+            best: serving customers.
           </p>
         </div>
 
@@ -97,11 +126,15 @@ export default function Landing() {
               <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
                 <BarChart3 className="w-6 h-6 text-primary" />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">Performance Insights</CardTitle>
+              <CardTitle className="text-xl text-hvac-gray">
+                Performance Insights
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                See what's working with crystal-clear analytics. Track leads, measure engagement, and discover which content brings in the most customers.
+                See what's working with crystal-clear analytics. Track leads,
+                measure engagement, and discover which content brings in the
+                most customers.
               </p>
             </CardContent>
           </Card>
@@ -111,11 +144,15 @@ export default function Landing() {
               <div className="w-12 h-12 bg-hvac-orange/10 rounded-lg flex items-center justify-center mb-4">
                 <Zap className="w-6 h-6 text-hvac-orange" />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">Content That Converts</CardTitle>
+              <CardTitle className="text-xl text-hvac-gray">
+                Content That Converts
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                Never stare at a blank page again. Our AI creates professional posts, helpful tips, and customer stories that showcase your expertise and attract new business.
+                Never stare at a blank page again. KasamaAI creates professional
+                posts, helpful tips, and customer stories that showcase your
+                expertise and attract new business.
               </p>
             </CardContent>
           </Card>
@@ -125,11 +162,15 @@ export default function Landing() {
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                 <Shield className="w-6 h-6 text-green-600" />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">Smart Lead Pipeline</CardTitle>
+              <CardTitle className="text-xl text-hvac-gray">
+                Smart Lead Pipeline
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                Turn inquiries into appointments effortlessly. Smart follow-ups, automated reminders, and lead scoring help you close more deals without the hassle.
+                Turn inquiries into appointments effortlessly. Smart follow-ups,
+                automated reminders, and lead scoring help you close more deals
+                without the hassle.
               </p>
             </CardContent>
           </Card>
@@ -137,20 +178,23 @@ export default function Landing() {
 
         {/* CTA Section */}
         <div className="text-center px-2">
-          <Card className="max-w-2xl mx-auto bg-gradient-to-r from-primary to-hvac-orange border-0">
+          <Card className="max-w-2xl mx-auto from-primary to-hvac-orange border-0">
             <CardContent className="p-6 lg:p-8">
-              <h3 className="text-xl lg:text-2xl font-bold text-white mb-3 lg:mb-4">
-                Ready to Turn Service Calls into Success Stories?
+              <h3 className="text-xl lg:text-2xl font-bold text-navy mb-3 lg:mb-4">
+                Ready leads into Success Stories?
               </h3>
-              <p className="text-blue-100 mb-4 lg:mb-6 text-sm lg:text-base">
-                Join thousands of field service professionals who've discovered that great work deserves great marketing. FieldPulse makes it effortless to showcase your expertise and attract more customers.
+              <p className="text-100 mb-4 lg:mb-6 text-sm lg:text-base">
+                Join thousands of soloprenuers and professionals who've
+                discovered that great work deserves great marketing. KasamaAI
+                makes it effortless to showcase your expertise and attract more
+                customers.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
                   <DialogTrigger asChild>
-                    <Button 
+                    <Button
                       size="lg"
-                      className="bg-white text-primary hover:bg-gray-50 font-semibold px-8"
+                      className="bg-navy text-primary hover:bg-gray-50 font-semibold px-8"
                     >
                       Get Started
                       <ArrowRight className="w-5 h-5 ml-2" />
@@ -159,7 +203,7 @@ export default function Landing() {
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle className="text-center text-2xl font-bold text-hvac-gray">
-                        Access FieldPulse
+                        Access KasamaAI
                       </DialogTitle>
                     </DialogHeader>
                     <Tabs defaultValue="login" className="w-full">
@@ -167,7 +211,7 @@ export default function Landing() {
                         <TabsTrigger value="login">Login</TabsTrigger>
                         <TabsTrigger value="signup">Sign Up</TabsTrigger>
                       </TabsList>
-                      
+
                       <TabsContent value="login" className="space-y-4">
                         <div className="space-y-4">
                           <div>
@@ -180,7 +224,12 @@ export default function Landing() {
                                 type="text"
                                 placeholder="Enter your username"
                                 value={loginData.username}
-                                onChange={(e) => setLoginData({ ...loginData, username: e.target.value })}
+                                onChange={(e) =>
+                                  setLoginData({
+                                    ...loginData,
+                                    username: e.target.value,
+                                  })
+                                }
                                 className="pl-10"
                               />
                             </div>
@@ -195,21 +244,32 @@ export default function Landing() {
                                 type="password"
                                 placeholder="Enter your password"
                                 value={loginData.password}
-                                onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
+                                onChange={(e) =>
+                                  setLoginData({
+                                    ...loginData,
+                                    password: e.target.value,
+                                  })
+                                }
                                 className="pl-10"
-                                onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                                onKeyPress={(e) =>
+                                  e.key === "Enter" && handleLogin()
+                                }
                               />
                             </div>
                           </div>
                           <div className="text-xs text-gray-500 bg-blue-50 p-2 rounded">
-                            Demo access: Use <strong>admin</strong> / <strong>demo123</strong>
+                            Demo access: Use <strong>admin</strong> /{" "}
+                            <strong>demo123</strong>
                           </div>
-                          <Button onClick={handleLogin} className="w-full bg-primary hover:bg-primary/90">
+                          <Button
+                            onClick={handleLogin}
+                            className="w-full bg-primary hover:bg-primary/90"
+                          >
                             Sign In
                           </Button>
                         </div>
                       </TabsContent>
-                      
+
                       <TabsContent value="signup" className="space-y-4">
                         <div className="space-y-4">
                           <div>
@@ -220,7 +280,12 @@ export default function Landing() {
                               type="text"
                               placeholder="Enter your full name"
                               value={signupData.name}
-                              onChange={(e) => setSignupData({ ...signupData, name: e.target.value })}
+                              onChange={(e) =>
+                                setSignupData({
+                                  ...signupData,
+                                  name: e.target.value,
+                                })
+                              }
                             />
                           </div>
                           <div>
@@ -233,7 +298,12 @@ export default function Landing() {
                                 type="email"
                                 placeholder="Enter your email"
                                 value={signupData.email}
-                                onChange={(e) => setSignupData({ ...signupData, email: e.target.value })}
+                                onChange={(e) =>
+                                  setSignupData({
+                                    ...signupData,
+                                    email: e.target.value,
+                                  })
+                                }
                                 className="pl-10"
                               />
                             </div>
@@ -248,7 +318,12 @@ export default function Landing() {
                                 type="text"
                                 placeholder="Choose a username"
                                 value={signupData.username}
-                                onChange={(e) => setSignupData({ ...signupData, username: e.target.value })}
+                                onChange={(e) =>
+                                  setSignupData({
+                                    ...signupData,
+                                    username: e.target.value,
+                                  })
+                                }
                                 className="pl-10"
                               />
                             </div>
@@ -263,12 +338,20 @@ export default function Landing() {
                                 type="password"
                                 placeholder="Create a password"
                                 value={signupData.password}
-                                onChange={(e) => setSignupData({ ...signupData, password: e.target.value })}
+                                onChange={(e) =>
+                                  setSignupData({
+                                    ...signupData,
+                                    password: e.target.value,
+                                  })
+                                }
                                 className="pl-10"
                               />
                             </div>
                           </div>
-                          <Button onClick={handleSignup} className="w-full bg-hvac-orange hover:bg-hvac-orange/90">
+                          <Button
+                            onClick={handleSignup}
+                            className="w-full bg-hvac-orange hover:bg-hvac-orange/90"
+                          >
                             Create Account
                           </Button>
                         </div>
@@ -276,8 +359,8 @@ export default function Landing() {
                     </Tabs>
                   </DialogContent>
                 </Dialog>
-                
-                <Button 
+
+                <Button
                   onClick={handleDemoAccess}
                   size="lg"
                   variant="outline"
@@ -293,7 +376,8 @@ export default function Landing() {
         {/* Footer */}
         <div className="text-center mt-16 text-gray-500">
           <p className="text-sm">
-            Secure platform designed for field service professionals. Your business data is protected and private.
+            Secure platform designed for professionals. Your business data is
+            protected and private.
           </p>
           <p className="text-xs mt-2">
             Already have an account? Click "Get Started" to sign in.
