@@ -1,8 +1,8 @@
-# FieldPulse - AI-Powered Marketing Platform
+# KasamaAI - AI-Powered Marketing Platform
 
 ## Overview
 
-This is FieldPulse - Where Field Service Meets Smart Marketing. A comprehensive marketing automation platform that transforms how field service providers connect with customers. From intelligent content creation to automated lead management, FieldPulse helps service professionals showcase their expertise and grow their business effortlessly.
+This is KasamaAI - Where Business Meets Smart Marketing. A comprehensive marketing automation platform that transforms how business professionals connect with customers. From intelligent content creation to automated lead management, KasamaAI helps professionals showcase their expertise and grow their business effortlessly.
 
 ## System Architecture
 
@@ -175,6 +175,13 @@ The application is configured for Replit deployment with:
   - Changed dashboard header alignment to center on mobile, left-align on larger screens
   - Improved mobile user experience with cleaner, focused header layout
   - Maintained logout button visibility across all screen sizes
+- June 29, 2025: White-label transformation and rebranding to KasamaAI:
+  - Removed all "Field Service" specific language throughout the platform
+  - Rebranded from "FieldPulse" to "MarketPulse" to "KasamaAI"
+  - Updated tagline to "Where Business Meets Smart Marketing"
+  - Transformed into universal white-label platform suitable for any business type
+  - Updated dashboard title from "Field Service Marketing Dashboard" to "Marketing Dashboard"
+  - Made content creation and messaging universally applicable to all industries
 
 ## Architecture Updates
 - **Database Schema**: Added `reviews` and `analytics_reports` tables with PostgreSQL backend
@@ -190,7 +197,7 @@ The application is configured for Replit deployment with:
 
 Preferred communication style: Simple, everyday language.
 API Keys: Will provide Google Analytics ID in the morning.
-Branding: Evolved from "Dave AI" to "HVAC Pro AI" to "FieldPro AI" and finally to "FieldPulse - Where Field Service Meets Smart Marketing" with compelling, customer-focused messaging that emphasizes effortless automation and business growth.
-Personalization: UI should reflect logged-in user's first name instead of generic "Dave" references.
-Market Focus: Universal platform for all field service providers - HVAC, plumbing, electrical, landscaping, pest control, etc.
+Branding: Evolved from "Dave AI" to "HVAC Pro AI" to "FieldPro AI" to "FieldPulse" to "MarketPulse" and finally to "KasamaAI - Where Business Meets Smart Marketing" as a white-label platform with compelling, customer-focused messaging that emphasizes effortless automation and business growth.
+Personalization: UI should reflect logged-in user's first name instead of generic references.
+Market Focus: Universal white-label platform for all business types - service providers, consultants, retailers, contractors, professionals, etc.
 Twilio Integration: User has Twilio account - implementing SMS features for lead follow-ups, appointment confirmations, and customer notifications.
