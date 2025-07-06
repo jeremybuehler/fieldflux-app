@@ -233,8 +233,4 @@ Try KasamaAI with our demo account:
 - Voice-to-content generation
 - Advanced personalization and targeting
 
----
 
-**KasamaAI** - Empowering field service professionals with intelligent marketing automation.
-
-Built with ❤️ for the field service community.
