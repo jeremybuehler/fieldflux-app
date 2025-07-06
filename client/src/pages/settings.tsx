@@ -1,18 +1,34 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
-import { Label } from "@/components/ui/label";
-import MobileSidebar from "@/components/dashboard/mobile-sidebar";
-import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, Key, ExternalLink, ArrowLeft, MessageSquare, Phone, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
+import { socialMediaService, SocialPlatformConfig } from "@/lib/social-media-service";
+import MobileSidebar from "@/components/dashboard/mobile-sidebar";
+import { 
+  ArrowLeft, 
+  Settings as SettingsIcon, 
+  Globe, 
+  Shield, 
+  Bell, 
+  Palette,
+  BarChart3,
+  Facebook,
+  Instagram,
+  Twitter,
+  Linkedin,
+  CheckCircle,
+  AlertCircle,
+  Save
+} from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
-import { Link } from "wouter";
 
 interface WordPressConfig {
   siteUrl: string;
@@ -91,6 +107,7 @@ interface SocialPlatformConfig {
     clientId: string;
     clientSecret: string;
     accessToken: string;
+    organizationId: string;
     isConfigured: boolean;
   };
 }
@@ -115,31 +132,8 @@ export default function Settings() {
     isConfigured: false,
   });
 
-  const [socialConfig, setSocialConfig] = useState<SocialPlatformConfig>({
-    facebook: {
-      appId: "",
-      appSecret: "",
-      accessToken: "",
-      isConfigured: false,
-    },
-    instagram: {
-      accessToken: "",
-      isConfigured: false,
-    },
-    twitter: {
-      apiKey: "",
-      apiSecret: "",
-      accessToken: "",
-      accessTokenSecret: "",
-      isConfigured: false,
-    },
-    linkedin: {
-      clientId: "",
-      clientSecret: "",
-      accessToken: "",
-      isConfigured: false,
-    },
-  });
+  const [socialConfigs, setSocialConfigs] = useState<SocialPlatformConfig[]>([]);
+  const [isLoadingConfigs, setIsLoadingConfigs] = useState(true);
 
   const { toast } = useToast();
 
@@ -154,12 +148,39 @@ export default function Settings() {
       }));
     }
 
-    // Load WordPress config from localStorage
+    // Load saved WordPress config from localStorage
     const savedWpConfig = localStorage.getItem('wpConfig');
     if (savedWpConfig) {
-      setWpConfig(JSON.parse(savedWpConfig));
+      try {
+        const parsed = JSON.parse(savedWpConfig);
+        setWpConfig(parsed);
+      } catch (error) {
+        console.error('Failed to parse saved WordPress config:', error);
+      }
     }
+
+    // Load social media configs from database
+    loadSocialConfigs();
+
+    trackEvent('settings_page_view', 'navigation', 'settings');
   }, []);
+
+  const loadSocialConfigs = async () => {
+    try {
+      setIsLoadingConfigs(true);
+      const configs = await socialMediaService.getSocialConfigs();
+      setSocialConfigs(configs);
+    } catch (error) {
+      console.error('Failed to load social configs:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load social media configurations.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoadingConfigs(false);
+    }
+  };
 
   const handleSaveWordPressConfig = () => {
     if (!wpConfig.siteUrl || !wpConfig.username || !wpConfig.appPassword) {
@@ -218,6 +239,61 @@ export default function Settings() {
         description: "WordPress connection is working properly.",
       });
     }, 2000);
+  };
+
+  const saveSocialConfig = async (platform: string, configData: Partial<SocialPlatformConfig>) => {
+    try {
+      const savedConfig = await socialMediaService.saveSocialConfig({
+        ...configData,
+        platform: platform.toLowerCase(),
+        isConfigured: true,
+      });
+
+      // Update local state
+      setSocialConfigs(prev => {
+        const existing = prev.find(c => c.platform === platform.toLowerCase());
+        if (existing) {
+          return prev.map(c => c.platform === platform.toLowerCase() ? savedConfig : c);
+        } else {
+          return [...prev, savedConfig];
+        }
+      });
+
+      toast({
+        title: `${platform} Connected`,
+        description: `Your ${platform} integration has been configured.`,
+      });
+    } catch (error) {
+      console.error(`Failed to save ${platform} config:`, error);
+      toast({
+        title: "Error",
+        description: `Failed to save ${platform} configuration.`,
+        variant: "destructive",
+      });
+    }
+  };
+
+  const getPlatformConfig = (platform: string): SocialPlatformConfig | undefined => {
+    return socialConfigs.find(c => c.platform === platform);
+  };
+
+  const updatePlatformConfig = (platform: string, field: string, value: string) => {
+    setSocialConfigs(prev => {
+      const existing = prev.find(c => c.platform === platform);
+      if (existing) {
+        return prev.map(c => 
+          c.platform === platform 
+            ? { ...c, [field]: value }
+            : c
+        );
+      } else {
+        return [...prev, { 
+          platform, 
+          [field]: value, 
+          isConfigured: false 
+        } as SocialPlatformConfig];
+      }
+    });
   };
 
   return (
@@ -683,10 +759,15 @@ export default function Settings() {
                 <CardTitle className="flex items-center space-x-2">
                   <div className="w-5 h-5 bg-blue-600 rounded"></div>
                   <span>Facebook</span>
-                  {socialConfig.facebook.isConfigured && (
+                  {socialConfigs.find(config => config.platform === 'facebook' && config.isConfigured) ? (
                     <Badge variant="default" className="bg-green-100 text-green-800">
                       <CheckCircle className="w-3 h-3 mr-1" />
                       Configured
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary">
+                      <AlertCircle className="w-3 h-3 mr-1" />
+                      Not Connected
                     </Badge>
                   )}
                 </CardTitle>
@@ -697,11 +778,8 @@ export default function Settings() {
                     <label className="block text-sm font-medium mb-2">App ID</label>
                     <Input
                       placeholder="Your Facebook App ID"
-                      value={socialConfig.facebook.appId}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        facebook: {...prev.facebook, appId: e.target.value}
-                      }))}
+                      value={getPlatformConfig('facebook')?.appId || ''}
+                      onChange={(e) => updatePlatformConfig('facebook', 'appId', e.target.value)}
                     />
                   </div>
                   <div>
@@ -709,11 +787,8 @@ export default function Settings() {
                     <Input
                       type="password"
                       placeholder="Your Facebook App Secret"
-                      value={socialConfig.facebook.appSecret}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        facebook: {...prev.facebook, appSecret: e.target.value}
-                      }))}
+                      value={getPlatformConfig('facebook')?.appSecret || ''}
+                      onChange={(e) => updatePlatformConfig('facebook', 'appSecret', e.target.value)}
                     />
                   </div>
                 </div>
@@ -721,14 +796,11 @@ export default function Settings() {
                   <label className="block text-sm font-medium mb-2">Access Token</label>
                   <Input
                     placeholder="Your Facebook Page Access Token"
-                    value={socialConfig.facebook.accessToken}
-                    onChange={(e) => setSocialConfig(prev => ({
-                      ...prev,
-                      facebook: {...prev.facebook, accessToken: e.target.value}
-                    }))}
+                    value={getPlatformConfig('facebook')?.accessToken || ''}
+                    onChange={(e) => updatePlatformConfig('facebook', 'accessToken', e.target.value)}
                   />
                 </div>
-                <Button onClick={() => saveSocialConfig('Facebook')} className="w-full">
+                <Button onClick={() => saveSocialConfig('Facebook', getPlatformConfig('facebook') || {})} className="w-full">
                   Save Facebook Configuration
                 </Button>
               </CardContent>
@@ -740,10 +812,15 @@ export default function Settings() {
                 <CardTitle className="flex items-center space-x-2">
                   <div className="w-5 h-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded"></div>
                   <span>Instagram</span>
-                  {socialConfig.instagram.isConfigured && (
+                  {socialConfigs.find(config => config.platform === 'instagram' && config.isConfigured) ? (
                     <Badge variant="default" className="bg-green-100 text-green-800">
                       <CheckCircle className="w-3 h-3 mr-1" />
                       Configured
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary">
+                      <AlertCircle className="w-3 h-3 mr-1" />
+                      Not Connected
                     </Badge>
                   )}
                 </CardTitle>
@@ -753,14 +830,11 @@ export default function Settings() {
                   <label className="block text-sm font-medium mb-2">Access Token</label>
                   <Input
                     placeholder="Your Instagram Access Token"
-                    value={socialConfig.instagram.accessToken}
-                    onChange={(e) => setSocialConfig(prev => ({
-                      ...prev,
-                      instagram: {...prev.instagram, accessToken: e.target.value}
-                    }))}
+                    value={getPlatformConfig('instagram')?.accessToken || ''}
+                    onChange={(e) => updatePlatformConfig('instagram', 'accessToken', e.target.value)}
                   />
                 </div>
-                <Button onClick={() => saveSocialConfig('Instagram')} className="w-full">
+                <Button onClick={() => saveSocialConfig('Instagram', getPlatformConfig('instagram') || {})} className="w-full">
                   Save Instagram Configuration
                 </Button>
               </CardContent>
@@ -772,10 +846,15 @@ export default function Settings() {
                 <CardTitle className="flex items-center space-x-2">
                   <div className="w-5 h-5 bg-blue-400 rounded"></div>
                   <span>Twitter/X</span>
-                  {socialConfig.twitter.isConfigured && (
+                  {socialConfigs.find(config => config.platform === 'twitter' && config.isConfigured) ? (
                     <Badge variant="default" className="bg-green-100 text-green-800">
                       <CheckCircle className="w-3 h-3 mr-1" />
                       Configured
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary">
+                      <AlertCircle className="w-3 h-3 mr-1" />
+                      Not Connected
                     </Badge>
                   )}
                 </CardTitle>
@@ -786,11 +865,8 @@ export default function Settings() {
                     <label className="block text-sm font-medium mb-2">API Key</label>
                     <Input
                       placeholder="Your Twitter API Key"
-                      value={socialConfig.twitter.apiKey}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        twitter: {...prev.twitter, apiKey: e.target.value}
-                      }))}
+                      value={getPlatformConfig('twitter')?.apiKey || ''}
+                      onChange={(e) => updatePlatformConfig('twitter', 'apiKey', e.target.value)}
                     />
                   </div>
                   <div>
@@ -798,11 +874,8 @@ export default function Settings() {
                     <Input
                       type="password"
                       placeholder="Your Twitter API Secret"
-                      value={socialConfig.twitter.apiSecret}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        twitter: {...prev.twitter, apiSecret: e.target.value}
-                      }))}
+                      value={getPlatformConfig('twitter')?.apiSecret || ''}
+                      onChange={(e) => updatePlatformConfig('twitter', 'apiSecret', e.target.value)}
                     />
                   </div>
                 </div>
@@ -811,11 +884,8 @@ export default function Settings() {
                     <label className="block text-sm font-medium mb-2">Access Token</label>
                     <Input
                       placeholder="Your Twitter Access Token"
-                      value={socialConfig.twitter.accessToken}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        twitter: {...prev.twitter, accessToken: e.target.value}
-                      }))}
+                      value={getPlatformConfig('twitter')?.accessToken || ''}
+                      onChange={(e) => updatePlatformConfig('twitter', 'accessToken', e.target.value)}
                     />
                   </div>
                   <div>
@@ -823,15 +893,12 @@ export default function Settings() {
                     <Input
                       type="password"
                       placeholder="Your Twitter Access Token Secret"
-                      value={socialConfig.twitter.accessTokenSecret}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        twitter: {...prev.twitter, accessTokenSecret: e.target.value}
-                      }))}
+                      value={getPlatformConfig('twitter')?.accessTokenSecret || ''}
+                      onChange={(e) => updatePlatformConfig('twitter', 'accessTokenSecret', e.target.value)}
                     />
                   </div>
                 </div>
-                <Button onClick={() => saveSocialConfig('Twitter')} className="w-full">
+                <Button onClick={() => saveSocialConfig('Twitter', getPlatformConfig('twitter') || {})} className="w-full">
                   Save Twitter Configuration
                 </Button>
               </CardContent>
@@ -843,10 +910,15 @@ export default function Settings() {
                 <CardTitle className="flex items-center space-x-2">
                   <div className="w-5 h-5 bg-blue-700 rounded"></div>
                   <span>LinkedIn</span>
-                  {socialConfig.linkedin.isConfigured && (
+                  {socialConfigs.find(config => config.platform === 'linkedin' && config.isConfigured) ? (
                     <Badge variant="default" className="bg-green-100 text-green-800">
                       <CheckCircle className="w-3 h-3 mr-1" />
                       Configured
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary">
+                      <AlertCircle className="w-3 h-3 mr-1" />
+                      Not Connected
                     </Badge>
                   )}
                 </CardTitle>
@@ -857,11 +929,8 @@ export default function Settings() {
                     <label className="block text-sm font-medium mb-2">Client ID</label>
                     <Input
                       placeholder="Your LinkedIn Client ID"
-                      value={socialConfig.linkedin.clientId}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        linkedin: {...prev.linkedin, clientId: e.target.value}
-                      }))}
+                      value={getPlatformConfig('linkedin')?.clientId || ''}
+                      onChange={(e) => updatePlatformConfig('linkedin', 'clientId', e.target.value)}
                     />
                   </div>
                   <div>
@@ -869,11 +938,8 @@ export default function Settings() {
                     <Input
                       type="password"
                       placeholder="Your LinkedIn Client Secret"
-                      value={socialConfig.linkedin.clientSecret}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        linkedin: {...prev.linkedin, clientSecret: e.target.value}
-                      }))}
+                      value={getPlatformConfig('linkedin')?.clientSecret || ''}
+                      onChange={(e) => updatePlatformConfig('linkedin', 'clientSecret', e.target.value)}
                     />
                   </div>
                 </div>
@@ -881,14 +947,11 @@ export default function Settings() {
                   <label className="block text-sm font-medium mb-2">Access Token</label>
                   <Input
                     placeholder="Your LinkedIn Access Token"
-                    value={socialConfig.linkedin.accessToken}
-                    onChange={(e) => setSocialConfig(prev => ({
-                      ...prev,
-                      linkedin: {...prev.linkedin, accessToken: e.target.value}
-                    }))}
+                    value={getPlatformConfig('linkedin')?.accessToken || ''}
+                    onChange={(e) => updatePlatformConfig('linkedin', 'accessToken', e.target.value)}
                   />
                 </div>
-                <Button onClick={() => saveSocialConfig('LinkedIn')} className="w-full">
+                <Button onClick={() => saveSocialConfig('LinkedIn', getPlatformConfig('linkedin') || {})} className="w-full">
                   Save LinkedIn Configuration
                 </Button>
               </CardContent>
@@ -1015,7 +1078,7 @@ export default function Settings() {
                             Connect your Facebook Page for automated posting
                           </p>
                         </div>
-                        {socialConfig.facebook.isConfigured && (
+                        {socialConfigs.find(config => config.platform === 'facebook' && config.isConfigured) ? (
                           <Badge variant="secondary" className="bg-green-100 text-green-800">
                             <CheckCircle className="w-3 h-3 mr-1" />
                             Connected
@@ -1030,11 +1093,8 @@ export default function Settings() {
                           <Input
                             id="fb-appid"
                             placeholder="Your Facebook App ID"
-                            value={socialConfig.facebook.appId}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              facebook: { ...prev.facebook, appId: e.target.value }
-                            }))}
+                            value={getPlatformConfig('facebook')?.appId || ''}
+                            onChange={(e) => updatePlatformConfig('facebook', 'appId', e.target.value)}
                           />
                         </div>
                         <div className="space-y-2">
@@ -1043,11 +1103,8 @@ export default function Settings() {
                             id="fb-secret"
                             type="password"
                             placeholder="Your Facebook App Secret"
-                            value={socialConfig.facebook.appSecret}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              facebook: { ...prev.facebook, appSecret: e.target.value }
-                            }))}
+                            value={getPlatformConfig('facebook')?.appSecret || ''}
+                            onChange={(e) => updatePlatformConfig('facebook', 'appSecret', e.target.value)}
                           />
                         </div>
                       </div>
@@ -1058,11 +1115,8 @@ export default function Settings() {
                             id="fb-token"
                             type="password"
                             placeholder="Your Page Access Token"
-                            value={socialConfig.facebook.accessToken}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              facebook: { ...prev.facebook, accessToken: e.target.value }
-                            }))}
+                            value={getPlatformConfig('facebook')?.accessToken || ''}
+                            onChange={(e) => updatePlatformConfig('facebook', 'accessToken', e.target.value)}
                           />
                         </div>
                         <div className="space-y-2">
@@ -1070,24 +1124,14 @@ export default function Settings() {
                           <Input
                             id="fb-pageid"
                             placeholder="Your Facebook Page ID"
-                            value={socialConfig.facebook.pageId}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              facebook: { ...prev.facebook, pageId: e.target.value }
-                            }))}
+                            value={getPlatformConfig('facebook')?.pageId || ''}
+                            onChange={(e) => updatePlatformConfig('facebook', 'pageId', e.target.value)}
                           />
                         </div>
                       </div>
                       <Button 
                         onClick={() => {
-                          setSocialConfig(prev => ({
-                            ...prev,
-                            facebook: { ...prev.facebook, isConfigured: true }
-                          }));
-                          toast({
-                            title: "Facebook Connected",
-                            description: "Your Facebook integration has been configured.",
-                          });
+                          saveSocialConfig('Facebook', getPlatformConfig('facebook') || {});
                         }}
                         className="w-full lg:w-auto"
                       >
@@ -1107,7 +1151,7 @@ export default function Settings() {
                             Connect your Twitter account for automated tweeting
                           </p>
                         </div>
-                        {socialConfig.twitter.isConfigured && (
+                        {socialConfigs.find(config => config.platform === 'twitter' && config.isConfigured) ? (
                           <Badge variant="secondary" className="bg-green-100 text-green-800">
                             <CheckCircle className="w-3 h-3 mr-1" />
                             Connected
@@ -1122,11 +1166,8 @@ export default function Settings() {
                           <Input
                             id="tw-key"
                             placeholder="Your Twitter API Key"
-                            value={socialConfig.twitter.apiKey}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              twitter: { ...prev.twitter, apiKey: e.target.value }
-                            }))}
+                            value={getPlatformConfig('twitter')?.apiKey || ''}
+                            onChange={(e) => updatePlatformConfig('twitter', 'apiKey', e.target.value)}
                           />
                         </div>
                         <div className="space-y-2">
@@ -1135,11 +1176,8 @@ export default function Settings() {
                             id="tw-secret"
                             type="password"
                             placeholder="Your Twitter API Secret"
-                            value={socialConfig.twitter.apiSecret}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              twitter: { ...prev.twitter, apiSecret: e.target.value }
-                            }))}
+                            value={getPlatformConfig('twitter')?.apiSecret || ''}
+                            onChange={(e) => updatePlatformConfig('twitter', 'apiSecret', e.target.value)}
                           />
                         </div>
                       </div>
@@ -1150,11 +1188,8 @@ export default function Settings() {
                             id="tw-token"
                             type="password"
                             placeholder="Your Access Token"
-                            value={socialConfig.twitter.accessToken}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              twitter: { ...prev.twitter, accessToken: e.target.value }
-                            }))}
+                            value={getPlatformConfig('twitter')?.accessToken || ''}
+                            onChange={(e) => updatePlatformConfig('twitter', 'accessToken', e.target.value)}
                           />
                         </div>
                         <div className="space-y-2">
@@ -1163,24 +1198,14 @@ export default function Settings() {
                             id="tw-token-secret"
                             type="password"
                             placeholder="Your Access Token Secret"
-                            value={socialConfig.twitter.accessTokenSecret}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              twitter: { ...prev.twitter, accessTokenSecret: e.target.value }
-                            }))}
+                            value={getPlatformConfig('twitter')?.accessTokenSecret || ''}
+                            onChange={(e) => updatePlatformConfig('twitter', 'accessTokenSecret', e.target.value)}
                           />
                         </div>
                       </div>
                       <Button 
                         onClick={() => {
-                          setSocialConfig(prev => ({
-                            ...prev,
-                            twitter: { ...prev.twitter, isConfigured: true }
-                          }));
-                          toast({
-                            title: "Twitter Connected",
-                            description: "Your Twitter integration has been configured.",
-                          });
+                          saveSocialConfig('Twitter', getPlatformConfig('twitter') || {});
                         }}
                         className="w-full lg:w-auto"
                       >
@@ -1200,7 +1225,7 @@ export default function Settings() {
                             Connect your Instagram Business account
                           </p>
                         </div>
-                        {socialConfig.instagram.isConfigured && (
+                        {socialConfigs.find(config => config.platform === 'instagram' && config.isConfigured) ? (
                           <Badge variant="secondary" className="bg-green-100 text-green-800">
                             <CheckCircle className="w-3 h-3 mr-1" />
                             Connected
@@ -1216,11 +1241,8 @@ export default function Settings() {
                             id="ig-token"
                             type="password"
                             placeholder="Your Instagram Access Token"
-                            value={socialConfig.instagram.accessToken}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              instagram: { ...prev.instagram, accessToken: e.target.value }
-                            }))}
+                            value={getPlatformConfig('instagram')?.accessToken || ''}
+                            onChange={(e) => updatePlatformConfig('instagram', 'accessToken', e.target.value)}
                           />
                         </div>
                         <div className="space-y-2">
@@ -1228,24 +1250,14 @@ export default function Settings() {
                           <Input
                             id="ig-account"
                             placeholder="Your Instagram Business Account ID"
-                            value={socialConfig.instagram.businessAccountId}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              instagram: { ...prev.instagram, businessAccountId: e.target.value }
-                            }))}
+                            value={getPlatformConfig('instagram')?.businessAccountId || ''}
+                            onChange={(e) => updatePlatformConfig('instagram', 'businessAccountId', e.target.value)}
                           />
                         </div>
                       </div>
                       <Button 
                         onClick={() => {
-                          setSocialConfig(prev => ({
-                            ...prev,
-                            instagram: { ...prev.instagram, isConfigured: true }
-                          }));
-                          toast({
-                            title: "Instagram Connected",
-                            description: "Your Instagram integration has been configured.",
-                          });
+                          saveSocialConfig('Instagram', getPlatformConfig('instagram') || {});
                         }}
                         className="w-full lg:w-auto"
                       >
@@ -1265,7 +1277,7 @@ export default function Settings() {
                             Connect your LinkedIn Company Page
                           </p>
                         </div>
-                        {socialConfig.linkedin.isConfigured && (
+                        {socialConfigs.find(config => config.platform === 'linkedin' && config.isConfigured) ? (
                           <Badge variant="secondary" className="bg-green-100 text-green-800">
                             <CheckCircle className="w-3 h-3 mr-1" />
                             Connected
@@ -1280,11 +1292,8 @@ export default function Settings() {
                           <Input
                             id="li-clientid"
                             placeholder="Your LinkedIn Client ID"
-                            value={socialConfig.linkedin.clientId}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              linkedin: { ...prev.linkedin, clientId: e.target.value }
-                            }))}
+                            value={getPlatformConfig('linkedin')?.clientId || ''}
+                            onChange={(e) => updatePlatformConfig('linkedin', 'clientId', e.target.value)}
                           />
                         </div>
                         <div className="space-y-2">
@@ -1293,11 +1302,8 @@ export default function Settings() {
                             id="li-secret"
                             type="password"
                             placeholder="Your LinkedIn Client Secret"
-                            value={socialConfig.linkedin.clientSecret}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              linkedin: { ...prev.linkedin, clientSecret: e.target.value }
-                            }))}
+                            value={getPlatformConfig('linkedin')?.clientSecret || ''}
+                            onChange={(e) => updatePlatformConfig('linkedin', 'clientSecret', e.target.value)}
                           />
                         </div>
                       </div>
@@ -1308,11 +1314,8 @@ export default function Settings() {
                             id="li-token"
                             type="password"
                             placeholder="Your Access Token"
-                            value={socialConfig.linkedin.accessToken}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              linkedin: { ...prev.linkedin, accessToken: e.target.value }
-                            }))}
+                            value={getPlatformConfig('linkedin')?.accessToken || ''}
+                            onChange={(e) => updatePlatformConfig('linkedin', 'accessToken', e.target.value)}
                           />
                         </div>
                         <div className="space-y-2">
@@ -1320,24 +1323,14 @@ export default function Settings() {
                           <Input
                             id="li-org"
                             placeholder="Your Company Page Organization ID"
-                            value={socialConfig.linkedin.organizationId}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              linkedin: { ...prev.linkedin, organizationId: e.target.value }
-                            }))}
+                            value={getPlatformConfig('linkedin')?.organizationId || ''}
+                            onChange={(e) => updatePlatformConfig('linkedin', 'organizationId', e.target.value)}
                           />
                         </div>
                       </div>
                       <Button 
                         onClick={() => {
-                          setSocialConfig(prev => ({
-                            ...prev,
-                            linkedin: { ...prev.linkedin, isConfigured: true }
-                          }));
-                          toast({
-                            title: "LinkedIn Connected",
-                            description: "Your LinkedIn integration has been configured.",
-                          });
+                          saveSocialConfig('LinkedIn', getPlatformConfig('linkedin') || {});
                         }}
                         className="w-full lg:w-auto"
                       >

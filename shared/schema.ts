@@ -169,6 +169,51 @@ export const insertSeoKeywordSchema = createInsertSchema(seoKeywords).omit({
   createdAt: true,
 });
 
+// Social Media Platform Configurations
+export const socialMediaConfigs = pgTable("social_media_configs", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  platform: text("platform").notNull(), // facebook, instagram, twitter, linkedin
+  appId: text("app_id"),
+  appSecret: text("app_secret"),
+  accessToken: text("access_token"),
+  accessTokenSecret: text("access_token_secret"),
+  clientId: text("client_id"),
+  clientSecret: text("client_secret"),
+  pageId: text("page_id"),
+  businessAccountId: text("business_account_id"),
+  organizationId: text("organization_id"),
+  isConfigured: boolean("is_configured").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Social Media Post Analytics
+export const socialMediaAnalytics = pgTable("social_media_analytics", {
+  id: serial("id").primaryKey(),
+  postId: integer("post_id").references(() => socialPosts.id),
+  platform: text("platform").notNull(),
+  likes: integer("likes").default(0),
+  shares: integer("shares").default(0),
+  comments: integer("comments").default(0),
+  reach: integer("reach").default(0),
+  impressions: integer("impressions").default(0),
+  clickThrough: integer("click_through").default(0),
+  engagementRate: decimal("engagement_rate", { precision: 5, scale: 2 }),
+  recordedAt: timestamp("recorded_at").defaultNow(),
+});
+
+export const insertSocialMediaConfigSchema = createInsertSchema(socialMediaConfigs).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertSocialMediaAnalyticsSchema = createInsertSchema(socialMediaAnalytics).omit({
+  id: true,
+  recordedAt: true,
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type WordPressPost = typeof wordpressPosts.$inferSelect;
@@ -187,3 +232,7 @@ export type Review = typeof reviews.$inferSelect;
 export type InsertReview = z.infer<typeof insertReviewSchema>;
 export type AnalyticsReport = typeof analyticsReports.$inferSelect;
 export type InsertAnalyticsReport = z.infer<typeof insertAnalyticsReportSchema>;
+export type SocialMediaConfig = typeof socialMediaConfigs.$inferSelect;
+export type InsertSocialMediaConfig = z.infer<typeof insertSocialMediaConfigSchema>;
+export type SocialMediaAnalytics = typeof socialMediaAnalytics.$inferSelect;
+export type InsertSocialMediaAnalytics = z.infer<typeof insertSocialMediaAnalyticsSchema>;

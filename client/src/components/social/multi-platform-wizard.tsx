@@ -24,6 +24,7 @@ import {
   Settings
 } from "lucide-react";
 import { format } from "date-fns";
+import { useToast } from "@/components/ui/use-toast";
 
 interface Platform {
   id: string;
@@ -92,6 +93,8 @@ export default function MultiPlatformWizard() {
   const [globalContent, setGlobalContent] = useState("");
   const [platformContent, setPlatformContent] = useState<PlatformContent>({});
   const [isScheduling, setIsScheduling] = useState(false);
+    const [configuredPlatforms, setConfiguredPlatforms] = useState<string[]>(["facebook", "instagram", "twitter", "linkedin"]); // Mock configured platforms
+  const { toast } = useToast();
 
   const totalSteps = 4;
 
@@ -112,9 +115,9 @@ export default function MultiPlatformWizard() {
     const newSelected = selectedPlatforms.includes(platformId)
       ? selectedPlatforms.filter(id => id !== platformId)
       : [...selectedPlatforms, platformId];
-    
+
     setSelectedPlatforms(newSelected);
-    
+
     if (newSelected.length > 0) {
       initializePlatformContent(newSelected);
     }
@@ -149,17 +152,17 @@ export default function MultiPlatformWizard() {
 
   const handleSchedule = async () => {
     setIsScheduling(true);
-    
+
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     // Here you would make actual API calls to schedule posts
     console.log("Scheduling posts:", {
       platforms: selectedPlatforms,
       content: platformContent,
       schedule: scheduleTime
     });
-    
+
     setIsScheduling(false);
     // Reset wizard or show success message
     setCurrentStep(1);
@@ -202,7 +205,7 @@ export default function MultiPlatformWizard() {
         </div>
         <Progress value={(currentStep / totalSteps) * 100} className="w-full" />
       </CardHeader>
-      
+
       <CardContent className="space-y-6">
         {/* Step 1: Platform Selection */}
         {currentStep === 1 && (
@@ -211,7 +214,7 @@ export default function MultiPlatformWizard() {
               <h3 className="text-lg font-medium mb-3">Select Platforms</h3>
               <p className="text-sm text-gray-600 mb-4">Choose which social media platforms you want to post to</p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {platforms.map((platform) => (
                 <div
@@ -219,9 +222,21 @@ export default function MultiPlatformWizard() {
                   className={`p-4 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
                     selectedPlatforms.includes(platform.id)
                       ? 'border-primary bg-primary/5'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
-                  onClick={() => handlePlatformToggle(platform.id)}
+                      : configuredPlatforms.includes(platform.id)
+                        ? 'border-gray-200 hover:border-gray-300'
+                        : 'border-red-200 bg-red-50 opacity-60'
+                  } ${!configuredPlatforms.includes(platform.id) ? 'cursor-not-allowed' : ''}`}
+                  onClick={() => {
+                    if (configuredPlatforms.includes(platform.id)) {
+                      handlePlatformToggle(platform.id);
+                    } else {
+                      toast({
+                        title: "Platform Not Configured",
+                        description: `Please configure ${platform.name} in Settings first.`,
+                        variant: "destructive",
+                      });
+                    }
+                  }}
                 >
                   <div className="flex items-center space-x-3">
                     <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-white ${platform.color}`}>
@@ -234,6 +249,7 @@ export default function MultiPlatformWizard() {
                     <Checkbox
                       checked={selectedPlatforms.includes(platform.id)}
                       onChange={() => handlePlatformToggle(platform.id)}
+                      disabled={!configuredPlatforms.includes(platform.id)}
                     />
                   </div>
                   <div className="mt-3 flex flex-wrap gap-1">
@@ -256,7 +272,7 @@ export default function MultiPlatformWizard() {
               <h3 className="text-lg font-medium mb-3">Create Content</h3>
               <p className="text-sm text-gray-600 mb-4">Write your post content. It will be applied to all selected platforms by default.</p>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="global-content">Post Content</Label>
@@ -288,7 +304,7 @@ export default function MultiPlatformWizard() {
                         onCheckedChange={(checked) => updatePlatformContent(platform.id, 'enabled', checked)}
                       />
                     </div>
-                    
+
                     {platformContent[platform.id]?.enabled !== false && (
                       <div className="space-y-3">
                         <Textarea
@@ -321,7 +337,7 @@ export default function MultiPlatformWizard() {
               <h3 className="text-lg font-medium mb-3">Schedule Post</h3>
               <p className="text-sm text-gray-600 mb-4">Choose when to publish your content</p>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-3">
                 <Label>Select Date</Label>
@@ -343,7 +359,7 @@ export default function MultiPlatformWizard() {
                   </PopoverContent>
                 </Popover>
               </div>
-              
+
               <div className="space-y-3">
                 <Label>Select Time</Label>
                 <div className="flex items-center space-x-2">
@@ -384,7 +400,7 @@ export default function MultiPlatformWizard() {
               <h3 className="text-lg font-medium mb-3">Review & Confirm</h3>
               <p className="text-sm text-gray-600 mb-4">Review your post before scheduling</p>
             </div>
-            
+
             <div className="space-y-4">
               <div className="bg-gray-50 rounded-lg p-4">
                 <h4 className="font-medium mb-2">Schedule Details</h4>
@@ -400,7 +416,7 @@ export default function MultiPlatformWizard() {
                 {getSelectedPlatforms().map((platform) => {
                   const content = platformContent[platform.id];
                   if (!content?.enabled) return null;
-                  
+
                   return (
                     <div key={platform.id} className="border rounded-lg p-4">
                       <div className="flex items-center space-x-2 mb-3">
@@ -433,7 +449,7 @@ export default function MultiPlatformWizard() {
             <ChevronLeft className="w-4 h-4 mr-1" />
             Previous
           </Button>
-          
+
           <div className="flex space-x-2">
             {currentStep < totalSteps && (
               <Button
@@ -444,7 +460,7 @@ export default function MultiPlatformWizard() {
                 <ChevronRight className="w-4 h-4 ml-1" />
               </Button>
             )}
-            
+
             {currentStep === totalSteps && (
               <Button
                 onClick={handleSchedule}

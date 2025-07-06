@@ -2,14 +2,27 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import {
+  users, 
+  wordpressPosts, 
+  reviews, 
+  analyticsReports, 
+  socialPosts, 
+  leads, 
+  tasks, 
+  activities, 
+  seoKeywords,
+  socialMediaConfigs,
+  socialMediaAnalytics,
   insertWordPressPostSchema,
+  insertReviewSchema,
+  insertAnalyticsReportSchema,
   insertSocialPostSchema,
   insertLeadSchema,
   insertTaskSchema,
   insertActivitySchema,
   insertSeoKeywordSchema,
-  insertReviewSchema,
-  insertAnalyticsReportSchema,
+  insertSocialMediaConfigSchema,
+  insertSocialMediaAnalyticsSchema
 } from "@shared/schema";
 import OpenAI from "openai";
 import twilio from "twilio";
@@ -99,7 +112,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/wordpress/generate-post", async (req, res) => {
     try {
       const { topic, type = "blog" } = req.body;
-      
+
       if (!topic) {
         return res.status(400).json({ message: "Topic is required" });
       }
@@ -121,7 +134,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       const result = JSON.parse(completion.choices[0].message.content || '{}');
-      
+
       const post = await storage.createWordPressPost({
         title: result.title || `HVAC Guide: ${topic}`,
         content: result.content || `Comprehensive guide about ${topic} for HVAC services.`,
@@ -164,7 +177,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/social/generate-post", async (req, res) => {
     try {
       const { topic, platform, tone = "professional" } = req.body;
-      
+
       if (!topic || !platform) {
         return res.status(400).json({ message: "Topic and platform are required" });
       }
@@ -186,7 +199,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       const result = JSON.parse(completion.choices[0].message.content || '{}');
-      
+
       const post = await storage.createSocialPost({
         platform,
         content: result.content || `Check out our latest HVAC tips about ${topic}!`,
@@ -210,7 +223,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/ai/generate-topic", async (req, res) => {
     try {
       const { type, industry, platform } = req.body;
-      
+
       let prompt = `Generate a relevant and engaging topic for ${type} content in the ${industry} industry.`;
       if (platform) {
         prompt += ` This will be for ${platform}.`;
@@ -234,7 +247,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       const topic = response.choices[0].message.content?.trim() || "Field Service Maintenance Tips";
-      
+
       res.json({ topic });
     } catch (error) {
       console.error("Error generating topic:", error);
@@ -294,7 +307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const updates = req.body;
       const lead = await storage.updateLead(id, updates);
-      
+
       if (!lead) {
         return res.status(404).json({ message: "Lead not found" });
       }
@@ -330,7 +343,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const id = parseInt(req.params.id);
       const updates = req.body;
       const task = await storage.updateTask(id, updates);
-      
+
       if (!task) {
         return res.status(404).json({ message: "Task not found" });
       }
@@ -372,7 +385,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/seo/analyze", async (req, res) => {
     try {
       const { url, keywords } = req.body;
-      
+
       if (!url) {
         return res.status(400).json({ message: "URL is required" });
       }
@@ -439,7 +452,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const reviewId = parseInt(req.params.id);
       const review = await storage.getReview(reviewId);
-      
+
       if (!review) {
         return res.status(404).json({ message: "Review not found" });
       }
@@ -461,7 +474,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
 
       const result = JSON.parse(completion.choices[0].message.content || '{}');
-      
+
       await storage.updateReview(reviewId, {
         aiResponse: result.response || "Thank you for your feedback!",
         responseStatus: "ready"
@@ -484,7 +497,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/wordpress/publish-to-godaddy", async (req, res) => {
     try {
       const { postId, godaddyConfig } = req.body;
-      
+
       if (!postId) {
         return res.status(400).json({ message: "Post ID is required" });
       }
@@ -518,7 +531,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/analytics/generate-report", async (req, res) => {
     try {
       const { period = "30d" } = req.body;
-      
+
       // Simulate comprehensive analytics data
       const reportData = {
         period,
@@ -576,7 +589,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const leadId = parseInt(req.params.id);
       const lead = await storage.getLead(leadId);
-      
+
       if (!lead) {
         return res.status(404).json({ message: "Lead not found" });
       }
@@ -589,7 +602,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         priority = "high";
         qualificationScore += 30;
       }
-      
+
       if (lead.service.toLowerCase().includes("emergency") || 
           lead.service.toLowerCase().includes("repair")) {
         priority = "high";
@@ -729,7 +742,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/sms/status", async (req, res) => {
     try {
       const isConfigured = !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER);
-      
+
       res.json({
         configured: isConfigured,
         accountSid: process.env.TWILIO_ACCOUNT_SID ? process.env.TWILIO_ACCOUNT_SID.substring(0, 8) + '...' : null,
@@ -777,6 +790,96 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("TikTok generation error:", error);
       res.status(500).json({ message: "Failed to process TikTok video request" });
     }
+  });
+
+    // SEO Keywords endpoints
+  app.get("/api/seo-keywords", async (req, res) => {
+    const keywords = await storage.getAllSeoKeywords()
+    return res.json({ keywords });
+  });
+
+  app.post("/api/seo-keywords", async (req, res) => {
+    const data = insertSeoKeywordSchema.parse(req.body);
+    const keyword = await storage.createSeoKeyword(data);
+    return res.json(keyword);
+  });
+
+  // Social Media Configuration endpoints
+  app.get("/api/social-configs", async (req, res) => {
+    const user = req.get('user');
+    if (!user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const configs = await storage.getAllSocialMediaConfigs()
+    return res.json({ configs });
+  });
+
+  app.post("/api/social-configs", async (req, res) => {
+    const user = req.get('user');
+    if (!user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const configData = insertSocialMediaConfigSchema.parse(req.body);
+
+    // Check if config already exists for this platform
+    const existing = await storage.getAllSocialMediaConfigs()
+
+    let result;
+
+    result = await storage.createSocialMediaConfig(configData);
+
+    return res.json(result);
+  });
+
+  app.delete("/api/social-configs/:platform", async (req, res) => {
+    const user = req.get('user');
+    if (!user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const platform = req.params.platform;
+    await storage.deleteSocialMediaConfig(platform)
+
+    return res.json({ success: true });
+  });
+
+  // Enhanced Social Media Posting
+  app.post("/api/social/schedule-multi-platform", async (req, res) => {
+    const user = req.get('user');
+    if (!user) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const { platforms, content, scheduleTime } = req.body;
+    const results = [];
+
+    for (const platform of platforms) {
+      const postData = {
+        platform: platform.id,
+        content: platform.content,
+        status: "scheduled",
+        scheduledFor: new Date(scheduleTime.date + ' ' + scheduleTime.time),
+      };
+
+      const result = await storage.createSocialPost(postData);
+      results.push(result);
+    }
+
+    return res.json({ posts: results });
+  });
+
+  // Social Media Analytics
+  app.get("/api/social/analytics", async (req, res) => {
+    const analytics = await storage.getAllSocialMediaAnalytics();
+    return res.json({ analytics });
+  });
+
+  app.post("/api/social/analytics", async (req, res) => {
+    const analyticsData = insertSocialMediaAnalyticsSchema.parse(req.body);
+    const result = await storage.createSocialMediaAnalytics(analyticsData);
+    return res.json(result);
   });
 
   const httpServer = createServer(app);
