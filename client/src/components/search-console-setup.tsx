@@ -1,129 +1,198 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ExternalLink, CheckCircle, AlertCircle, Info, RefreshCw } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { MapPin, Search, CheckCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
+
+interface BusinessSearchResult {
+  place_id: string;
+  name: string;
+  rating: number;
+  user_ratings_total: number;
+  formatted_address: string;
+}
 
 export default function SearchConsoleSetup() {
-  const { data: status, isLoading, refetch } = useQuery({
-    queryKey: ['/api/search-console/status'],
-    refetchInterval: 30000, // Refresh every 30 seconds
+  const [businessName, setBusinessName] = useState('');
+  const [businessLocation, setBusinessLocation] = useState('');
+  const [searchResults, setSearchResults] = useState<BusinessSearchResult[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const { toast } = useToast();
+
+  // Check Places API status
+  const { data: placesStatus } = useQuery({
+    queryKey: ['/api/places/status'],
+    queryFn: () => fetch('/api/places/status').then(res => res.json()),
   });
+
+  const handleSearch = async () => {
+    if (!businessName.trim()) {
+      toast({
+        title: "Missing Information",
+        description: "Please enter a business name to search",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      const query = businessLocation ? `${businessName} ${businessLocation}` : businessName;
+      const response = await fetch(`/api/places/search?q=${encodeURIComponent(query)}`);
+      
+      if (!response.ok) {
+        throw new Error('Search failed');
+      }
+      
+      const results = await response.json();
+      setSearchResults(results);
+      
+      if (results.length === 0) {
+        toast({
+          title: "No Results",
+          description: "No businesses found. Try adjusting your search terms.",
+        });
+      } else {
+        toast({
+          title: "Search Complete",
+          description: `Found ${results.length} businesses`,
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Search Error",
+        description: "Unable to search businesses. Check your Google Places API configuration.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  const handleSelectBusiness = async (business: BusinessSearchResult) => {
+    try {
+      const response = await fetch(`/api/places/details/${business.place_id}`);
+      const details = await response.json();
+      
+      toast({
+        title: "Business Selected",
+        description: `Selected ${business.name} - ${details.reviews?.length || 0} reviews available`,
+      });
+      
+      // You could emit an event or call a callback here to update the parent component
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to get business details",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
-    <Card className="mb-6">
-      <CardHeader>
-        <CardTitle className="flex items-center space-x-2">
-          <Info className="w-5 h-5 text-blue-500" />
-          <span>Google Search Console Integration</span>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <Alert>
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Your Google service account is connected but needs access to your website in Search Console to retrieve keyword data.
-          </AlertDescription>
-        </Alert>
-        
-        <div className="space-y-3">
-          <div className="flex items-center space-x-2 text-sm">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            <span>Google Analytics API - Connected ✓</span>
-          </div>
-          
-          <div className="flex items-center space-x-2 text-sm">
-            {status?.apiEnabled ? (
-              <CheckCircle className="w-4 h-4 text-green-500" />
-            ) : (
-              <AlertCircle className="w-4 h-4 text-red-500" />
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <div className="flex items-center space-x-3">
+            <MapPin className="w-6 h-6 text-red-600" />
+            <div>
+              <CardTitle>Google Places API Business Search</CardTitle>
+              <p className="text-sm text-gray-600 mt-1">
+                Search for businesses to connect their Google reviews
+              </p>
+            </div>
+            {placesStatus?.configured && (
+              <Badge variant="secondary" className="bg-green-100 text-green-800">
+                <CheckCircle className="w-3 h-3 mr-1" />
+                API Connected
+              </Badge>
             )}
-            <span>Google Search Console API - {status?.apiEnabled ? 'Enabled ✓' : 'Needs Enabling'}</span>
           </div>
-          
-          <div className="flex items-center space-x-2 text-sm">
-            {status?.sitesFound > 0 ? (
-              <CheckCircle className="w-4 h-4 text-green-500" />
-            ) : (
-              <AlertCircle className="w-4 h-4 text-orange-500" />
-            )}
-            <span>Website Properties - {status?.sitesFound || 0} found</span>
-          </div>
-
-          {status?.serviceAccount && (
-            <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
-              <strong>Service Account:</strong> {status.serviceAccount}
-            </div>
-          )}
-
-          {status?.sites && status.sites.length > 0 && (
-            <div className="text-xs text-gray-600">
-              <strong>Connected Sites:</strong>
-              <ul className="mt-1 list-disc list-inside ml-2">
-                {status.sites.map((site: string) => (
-                  <li key={site}>{site}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-
-        <div className="bg-gray-50 p-4 rounded-lg space-y-4">
-          <h4 className="font-medium text-gray-900">Step-by-Step Setup:</h4>
-          
-          <div className="space-y-4">
-            <div className="border-l-4 border-blue-500 pl-4">
-              <h5 className="font-medium text-gray-900">Step 1: Add Your Website</h5>
-              <p className="text-sm text-gray-700 mb-2">Go to Google Search Console and add your website:</p>
-              <ol className="text-sm space-y-1 list-decimal list-inside text-gray-600 ml-2">
-                <li>Visit <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google Search Console</a></li>
-                <li>Click "Add Property" (+ button)</li>
-                <li>Choose "URL prefix" option</li>
-                <li>Enter your website URL (e.g., https://yourwebsite.com)</li>
-                <li>Click "Continue" and verify ownership</li>
-              </ol>
-            </div>
-
-            <div className="border-l-4 border-orange-500 pl-4">
-              <h5 className="font-medium text-gray-900">Step 2: Grant Service Account Access</h5>
-              <p className="text-sm text-gray-700 mb-2">Add your service account as a user:</p>
-              <ol className="text-sm space-y-1 list-decimal list-inside text-gray-600 ml-2">
-                <li>In Search Console, go to Settings (gear icon)</li>
-                <li>Click "Users and permissions"</li>
-                <li>Click "Add User"</li>
-                <li>Enter your service account email:</li>
-                <div className="ml-4 text-xs bg-white p-2 rounded border font-mono break-all mt-1">
-                  {status?.serviceAccount || 'your-service-account@project.iam.gserviceaccount.com'}
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {!placesStatus?.configured ? (
+            <Alert>
+              <AlertDescription>
+                Google Places API is not configured. Add your GOOGLE_PLACES_API_KEY to Replit Secrets to enable business search and real review data.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="business-name">Business Name</Label>
+                  <Input
+                    id="business-name"
+                    placeholder="e.g., Winter Haven Air Conditioning"
+                    value={businessName}
+                    onChange={(e) => setBusinessName(e.target.value)}
+                  />
                 </div>
-                <li>Select "Owner" permissions</li>
-                <li>Click "Add"</li>
-              </ol>
-            </div>
+                <div className="space-y-2">
+                  <Label htmlFor="business-location">Location (Optional)</Label>
+                  <Input
+                    id="business-location"
+                    placeholder="e.g., Winter Haven, FL"
+                    value={businessLocation}
+                    onChange={(e) => setBusinessLocation(e.target.value)}
+                  />
+                </div>
+              </div>
+              
+              <Button 
+                onClick={handleSearch}
+                disabled={isSearching}
+                className="w-full md:w-auto"
+              >
+                <Search className="w-4 h-4 mr-2" />
+                {isSearching ? 'Searching...' : 'Search Businesses'}
+              </Button>
+            </>
+          )}
+        </CardContent>
+      </Card>
 
-            <div className="border-l-4 border-green-500 pl-4">
-              <h5 className="font-medium text-gray-900">Step 3: Verify Setup</h5>
-              <p className="text-sm text-gray-700">Once completed, click "Refresh Status" below to verify the connection.</p>
+      {searchResults.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Search Results</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {searchResults.map((business) => (
+                <div
+                  key={business.place_id}
+                  className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"
+                  onClick={() => handleSelectBusiness(business)}
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h4 className="font-semibold">{business.name}</h4>
+                      <p className="text-sm text-gray-600">{business.formatted_address}</p>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <span className="text-sm font-medium">
+                          ⭐ {business.rating.toFixed(1)}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          ({business.user_ratings_total} reviews)
+                        </span>
+                      </div>
+                    </div>
+                    <Button variant="outline" size="sm">
+                      Select
+                    </Button>
+                  </div>
+                </div>
+              ))}
             </div>
-          </div>
-        </div>
-
-        <div className="flex space-x-3">
-          <Button size="sm" variant="outline" asChild>
-            <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer">
-              Open Search Console
-            </a>
-          </Button>
-          <Button size="sm" variant="outline" asChild>
-            <a href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_blank" rel="noopener noreferrer">
-              Manage Service Account
-            </a>
-          </Button>
-          <Button size="sm" variant="outline" onClick={() => refetch()}>
-            <RefreshCw className="w-3 h-3 mr-1" />
-            Refresh Status
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 }

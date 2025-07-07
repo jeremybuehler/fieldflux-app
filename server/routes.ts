@@ -532,12 +532,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Get real Google reviews
   app.get("/api/reviews/google", async (req, res) => {
     try {
+      const businessName = req.query.businessName as string;
+      const businessAddress = req.query.businessAddress as string;
+      
       const { googleReviewsService } = await import('./services/google-reviews');
-      const reviews = await googleReviewsService.getBusinessReviews();
+      const reviews = await googleReviewsService.getBusinessReviews(businessName, businessAddress);
       res.json(reviews);
     } catch (error) {
       console.error("Error fetching Google reviews:", error);
       res.status(500).json({ message: "Failed to fetch Google reviews" });
+    }
+  });
+
+  // Search for businesses using Google Places API
+  app.get("/api/places/search", async (req, res) => {
+    try {
+      const query = req.query.q as string;
+      const location = req.query.location as string;
+      
+      if (!query) {
+        return res.status(400).json({ message: "Query parameter 'q' is required" });
+      }
+      
+      const { googlePlacesService } = await import('./services/google-places');
+      const businesses = await googlePlacesService.searchBusinesses(query, location);
+      res.json(businesses);
+    } catch (error) {
+      console.error("Error searching businesses:", error);
+      res.status(500).json({ message: "Failed to search businesses" });
+    }
+  });
+
+  // Get detailed business information including reviews
+  app.get("/api/places/details/:placeId", async (req, res) => {
+    try {
+      const { placeId } = req.params;
+      
+      const { googlePlacesService } = await import('./services/google-places');
+      const details = await googlePlacesService.getPlaceDetails(placeId);
+      
+      if (!details) {
+        return res.status(404).json({ message: "Business not found" });
+      }
+      
+      res.json(details);
+    } catch (error) {
+      console.error("Error fetching business details:", error);
+      res.status(500).json({ message: "Failed to fetch business details" });
+    }
+  });
+
+  // Check Google Places API status
+  app.get("/api/places/status", async (req, res) => {
+    try {
+      const { googlePlacesService } = await import('./services/google-places');
+      const status = googlePlacesService.getConfigurationStatus();
+      res.json(status);
+    } catch (error) {
+      console.error("Error checking Places API status:", error);
+      res.status(500).json({ message: "Failed to check Places API status" });
     }
   });
 
