@@ -1,6 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import { setupAuth, isAuthenticated } from "./replitAuth";
 import {
   users, 
   wordpressPosts, 
@@ -26,6 +27,7 @@ import {
 } from "@shared/schema";
 import OpenAI from "openai";
 import twilio from "twilio";
+import { googleAnalyticsService } from "./services/google-analytics";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "default_key",
@@ -44,6 +46,36 @@ const isAuthenticated = (req: any, res: any, next: any) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Auth middleware
+  await setupAuth(app);
+
+  // Auth routes
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+    try {
+      if (!req.user || !req.user.claims) {
+        return res.status(401).json({ message: "User not authenticated" });
+      }
+      
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      if (user) {
+        res.json(user);
+      } else {
+        // Create user if doesn't exist
+        const newUser = await storage.upsertUser({
+          id: userId,
+          email: req.user.claims.email,
+          firstName: req.user.claims.first_name,
+          lastName: req.user.claims.last_name,
+          profileImageUrl: req.user.claims.profile_image_url,
+        });
+        res.json(newUser);
+      }
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
   // Dashboard Analytics
   app.get("/api/dashboard/metrics", async (req, res) => {
     try {
@@ -52,10 +84,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const socialPosts = await storage.getAllSocialPosts();
       const seoKeywords = await storage.getAllSeoKeywords();
 
+      // Get real Google Analytics data for dashboard
+      const analyticsMetrics = await googleAnalyticsService.getMetrics('30d');
+      
       const metrics = {
-        traffic: 2847,
-        trafficGrowth: 12.5,
-        socialEngagement: 1234,
+        traffic: analyticsMetrics.sessions,
+        trafficGrowth: 12.5, // Could be calculated from comparing periods
+        socialEngagement: socialPosts.length * 47, // Estimate based on posts
         socialEngagementGrowth: 8.3,
         leads: leads.length,
         leadsGrowth: 15.2,
@@ -65,6 +100,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(metrics);
     } catch (error) {
+      console.error("Error fetching dashboard metrics:", error);
       res.status(500).json({ message: "Failed to fetch dashboard metrics" });
     }
   });
@@ -463,11 +499,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages: [
           {
             role: "system",
-            content: "You are a professional HVAC business owner responding to customer reviews. Be courteous, professional, and address any concerns mentioned. Keep responses concise and grateful.",
+            content: "You are a professional business owner responding to customer reviews. Be courteous, professional, and address any concerns mentioned. Keep responses concise and grateful.",
           },
           {
             role: "user",
-            content: `Generate a professional response to this ${review.rating}-star review: "${review.content}" from ${review.customerName}. The business is a local HVAC company in Winter Haven/Lakeland, Florida.`,
+            content: `Generate a professional response to this ${review.rating}-star review: "${review.content}" from ${review.customerName}. The business is KasamaAI, a marketing automation platform.`,
           },
         ],
         response_format: { type: "json_object" },
@@ -492,6 +528,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to generate review response" });
     }
   });
+
+  // Get real Google reviews
+  app.get("/api/reviews/google", async (req, res) => {
+    try {
+      const businessName = req.query.businessName as string;
+      const businessAddress = req.query.businessAddress as string;
+      
+      const { googleReviewsService } = await import('./services/google-reviews');
+      const reviews = await googleReviewsService.getBusinessReviews(businessName, businessAddress);
+      res.json(reviews);
+    } catch (error) {
+      console.error("Error fetching Google reviews:", error);
+      res.status(500).json({ message: "Failed to fetch Google reviews" });
+    }
+  });
+
+  // Search for businesses using Google Places API
+  app.get("/api/places/search", async (req, res) => {
+    try {
+      const query = req.query.q as string;
+      const location = req.query.location as string;
+      
+      if (!query) {
+        return res.status(400).json({ message: "Query parameter 'q' is required" });
+      }
+      
+      const { googlePlacesNewService } = await import('./services/google-places-new');
+      const businesses = await googlePlacesNewService.searchBusinesses(query);
+      res.json(businesses);
+    } catch (error) {
+      console.error("Error searching businesses:", error);
+      res.status(500).json({ message: "Failed to search businesses" });
+    }
+  });
+
+  // Get detailed business information including reviews
+  app.get("/api/places/details/:placeId", async (req, res) => {
+    try {
+      const { placeId } = req.params;
+      
+      const { googlePlacesService } = await import('./services/google-places');
+      const details = await googlePlacesService.getPlaceDetails(placeId);
+      
+      if (!details) {
+        return res.status(404).json({ message: "Business not found" });
+      }
+      
+      res.json(details);
+    } catch (error) {
+      console.error("Error fetching business details:", error);
+      res.status(500).json({ message: "Failed to fetch business details" });
+    }
+  });
+
+  // Check Google Places API status
+  app.get("/api/places/status", async (req, res) => {
+    try {
+      const { googlePlacesService } = await import('./services/google-places');
+      const status = googlePlacesService.getConfigurationStatus();
+      res.json(status);
+    } catch (error) {
+      console.error("Error checking Places API status:", error);
+      res.status(500).json({ message: "Failed to check Places API status" });
+    }
+  });
+
+  // Get review analytics (now uses real data)
+  app.get("/api/reviews/analytics", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const analytics = await googleAnalyticsService.getReviewsAnalytics(period);
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching review analytics:", error);
+      res.status(500).json({ message: "Failed to fetch review analytics" });
+    }
+  });
+
+  // Reply to Google review
+  app.post("/api/reviews/google/:reviewId/reply", async (req, res) => {
+    const { reviewId } = req.params;
+    const { businessId, replyText } = req.body;
+    
+    try {
+      const { googleReviewsService } = await import('./services/google-reviews');
+      const success = await googleReviewsService.replyToReview(businessId, reviewId, replyText);
+      
+      if (success) {
+        res.json({ message: "Reply posted successfully" });
+      } else {
+        res.status(500).json({ message: "Failed to post reply" });
+      }
+    } catch (error) {
+      console.error("Error posting review reply:", error);
+      res.status(500).json({ message: "Failed to post review reply" });
+    }
+  });;
 
   // WordPress with GoDaddy Integration
   app.post("/api/wordpress/publish-to-godaddy", async (req, res) => {
@@ -527,37 +660,177 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Google Analytics API Integration
+  app.get("/api/analytics/metrics", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const metrics = await googleAnalyticsService.getMetrics(period);
+      res.json(metrics);
+    } catch (error) {
+      console.error("Error fetching analytics metrics:", error);
+      res.status(500).json({ message: "Failed to fetch analytics metrics" });
+    }
+  });
+
+  app.get("/api/analytics/traffic-sources", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const sources = await googleAnalyticsService.getTrafficSources(period);
+      res.json(sources);
+    } catch (error) {
+      console.error("Error fetching traffic sources:", error);
+      res.status(500).json({ message: "Failed to fetch traffic sources" });
+    }
+  });
+
+  app.get("/api/analytics/top-pages", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const pages = await googleAnalyticsService.getTopPages(period);
+      res.json(pages);
+    } catch (error) {
+      console.error("Error fetching top pages:", error);
+      res.status(500).json({ message: "Failed to fetch top pages" });
+    }
+  });
+
+  app.get("/api/analytics/locations", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const locations = await googleAnalyticsService.getLocationData(period);
+      res.json(locations);
+    } catch (error) {
+      console.error("Error fetching location data:", error);
+      res.status(500).json({ message: "Failed to fetch location data" });
+    }
+  });
+
+  app.get("/api/analytics/devices", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const devices = await googleAnalyticsService.getDeviceData(period);
+      res.json(devices);
+    } catch (error) {
+      console.error("Error fetching device data:", error);
+      res.status(500).json({ message: "Failed to fetch device data" });
+    }
+  });
+
+  app.get("/api/analytics/realtime", async (req, res) => {
+    try {
+      const realtime = await googleAnalyticsService.getRealtimeData();
+      res.json(realtime);
+    } catch (error) {
+      console.error("Error fetching realtime data:", error);
+      res.status(500).json({ message: "Failed to fetch realtime data" });
+    }
+  });
+
+  app.get("/api/analytics/keywords", async (req, res) => {
+    try {
+      const period = (req.query.period as '7d' | '30d' | '90d') || '30d';
+      const keywords = await googleAnalyticsService.getSearchConsoleKeywords(period);
+      
+      // Add metadata about data source
+      const response = {
+        keywords,
+        meta: {
+          source: keywords.length > 0 && keywords[0].keyword !== 'ac repair near me' ? 'search_console' : 'demo',
+          total: keywords.length,
+          period,
+          lastUpdated: new Date().toISOString()
+        }
+      };
+      
+      res.json(response);
+    } catch (error) {
+      console.error("Error fetching keyword data:", error);
+      res.status(500).json({ message: "Failed to fetch keyword data" });
+    }
+  });
+
+  app.get("/api/search-console/status", async (req, res) => {
+    try {
+      const status = await googleAnalyticsService.getSearchConsoleStatus();
+      res.json(status);
+    } catch (error) {
+      console.error("Error fetching Search Console status:", error);
+      res.status(500).json({ message: "Failed to fetch Search Console status" });
+    }
+  });
+
+  app.get("/api/analytics/keyword-opportunities", async (req, res) => {
+    try {
+      const keywords = await googleAnalyticsService.getSearchConsoleKeywords('30d');
+      
+      // Analyze optimization opportunities
+      const quickWins = keywords.filter(k => k.position > 3 && k.position <= 10);
+      const lowCtrKeywords = keywords.filter(k => k.ctr < 4.0);
+      const highVolumeEasyKeywords = keywords.filter(k => k.difficulty === 'easy' && k.searchVolume > 1000);
+      
+      res.json({
+        quickWins,
+        lowCtrKeywords,
+        highVolumeEasyKeywords,
+        totalKeywords: keywords.length
+      });
+    } catch (error) {
+      console.error("Error fetching keyword opportunities:", error);
+      res.status(500).json({ message: "Failed to fetch keyword opportunities" });
+    }
+  });
+
+  app.get("/api/analytics/reviews", async (req, res) => {
+    try {
+      const period = (req.query.period as '7d' | '30d' | '90d') || '30d';
+      const reviews = await googleAnalyticsService.getReviewsAnalytics(period);
+      res.json(reviews);
+    } catch (error) {
+      console.error("Error fetching reviews data:", error);
+      res.status(500).json({ message: "Failed to fetch reviews data" });
+    }
+  });
+
+  app.get("/api/analytics/status", async (req, res) => {
+    try {
+      const hasServiceAccount = !!process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT_KEY;
+      const hasPropertyId = !!process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
+      const hasMeasurementId = !!process.env.VITE_GA_MEASUREMENT_ID;
+      
+      res.json({
+        configured: hasServiceAccount && hasPropertyId && hasMeasurementId,
+        hasServiceAccount,
+        hasPropertyId,
+        hasMeasurementId,
+        setupInstructions: !hasServiceAccount || !hasPropertyId ? 
+          "Please enable Google Analytics Data API in Google Cloud Console and provide service account credentials" : 
+          "Google Analytics is configured and ready to use"
+      });
+    } catch (error) {
+      console.error("Error checking analytics status:", error);
+      res.status(500).json({ message: "Failed to check analytics status" });
+    }
+  });
+
   // Enhanced Analytics Reporting
   app.post("/api/analytics/generate-report", async (req, res) => {
     try {
       const { period = "30d" } = req.body;
 
-      // Simulate comprehensive analytics data
+      // Get real analytics data for the report
+      const [metrics, trafficSources, topPages] = await Promise.all([
+        googleAnalyticsService.getMetrics(period),
+        googleAnalyticsService.getTrafficSources(period),
+        googleAnalyticsService.getTopPages(period)
+      ]);
+
       const reportData = {
         period,
-        traffic: Math.floor(Math.random() * 5000) + 2000,
-        conversions: Math.floor(Math.random() * 50) + 20,
-        topKeywords: [
-          "HVAC repair Winter Haven",
-          "AC installation Lakeland", 
-          "Commercial HVAC service",
-          "Emergency HVAC repair",
-          "Heat pump maintenance"
-        ],
-        topPages: [
-          "/services/ac-repair",
-          "/services/installation", 
-          "/commercial-hvac",
-          "/emergency-service",
-          "/maintenance-plans"
-        ],
-        trafficSources: [
-          "Google Organic (45%)",
-          "Google Ads (25%)",
-          "Direct (15%)",
-          "Facebook (10%)",
-          "Referrals (5%)"
-        ]
+        traffic: metrics.sessions,
+        conversions: Math.floor(metrics.sessions * 0.032), // Estimate based on average conversion rate
+        topKeywords: trafficSources.filter(s => s.source.toLowerCase().includes('google')).map(s => s.source).slice(0, 5),
+        topPages: topPages.map(p => p.page).slice(0, 5),
+        trafficSources: trafficSources.map(s => `${s.source} (${s.percentage.toFixed(1)}%)`).slice(0, 5),
       };
 
       const report = await storage.createAnalyticsReport(reportData);

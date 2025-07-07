@@ -15,6 +15,7 @@ import {
   Star,
   UserPlus,
   Settings as SettingsIcon,
+  Globe,
 } from "lucide-react";
 
 const navigation = [
@@ -25,6 +26,7 @@ const navigation = [
   { name: "SEO", href: "/seo", icon: Search },
   { name: "Reviews", href: "/reviews", icon: Star },
   { name: "Leads", href: "/leads", icon: UserPlus },
+  { name: "GoDaddy", href: "/godaddy", icon: Globe },
   { name: "Settings", href: "/settings", icon: SettingsIcon },
 ];
 
@@ -38,12 +40,10 @@ export default function TopNavigation({ title }: TopNavigationProps) {
 
   const handleLogout = () => {
     toast({
-      title: "Logged Out",
-      description: "You have been successfully logged out.",
+      title: "Logging Out",
+      description: "You are being logged out.",
     });
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 1000);
+    window.location.href = "/api/logout";
   };
 
   return (

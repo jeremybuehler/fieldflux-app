@@ -257,11 +257,31 @@ export default function Settings() {
       {/* Main Content */}
       <div className="p-4 lg:p-8">
         <Tabs defaultValue="wordpress" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
-            <TabsTrigger value="wordpress">WordPress</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-            <TabsTrigger value="twilio">SMS</TabsTrigger>
-            <TabsTrigger value="social">Social</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 bg-gray-100 p-1 rounded-lg">
+            <TabsTrigger 
+              value="wordpress" 
+              className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm text-gray-700 font-medium"
+            >
+              WordPress
+            </TabsTrigger>
+            <TabsTrigger 
+              value="analytics" 
+              className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm text-gray-700 font-medium"
+            >
+              Analytics
+            </TabsTrigger>
+            <TabsTrigger 
+              value="twilio" 
+              className="data-[state=active]:bg-blue-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-gray-700 font-medium hover:text-blue-600"
+            >
+              SMS
+            </TabsTrigger>
+            <TabsTrigger 
+              value="social" 
+              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-gray-700 font-medium hover:text-purple-600"
+            >
+              Social
+            </TabsTrigger>
           </TabsList>
 
           {/* WordPress Configuration */}
@@ -437,13 +457,15 @@ export default function Settings() {
 
           {/* Twilio SMS Configuration */}
           <TabsContent value="twilio" className="space-y-6">
-            <Card>
-              <CardHeader>
+            <Card className="border-blue-200 bg-blue-50/50">
+              <CardHeader className="bg-blue-100/50">
                 <div className="flex items-center space-x-3">
-                  <MessageSquare className="w-6 h-6 text-red-600" />
+                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <MessageSquare className="w-5 h-5 text-white" />
+                  </div>
                   <div>
-                    <CardTitle>Twilio SMS Configuration</CardTitle>
-                    <p className="text-sm text-gray-600 mt-1">
+                    <CardTitle className="text-blue-900">Twilio SMS Configuration</CardTitle>
+                    <p className="text-sm text-blue-700 mt-1">
                       Configure Twilio for SMS notifications and lead follow-ups
                     </p>
                   </div>
@@ -535,6 +557,19 @@ export default function Settings() {
 
           {/* Social Media Configuration */}
           <TabsContent value="social" className="space-y-6">
+            <div className="bg-purple-50/50 p-4 rounded-lg border border-purple-200">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center">
+                  <Share2 className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-purple-900">Social Media Configuration</h2>
+                  <p className="text-sm text-purple-700">
+                    Connect your social media accounts for automated posting
+                  </p>
+                </div>
+              </div>
+            </div>
             <div className="grid gap-6">
               {/* Facebook */}
               <Card>
