@@ -9,6 +9,116 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 
+// Individual Review Card Component with Response Actions
+function ReviewCard({ review, businessName }) {
+  const [isGeneratingResponse, setIsGeneratingResponse] = useState(false);
+  const [showResponse, setShowResponse] = useState(false);
+  const [generatedResponse, setGeneratedResponse] = useState('');
+
+  const generateResponse = async () => {
+    setIsGeneratingResponse(true);
+    try {
+      const response = await fetch('/api/reviews/generate-response', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reviewText: review.comment,
+          rating: review.starRating,
+          businessName: businessName
+        })
+      });
+      
+      if (!response.ok) throw new Error('Failed to generate response');
+      
+      const data = await response.json();
+      setGeneratedResponse(data.response);
+      setShowResponse(true);
+      
+      toast({
+        title: "Response Generated",
+        description: "AI-powered response ready for review",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsGeneratingResponse(false);
+    }
+  };
+
+  return (
+    <div className="border rounded-lg p-4 space-y-3">
+      <div className="flex items-start space-x-3">
+        <img 
+          src={review.reviewer.profilePhotoUrl || `https://ui-avatars.com/api/?name=${review.reviewer.displayName}&size=40&background=random`}
+          alt={review.reviewer.displayName}
+          className="w-10 h-10 rounded-full"
+        />
+        <div className="flex-1">
+          <div className="flex items-center justify-between mb-1">
+            <h4 className="font-medium">{review.reviewer.displayName}</h4>
+            <div className="flex items-center space-x-1">
+              {Array.from({ length: 5 }, (_, i) => (
+                <Star
+                  key={i}
+                  className={`w-4 h-4 ${i < review.starRating ? 'text-yellow-500 fill-current' : 'text-gray-300'}`}
+                />
+              ))}
+            </div>
+          </div>
+          <p className="text-gray-600 text-sm mb-2">{review.comment}</p>
+          <p className="text-xs text-gray-500">
+            {new Date(review.createTime).toLocaleDateString()}
+          </p>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex items-center space-x-2 pt-2 border-t">
+        <Button 
+          onClick={generateResponse} 
+          disabled={isGeneratingResponse}
+          size="sm"
+          variant="outline"
+        >
+          {isGeneratingResponse ? 'Generating...' : 'Generate Response'}
+        </Button>
+        
+        {review.starRating <= 3 && (
+          <Button size="sm" variant="outline" className="text-orange-600 border-orange-600">
+            Flag for Follow-up
+          </Button>
+        )}
+        
+        <Button size="sm" variant="ghost" className="text-blue-600">
+          View Full Review
+        </Button>
+      </div>
+
+      {/* Generated Response Section */}
+      {showResponse && (
+        <div className="bg-blue-50 rounded-lg p-3 mt-3">
+          <div className="flex items-center justify-between mb-2">
+            <h5 className="font-medium text-blue-900">AI-Generated Response</h5>
+            <div className="flex space-x-2">
+              <Button size="sm" variant="outline" className="text-xs">
+                Edit
+              </Button>
+              <Button size="sm" className="text-xs bg-blue-600 hover:bg-blue-700">
+                Post Response
+              </Button>
+            </div>
+          </div>
+          <p className="text-sm text-blue-800">{generatedResponse}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Reviews() {
   const [selectedBusiness, setSelectedBusiness] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -240,7 +350,7 @@ export default function Reviews() {
           </Card>
         </div>
 
-        {/* Reviews List */}
+        {/* Reviews List with Response Actions */}
         <Card>
           <CardHeader>
             <CardTitle>Recent Reviews</CardTitle>
@@ -252,34 +362,9 @@ export default function Reviews() {
                 <p className="mt-2 text-gray-600">Loading reviews...</p>
               </div>
             ) : googleReviews?.reviews?.length > 0 ? (
-              <div className="space-y-4">
+              <div className="space-y-6">
                 {googleReviews.reviews.map((review, index) => (
-                  <div key={review.reviewId || index} className="border-b pb-4 last:border-b-0">
-                    <div className="flex items-start space-x-3">
-                      <img 
-                        src={review.reviewer.profilePhotoUrl || `https://ui-avatars.com/api/?name=${review.reviewer.displayName}&size=40&background=random`}
-                        alt={review.reviewer.displayName}
-                        className="w-10 h-10 rounded-full"
-                      />
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <h4 className="font-medium">{review.reviewer.displayName}</h4>
-                          <div className="flex items-center space-x-1">
-                            {Array.from({ length: 5 }, (_, i) => (
-                              <Star
-                                key={i}
-                                className={`w-4 h-4 ${i < review.starRating ? 'text-yellow-500 fill-current' : 'text-gray-300'}`}
-                              />
-                            ))}
-                          </div>
-                        </div>
-                        <p className="text-gray-600 text-sm mb-2">{review.comment}</p>
-                        <p className="text-xs text-gray-500">
-                          {new Date(review.createTime).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  <ReviewCard key={review.reviewId || index} review={review} businessName={selectedBusiness.name} />
                 ))}
               </div>
             ) : (
