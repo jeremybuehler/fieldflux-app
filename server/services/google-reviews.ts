@@ -153,20 +153,19 @@ export class GoogleReviewsService {
   async getBusinessReviews(businessName?: string, businessAddress?: string): Promise<ReviewsResponse> {
     // Try Google Places API first for real reviews
     try {
-      const { googlePlacesService } = await import('./google-places');
-      const placesStatus = googlePlacesService.getConfigurationStatus();
+      const { googlePlacesNewService } = await import('./google-places-new');
+      const placesStatus = googlePlacesNewService.getConfigurationStatus();
       
       if (placesStatus.configured && businessName) {
-        console.log('Fetching real reviews using Google Places API for:', businessName);
+        console.log('Fetching real reviews using Google Places (New) API for:', businessName);
         
-        const reviewsData = await googlePlacesService.getReviewsForBusiness(businessName, businessAddress);
-        const convertedReviews = googlePlacesService.convertToInternalFormat(reviewsData.reviews);
+        const reviewsData = await googlePlacesNewService.getReviewsForBusiness(businessName, businessAddress);
         
-        console.log(`Successfully fetched ${convertedReviews.length} real reviews for ${reviewsData.businessInfo.name}`);
+        console.log(`Successfully fetched ${reviewsData.reviews.length} real reviews`);
         
         return {
-          reviews: convertedReviews,
-          totalReviewCount: reviewsData.totalReviews,
+          reviews: reviewsData.reviews,
+          totalReviewCount: reviewsData.totalReviewCount,
           averageRating: reviewsData.averageRating
         };
       }
