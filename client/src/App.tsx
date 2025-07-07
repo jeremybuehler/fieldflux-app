@@ -13,7 +13,7 @@ import Landing from "@/pages/landing-auth";
 import Social from "@/pages/social";
 import Leads from "@/pages/leads";
 import Reviews from "@/pages/reviews";
-import Analytics from "@/pages/analytics";
+import Reports from "@/pages/reports";
 import Keywords from "@/pages/keywords";
 import SEO from "@/pages/seo";
 import Website from "@/pages/website";
@@ -36,7 +36,7 @@ function Router() {
           <Route path="/social" component={Social} />
           <Route path="/leads" component={Leads} />
           <Route path="/reviews" component={Reviews} />
-          <Route path="/analytics" component={Analytics} />
+          <Route path="/reports" component={Reports} />
           <Route path="/keywords" component={Keywords} />
           <Route path="/seo" component={SEO} />
           <Route path="/website" component={Website} />
