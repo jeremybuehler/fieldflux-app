@@ -1,236 +1,230 @@
-# KasamaAI - Where Field Service Meets Smart Marketing
+# KasamaAI - AI-Powered Marketing Platform
 
-![KasamaAI Logo](icons/icon.png)
+## Overview
 
-KasamaAI is a comprehensive AI-powered marketing automation platform designed specifically for field service professionals. Transform your service business with intelligent content creation, automated social media management, lead tracking, and reputation building - all while you focus on delivering exceptional service to your customers.
+This is KasamaAI - Where Business Meets Smart Marketing. A comprehensive marketing automation platform that transforms how business professionals connect with customers. From intelligent content creation to automated lead management, KasamaAI helps professionals showcase their expertise and grow their business effortlessly.
 
-## 🚀 Features
+## System Architecture
 
-### 🤖 AI-Powered Content Generation
-- **Blog Posts**: Generate SEO-optimized blog content for your industry
-- **Social Media**: Create platform-specific posts for Facebook, Instagram, LinkedIn, and TikTok
-- **Email Campaigns**: Craft compelling email marketing content
-- **Review Responses**: AI-generated professional responses to customer reviews
+The application follows a full-stack architecture with:
 
-### 📱 Multi-Platform Social Media Management
-- **Unified Scheduler**: Plan and schedule content across all major platforms
-- **Platform Optimization**: Content automatically adapted for each platform's requirements
-- **Character Limits**: Smart truncation and optimization for platform-specific limits
-- **Hashtag Generation**: Industry-relevant hashtags for maximum reach
+- **Frontend**: React with TypeScript, built using Vite
+- **Backend**: Express.js server with TypeScript
+- **Database**: PostgreSQL with Drizzle ORM
+- **UI Framework**: Tailwind CSS with shadcn/ui components
+- **State Management**: TanStack Query for server state
+- **Routing**: Wouter for client-side routing
 
-### 📊 Analytics & Insights
-- **Performance Tracking**: Monitor engagement, reach, and conversion metrics
-- **Google Analytics Integration**: Connect your GA4 property for comprehensive insights
-- **Lead Attribution**: Track which marketing efforts generate the most leads
-- **ROI Analysis**: Understand the return on your marketing investments
+## Key Components
 
-### 🎯 Lead Management
-- **Lead Tracking**: Capture and organize customer inquiries
-- **Automated Follow-ups**: Smart reminders and follow-up sequences
-- **Lead Scoring**: Prioritize high-value prospects
-- **Conversion Tracking**: Monitor lead-to-customer conversion rates
+### Frontend Architecture
+- **React Components**: Modular component structure with shadcn/ui design system
+- **TypeScript**: Full type safety across client and server
+- **Tailwind CSS**: Utility-first CSS framework with custom HVAC branding variables
+- **TanStack Query**: Server state management and caching
+- **Wouter**: Lightweight routing solution
 
-### 🔍 SEO Optimization
-- **Website Analysis**: Comprehensive SEO audits and recommendations
-- **Keyword Tracking**: Monitor your rankings for important search terms
-- **Local SEO**: Optimize for local search results in your service area
-- **Content Optimization**: SEO-friendly content suggestions
+### Backend Architecture
+- **Express.js**: RESTful API server with middleware for logging and error handling
+- **TypeScript**: Type-safe server implementation
+- **Drizzle ORM**: Type-safe database operations with PostgreSQL
+- **OpenAI Integration**: AI-powered content generation for marketing materials
 
-### ⭐ Reputation Management
-- **Review Monitoring**: Track reviews across Google, Yelp, and Facebook
-- **Response Generation**: AI-powered review responses
-- **Reputation Analytics**: Monitor your online reputation score
-- **Review Request Automation**: Systematic review collection campaigns
+### Database Schema
+The application manages several core entities:
+- **Users**: Authentication and user management
+- **WordPress Posts**: Blog content management
+- **Social Posts**: Social media content scheduling
+- **Leads**: Customer lead tracking and management
+- **Tasks**: Marketing task automation
+- **Activities**: Activity feed for user actions
+- **SEO Keywords**: Keyword tracking and performance
 
-## 🛠 Technology Stack
+### UI Design System
+- **shadcn/ui**: Modern, accessible component library
+- **Custom HVAC Branding**: Industry-specific color scheme (blue, orange, gray)
+- **Responsive Design**: Mobile-first approach with Tailwind breakpoints
+- **Dark Mode Support**: Complete dark mode implementation
 
-### Frontend
-- **React 18** with TypeScript
-- **Vite** for fast development and building
-- **Tailwind CSS** with custom HVAC industry theming
-- **shadcn/ui** component library for modern, accessible UI
-- **TanStack Query** for efficient server state management
-- **Wouter** for lightweight client-side routing
+## Data Flow
 
-### Backend
-- **Express.js** with TypeScript
-- **PostgreSQL** database with Neon serverless hosting
-- **Drizzle ORM** for type-safe database operations
-- **OpenAI GPT-4** for AI content generation
-- **Passport.js** for authentication
+1. **Client Requests**: React components make API calls using TanStack Query
+2. **API Layer**: Express.js routes handle business logic and database operations
+3. **Database Operations**: Drizzle ORM manages PostgreSQL interactions
+4. **AI Integration**: OpenAI API generates marketing content when requested
+5. **Real-time Updates**: Query client invalidation keeps UI synchronized
+
+## External Dependencies
+
+### Core Dependencies
+- **@neondatabase/serverless**: PostgreSQL database connection
+- **drizzle-orm**: Type-safe database ORM
+- **openai**: AI content generation
+- **@tanstack/react-query**: Server state management
+- **wouter**: Client-side routing
+
+### UI Dependencies
+- **@radix-ui/react-***: Accessible primitive components
+- **tailwindcss**: Utility-first CSS framework
+- **lucide-react**: Icon library
+- **recharts**: Chart visualization
 
 ### Development Tools
-- **TypeScript** for full-stack type safety
-- **ESBuild** for fast bundling
-- **Drizzle Kit** for database migrations
-- **TSX** for TypeScript execution
+- **typescript**: Type safety
+- **vite**: Build tool and dev server
+- **esbuild**: Server bundling for production
 
-## 🏗 Architecture
+## Deployment Strategy
 
-```
-┌─────────────────────┐    ┌─────────────────────┐    ┌─────────────────────┐
-│     React Client    │    │   Express Server    │    │   PostgreSQL DB     │
-│                     │    │                     │    │                     │
-│ • TypeScript        │◄──►│ • RESTful API       │◄──►│ • Drizzle ORM       │
-│ • TanStack Query    │    │ • OpenAI Integration│    │ • User Management   │
-│ • Tailwind CSS     │    │ • Authentication    │    │ • Content Storage   │
-│ • shadcn/ui         │    │ • File Processing   │    │ • Analytics Data    │
-└─────────────────────┘    └─────────────────────┘    └─────────────────────┘
-```
+The application is configured for Replit deployment with:
 
-## 📦 Installation & Setup
+- **Development**: `npm run dev` - Runs both client and server in development mode
+- **Build**: `npm run build` - Creates optimized production builds
+- **Production**: `npm run start` - Serves the production application
+- **Database**: Uses PostgreSQL with Drizzle migrations
+- **Environment**: Node.js 20 with TypeScript support
 
-### Prerequisites
-- Node.js 18+ 
-- PostgreSQL database (Neon recommended)
-- OpenAI API key
+### Replit Configuration
+- **Port 5000**: Main application server
+- **Auto-scaling**: Configured for automatic scaling
+- **Database**: PostgreSQL 16 module enabled
+- **Build Process**: Vite for client, esbuild for server
 
-### Environment Variables
-Create a `.env` file in the root directory:
+## Recent Changes
+- June 24, 2025: Initial HVAC marketing dashboard setup with basic components
+- June 24, 2025: Enhanced FieldPulse AI agent with comprehensive features:
+  - Added reviews management system with AI-powered response generation
+  - Integrated GoDaddy WordPress publishing capabilities  
+  - Enhanced analytics reporting with comprehensive metrics and charts
+  - Added lead qualification system with automated scoring
+  - Extended database schema for reviews and analytics reports
+  - Improved UI with additional dashboard panels
+- June 24, 2025: Added PostgreSQL database integration with full data persistence
+- June 24, 2025: Created comprehensive Settings page with detailed configuration instructions:
+  - WordPress/GoDaddy integration setup with step-by-step instructions
+  - Google Analytics configuration with GA4 measurement ID setup
+  - Added navigation to settings page in sidebar
+- June 24, 2025: Implemented AI-powered content generation features:
+  - Added "Need an idea?" functionality with GPT-4o integration
+  - Created intelligent topic suggestion system for blog and social media posts
+  - Enhanced UX with Use This/Try Another/No Thanks workflow options
+- June 24, 2025: Added weather integration and authentication framework:
+  - Integrated real-time weather widget for Winter Haven, FL location
+  - Created professional marketing landing page as default entry point
+  - Implemented login/signup system with demo access (admin/demo123)
+  - Added proper navigation flow between landing page and dashboard
+- June 24, 2025: Rebranded from "Dave AI" to "HVAC Pro AI" for professional presentation:
+  - Updated all branding throughout the application
+  - Switched to in-memory storage to resolve database connection issues
+  - Prepared for personalized UI with user's first name integration
+- June 24, 2025: Rebranded to universal Field Service Providers platform:
+  - Changed from HVAC-specific to "FieldPro AI" for broader market appeal
+  - Updated messaging to focus on social media content marketing for all field service industries
+  - Repositioned as universal platform for HVAC, plumbing, electrical, landscaping, pest control, etc.
+- June 24, 2025: Final rebrand to "FieldPulse":
+  - Changed to "FieldPulse - Where Field Service Meets Smart Marketing"
+  - Enhanced messaging with compelling taglines and customer-focused language
+  - Positioned as effortless marketing automation that transforms service calls into success stories
+  - Maintains focus on field service providers across all industries
+- June 24, 2025: Enhanced navigation and added Twilio SMS integration:
+  - Fixed sidebar navigation links to properly route to dedicated pages
+  - Created Social Media and Lead Management pages with dedicated functionality
+  - Added comprehensive Twilio SMS service for customer communication
+  - Implemented SMS templates for lead follow-ups, appointment confirmations, and emergency alerts
+- June 25, 2025: Mobile responsiveness improvements:
+  - Implemented mobile-first sidebar with hamburger menu and slide-in animation
+  - Added proper mobile overlay and touch-friendly navigation
+  - Enhanced landing page responsiveness with optimized spacing and text sizing
+  - Improved dashboard and social media page layouts for mobile devices
+- June 25, 2025: Landing page and credential management improvements:
+  - Fixed difficult-to-read gradient on landing page by switching from dark blue to light slate theme
+  - Improved text contrast and readability with darker text on lighter background
+  - Added comprehensive credential management interfaces in Settings page
+  - Created Twilio SMS configuration section with Account SID, Auth Token, and Phone Number fields
+  - Added social media platform credential management for Facebook, Instagram, Twitter, and LinkedIn
+  - Included detailed setup instructions for each integration with proper secret environment variable names
+- June 25, 2025: UI improvements and dashboard fixes:
+  - Fixed large gap between sidebar and dashboard content by removing excessive left padding
+  - Resolved blank settings page by implementing complete settings interface with mobile sidebar
+  - Removed "Generate Content" button from dashboard header as requested
+  - Enhanced landing page readability by switching from dark gradient to light theme
+  - Added comprehensive credential management for Twilio SMS, Facebook, Twitter, Instagram, and LinkedIn
+  - Improved mobile responsiveness across settings page with proper form layouts
+  - Applied consistent spacing fix across all main pages (dashboard, settings, social, leads)
+  - Implemented Smart UI Spacing Optimizer system with intelligent spacing, typography, and component classes
+  - Enhanced dashboard with modern card designs, gradient backgrounds, colored icon containers, and improved visual hierarchy
+  - Created comprehensive UI optimization library for consistent design system across application
+- June 26, 2025: Critical dashboard TypeScript error resolution:
+  - Successfully resolved blank dashboard issue caused by UI optimizer TypeScript errors
+  - Completely rewrote dashboard-simple.tsx with clean, direct Tailwind styling
+  - Removed problematic UI optimizer function calls that caused "ui is not defined" errors
+  - Implemented modern dashboard design with gradient background, metric cards, and hover animations
+  - Dashboard now displays properly with professional interface featuring social media management, performance analytics, and activity timeline
+- June 27, 2025: Multi-Platform Post Scheduling Wizard implementation:
+  - Created comprehensive step-by-step wizard for social media scheduling
+  - Added platform selection for Facebook, Instagram, Twitter/X, and LinkedIn
+  - Implemented global content creation with platform-specific customization
+  - Added date/time scheduling with optimal posting time recommendations
+  - Created review and preview functionality before scheduling
+  - Fixed navigation consistency - Social Media Management now properly navigates to dedicated page
+  - Updated sidebar navigation to route to /social with proper breadcrumbs
+  - Enhanced social media page with tabbed interface (Multi-Platform Wizard and Quick Post)
+  - Updated button labels from "Need an idea?" to "Get Ideas" and "Generate Content" to "Generate Post"
+- June 29, 2025: Mobile responsiveness improvements:
+  - Hidden header badges (AI Powered, Winter Haven FL) on mobile screens to center text better
+  - Changed dashboard header alignment to center on mobile, left-align on larger screens
+  - Improved mobile user experience with cleaner, focused header layout
+  - Maintained logout button visibility across all screen sizes
+- June 29, 2025: White-label transformation and rebranding to KasamaAI:
+  - Removed all "Field Service" specific language throughout the platform
+  - Rebranded from "FieldPulse" to "MarketPulse" to "KasamaAI"
+  - Updated tagline to "Where Business Meets Smart Marketing"
+  - Transformed into universal white-label platform suitable for any business type
+  - Updated dashboard title from "Field Service Marketing Dashboard" to "Marketing Dashboard"
+  - Made content creation and messaging universally applicable to all industries
+- July 7, 2025: Added GoDaddy Configuration page:
+  - Created comprehensive GoDaddy integration page with domain management capabilities
+  - Added three-tab interface: Connection, Domains, and Settings
+  - Implemented API key configuration with sandbox/production environment selection
+  - Added domain management interface with auto-renewal and privacy settings
+  - Created webhook configuration for domain notifications
+  - Added detailed setup instructions for GoDaddy Developer account
+  - Integrated GoDaddy page into navigation (top navigation and mobile sidebar)
+  - Positioned as complete domain management solution within KasamaAI platform
+- July 7, 2025: Implemented Replit Authentication system:
+  - Added complete Replit Auth integration with OpenID Connect
+  - Created new landing page with professional header containing Login/Sign-Up button
+  - Updated main CTA from "Sign in with Replit" to "Get Started" with additional "Already have an account?" option
+  - Set up PostgreSQL database with users and sessions tables for persistent authentication
+  - Added proper authentication routes: /api/login, /api/logout, /api/callback, /api/auth/user
+  - Implemented authenticated user flow that redirects to dashboard upon successful login
+  - Fixed authentication error handling to prevent undefined claims issues
+- July 7, 2025: Implemented Google Search Console Integration for Real Keyword Data:
+  - Added googleapis package for Google Search Console API access
+  - Extended GoogleAnalyticsService to include Search Console authentication and data retrieval
+  - Created intelligent fallback system between live Search Console data and demo data
+  - Implemented real-time status monitoring for API connections and site verification
+  - Added comprehensive setup instructions with step-by-step guidance for adding websites to Search Console
+  - Created /api/search-console/status endpoint for monitoring integration health
+  - Enhanced Keywords page with live/demo data indicators and automatic refresh functionality
+  - Service account properly configured for both Google Analytics and Search Console APIs
+  - System automatically switches from demo to live data once Search Console properties are configured
 
-```env
-# Database
-DATABASE_URL=your_postgresql_connection_string
+## Architecture Updates
+- **Database Schema**: Added `reviews` and `analytics_reports` tables with PostgreSQL backend
+- **Storage**: Migrated from in-memory storage to PostgreSQL with Drizzle ORM
+- **API Endpoints**: Extended with review management, GoDaddy integration, analytics reporting, topic generation, and weather data
+- **UI Components**: Added ReviewsPanel, GoDaddyIntegration, AnalyticsReports, WeatherWidget, and Settings page
+- **Navigation**: Enhanced sidebar with settings page and proper routing between landing and dashboard
+- **AI Features**: Enhanced OpenAI integration for review responses, content generation, and intelligent topic suggestions
+- **Authentication**: Implemented user authentication framework with landing page, login/signup forms, and demo access
+- **Weather Integration**: Added real-time weather display for Winter Haven, FL with temperature and rain forecast
 
-# OpenAI
-OPENAI_API_KEY=your_openai_api_key
+## User Preferences
 
-# Analytics (Optional)
-VITE_GA_MEASUREMENT_ID=your_google_analytics_id
-
-# Session Secret
-SESSION_SECRET=your_session_secret_key
-```
-
-### Quick Start
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/kasama-ai.git
-   cd kasama-ai
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up the database**
-   ```bash
-   npm run db:push
-   ```
-
-4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Visit the application**
-   Open [http://localhost:5000](http://localhost:5000) in your browser
-
-## 🚦 Usage
-
-### Getting Started
-1. **Access the Platform**: Visit the landing page and create an account or use demo credentials (admin/demo123)
-2. **Dashboard Overview**: Familiarize yourself with the main dashboard showing key metrics and recent activity
-3. **Connect Integrations**: Set up Google Analytics, social media accounts, and other integrations in Settings
-
-### Content Creation Workflow
-1. **Navigate to Social**: Go to the Social Media section
-2. **Generate Content**: Use the AI content generator to create posts
-3. **Platform Optimization**: Review and customize content for each platform
-4. **Schedule Posts**: Set your posting schedule across all platforms
-5. **Monitor Performance**: Track engagement and adjust strategy
-
-### Lead Management
-1. **Lead Capture**: Leads automatically appear in the Leads section
-2. **Follow-up Tasks**: Review suggested follow-up actions
-3. **Conversion Tracking**: Monitor lead progression through your sales funnel
-
-## 📱 Platform Support
-
-### Social Media Platforms
-- **Facebook**: Posts, images, hashtags, scheduling
-- **Instagram**: Posts, stories, hashtags, optimal timing
-- **LinkedIn**: Professional content, company updates
-- **TikTok**: Short-form video concepts and scripts
-
-### Content Types
-- **Blog Posts**: SEO-optimized articles for your website
-- **Social Posts**: Platform-specific content with optimal formatting
-- **Email Campaigns**: Customer retention and lead nurturing
-- **Review Responses**: Professional, brand-consistent replies
-
-## 🔧 Development
-
-### Available Scripts
-- `npm run dev` - Start development server with hot reload
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run check` - Type check with TypeScript
-- `npm run db:push` - Push database schema changes
-
-### Project Structure
-```
-├── client/              # React frontend application
-│   ├── src/
-│   │   ├── components/  # Reusable UI components
-│   │   ├── pages/       # Page components
-│   │   ├── hooks/       # Custom React hooks
-│   │   └── lib/         # Utility libraries
-├── server/              # Express backend application
-│   ├── routes.ts        # API route definitions
-│   ├── db.ts           # Database connection
-│   └── storage.ts      # Data access layer
-├── shared/              # Shared TypeScript schemas
-└── icons/              # Application icons and assets
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
-
-### Development Workflow
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🆘 Support
-
-### Documentation
-- [API Documentation](docs/api.md)
-- [Deployment Guide](docs/deployment.md)
-- [Integration Setup](docs/integrations.md)
-
-### Getting Help
-- **GitHub Issues**: For bug reports and feature requests
-- **Documentation**: Comprehensive guides and API reference
-- **Community**: Join our Discord community for discussions
-
-### Demo Access
-Try KasamaAI with our demo account:
-- **Username**: admin
-- **Password**: demo123
-
-## 🔮 Roadmap
-
-### Upcoming Features
-- [ ] Advanced analytics dashboard with custom reports
-- [ ] WhatsApp Business API integration
-- [ ] Automated review collection campaigns
-- [ ] Custom AI training on your business data
-- [ ] Mobile app for iOS and Android
-- [ ] Integration marketplace for popular field service tools
-
-### Long-term Vision
-- AI-powered customer service automation
-- Predictive analytics for business forecasting
-- Voice-to-content generation
-- Advanced personalization and targeting
-
-
+Preferred communication style: Simple, everyday language.
+API Keys: Will provide Google Analytics ID in the morning.
+Branding: Evolved from "Dave AI" to "HVAC Pro AI" to "FieldPro AI" to "FieldPulse" to "MarketPulse" and finally to "KasamaAI - Where Business Meets Smart Marketing" as a white-label platform with compelling, customer-focused messaging that emphasizes effortless automation and business growth.
+Personalization: UI should reflect logged-in user's first name instead of generic references.
+Market Focus: Universal white-label platform for all business types - service providers, consultants, retailers, contractors, professionals, etc.
+Twilio Integration: User has Twilio account - implementing SMS features for lead follow-ups, appointment confirmations, and customer notifications.
