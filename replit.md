@@ -209,6 +209,11 @@ The application is configured for Replit deployment with:
   - Enhanced Keywords page with live/demo data indicators and automatic refresh functionality
   - Service account properly configured for both Google Analytics and Search Console APIs
   - System automatically switches from demo to live data once Search Console properties are configured
+- July 7, 2025: Enhanced Settings Page Tab Visibility:
+  - Improved tab contrast and styling for better readability
+  - Added colored backgrounds and active states for SMS (blue) and Social (purple) tabs
+  - Enhanced content styling with theme-appropriate colors and better visual separation
+  - Fixed hard-to-see tab issue with stronger text contrast and hover effects
 
 ## Architecture Updates
 - **Database Schema**: Added `reviews` and `analytics_reports` tables with PostgreSQL backend
