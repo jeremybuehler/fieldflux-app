@@ -15,6 +15,7 @@ import {
   Star,
   UserPlus,
   Settings as SettingsIcon,
+  Globe,
 } from "lucide-react";
 
 const navigation = [
@@ -25,6 +26,7 @@ const navigation = [
   { name: "SEO", href: "/seo", icon: Search },
   { name: "Reviews", href: "/reviews", icon: Star },
   { name: "Leads", href: "/leads", icon: UserPlus },
+  { name: "GoDaddy", href: "/godaddy", icon: Globe },
   { name: "Settings", href: "/settings", icon: SettingsIcon },
 ];
 

@@ -16,6 +16,7 @@ import Reviews from "@/pages/reviews";
 import Analytics from "@/pages/analytics";
 import SEO from "@/pages/seo";
 import Website from "@/pages/website";
+import GoDaddy from "@/pages/godaddy";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/analytics" component={Analytics} />
       <Route path="/seo" component={SEO} />
       <Route path="/website" component={Website} />
+      <Route path="/godaddy" component={GoDaddy} />
       <Route path="/settings" component={Settings} />
       <Route component={NotFound} />
     </Switch>
