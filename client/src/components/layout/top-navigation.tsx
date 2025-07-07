@@ -1,39 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import WeatherWidget from "@/components/dashboard/weather-widget";
-import {
-  Bot,
-  MapPin,
-  LogOut,
-  Share2,
-  Code,
-  Search,
-  Star,
-  UserPlus,
-  Settings as SettingsIcon,
-  LayoutDashboard,
-  TrendingUp,
-} from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
-
-const navigation = [
-  { name: "", href: "/dashboard", icon: WeatherWidget },
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Social Media", href: "/social", icon: Share2 },
-  { name: "Website", href: "/website", icon: Code },
-  { name: "Analytics", href: "/analytics", icon: TrendingUp },
-  { name: "SEO", href: "/seo", icon: Search },
-  { name: "Reviews", href: "/reviews", icon: Star },
-  { name: "Leads", href: "/leads", icon: UserPlus },
-  { name: "Settings", href: "/settings", icon: SettingsIcon },
-  { name: "Logout", href: "alert('Add something here')", icon: LogOut },
-];
-
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Link, useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import {
