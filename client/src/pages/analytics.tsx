@@ -4,8 +4,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AnalyticsChart from "@/components/dashboard/analytics-chart";
 import AnalyticsReports from "@/components/dashboard/analytics-reports";
 import { ArrowLeft, TrendingUp, Users, Eye, MousePointer } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { analyticsService } from "@/lib/analytics-service";
 
 export default function Analytics() {
+  const { data: metrics, isLoading: metricsLoading } = useQuery({
+    queryKey: ['/api/analytics/metrics'],
+    queryFn: () => analyticsService.getMetrics('30d'),
+  });
+
+  const { data: trafficSources, isLoading: sourcesLoading } = useQuery({
+    queryKey: ['/api/analytics/traffic-sources'],
+    queryFn: () => analyticsService.getTrafficSources('30d'),
+  });
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto p-6">
@@ -34,9 +46,13 @@ export default function Analytics() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Total Visitors</p>
-                  <p className="text-2xl font-bold">2,847</p>
-                  <p className="text-xs text-green-600">+12% from last month</p>
+                  <p className="text-sm text-gray-600">Total Users</p>
+                  <p className="text-2xl font-bold">
+                    {metricsLoading ? '...' : metrics?.users.toLocaleString() || '0'}
+                  </p>
+                  <p className="text-xs text-green-600">
+                    {metricsLoading ? '...' : `${metrics?.new_users || 0} new users`}
+                  </p>
                 </div>
                 <Users className="w-8 h-8 text-blue-500" />
               </div>
@@ -48,8 +64,12 @@ export default function Analytics() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Page Views</p>
-                  <p className="text-2xl font-bold">8,392</p>
-                  <p className="text-xs text-green-600">+8% from last month</p>
+                  <p className="text-2xl font-bold">
+                    {metricsLoading ? '...' : metrics?.pageviews.toLocaleString() || '0'}
+                  </p>
+                  <p className="text-xs text-green-600">
+                    {metricsLoading ? '...' : `${metrics?.sessions || 0} sessions`}
+                  </p>
                 </div>
                 <Eye className="w-8 h-8 text-green-500" />
               </div>
@@ -60,9 +80,13 @@ export default function Analytics() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Conversion Rate</p>
-                  <p className="text-2xl font-bold">3.2%</p>
-                  <p className="text-xs text-green-600">+0.4% from last month</p>
+                  <p className="text-sm text-gray-600">Avg Session Duration</p>
+                  <p className="text-2xl font-bold">
+                    {metricsLoading ? '...' : `${Math.round((metrics?.avg_session_duration || 0) / 60)}m`}
+                  </p>
+                  <p className="text-xs text-blue-600">
+                    {metricsLoading ? '...' : `${metrics?.sessions || 0} sessions`}
+                  </p>
                 </div>
                 <MousePointer className="w-8 h-8 text-orange-500" />
               </div>
@@ -74,8 +98,12 @@ export default function Analytics() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Bounce Rate</p>
-                  <p className="text-2xl font-bold">42%</p>
-                  <p className="text-xs text-red-600">+2% from last month</p>
+                  <p className="text-2xl font-bold">
+                    {metricsLoading ? '...' : `${(metrics?.bounce_rate || 0).toFixed(1)}%`}
+                  </p>
+                  <p className="text-xs text-red-600">
+                    {metricsLoading ? '...' : 'Google Analytics data'}
+                  </p>
                 </div>
                 <TrendingUp className="w-8 h-8 text-red-500" />
               </div>
@@ -90,42 +118,31 @@ export default function Analytics() {
               <CardTitle className="text-lg">Top Traffic Sources</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Google Search</span>
-                <div className="flex items-center space-x-2">
-                  <div className="w-20 bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: '65%' }}></div>
+              {sourcesLoading ? (
+                <div className="text-center py-4">Loading traffic sources...</div>
+              ) : trafficSources && trafficSources.length > 0 ? (
+                trafficSources.slice(0, 5).map((source, index) => (
+                  <div key={index} className="flex justify-between items-center">
+                    <span className="text-sm">{source.source} ({source.medium})</span>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-20 bg-gray-200 rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full ${
+                            index === 0 ? 'bg-blue-600' : 
+                            index === 1 ? 'bg-green-600' : 
+                            index === 2 ? 'bg-purple-600' : 
+                            index === 3 ? 'bg-orange-600' : 'bg-gray-600'
+                          }`}
+                          style={{ width: `${Math.min(source.percentage, 100)}%` }}
+                        ></div>
+                      </div>
+                      <span className="text-sm font-semibold">{source.percentage.toFixed(1)}%</span>
+                    </div>
                   </div>
-                  <span className="text-sm font-semibold">65%</span>
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Direct Traffic</span>
-                <div className="flex items-center space-x-2">
-                  <div className="w-20 bg-gray-200 rounded-full h-2">
-                    <div className="bg-green-600 h-2 rounded-full" style={{ width: '18%' }}></div>
-                  </div>
-                  <span className="text-sm font-semibold">18%</span>
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Social Media</span>
-                <div className="flex items-center space-x-2">
-                  <div className="w-20 bg-gray-200 rounded-full h-2">
-                    <div className="bg-purple-600 h-2 rounded-full" style={{ width: '12%' }}></div>
-                  </div>
-                  <span className="text-sm font-semibold">12%</span>
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <span className="text-sm">Referrals</span>
-                <div className="flex items-center space-x-2">
-                  <div className="w-20 bg-gray-200 rounded-full h-2">
-                    <div className="bg-orange-600 h-2 rounded-full" style={{ width: '5%' }}></div>
-                  </div>
-                  <span className="text-sm font-semibold">5%</span>
-                </div>
-              </div>
+                ))
+              ) : (
+                <div className="text-center py-4 text-gray-500">No traffic data available</div>
+              )}
             </CardContent>
           </Card>
         </div>

@@ -58,6 +58,26 @@ export class AnalyticsService {
     return response.json();
   }
 
+  async getTopPages(period: "7d" | "30d" | "90d" = "30d"): Promise<PagePerformance[]> {
+    const response = await apiRequest("GET", `/api/analytics/top-pages?period=${period}`);
+    return response.json();
+  }
+
+  async getLocationData(period: "7d" | "30d" | "90d" = "30d"): Promise<Array<{ location: string; sessions: number }>> {
+    const response = await apiRequest("GET", `/api/analytics/locations?period=${period}`);
+    return response.json();
+  }
+
+  async getDeviceData(period: "7d" | "30d" | "90d" = "30d"): Promise<Array<{ device: string; sessions: number }>> {
+    const response = await apiRequest("GET", `/api/analytics/devices?period=${period}`);
+    return response.json();
+  }
+
+  async getTrafficSources(period: "7d" | "30d" | "90d" = "30d"): Promise<TrafficSource[]> {
+    const response = await apiRequest("GET", `/api/analytics/traffic-sources?period=${period}`);
+    return response.json();
+  }
+
   async getPagePerformance(period: "7d" | "30d" | "90d" = "30d"): Promise<PagePerformance[]> {
     const response = await apiRequest("GET", `/api/analytics/pages?period=${period}`);
     return response.json();

@@ -27,6 +27,7 @@ import {
 } from "@shared/schema";
 import OpenAI from "openai";
 import twilio from "twilio";
+import { googleAnalyticsService } from "./services/google-analytics";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "default_key",
@@ -83,10 +84,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const socialPosts = await storage.getAllSocialPosts();
       const seoKeywords = await storage.getAllSeoKeywords();
 
+      // Get real Google Analytics data for dashboard
+      const analyticsMetrics = await googleAnalyticsService.getMetrics('30d');
+      
       const metrics = {
-        traffic: 2847,
-        trafficGrowth: 12.5,
-        socialEngagement: 1234,
+        traffic: analyticsMetrics.sessions,
+        trafficGrowth: 12.5, // Could be calculated from comparing periods
+        socialEngagement: socialPosts.length * 47, // Estimate based on posts
         socialEngagementGrowth: 8.3,
         leads: leads.length,
         leadsGrowth: 15.2,
@@ -96,6 +100,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.json(metrics);
     } catch (error) {
+      console.error("Error fetching dashboard metrics:", error);
       res.status(500).json({ message: "Failed to fetch dashboard metrics" });
     }
   });
@@ -558,37 +563,112 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Google Analytics API Integration
+  app.get("/api/analytics/metrics", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const metrics = await googleAnalyticsService.getMetrics(period);
+      res.json(metrics);
+    } catch (error) {
+      console.error("Error fetching analytics metrics:", error);
+      res.status(500).json({ message: "Failed to fetch analytics metrics" });
+    }
+  });
+
+  app.get("/api/analytics/traffic-sources", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const sources = await googleAnalyticsService.getTrafficSources(period);
+      res.json(sources);
+    } catch (error) {
+      console.error("Error fetching traffic sources:", error);
+      res.status(500).json({ message: "Failed to fetch traffic sources" });
+    }
+  });
+
+  app.get("/api/analytics/top-pages", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const pages = await googleAnalyticsService.getTopPages(period);
+      res.json(pages);
+    } catch (error) {
+      console.error("Error fetching top pages:", error);
+      res.status(500).json({ message: "Failed to fetch top pages" });
+    }
+  });
+
+  app.get("/api/analytics/locations", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const locations = await googleAnalyticsService.getLocationData(period);
+      res.json(locations);
+    } catch (error) {
+      console.error("Error fetching location data:", error);
+      res.status(500).json({ message: "Failed to fetch location data" });
+    }
+  });
+
+  app.get("/api/analytics/devices", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const devices = await googleAnalyticsService.getDeviceData(period);
+      res.json(devices);
+    } catch (error) {
+      console.error("Error fetching device data:", error);
+      res.status(500).json({ message: "Failed to fetch device data" });
+    }
+  });
+
+  app.get("/api/analytics/realtime", async (req, res) => {
+    try {
+      const realtime = await googleAnalyticsService.getRealtimeData();
+      res.json(realtime);
+    } catch (error) {
+      console.error("Error fetching realtime data:", error);
+      res.status(500).json({ message: "Failed to fetch realtime data" });
+    }
+  });
+
+  app.get("/api/analytics/status", async (req, res) => {
+    try {
+      const hasServiceAccount = !!process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT_KEY;
+      const hasPropertyId = !!process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
+      const hasMeasurementId = !!process.env.VITE_GA_MEASUREMENT_ID;
+      
+      res.json({
+        configured: hasServiceAccount && hasPropertyId && hasMeasurementId,
+        hasServiceAccount,
+        hasPropertyId,
+        hasMeasurementId,
+        setupInstructions: !hasServiceAccount || !hasPropertyId ? 
+          "Please enable Google Analytics Data API in Google Cloud Console and provide service account credentials" : 
+          "Google Analytics is configured and ready to use"
+      });
+    } catch (error) {
+      console.error("Error checking analytics status:", error);
+      res.status(500).json({ message: "Failed to check analytics status" });
+    }
+  });
+
   // Enhanced Analytics Reporting
   app.post("/api/analytics/generate-report", async (req, res) => {
     try {
       const { period = "30d" } = req.body;
 
-      // Simulate comprehensive analytics data
+      // Get real analytics data for the report
+      const [metrics, trafficSources, topPages] = await Promise.all([
+        googleAnalyticsService.getMetrics(period),
+        googleAnalyticsService.getTrafficSources(period),
+        googleAnalyticsService.getTopPages(period)
+      ]);
+
       const reportData = {
         period,
-        traffic: Math.floor(Math.random() * 5000) + 2000,
-        conversions: Math.floor(Math.random() * 50) + 20,
-        topKeywords: [
-          "HVAC repair Winter Haven",
-          "AC installation Lakeland", 
-          "Commercial HVAC service",
-          "Emergency HVAC repair",
-          "Heat pump maintenance"
-        ],
-        topPages: [
-          "/services/ac-repair",
-          "/services/installation", 
-          "/commercial-hvac",
-          "/emergency-service",
-          "/maintenance-plans"
-        ],
-        trafficSources: [
-          "Google Organic (45%)",
-          "Google Ads (25%)",
-          "Direct (15%)",
-          "Facebook (10%)",
-          "Referrals (5%)"
-        ]
+        traffic: metrics.sessions,
+        conversions: Math.floor(metrics.sessions * 0.032), // Estimate based on average conversion rate
+        topKeywords: trafficSources.filter(s => s.source.toLowerCase().includes('google')).map(s => s.source).slice(0, 5),
+        topPages: topPages.map(p => p.page).slice(0, 5),
+        trafficSources: trafficSources.map(s => `${s.source} (${s.percentage.toFixed(1)}%)`).slice(0, 5),
       };
 
       const report = await storage.createAnalyticsReport(reportData);
