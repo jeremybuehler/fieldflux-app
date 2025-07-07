@@ -1,8 +1,8 @@
 # Google Places API Setup Guide
 
-## Current Status: API Key Added ✅
+## Current Status: API Key Added ✅ - Authorization Needed ⚠️
 
-Your Google Places API key has been successfully added to KasamaAI. However, we're getting a 400 error which indicates additional setup is needed.
+Your Google Places API key has been successfully added to KasamaAI. However, we're getting a 403 error: "This API key is not authorized to use this service or API." This means your API key needs proper authorization.
 
 ## Required Google Cloud Console Configuration
 
