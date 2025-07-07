@@ -141,12 +141,12 @@ export default function Reviews() {
           {/* Real Data Status Indicator & Business Search */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-2">
-              <Badge variant="secondary" className="bg-orange-100 text-orange-800">
-                <AlertCircle className="w-3 h-3 mr-1" />
-                Places API Authorization Issue
+              <Badge variant="default" className="bg-green-100 text-green-800">
+                <CheckCircle className="w-3 h-3 mr-1" />
+                Google Places API (New) Connected
               </Badge>
-              <Badge variant="outline" className="text-gray-600 border-gray-600">
-                Check Billing & API Enable Status
+              <Badge variant="outline" className="text-blue-600 border-blue-600">
+                Real Reviews Available
               </Badge>
             </div>
             <BusinessSearchButton />

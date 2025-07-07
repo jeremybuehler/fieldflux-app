@@ -554,8 +554,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "Query parameter 'q' is required" });
       }
       
-      const { googlePlacesService } = await import('./services/google-places');
-      const businesses = await googlePlacesService.searchBusinesses(query, location);
+      const { googlePlacesNewService } = await import('./services/google-places-new');
+      const businesses = await googlePlacesNewService.searchBusinesses(query);
       res.json(businesses);
     } catch (error) {
       console.error("Error searching businesses:", error);
