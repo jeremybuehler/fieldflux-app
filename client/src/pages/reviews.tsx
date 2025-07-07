@@ -2,21 +2,15 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ReviewsPanel from "@/components/dashboard/reviews-panel";
+import TopNavigation from "@/components/layout/top-navigation";
 import { ArrowLeft, Star, MessageSquare, TrendingUp } from "lucide-react";
 
 export default function Reviews() {
   return (
     <div className="min-h-screen bg-gray-50">
+      <TopNavigation title="Reviews Management" />
       <div className="max-w-6xl mx-auto p-6">
         <div className="mb-8">
-          <div className="flex items-center space-x-4 mb-4">
-            <Link href="/dashboard">
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
-              </Button>
-            </Link>
-          </div>
           <div className="flex items-center space-x-3 mb-4">
             <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
               <Star className="w-5 h-5 text-yellow-600" />

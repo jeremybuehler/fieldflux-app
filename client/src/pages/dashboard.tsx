@@ -39,7 +39,7 @@ export default function Dashboard() {
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4">
                 <div>
                   <h1 className="text-xl lg:text-2xl font-bold text-hvac-gray mb-2">
-                    Field Service Marketing Dashboard
+                    
                   </h1>
                   <p className="text-gray-600 text-sm lg:text-base">Welcome back! Here's your social media content marketing activity.</p>
                 </div>
@@ -49,15 +49,7 @@ export default function Dashboard() {
                     <MapPin className="w-4 h-4 text-primary" />
                     <span className="text-sm font-medium text-primary">Winter Haven, FL</span>
                   </div>
-                  <WeatherWidget />
-                  <Button 
-                    onClick={() => window.location.href = '/'}
-                    variant="outline"
-                    size="sm"
-                    className="text-gray-600 hover:text-gray-900"
-                  >
-                    Logout
-                  </Button>
+            
                   <Button 
                     onClick={handleGenerateContent}
                     className="bg-gradient-to-r from-primary to-hvac-orange hover:from-primary/90 hover:to-hvac-orange/90 text-white text-sm lg:text-base"

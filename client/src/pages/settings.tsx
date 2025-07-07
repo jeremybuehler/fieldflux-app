@@ -2,14 +2,12 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import MobileSidebar from "@/components/dashboard/mobile-sidebar";
-import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, Key, ExternalLink, ArrowLeft, MessageSquare, Phone, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
+import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, ExternalLink, ArrowLeft, MessageSquare, Facebook, Twitter, Instagram, Linkedin } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 import { Link } from "wouter";
@@ -62,39 +60,6 @@ interface SocialConfig {
   };
 }
 
-interface TwilioConfig {
-  accountSid: string;
-  authToken: string;
-  phoneNumber: string;
-  isConfigured: boolean;
-}
-
-interface SocialPlatformConfig {
-  facebook: {
-    appId: string;
-    appSecret: string;
-    accessToken: string;
-    isConfigured: boolean;
-  };
-  instagram: {
-    accessToken: string;
-    isConfigured: boolean;
-  };
-  twitter: {
-    apiKey: string;
-    apiSecret: string;
-    accessToken: string;
-    accessTokenSecret: string;
-    isConfigured: boolean;
-  };
-  linkedin: {
-    clientId: string;
-    clientSecret: string;
-    accessToken: string;
-    isConfigured: boolean;
-  };
-}
-
 export default function Settings() {
   const [wpConfig, setWpConfig] = useState<WordPressConfig>({
     siteUrl: "",
@@ -115,15 +80,12 @@ export default function Settings() {
     isConfigured: false,
   });
 
-  const [socialConfig, setSocialConfig] = useState<SocialPlatformConfig>({
+  const [socialConfig, setSocialConfig] = useState<SocialConfig>({
     facebook: {
       appId: "",
       appSecret: "",
       accessToken: "",
-      isConfigured: false,
-    },
-    instagram: {
-      accessToken: "",
+      pageId: "",
       isConfigured: false,
     },
     twitter: {
@@ -133,10 +95,16 @@ export default function Settings() {
       accessTokenSecret: "",
       isConfigured: false,
     },
+    instagram: {
+      accessToken: "",
+      businessAccountId: "",
+      isConfigured: false,
+    },
     linkedin: {
       clientId: "",
       clientSecret: "",
       accessToken: "",
+      organizationId: "",
       isConfigured: false,
     },
   });
@@ -154,11 +122,18 @@ export default function Settings() {
       }));
     }
 
-    // Load WordPress config from localStorage
+    // Load saved WordPress config from localStorage
     const savedWpConfig = localStorage.getItem('wpConfig');
     if (savedWpConfig) {
-      setWpConfig(JSON.parse(savedWpConfig));
+      try {
+        const parsed = JSON.parse(savedWpConfig);
+        setWpConfig(parsed);
+      } catch (error) {
+        console.error('Failed to parse saved WordPress config:', error);
+      }
     }
+
+    trackEvent('settings_page_view', 'navigation', 'settings');
   }, []);
 
   const handleSaveWordPressConfig = () => {
@@ -195,711 +170,203 @@ export default function Settings() {
     trackEvent('wordpress_configured', 'settings', 'configuration');
   };
 
-  const handleTestWordPressConnection = async () => {
-    if (!wpConfig.isConfigured) {
-      toast({
-        title: "Configuration Required",
-        description: "Please save your WordPress configuration first.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Simulate connection test
-    toast({
-      title: "Testing Connection...",
-      description: "This feature will test your WordPress REST API connection.",
-    });
-
-    // In a real implementation, you would make an API call to test the connection
-    setTimeout(() => {
-      toast({
-        title: "Connection Test Complete",
-        description: "WordPress connection is working properly.",
-      });
-    }, 2000);
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="mb-8">
-          <div className="flex items-center space-x-4 mb-4">
-            <Link href="/dashboard">
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
-              </Button>
-            </Link>
-          </div>
-          <h1 className="text-2xl font-bold text-hvac-gray mb-2">Settings & Configuration</h1>
-          <p className="text-gray-600">Configure your integrations and preferences for FieldPulse</p>
-        </div>
-
-        <Tabs defaultValue="wordpress" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="wordpress" className="flex items-center space-x-2">
-              <Globe className="w-4 h-4" />
-              <span>WordPress</span>
-            </TabsTrigger>
-            <TabsTrigger value="analytics" className="flex items-center space-x-2">
-              <BarChart3 className="w-4 h-4" />
-              <span>Analytics</span>
-            </TabsTrigger>
-            <TabsTrigger value="twilio" className="flex items-center space-x-2">
-              <Phone className="w-4 h-4" />
-              <span>SMS</span>
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="wordpress" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Globe className="w-5 h-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <CardTitle className="text-xl">GoDaddy WordPress Integration</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">Connect FieldPulse to your GoDaddy-hosted WordPress site</p>
-                    </div>
-                  </div>
-                  {wpConfig.isConfigured ? (
-                    <Badge variant="default" className="bg-green-100 text-green-700">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      Connected
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary">
-                      <AlertCircle className="w-3 h-3 mr-1" />
-                      Not Connected
-                    </Badge>
-                  )}
+      <TopNavigation title="Settings" />
+      <div className="flex min-h-screen">
+        <MobileSidebar />
+        
+        <main className="flex-1 lg:ml-64">
+          <div className="p-4 pt-16 lg:pt-6 lg:pl-6">
+            <div className="mb-6 lg:mb-8">
+              <div className="flex items-center space-x-3 mb-4">
+                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <SettingsIcon className="w-5 h-5 text-blue-600" />
                 </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <Alert>
-                  <SettingsIcon className="h-4 w-4" />
-                  <AlertDescription>
-                    <strong>Before you start:</strong> You'll need to create an Application Password in your WordPress admin panel.
-                    This is different from your regular login password and provides secure API access.
-                  </AlertDescription>
-                </Alert>
+                <div>
+                  <h1 className="text-xl lg:text-2xl font-bold text-hvac-gray">Settings</h1>
+                  <p className="text-gray-600 text-sm lg:text-base">Configure your integrations and preferences</p>
+                </div>
+              </div>
+            </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 mb-2 block">
-                      WordPress Site URL <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      value={wpConfig.siteUrl}
-                      onChange={(e) => setWpConfig({ ...wpConfig, siteUrl: e.target.value })}
-                      placeholder="https://yoursite.com"
-                      className="w-full"
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      The full URL of your GoDaddy WordPress site (including https://)
-                    </p>
-                  </div>
+            <Tabs defaultValue="wordpress" className="w-full">
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
+                <TabsTrigger value="wordpress">WordPress</TabsTrigger>
+                <TabsTrigger value="analytics">Analytics</TabsTrigger>
+                <TabsTrigger value="twilio">SMS</TabsTrigger>
+                <TabsTrigger value="social">Social</TabsTrigger>
+              </TabsList>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 mb-2 block">
-                        WordPress Username <span className="text-red-500">*</span>
-                      </label>
-                      <Input
-                        value={wpConfig.username}
-                        onChange={(e) => setWpConfig({ ...wpConfig, username: e.target.value })}
-                        placeholder="admin"
-                        className="w-full"
-                      />
-                      <p className="text-xs text-gray-500 mt-1">
-                        Your WordPress admin username
-                      </p>
+              {/* WordPress Configuration */}
+              <TabsContent value="wordpress" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center space-x-3">
+                      <Globe className="w-6 h-6 text-blue-600" />
+                      <div>
+                        <CardTitle>WordPress & GoDaddy Integration</CardTitle>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Connect your GoDaddy-hosted WordPress site to publish content automatically
+                        </p>
+                      </div>
+                      {wpConfig.isConfigured && (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Connected
+                        </Badge>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        Your WordPress site must have the REST API enabled (WordPress 4.7+). 
+                        Create an Application Password in your WordPress dashboard under Users → Profile.
+                      </AlertDescription>
+                    </Alert>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="site-url">WordPress Site URL</Label>
+                        <Input
+                          id="site-url"
+                          placeholder="https://yoursite.com"
+                          value={wpConfig.siteUrl}
+                          onChange={(e) => setWpConfig(prev => ({ ...prev, siteUrl: e.target.value }))}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="wp-username">WordPress Username</Label>
+                        <Input
+                          id="wp-username"
+                          placeholder="Your WordPress username"
+                          value={wpConfig.username}
+                          onChange={(e) => setWpConfig(prev => ({ ...prev, username: e.target.value }))}
+                        />
+                      </div>
                     </div>
 
-                    <div>
-                      <label className="text-sm font-medium text-gray-700 mb-2 block">
-                        Application Password <span className="text-red-500">*</span>
-                      </label>
+                    <div className="space-y-2">
+                      <Label htmlFor="app-password">Application Password</Label>
                       <Input
+                        id="app-password"
                         type="password"
+                        placeholder="xxxx xxxx xxxx xxxx xxxx xxxx"
                         value={wpConfig.appPassword}
-                        onChange={(e) => setWpConfig({ ...wpConfig, appPassword: e.target.value })}
-                        placeholder="xxxx xxxx xxxx xxxx"
-                        className="w-full"
+                        onChange={(e) => setWpConfig(prev => ({ ...prev, appPassword: e.target.value }))}
                       />
-                      <p className="text-xs text-gray-500 mt-1">
-                        Generated in WordPress Admin → Users → Application Passwords
+                      <p className="text-xs text-gray-500">
+                        Generate this in WordPress Admin → Users → Your Profile → Application Passwords
                       </p>
                     </div>
-                  </div>
-                </div>
 
-                <Separator />
-
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-blue-900 mb-2 flex items-center">
-                    <Key className="w-4 h-4 mr-2" />
-                    How to Create an Application Password
-                  </h4>
-                  <div className="text-sm text-blue-800 space-y-2">
-                    <p><strong>Step 1:</strong> Log into your WordPress admin panel</p>
-                    <p><strong>Step 2:</strong> Go to Users → Your Profile (or Users → All Users → Your Username)</p>
-                    <p><strong>Step 3:</strong> Scroll down to "Application Passwords" section</p>
-                    <p><strong>Step 4:</strong> Enter "Dave Marketing Agent" as the application name</p>
-                    <p><strong>Step 5:</strong> Click "Add New Application Password"</p>
-                    <p><strong>Step 6:</strong> Copy the generated password (it looks like: xxxx xxxx xxxx xxxx)</p>
-                    <p className="text-blue-600"><strong>Important:</strong> Save this password immediately - you won't be able to see it again!</p>
-                  </div>
-                </div>
-
-                <div className="flex space-x-3">
-                  <Button
-                    onClick={handleSaveWordPressConfig}
-                    className="bg-primary hover:bg-primary/90 text-white"
-                  >
-                    Save Configuration
-                  </Button>
-                  <Button
-                    onClick={handleTestWordPressConnection}
-                    variant="outline"
-                    disabled={!wpConfig.isConfigured}
-                  >
-                    Test Connection
-                  </Button>
-                </div>
-
-                {wpConfig.isConfigured && (
-                  <Alert>
-                    <CheckCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      WordPress integration is configured. Dave can now publish content directly to your GoDaddy site.
-                    </AlertDescription>
-                  </Alert>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="analytics" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                      <BarChart3 className="w-5 h-5 text-green-600" />
+                    <div className="flex flex-col sm:flex-row gap-3">
+                      <Button onClick={handleSaveWordPressConfig} className="flex-1 sm:flex-none">
+                        Save Configuration
+                      </Button>
                     </div>
-                    <div>
-                      <CardTitle className="text-xl">Google Analytics Integration</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">Connect Dave to your Google Analytics for comprehensive reporting</p>
+
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h4 className="font-medium text-blue-900 mb-2">Setup Instructions:</h4>
+                      <ol className="text-sm text-blue-800 space-y-1 list-decimal list-inside">
+                        <li>Log into your WordPress admin dashboard</li>
+                        <li>Go to Users → Your Profile</li>
+                        <li>Scroll down to "Application Passwords"</li>
+                        <li>Enter "FieldPulse" as the application name and click "Add New Application Password"</li>
+                        <li>Copy the generated password and paste it above</li>
+                        <li>Your site URL should be your main domain (e.g., https://yourbusiness.com)</li>
+                      </ol>
                     </div>
-                  </div>
-                  {gaConfig.isConfigured ? (
-                    <Badge variant="default" className="bg-green-100 text-green-700">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      Connected
-                    </Badge>
-                  ) : (
-                    <Badge variant="secondary">
-                      <AlertCircle className="w-3 h-3 mr-1" />
-                      Not Connected
-                    </Badge>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <Alert>
-                  <BarChart3 className="h-4 w-4" />
-                  <AlertDescription>
-                    <strong>Google Analytics 4 required:</strong> Make sure you're using Google Analytics 4 (GA4), not Universal Analytics.
-                    Your Measurement ID should start with "G-" (e.g., G-XXXXXXXXXX).
-                  </AlertDescription>
-                </Alert>
+                  </CardContent>
+                </Card>
+              </TabsContent>
 
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 mb-2 block">
-                      Google Analytics 4 Measurement ID <span className="text-red-500">*</span>
-                    </label>
-                    <Input
-                      value={gaConfig.measurementId}
-                      onChange={(e) => setGaConfig({ ...gaConfig, measurementId: e.target.value })}
-                      placeholder="G-XXXXXXXXXX"
-                      className="w-full"
-                      disabled={gaConfig.isConfigured}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      Your GA4 Measurement ID from Google Analytics
-                    </p>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="bg-green-50 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-green-900 mb-2 flex items-center">
-                    <BarChart3 className="w-4 h-4 mr-2" />
-                    How to Find Your Google Analytics Measurement ID
-                  </h4>
-                  <div className="text-sm text-green-800 space-y-2">
-                    <p><strong>Step 1:</strong> Go to your Google Analytics account</p>
-                    <p><strong>Step 2:</strong> Click on "Admin" (gear icon) in the bottom left</p>
-                    <p><strong>Step 3:</strong> In the Property column, click on "Data Streams"</p>
-                    <p><strong>Step 4:</strong> Select your web data stream</p>
-                    <p><strong>Step 5:</strong> Copy the "Measurement ID" (starts with G-)</p>
-                    <div className="mt-3 p-2 bg-green-100 rounded border-l-4 border-green-400">
-                      <p className="text-green-700">
-                        <strong>Don't have Google Analytics yet?</strong> Create a free account at{" "}
-                        <a href="https://analytics.google.com" target="_blank" rel="noopener noreferrer" className="underline inline-flex items-center">
-                          analytics.google.com <ExternalLink className="w-3 h-3 ml-1" />
+              {/* Analytics Configuration */}
+              <TabsContent value="analytics" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center space-x-3">
+                      <BarChart3 className="w-6 h-6 text-orange-600" />
+                      <div>
+                        <CardTitle>Google Analytics Configuration</CardTitle>
+                        <p className="text-sm text-gray-600 mt-1">
+                          Connect Google Analytics 4 to track website performance
+                        </p>
+                      </div>
+                      {gaConfig.isConfigured && (
+                        <Badge variant="secondary" className="bg-green-100 text-green-800">
+                          <CheckCircle className="w-3 h-3 mr-1" />
+                          Connected
+                        </Badge>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <Alert>
+                      <AlertCircle className="h-4 w-4" />
+                      <AlertDescription>
+                        You need a Google Analytics 4 property to track your website performance.
+                        Get your Measurement ID from{" "}
+                        <a 
+                          href="https://analytics.google.com/" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:underline inline-flex items-center"
+                        >
+                          Google Analytics <ExternalLink className="w-3 h-3 ml-1" />
                         </a>
+                      </AlertDescription>
+                    </Alert>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="ga-measurement-id">Measurement ID</Label>
+                      <Input
+                        id="ga-measurement-id"
+                        placeholder="G-XXXXXXXXXX"
+                        value={gaConfig.measurementId}
+                        onChange={(e) => setGaConfig(prev => ({ ...prev, measurementId: e.target.value }))}
+                      />
+                      <p className="text-xs text-gray-500">
+                        Your GA4 Measurement ID starts with "G-" followed by 10 characters
                       </p>
                     </div>
-                  </div>
-                </div>
 
-                {gaConfig.isConfigured ? (
-                  <Alert>
-                    <CheckCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      Google Analytics is configured with ID: <code className="bg-gray-100 px-2 py-1 rounded">{gaConfig.measurementId}</code>
-                      <br />
-                      Dave is now tracking page views and user interactions on your website.
-                    </AlertDescription>
-                  </Alert>
-                ) : (
-                  <Alert>
-                    <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      <strong>Configuration needed:</strong> Add your Google Analytics Measurement ID to the Secrets tab in your Replit project.
-                      Use the key name: <code className="bg-gray-100 px-2 py-1 rounded">VITE_GA_MEASUREMENT_ID</code>
-                    </AlertDescription>
-                  </Alert>
-                )}
+                    <Button 
+                      onClick={() => {
+                        if (!gaConfig.measurementId) {
+                          toast({
+                            title: "Missing Measurement ID",
+                            description: "Please enter your Google Analytics Measurement ID.",
+                            variant: "destructive",
+                          });
+                          return;
+                        }
+                        
+                        setGaConfig(prev => ({ ...prev, isConfigured: true }));
+                        toast({
+                          title: "Google Analytics Connected",
+                          description: "Add VITE_GA_MEASUREMENT_ID to your Replit Secrets to complete setup.",
+                        });
+                      }}
+                      className="w-full lg:w-auto"
+                    >
+                      Save Analytics Settings
+                    </Button>
 
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <h4 className="text-sm font-semibold text-blue-900 mb-2">
-                    What FieldPulse Tracks with Google Analytics
-                  </h4>
-                  <div className="text-sm text-blue-800 space-y-1">
-                    <p>• Page views and session data</p>
-                    <p>• User engagement and behavior</p>
-                    <p>• Traffic sources and campaigns</p>
-                    <p>• Conversion tracking for leads</p>
-                    <p>• Custom events for marketing activities</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="twilio" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                      <MessageSquare className="w-5 h-5 text-red-600" />
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <h4 className="font-medium text-green-900 mb-2">Setup Instructions:</h4>
+                      <ol className="text-sm text-green-800 space-y-1 list-decimal list-inside">
+                        <li>Go to Google Analytics and create or select your property</li>
+                        <li>Navigate to Admin → Data Streams → Web</li>
+                        <li>Select your web stream or create a new one</li>
+                        <li>Copy the Measurement ID (starts with G-)</li>
+                        <li>Add it to your Replit Secrets as VITE_GA_MEASUREMENT_ID</li>
+                      </ol>
                     </div>
-                    <div>
-                      <CardTitle className="text-xl">Twilio SMS Configuration</CardTitle>
-                      <p className="text-sm text-gray-600 mt-1">Configure SMS communication for customer engagement</p>
-                    </div>
-                  </div>
-                  <Badge variant="secondary">
-                    <AlertCircle className="w-3 h-3 mr-1" />
-                    Setup Required
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <Alert>
-                  <SettingsIcon className="h-4 w-4" />
-                  <AlertDescription>
-                    To enable SMS features, add your Twilio credentials as environment variables in your hosting platform. These credentials are stored securely and only used for SMS functionality.
-                  </AlertDescription>
-                </Alert>
-
-                <div className="space-y-4">
-                  <div className="bg-blue-50 rounded-lg p-4">
-                    <h4 className="text-sm font-semibold text-blue-900 mb-3">Required Environment Variables</h4>
-                    <div className="space-y-2 text-sm text-blue-800">
-                      <div className="flex items-center justify-between">
-                        <code className="bg-blue-100 px-2 py-1 rounded">TWILIO_ACCOUNT_SID</code>
-                        <span className="text-xs">Your Twilio Account SID</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <code className="bg-blue-100 px-2 py-1 rounded">TWILIO_AUTH_TOKEN</code>
-                        <span className="text-xs">Your Twilio Auth Token</span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <code className="bg-blue-100 px-2 py-1 rounded">TWILIO_PHONE_NUMBER</code>
-                        <span className="text-xs">Your Twilio phone number (+1234567890)</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="bg-green-50 rounded-lg p-4">
-                    <h4 className="text-sm font-semibold text-green-900 mb-3">How to Get Your Twilio Credentials</h4>
-                    <ol className="text-sm text-green-800 space-y-2">
-                      <li className="flex items-start">
-                        <span className="w-5 h-5 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">1</span>
-                        <span>Log in to your <a href="https://console.twilio.com" target="_blank" rel="noopener noreferrer" className="underline">Twilio Console</a></span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-5 h-5 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">2</span>
-                        <span>Find your Account SID and Auth Token on the main dashboard</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-5 h-5 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">3</span>
-                        <span>Get a phone number from Phone Numbers → Manage → Active numbers</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="w-5 h-5 bg-green-200 rounded-full flex items-center justify-center text-xs font-bold mr-3 mt-0.5">4</span>
-                        <span>Add these values as environment variables in your hosting platform</span>
-                      </li>
-                    </ol>
-                  </div>
-
-                  <div className="bg-orange-50 rounded-lg p-4">
-                    <h4 className="text-sm font-semibold text-orange-900 mb-2">
-                      SMS Features Once Configured
-                    </h4>
-                    <div className="text-sm text-orange-800 space-y-1">
-                      <p>• Automated lead follow-up messages</p>
-                      <p>• Appointment confirmation and reminders</p>
-                      <p>• Service completion notifications</p>
-                      <p>• Emergency alerts to customers</p>
-                      <p>• Review request automation</p>
-                      <p>• Weather delay notifications</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-center py-4">
-                  <Button asChild>
-                    <a href="https://console.twilio.com" target="_blank" rel="noopener noreferrer">
-                      <Phone className="w-4 h-4 mr-2" />
-                      Open Twilio Console
-                    </a>
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Twilio Configuration */}
-          <TabsContent value="twilio" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <MessageSquare className="w-5 h-5 text-red-600" />
-                  <span>Twilio SMS Configuration</span>
-                  {twilioConfig.isConfigured && (
-                    <Badge variant="default" className="bg-green-100 text-green-800">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      Configured
-                    </Badge>
-                  )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Alert>
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>
-                    Configure your Twilio account to enable SMS notifications for lead follow-ups, appointment confirmations, and customer communication.
-                  </AlertDescription>
-                </Alert>
-
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Account SID</label>
-                    <Input
-                      placeholder="ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                      value={twilioConfig.accountSid}
-                      onChange={(e) => setTwilioConfig(prev => ({...prev, accountSid: e.target.value}))}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Auth Token</label>
-                    <Input
-                      type="password"
-                      placeholder="Your Twilio Auth Token"
-                      value={twilioConfig.authToken}
-                      onChange={(e) => setTwilioConfig(prev => ({...prev, authToken: e.target.value}))}
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Phone Number</label>
-                    <Input
-                      placeholder="+1234567890"
-                      value={twilioConfig.phoneNumber}
-                      onChange={(e) => setTwilioConfig(prev => ({...prev, phoneNumber: e.target.value}))}
-                    />
-                  </div>
-
-                  <Button onClick={saveTwilioConfig} className="w-full">
-                    Save Twilio Configuration
-                  </Button>
-                </div>
-
-                <Separator />
-
-                <div className="space-y-3">
-                  <h4 className="font-medium">Setup Instructions:</h4>
-                  <ol className="list-decimal list-inside space-y-2 text-sm text-gray-600">
-                    <li>Create a Twilio account at <a href="https://www.twilio.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">twilio.com</a></li>
-                    <li>Get your Account SID and Auth Token from the Twilio Console</li>
-                    <li>Purchase a phone number in the Twilio Console</li>
-                    <li>Add these credentials to your Replit Secrets:
-                      <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
-                        <li><code className="bg-gray-100 px-1 rounded">TWILIO_ACCOUNT_SID</code></li>
-                        <li><code className="bg-gray-100 px-1 rounded">TWILIO_AUTH_TOKEN</code></li>
-                        <li><code className="bg-gray-100 px-1 rounded">TWILIO_PHONE_NUMBER</code></li>
-                      </ul>
-                    </li>
-                  </ol>
-                </div>
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          {/* Social Media Configuration */}
-          <TabsContent value="social" className="space-y-6">
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                Configure your social media platform credentials to enable automated posting and content sharing.
-              </AlertDescription>
-            </Alert>
-
-            {/* Facebook Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <div className="w-5 h-5 bg-blue-600 rounded"></div>
-                  <span>Facebook</span>
-                  {socialConfig.facebook.isConfigured && (
-                    <Badge variant="default" className="bg-green-100 text-green-800">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      Configured
-                    </Badge>
-                  )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">App ID</label>
-                    <Input
-                      placeholder="Your Facebook App ID"
-                      value={socialConfig.facebook.appId}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        facebook: {...prev.facebook, appId: e.target.value}
-                      }))}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">App Secret</label>
-                    <Input
-                      type="password"
-                      placeholder="Your Facebook App Secret"
-                      value={socialConfig.facebook.appSecret}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        facebook: {...prev.facebook, appSecret: e.target.value}
-                      }))}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Access Token</label>
-                  <Input
-                    placeholder="Your Facebook Page Access Token"
-                    value={socialConfig.facebook.accessToken}
-                    onChange={(e) => setSocialConfig(prev => ({
-                      ...prev,
-                      facebook: {...prev.facebook, accessToken: e.target.value}
-                    }))}
-                  />
-                </div>
-                <Button onClick={() => saveSocialConfig('Facebook')} className="w-full">
-                  Save Facebook Configuration
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Instagram Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <div className="w-5 h-5 bg-gradient-to-r from-purple-500 to-pink-500 rounded"></div>
-                  <span>Instagram</span>
-                  {socialConfig.instagram.isConfigured && (
-                    <Badge variant="default" className="bg-green-100 text-green-800">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      Configured
-                    </Badge>
-                  )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Access Token</label>
-                  <Input
-                    placeholder="Your Instagram Access Token"
-                    value={socialConfig.instagram.accessToken}
-                    onChange={(e) => setSocialConfig(prev => ({
-                      ...prev,
-                      instagram: {...prev.instagram, accessToken: e.target.value}
-                    }))}
-                  />
-                </div>
-                <Button onClick={() => saveSocialConfig('Instagram')} className="w-full">
-                  Save Instagram Configuration
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* Twitter Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <div className="w-5 h-5 bg-blue-400 rounded"></div>
-                  <span>Twitter/X</span>
-                  {socialConfig.twitter.isConfigured && (
-                    <Badge variant="default" className="bg-green-100 text-green-800">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      Configured
-                    </Badge>
-                  )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">API Key</label>
-                    <Input
-                      placeholder="Your Twitter API Key"
-                      value={socialConfig.twitter.apiKey}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        twitter: {...prev.twitter, apiKey: e.target.value}
-                      }))}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">API Secret</label>
-                    <Input
-                      type="password"
-                      placeholder="Your Twitter API Secret"
-                      value={socialConfig.twitter.apiSecret}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        twitter: {...prev.twitter, apiSecret: e.target.value}
-                      }))}
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Access Token</label>
-                    <Input
-                      placeholder="Your Twitter Access Token"
-                      value={socialConfig.twitter.accessToken}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        twitter: {...prev.twitter, accessToken: e.target.value}
-                      }))}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Access Token Secret</label>
-                    <Input
-                      type="password"
-                      placeholder="Your Twitter Access Token Secret"
-                      value={socialConfig.twitter.accessTokenSecret}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        twitter: {...prev.twitter, accessTokenSecret: e.target.value}
-                      }))}
-                    />
-                  </div>
-                </div>
-                <Button onClick={() => saveSocialConfig('Twitter')} className="w-full">
-                  Save Twitter Configuration
-                </Button>
-              </CardContent>
-            </Card>
-
-            {/* LinkedIn Configuration */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <div className="w-5 h-5 bg-blue-700 rounded"></div>
-                  <span>LinkedIn</span>
-                  {socialConfig.linkedin.isConfigured && (
-                    <Badge variant="default" className="bg-green-100 text-green-800">
-                      <CheckCircle className="w-3 h-3 mr-1" />
-                      Configured
-                    </Badge>
-                  )}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Client ID</label>
-                    <Input
-                      placeholder="Your LinkedIn Client ID"
-                      value={socialConfig.linkedin.clientId}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        linkedin: {...prev.linkedin, clientId: e.target.value}
-                      }))}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium mb-2">Client Secret</label>
-                    <Input
-                      type="password"
-                      placeholder="Your LinkedIn Client Secret"
-                      value={socialConfig.linkedin.clientSecret}
-                      onChange={(e) => setSocialConfig(prev => ({
-                        ...prev,
-                        linkedin: {...prev.linkedin, clientSecret: e.target.value}
-                      }))}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Access Token</label>
-                  <Input
-                    placeholder="Your LinkedIn Access Token"
-                    value={socialConfig.linkedin.accessToken}
-                    onChange={(e) => setSocialConfig(prev => ({
-                      ...prev,
-                      linkedin: {...prev.linkedin, accessToken: e.target.value}
-                    }))}
-                  />
-                </div>
-                <Button onClick={() => saveSocialConfig('LinkedIn')} className="w-full">
-                  Save LinkedIn Configuration
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Alert>
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>
-                After configuring each platform, add the credentials to your Replit Secrets using the appropriate environment variable names (e.g., FACEBOOK_APP_ID, TWITTER_API_KEY, etc.) for the integrations to work properly.
-              </AlertDescription>
-            </Alert>
+                  </CardContent>
+                </Card>
               </TabsContent>
 
               {/* Twilio SMS Configuration */}
@@ -975,11 +442,10 @@ export default function Settings() {
 
                     <Button 
                       onClick={() => {
-                        // In a real app, this would save to environment variables or backend
                         setTwilioConfig(prev => ({ ...prev, isConfigured: true }));
                         toast({
                           title: "Twilio Configuration Saved",
-                          description: "Your Twilio SMS settings have been configured successfully.",
+                          description: "Add your credentials to Replit Secrets: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER",
                         });
                       }}
                       className="w-full lg:w-auto"
@@ -1086,7 +552,7 @@ export default function Settings() {
                           }));
                           toast({
                             title: "Facebook Connected",
-                            description: "Your Facebook integration has been configured.",
+                            description: "Add your credentials to Replit Secrets: FACEBOOK_APP_ID, FACEBOOK_APP_SECRET, FACEBOOK_ACCESS_TOKEN, FACEBOOK_PAGE_ID",
                           });
                         }}
                         className="w-full lg:w-auto"
@@ -1096,255 +562,13 @@ export default function Settings() {
                     </CardContent>
                   </Card>
 
-                  {/* Twitter */}
-                  <Card>
-                    <CardHeader>
-                      <div className="flex items-center space-x-3">
-                        <Twitter className="w-6 h-6 text-blue-400" />
-                        <div>
-                          <CardTitle>Twitter Integration</CardTitle>
-                          <p className="text-sm text-gray-600 mt-1">
-                            Connect your Twitter account for automated tweeting
-                          </p>
-                        </div>
-                        {socialConfig.twitter.isConfigured && (
-                          <Badge variant="secondary" className="bg-green-100 text-green-800">
-                            <CheckCircle className="w-3 h-3 mr-1" />
-                            Connected
-                          </Badge>
-                        )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="tw-key">API Key</Label>
-                          <Input
-                            id="tw-key"
-                            placeholder="Your Twitter API Key"
-                            value={socialConfig.twitter.apiKey}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              twitter: { ...prev.twitter, apiKey: e.target.value }
-                            }))}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="tw-secret">API Secret</Label>
-                          <Input
-                            id="tw-secret"
-                            type="password"
-                            placeholder="Your Twitter API Secret"
-                            value={socialConfig.twitter.apiSecret}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              twitter: { ...prev.twitter, apiSecret: e.target.value }
-                            }))}
-                          />
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="tw-token">Access Token</Label>
-                          <Input
-                            id="tw-token"
-                            type="password"
-                            placeholder="Your Access Token"
-                            value={socialConfig.twitter.accessToken}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              twitter: { ...prev.twitter, accessToken: e.target.value }
-                            }))}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="tw-token-secret">Access Token Secret</Label>
-                          <Input
-                            id="tw-token-secret"
-                            type="password"
-                            placeholder="Your Access Token Secret"
-                            value={socialConfig.twitter.accessTokenSecret}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              twitter: { ...prev.twitter, accessTokenSecret: e.target.value }
-                            }))}
-                          />
-                        </div>
-                      </div>
-                      <Button 
-                        onClick={() => {
-                          setSocialConfig(prev => ({
-                            ...prev,
-                            twitter: { ...prev.twitter, isConfigured: true }
-                          }));
-                          toast({
-                            title: "Twitter Connected",
-                            description: "Your Twitter integration has been configured.",
-                          });
-                        }}
-                        className="w-full lg:w-auto"
-                      >
-                        Save Twitter Settings
-                      </Button>
-                    </CardContent>
-                  </Card>
-
-                  {/* Instagram */}
-                  <Card>
-                    <CardHeader>
-                      <div className="flex items-center space-x-3">
-                        <Instagram className="w-6 h-6 text-pink-600" />
-                        <div>
-                          <CardTitle>Instagram Business Integration</CardTitle>
-                          <p className="text-sm text-gray-600 mt-1">
-                            Connect your Instagram Business account
-                          </p>
-                        </div>
-                        {socialConfig.instagram.isConfigured && (
-                          <Badge variant="secondary" className="bg-green-100 text-green-800">
-                            <CheckCircle className="w-3 h-3 mr-1" />
-                            Connected
-                          </Badge>
-                        )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="ig-token">Access Token</Label>
-                          <Input
-                            id="ig-token"
-                            type="password"
-                            placeholder="Your Instagram Access Token"
-                            value={socialConfig.instagram.accessToken}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              instagram: { ...prev.instagram, accessToken: e.target.value }
-                            }))}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="ig-account">Business Account ID</Label>
-                          <Input
-                            id="ig-account"
-                            placeholder="Your Instagram Business Account ID"
-                            value={socialConfig.instagram.businessAccountId}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              instagram: { ...prev.instagram, businessAccountId: e.target.value }
-                            }))}
-                          />
-                        </div>
-                      </div>
-                      <Button 
-                        onClick={() => {
-                          setSocialConfig(prev => ({
-                            ...prev,
-                            instagram: { ...prev.instagram, isConfigured: true }
-                          }));
-                          toast({
-                            title: "Instagram Connected",
-                            description: "Your Instagram integration has been configured.",
-                          });
-                        }}
-                        className="w-full lg:w-auto"
-                      >
-                        Save Instagram Settings
-                      </Button>
-                    </CardContent>
-                  </Card>
-
-                  {/* LinkedIn */}
-                  <Card>
-                    <CardHeader>
-                      <div className="flex items-center space-x-3">
-                        <Linkedin className="w-6 h-6 text-blue-700" />
-                        <div>
-                          <CardTitle>LinkedIn Integration</CardTitle>
-                          <p className="text-sm text-gray-600 mt-1">
-                            Connect your LinkedIn Company Page
-                          </p>
-                        </div>
-                        {socialConfig.linkedin.isConfigured && (
-                          <Badge variant="secondary" className="bg-green-100 text-green-800">
-                            <CheckCircle className="w-3 h-3 mr-1" />
-                            Connected
-                          </Badge>
-                        )}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="li-clientid">Client ID</Label>
-                          <Input
-                            id="li-clientid"
-                            placeholder="Your LinkedIn Client ID"
-                            value={socialConfig.linkedin.clientId}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              linkedin: { ...prev.linkedin, clientId: e.target.value }
-                            }))}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="li-secret">Client Secret</Label>
-                          <Input
-                            id="li-secret"
-                            type="password"
-                            placeholder="Your LinkedIn Client Secret"
-                            value={socialConfig.linkedin.clientSecret}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              linkedin: { ...prev.linkedin, clientSecret: e.target.value }
-                            }))}
-                          />
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="li-token">Access Token</Label>
-                          <Input
-                            id="li-token"
-                            type="password"
-                            placeholder="Your Access Token"
-                            value={socialConfig.linkedin.accessToken}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              linkedin: { ...prev.linkedin, accessToken: e.target.value }
-                            }))}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="li-org">Organization ID</Label>
-                          <Input
-                            id="li-org"
-                            placeholder="Your Company Page Organization ID"
-                            value={socialConfig.linkedin.organizationId}
-                            onChange={(e) => setSocialConfig(prev => ({
-                              ...prev,
-                              linkedin: { ...prev.linkedin, organizationId: e.target.value }
-                            }))}
-                          />
-                        </div>
-                      </div>
-                      <Button 
-                        onClick={() => {
-                          setSocialConfig(prev => ({
-                            ...prev,
-                            linkedin: { ...prev.linkedin, isConfigured: true }
-                          }));
-                          toast({
-                            title: "LinkedIn Connected",
-                            description: "Your LinkedIn integration has been configured.",
-                          });
-                        }}
-                        className="w-full lg:w-auto"
-                      >
-                        Save LinkedIn Settings
-                      </Button>
-                    </CardContent>
-                  </Card>
+                  {/* Alert for all social platforms */}
+                  <Alert>
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertDescription>
+                      After configuring each platform, add the credentials to your Replit Secrets using the appropriate environment variable names for the integrations to work properly.
+                    </AlertDescription>
+                  </Alert>
                 </div>
               </TabsContent>
             </Tabs>

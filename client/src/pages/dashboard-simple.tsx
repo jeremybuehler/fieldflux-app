@@ -1,28 +1,122 @@
 import { useEffect } from "react";
-import MobileSidebar from "@/components/dashboard/mobile-sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { trackEvent } from "@/lib/analytics";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { TrendingUp, Calendar, Users, MessageSquare, Star, Target, Zap, CheckCircle, BarChart3, Globe, MapPin } from "lucide-react";
-import { trackEvent } from "@/lib/analytics";
+import { Link, useLocation } from "wouter";
+import { Bot, MapPin, TrendingUp, Users, MessageSquare, Star, LogOut, Calendar, Share2, Code, Search, UserPlus, Settings as SettingsIcon, LayoutDashboard, CheckCircle, Globe, Target } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+
+const navigation = [
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { name: "Social Media", href: "/social", icon: Share2 },
+  { name: "Website", href: "/website", icon: Code },
+  { name: "Analytics", href: "/analytics", icon: TrendingUp },
+  { name: "SEO", href: "/seo", icon: Search },
+  { name: "Reviews", href: "/reviews", icon: Star },
+  { name: "Leads", href: "/leads", icon: UserPlus },
+  { name: "Settings", href: "/settings", icon: SettingsIcon },
+];
 
 export default function Dashboard() {
+  const { toast } = useToast();
+  const [location] = useLocation();
+
   useEffect(() => {
     trackEvent('dashboard_view', 'navigation', 'dashboard_page');
   }, []);
 
+  const handleLogout = () => {
+    toast({
+      title: "Logged Out",
+      description: "You have been successfully logged out.",
+    });
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 1000);
+  };
+
   const handleGenerateContent = () => {
-    trackEvent('generate_content_click', 'action', 'header_button');
+    toast({
+      title: "Generate Content",
+      description: "Content generation feature coming soon!",
+    });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
-      <div className="flex min-h-screen">
-        <MobileSidebar />
-        
-        <main className="flex-1 lg:ml-64">
-          <div className="p-6 pt-16 lg:pt-6">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+      {/* Header */}
+      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-4 lg:px-8 py-4 lg:py-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-primary to-hvac-orange rounded-xl flex items-center justify-center">
+                <Bot className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-lg lg:text-xl font-bold text-hvac-gray text-center lg:text-left">
+                  KasamaAI Marketing Dashboard
+                </h1>
+                <div className="flex items-center space-x-2 text-sm text-gray-600">
+                  <div className="hidden sm:flex items-center space-x-1">
+                    <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                      AI Powered
+                    </Badge>
+                    <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
+                      <MapPin className="w-3 h-3 mr-1" />
+                      Winter Haven FL
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <Button 
+            onClick={handleLogout} 
+            variant="outline" 
+            size="sm"
+            className="hover:bg-red-50 hover:border-red-200 hover:text-red-600"
+          >
+            <LogOut className="w-4 h-4 mr-2" />
+            Logout
+          </Button>
+        </div>
+      </div>
+
+      {/* Top Navigation */}
+      <div className="bg-white border-b border-gray-200 px-4 lg:px-8 py-3">
+        <nav className="flex space-x-1 overflow-x-auto">
+          {navigation.map((item) => {
+            const Icon = item.icon;
+            const isActive = location === item.href;
+            return (
+              <Link key={item.name} href={item.href}>
+                <Button
+                  variant={isActive ? "default" : "ghost"}
+                  size="sm"
+                  className={cn(
+                    "flex items-center space-x-2 whitespace-nowrap",
+                    isActive 
+                      ? "bg-primary text-white" 
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  )}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span className="hidden sm:inline">{item.name}</span>
+                </Button>
+              </Link>
+            );
+          })}
+        </nav>
+      </div>
+
+      {/* Main Content */}
+      <div className="p-4 lg:p-8">
+        <div className="max-w-7xl mx-auto space-y-8">
+
             {/* Dashboard Header */}
             <div className="mb-8 border-b border-gray-100 bg-white/80 backdrop-blur-sm rounded-xl p-6">
               <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between text-center sm:text-left">
@@ -34,10 +128,10 @@ export default function Dashboard() {
                     Welcome back! Here's your marketing performance and activity overview.
                   </p>
                 </div>
-                
+
                 <div className="flex items-center space-x-3 mt-4 sm:mt-0">
                   <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 px-4 py-2 hidden sm:flex">
-                    <Zap className="w-4 h-4 mr-2" />
+                    <Bot className="w-4 h-4 mr-2" />
                     AI Powered
                   </Badge>
                   <div className="flex items-center space-x-2 bg-primary/10 rounded-lg px-3 py-2 hidden sm:flex">
@@ -136,7 +230,7 @@ export default function Dashboard() {
                     <p className="text-gray-600">
                       Create and schedule social media posts to boost your online presence and engage with customers.
                     </p>
-                    
+
                     <div className="space-y-4">
                       <div className="flex items-center justify-between p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl border border-green-100">
                         <div className="flex items-center space-x-4">
@@ -147,7 +241,7 @@ export default function Dashboard() {
                         </div>
                         <Badge variant="secondary" className="bg-white/80 border-green-200">Today 2:00 PM</Badge>
                       </div>
-                      
+
                       <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-xl border border-blue-100">
                         <div className="flex items-center space-x-4">
                           <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -157,7 +251,7 @@ export default function Dashboard() {
                         </div>
                         <Badge variant="secondary" className="bg-white/80 border-blue-200">Draft</Badge>
                       </div>
-                      
+
                       <div className="flex items-center justify-between p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl border border-purple-100">
                         <div className="flex items-center space-x-4">
                           <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
@@ -168,9 +262,9 @@ export default function Dashboard() {
                         <Badge variant="secondary" className="bg-white/80 border-purple-200">Tomorrow</Badge>
                       </div>
                     </div>
-                    
+
                     <Button className="w-full py-3 bg-primary text-white hover:bg-primary/90 font-medium rounded-lg transition-all duration-200" onClick={handleGenerateContent}>
-                      <Zap className="w-4 h-4 mr-2" />
+                      <Bot className="w-4 h-4 mr-2" />
                       Create New Post
                     </Button>
                   </CardContent>
@@ -181,7 +275,7 @@ export default function Dashboard() {
                   <CardHeader className="space-y-3 p-6">
                     <CardTitle className="text-xl font-semibold flex items-center space-x-3">
                       <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                        <BarChart3 className="w-5 h-5 text-green-600" />
+                        <TrendingUp className="w-5 h-5 text-green-600" />
                       </div>
                       <span>Performance Analytics</span>
                     </CardTitle>
@@ -195,7 +289,7 @@ export default function Dashboard() {
                         </div>
                         <Progress value={87} className="h-3 bg-gray-100" />
                       </div>
-                      
+
                       <div className="space-y-3">
                         <div className="flex justify-between items-center">
                           <span className="font-medium">Lead Generation</span>
@@ -203,7 +297,7 @@ export default function Dashboard() {
                         </div>
                         <Progress value={72} className="h-3 bg-gray-100" />
                       </div>
-                      
+
                       <div className="space-y-3">
                         <div className="flex justify-between items-center">
                           <span className="font-medium">Customer Satisfaction</span>
@@ -236,7 +330,7 @@ export default function Dashboard() {
                           <p className="text-xs text-gray-600">2 hours ago</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div className="w-3 h-3 bg-blue-500 rounded-full mt-2 shadow-sm"></div>
                         <div className="flex-1 space-y-1">
@@ -244,7 +338,7 @@ export default function Dashboard() {
                           <p className="text-xs text-gray-600">4 hours ago</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div className="w-3 h-3 bg-purple-500 rounded-full mt-2 shadow-sm"></div>
                         <div className="flex-1 space-y-1">
@@ -252,7 +346,7 @@ export default function Dashboard() {
                           <p className="text-xs text-gray-600">1 day ago</p>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div className="w-3 h-3 bg-orange-500 rounded-full mt-2 shadow-sm"></div>
                         <div className="flex-1 space-y-1">
@@ -266,8 +360,7 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
-        </main>
-      </div>
+        </div>
     </div>
   );
 }
