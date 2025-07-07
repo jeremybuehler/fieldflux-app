@@ -150,55 +150,44 @@ export class GoogleReviewsService {
     };
   }
 
-  async getBusinessReviews(businessId?: string): Promise<ReviewsResponse> {
-    if (!this.isConfigured || !this.mybusiness) {
-      console.log('Google Reviews service not configured properly. The Google My Business API v4 has been deprecated.');
-      console.log('For real reviews data, you need to:');
-      console.log('1. Use Google Business Profile API (newer)');
-      console.log('2. Or integrate with Google Places API for reviews');
-      console.log('3. Set up proper OAuth2 flow for business account access');
-      console.log('Returning enhanced demo data for now...');
-      return this.getMockReviews();
-    }
-
+  async getBusinessReviews(businessName?: string, businessAddress?: string): Promise<ReviewsResponse> {
+    // Try Google Places API first for real reviews
     try {
-      // Updated API calls for newer Google Business Profile API
-      if (!businessId) {
-        // List accounts using newer API structure
-        const accounts = await this.mybusiness.accounts.list();
-        if (!accounts.data.accounts || accounts.data.accounts.length === 0) {
-          console.warn('No business accounts found, using demo data');
-          return this.getMockReviews();
-        }
+      const { googlePlacesService } = await import('./google-places');
+      const placesStatus = googlePlacesService.getConfigurationStatus();
+      
+      if (placesStatus.configured && businessName) {
+        console.log('Fetching real reviews using Google Places API for:', businessName);
         
-        const accountName = accounts.data.accounts[0].name;
+        const reviewsData = await googlePlacesService.getReviewsForBusiness(businessName, businessAddress);
+        const convertedReviews = googlePlacesService.convertToInternalFormat(reviewsData.reviews);
         
-        // List locations under the account
-        const locations = await this.mybusiness.locations.list({
-          parent: accountName
-        });
+        console.log(`Successfully fetched ${convertedReviews.length} real reviews for ${reviewsData.businessInfo.name}`);
         
-        if (!locations.data.locations || locations.data.locations.length === 0) {
-          console.warn('No business locations found, using demo data');
-          return this.getMockReviews();
-        }
-        
-        businessId = locations.data.locations[0].name;
+        return {
+          reviews: convertedReviews,
+          totalReviewCount: reviewsData.totalReviews,
+          averageRating: reviewsData.averageRating
+        };
       }
-
-      // Note: Direct review access may require additional permissions
-      // In practice, you might need to use Google Places API for public reviews
-      console.log('Attempting to fetch reviews for business:', businessId);
-      
-      // This is a placeholder for the actual review fetching
-      // The exact API call depends on the specific Google API being used
-      return this.getMockReviews();
-      
     } catch (error) {
-      console.error('Error fetching Google reviews:', error);
-      console.log('Falling back to demo data');
-      return this.getMockReviews();
+      console.warn('Google Places API error, falling back to demo data:', error.message);
     }
+
+    // Fallback to My Business API if configured
+    if (this.isConfigured && this.mybusiness) {
+      try {
+        console.log('Attempting Google My Business API...');
+        // My Business API implementation would go here
+        // Currently falls through to demo data
+      } catch (error) {
+        console.warn('Google My Business API error:', error);
+      }
+    }
+
+    // Fallback to demo data
+    console.log('Using demo review data - configure Google Places API for real reviews');
+    return this.getMockReviews();
   }
 
   async replyToReview(businessId: string, reviewId: string, replyText: string): Promise<boolean> {
