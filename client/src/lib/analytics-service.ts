@@ -73,11 +73,6 @@ export class AnalyticsService {
     return response.json();
   }
 
-  async getTrafficSources(period: "7d" | "30d" | "90d" = "30d"): Promise<TrafficSource[]> {
-    const response = await apiRequest("GET", `/api/analytics/traffic-sources?period=${period}`);
-    return response.json();
-  }
-
   async getPagePerformance(period: "7d" | "30d" | "90d" = "30d"): Promise<PagePerformance[]> {
     const response = await apiRequest("GET", `/api/analytics/pages?period=${period}`);
     return response.json();
