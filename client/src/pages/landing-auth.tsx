@@ -15,7 +15,28 @@ export default function LandingAuth() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="container mx-auto px-4 py-16">
+      {/* Header with Login/Sign-Up */}
+      <header className="container mx-auto px-4 py-6">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-primary to-hvac-orange rounded-xl flex items-center justify-center">
+              <Bot className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-hvac-gray">KasamaAI</h1>
+            </div>
+          </div>
+          <Button 
+            variant="outline"
+            onClick={handleLogin}
+            className="border-primary text-primary hover:bg-primary hover:text-white"
+          >
+            Login/Sign-Up
+          </Button>
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-16">
           <div className="flex items-center justify-center space-x-3 mb-6">
@@ -99,12 +120,22 @@ export default function LandingAuth() {
               
               <Button 
                 size="lg" 
-                className="bg-white text-primary hover:bg-gray-50 font-semibold px-8"
+                className="bg-white text-primary hover:bg-gray-50 font-semibold px-8 mb-4"
                 onClick={handleLogin}
               >
-                Sign in with Replit
+                Get Started
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
+              
+              <div className="text-sm text-white/80">
+                Already have an account?{" "}
+                <button 
+                  onClick={handleLogin}
+                  className="underline hover:text-white font-medium"
+                >
+                  Login/Sign-Up
+                </button>
+              </div>
             </CardContent>
           </Card>
         </div>
