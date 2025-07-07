@@ -1,4 +1,4 @@
-import { Client } from '@googlemaps/google-maps-services-js';
+import { Client, PlaceInputType } from '@googlemaps/google-maps-services-js';
 
 export interface PlaceReview {
   author_name: string;
@@ -59,15 +59,45 @@ export class GooglePlacesService {
     }
 
     try {
+      // Try text search first (requires Places API enabled)
+      const searchParams: any = {
+        query: location ? `${query} ${location}` : query,
+        key: this.apiKey,
+      };
+
+      console.log('Attempting Google Places text search with params:', searchParams);
+
       const response = await this.client.textSearch({
-        params: {
-          query: query,
-          location: location,
-          key: this.apiKey,
-        },
+        params: searchParams,
       });
 
-      return response.data.results.map(place => ({
+      console.log('Search response status:', response.status);
+      console.log('Search results count:', response.data.results?.length || 0);
+      
+      if (response.data.error_message) {
+        console.error('Google Places API error:', response.data.error_message);
+      }
+
+      if (response.data.status === 'REQUEST_DENIED') {
+        throw new Error(`Google Places API access denied. Please ensure:
+1. Places API (New) is enabled in Google Cloud Console
+2. API key has Places API permissions
+3. Billing is enabled for your Google Cloud project
+Error: ${response.data.error_message}`);
+      }
+
+      if (response.data.status === 'INVALID_REQUEST') {
+        throw new Error(`Invalid request: ${response.data.error_message}`);
+      }
+
+      if (response.data.status !== 'OK' && response.data.status !== 'ZERO_RESULTS') {
+        throw new Error(`API returned status: ${response.data.status} - ${response.data.error_message || 'Unknown error'}`);
+      }
+
+      const results = response.data.results || [];
+      console.log(`Successfully found ${results.length} businesses`);
+      
+      return results.map(place => ({
         place_id: place.place_id,
         name: place.name,
         rating: place.rating || 0,
@@ -76,7 +106,13 @@ export class GooglePlacesService {
       }));
     } catch (error) {
       console.error('Error searching businesses:', error);
-      throw new Error('Failed to search businesses');
+      if (error.response?.data) {
+        console.error('API Error Response:', error.response.data);
+        if (error.response.status === 400) {
+          throw new Error('Google Places API configuration error. Please check that Places API (New) is enabled and billing is configured.');
+        }
+      }
+      throw new Error(`Failed to search businesses: ${error.message}`);
     }
   }
 
