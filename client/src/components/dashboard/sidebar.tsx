@@ -16,7 +16,7 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Social Media", href: "/social", icon: Share2 },
   { name: "Website Updates", href: "/website", icon: Code },
-  { name: "Analytics", href: "/analytics", icon: TrendingUp },
+  { name: "Reports", href: "/reports", icon: TrendingUp },
   { name: "SEO Optimization", href: "/seo", icon: Search },
   { name: "Reviews", href: "/reviews", icon: Star },
   { name: "Lead Generation", href: "/leads", icon: UserPlus },
