@@ -5,6 +5,7 @@ import { ArrowLeft, Search, TrendingUp, Eye, MousePointer, Target, ArrowUp, Arro
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import SearchConsoleSetup from "@/components/search-console-setup";
 
 interface KeywordData {
   keyword: string;
@@ -18,17 +19,14 @@ interface KeywordData {
 }
 
 export default function Keywords() {
-  // Mock data for now - will be replaced with real Search Console API
-  const keywordData: KeywordData[] = [
-    { keyword: 'ac repair near me', clicks: 45, impressions: 1250, ctr: 3.6, position: 2.1, trend: 'up', difficulty: 'medium', searchVolume: 8900 },
-    { keyword: 'hvac installation', clicks: 32, impressions: 890, ctr: 3.6, position: 3.2, trend: 'down', difficulty: 'hard', searchVolume: 5400 },
-    { keyword: 'emergency hvac repair', clicks: 28, impressions: 675, ctr: 4.1, position: 1.8, trend: 'up', difficulty: 'easy', searchVolume: 2100 },
-    { keyword: 'air conditioning service', clicks: 22, impressions: 580, ctr: 3.8, position: 2.7, trend: 'stable', difficulty: 'medium', searchVolume: 4800 },
-    { keyword: 'hvac maintenance', clicks: 18, impressions: 420, ctr: 4.3, position: 2.3, trend: 'up', difficulty: 'easy', searchVolume: 3200 },
-    { keyword: 'central air repair', clicks: 15, impressions: 380, ctr: 3.9, position: 4.1, trend: 'down', difficulty: 'medium', searchVolume: 1800 },
-    { keyword: 'commercial hvac', clicks: 12, impressions: 320, ctr: 3.8, position: 5.2, trend: 'stable', difficulty: 'hard', searchVolume: 2700 },
-    { keyword: 'ductwork cleaning', clicks: 10, impressions: 280, ctr: 3.6, position: 6.1, trend: 'up', difficulty: 'easy', searchVolume: 1500 }
-  ];
+  // Fetch real keyword data from Search Console API
+  const { data: apiResponse, isLoading, error } = useQuery({
+    queryKey: ['/api/analytics/keywords'],
+    refetchInterval: 300000, // Refresh every 5 minutes
+  });
+
+  const keywords: KeywordData[] = apiResponse?.keywords || [];
+  const isRealData = apiResponse?.meta?.source === 'search_console';
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
@@ -74,6 +72,27 @@ export default function Keywords() {
             </div>
           </div>
         </div>
+
+        {/* Search Console Setup Info */}
+        <SearchConsoleSetup />
+
+        {/* Loading State */}
+        {isLoading && (
+          <Card>
+            <CardContent className="p-6 text-center">
+              <div className="text-gray-500">Loading keyword data from Google Search Console...</div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <Card>
+            <CardContent className="p-6 text-center">
+              <div className="text-red-500">Error loading keyword data. Using demo data for display.</div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -133,8 +152,19 @@ export default function Keywords() {
         {/* Keyword Performance Table */}
         <Card className="mb-8">
           <CardHeader>
-            <CardTitle className="text-xl">Keyword Performance Analysis</CardTitle>
-            <p className="text-sm text-gray-600">Last 30 days performance data</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-xl">Keyword Performance Analysis</CardTitle>
+                <p className="text-sm text-gray-600">Last 30 days performance data</p>
+              </div>
+              <div className="flex items-center space-x-2">
+                {isRealData ? (
+                  <Badge className="bg-green-100 text-green-800">Live Data</Badge>
+                ) : (
+                  <Badge className="bg-orange-100 text-orange-800">Demo Data</Badge>
+                )}
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
@@ -152,7 +182,7 @@ export default function Keywords() {
                   </tr>
                 </thead>
                 <tbody>
-                  {keywordData.map((keyword, index) => (
+                  {keywords.length > 0 ? keywords.map((keyword, index) => (
                     <tr key={index} className="border-b hover:bg-gray-50">
                       <td className="py-3 px-2">
                         <div className="font-medium text-gray-900">{keyword.keyword}</div>
@@ -185,7 +215,13 @@ export default function Keywords() {
                         </div>
                       </td>
                     </tr>
-                  ))}
+                  )) : (
+                    <tr>
+                      <td colSpan={8} className="py-8 px-2 text-center text-gray-500">
+                        {isLoading ? 'Loading keywords...' : 'No keyword data available. Please set up Google Search Console integration.'}
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </table>
             </div>

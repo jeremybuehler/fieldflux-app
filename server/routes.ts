@@ -633,7 +633,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const period = (req.query.period as '7d' | '30d' | '90d') || '30d';
       const keywords = await googleAnalyticsService.getSearchConsoleKeywords(period);
-      res.json(keywords);
+      
+      // Add metadata about data source
+      const response = {
+        keywords,
+        meta: {
+          source: keywords.length > 0 && keywords[0].keyword !== 'ac repair near me' ? 'search_console' : 'demo',
+          total: keywords.length,
+          period,
+          lastUpdated: new Date().toISOString()
+        }
+      };
+      
+      res.json(response);
     } catch (error) {
       console.error("Error fetching keyword data:", error);
       res.status(500).json({ message: "Failed to fetch keyword data" });
