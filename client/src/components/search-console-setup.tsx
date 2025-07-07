@@ -1,9 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ExternalLink, CheckCircle, AlertCircle, Info } from "lucide-react";
+import { ExternalLink, CheckCircle, AlertCircle, Info, RefreshCw } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { Badge } from "@/components/ui/badge";
 
 export default function SearchConsoleSetup() {
+  const { data: status, isLoading, refetch } = useQuery({
+    queryKey: ['/api/search-console/status'],
+    refetchInterval: 30000, // Refresh every 30 seconds
+  });
   return (
     <Card className="mb-6">
       <CardHeader>
@@ -27,14 +33,39 @@ export default function SearchConsoleSetup() {
           </div>
           
           <div className="flex items-center space-x-2 text-sm">
-            <CheckCircle className="w-4 h-4 text-green-500" />
-            <span>Google Search Console API - Service Ready ✓</span>
+            {status?.apiEnabled ? (
+              <CheckCircle className="w-4 h-4 text-green-500" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-red-500" />
+            )}
+            <span>Google Search Console API - {status?.apiEnabled ? 'Enabled ✓' : 'Needs Enabling'}</span>
           </div>
           
           <div className="flex items-center space-x-2 text-sm">
-            <AlertCircle className="w-4 h-4 text-orange-500" />
-            <span>Search Console Access - Add your website property</span>
+            {status?.sitesFound > 0 ? (
+              <CheckCircle className="w-4 h-4 text-green-500" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-orange-500" />
+            )}
+            <span>Website Properties - {status?.sitesFound || 0} found</span>
           </div>
+
+          {status?.serviceAccount && (
+            <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
+              <strong>Service Account:</strong> {status.serviceAccount}
+            </div>
+          )}
+
+          {status?.sites && status.sites.length > 0 && (
+            <div className="text-xs text-gray-600">
+              <strong>Connected Sites:</strong>
+              <ul className="mt-1 list-disc list-inside ml-2">
+                {status.sites.map((site: string) => (
+                  <li key={site}>{site}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         <div className="bg-gray-50 p-4 rounded-lg space-y-3">
@@ -62,6 +93,10 @@ export default function SearchConsoleSetup() {
             <a href="https://console.cloud.google.com/iam-admin/serviceaccounts" target="_blank" rel="noopener noreferrer">
               Manage Service Account
             </a>
+          </Button>
+          <Button size="sm" variant="outline" onClick={() => refetch()}>
+            <RefreshCw className="w-3 h-3 mr-1" />
+            Refresh Status
           </Button>
         </div>
       </CardContent>
