@@ -22,7 +22,7 @@ export default function SearchConsoleSetup() {
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            To get real keyword data, your Google service account needs access to both Google Analytics and Google Search Console.
+            Your Google service account is connected but needs access to your website in Search Console to retrieve keyword data.
           </AlertDescription>
         </Alert>
         
@@ -68,19 +68,43 @@ export default function SearchConsoleSetup() {
           )}
         </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-          <h4 className="font-medium text-gray-900">Setup Steps:</h4>
-          <ol className="text-sm space-y-2 list-decimal list-inside text-gray-700">
-            <li>Go to <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline inline-flex items-center">
-              Google Search Console <ExternalLink className="w-3 h-3 ml-1" />
-            </a></li>
-            <li>Add your website property if not already added</li>
-            <li>In Google Cloud Console, add your service account email to Search Console:</li>
-            <li className="ml-4 text-xs bg-white p-2 rounded border font-mono break-all">
-              Service Account: your-service-account@project.iam.gserviceaccount.com
-            </li>
-            <li>Grant "Owner" or "Full User" permissions in Search Console Settings → Users and permissions</li>
-          </ol>
+        <div className="bg-gray-50 p-4 rounded-lg space-y-4">
+          <h4 className="font-medium text-gray-900">Step-by-Step Setup:</h4>
+          
+          <div className="space-y-4">
+            <div className="border-l-4 border-blue-500 pl-4">
+              <h5 className="font-medium text-gray-900">Step 1: Add Your Website</h5>
+              <p className="text-sm text-gray-700 mb-2">Go to Google Search Console and add your website:</p>
+              <ol className="text-sm space-y-1 list-decimal list-inside text-gray-600 ml-2">
+                <li>Visit <a href="https://search.google.com/search-console" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Google Search Console</a></li>
+                <li>Click "Add Property" (+ button)</li>
+                <li>Choose "URL prefix" option</li>
+                <li>Enter your website URL (e.g., https://yourwebsite.com)</li>
+                <li>Click "Continue" and verify ownership</li>
+              </ol>
+            </div>
+
+            <div className="border-l-4 border-orange-500 pl-4">
+              <h5 className="font-medium text-gray-900">Step 2: Grant Service Account Access</h5>
+              <p className="text-sm text-gray-700 mb-2">Add your service account as a user:</p>
+              <ol className="text-sm space-y-1 list-decimal list-inside text-gray-600 ml-2">
+                <li>In Search Console, go to Settings (gear icon)</li>
+                <li>Click "Users and permissions"</li>
+                <li>Click "Add User"</li>
+                <li>Enter your service account email:</li>
+                <div className="ml-4 text-xs bg-white p-2 rounded border font-mono break-all mt-1">
+                  {status?.serviceAccount || 'your-service-account@project.iam.gserviceaccount.com'}
+                </div>
+                <li>Select "Owner" permissions</li>
+                <li>Click "Add"</li>
+              </ol>
+            </div>
+
+            <div className="border-l-4 border-green-500 pl-4">
+              <h5 className="font-medium text-gray-900">Step 3: Verify Setup</h5>
+              <p className="text-sm text-gray-700">Once completed, click "Refresh Status" below to verify the connection.</p>
+            </div>
+          </div>
         </div>
 
         <div className="flex space-x-3">
