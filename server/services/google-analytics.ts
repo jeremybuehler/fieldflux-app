@@ -71,6 +71,13 @@ export class GoogleAnalyticsService {
     return !!(this.analyticsData && this.propertyId);
   }
 
+  public getConfigurationStatus(): { configured: boolean; hasPermissions: boolean } {
+    return {
+      configured: this.isConfigured(),
+      hasPermissions: this.isConfigured() // Will be determined by actual API calls
+    };
+  }
+
   private getMockMetrics(): GoogleAnalyticsMetrics {
     return {
       sessions: 2847,
