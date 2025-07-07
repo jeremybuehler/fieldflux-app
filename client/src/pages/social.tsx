@@ -1,11 +1,32 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Link, useLocation } from "wouter";
 import MultiPlatformWizard from "@/components/social/multi-platform-wizard";
-import { Bot, MapPin, Wand2, PlusCircle, LogOut, Calendar, Share2, Code, Search, Star, UserPlus, Settings as SettingsIcon, LayoutDashboard, TrendingUp } from "lucide-react";
+import {
+  Bot,
+  MapPin,
+  Wand2,
+  PlusCircle,
+  LogOut,
+  Calendar,
+  Share2,
+  Code,
+  Search,
+  Star,
+  UserPlus,
+  Settings as SettingsIcon,
+  LayoutDashboard,
+  TrendingUp,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -49,10 +70,16 @@ export default function Social() {
                 </h1>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <div className="hidden sm:flex items-center space-x-1">
-                    <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
+                    <Badge
+                      variant="secondary"
+                      className="bg-primary/10 text-primary border-primary/20"
+                    >
                       AI Powered
                     </Badge>
-                    <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
+                    <Badge
+                      variant="secondary"
+                      className="bg-green-100 text-green-700 border-green-200"
+                    >
                       <MapPin className="w-3 h-3 mr-1" />
                       Winter Haven FL
                     </Badge>
@@ -62,9 +89,9 @@ export default function Social() {
             </div>
           </div>
 
-          <Button 
-            onClick={handleLogout} 
-            variant="outline" 
+          <Button
+            onClick={handleLogout}
+            variant="outline"
             size="sm"
             className="hover:bg-red-50 hover:border-red-200 hover:text-red-600"
           >
@@ -87,9 +114,9 @@ export default function Social() {
                   size="sm"
                   className={cn(
                     "flex items-center space-x-2 whitespace-nowrap",
-                    isActive 
-                      ? "bg-primary text-white" 
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                    isActive
+                      ? "bg-primary text-white"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-100",
                   )}
                 >
                   <Icon className="w-4 h-4" />
@@ -120,7 +147,9 @@ export default function Social() {
                     rows={4}
                     onChange={(e) => setGeneratedContent(e.target.value)}
                   />
-                  <Button onClick={() => setIsGenerating(true)}>Generate</Button>
+                  <Button onClick={() => setIsGenerating(true)}>
+                    Generate
+                  </Button>
                 </div>
                 <p className="text-sm text-gray-500">
                   Powered by AI, generate content ideas for your social media
@@ -132,11 +161,17 @@ export default function Social() {
 
           <Tabs defaultValue="wizard" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="wizard" className="flex items-center space-x-2">
+              <TabsTrigger
+                value="wizard"
+                className="flex items-center space-x-2"
+              >
                 <Calendar className="w-4 h-4" />
                 <span>Multi-Platform Wizard</span>
               </TabsTrigger>
-              <TabsTrigger value="quick" className="flex items-center space-x-2">
+              <TabsTrigger
+                value="quick"
+                className="flex items-center space-x-2"
+              >
                 <PlusCircle className="w-4 h-4" />
                 <span>Quick Post</span>
               </TabsTrigger>
@@ -154,18 +189,14 @@ export default function Social() {
               <CardHeader>
                 <CardTitle>Performance Overview</CardTitle>
               </CardHeader>
-              <CardContent>
-                Performance data here
-              </CardContent>
+              <CardContent>Performance data here</CardContent>
             </Card>
 
             <Card>
               <CardHeader>
                 <CardTitle>Platform Performance</CardTitle>
               </CardHeader>
-              <CardContent>
-                Platform specific data here
-              </CardContent>
+              <CardContent>Platform specific data here</CardContent>
             </Card>
           </div>
         </div>
