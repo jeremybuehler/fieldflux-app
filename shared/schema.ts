@@ -214,6 +214,77 @@ export const insertSocialMediaAnalyticsSchema = createInsertSchema(socialMediaAn
   recordedAt: true,
 });
 
+// White-label and multi-client configuration tables
+export const clients = pgTable("clients", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  domain: text("domain").unique(),
+  logo: text("logo"),
+  primaryColor: text("primary_color").default("#3b82f6"),
+  secondaryColor: text("secondary_color").default("#f97316"),
+  contactEmail: text("contact_email"),
+  contactPhone: text("contact_phone"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const clientConfigurations = pgTable("client_configurations", {
+  id: serial("id").primaryKey(),
+  clientId: integer("client_id").references(() => clients.id),
+  userId: varchar("user_id").references(() => users.id),
+  businessName: text("business_name"),
+  businessAddress: text("business_address"),
+  businessPhone: text("business_phone"),
+  businessEmail: text("business_email"),
+  businessWebsite: text("business_website"),
+  businessDefaultSearch: text("business_default_search"), // For Google Places API
+  industry: text("industry"),
+  timezone: text("timezone").default("America/New_York"),
+  currency: text("currency").default("USD"),
+  // Google Analytics
+  gaPropertyId: text("ga_property_id"),
+  gaServiceAccountKey: text("ga_service_account_key"),
+  // Google Places API
+  googlePlacesApiKey: text("google_places_api_key"),
+  // Twilio SMS
+  twilioAccountSid: text("twilio_account_sid"),
+  twilioAuthToken: text("twilio_auth_token"),
+  twilioPhoneNumber: text("twilio_phone_number"),
+  // WordPress/GoDaddy
+  wordpressSiteUrl: text("wordpress_site_url"),
+  wordpressUsername: text("wordpress_username"),
+  wordpressAppPassword: text("wordpress_app_password"),
+  // Social Media APIs
+  facebookAppId: text("facebook_app_id"),
+  facebookAppSecret: text("facebook_app_secret"),
+  facebookAccessToken: text("facebook_access_token"),
+  facebookPageId: text("facebook_page_id"),
+  twitterApiKey: text("twitter_api_key"),
+  twitterApiSecret: text("twitter_api_secret"),
+  twitterAccessToken: text("twitter_access_token"),
+  twitterAccessTokenSecret: text("twitter_access_token_secret"),
+  instagramAccessToken: text("instagram_access_token"),
+  instagramBusinessId: text("instagram_business_id"),
+  linkedinClientId: text("linkedin_client_id"),
+  linkedinClientSecret: text("linkedin_client_secret"),
+  linkedinAccessToken: text("linkedin_access_token"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertClientSchema = createInsertSchema(clients).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export const insertClientConfigurationSchema = createInsertSchema(clientConfigurations).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type WordPressPost = typeof wordpressPosts.$inferSelect;
@@ -236,3 +307,7 @@ export type SocialMediaConfig = typeof socialMediaConfigs.$inferSelect;
 export type InsertSocialMediaConfig = z.infer<typeof insertSocialMediaConfigSchema>;
 export type SocialMediaAnalytics = typeof socialMediaAnalytics.$inferSelect;
 export type InsertSocialMediaAnalytics = z.infer<typeof insertSocialMediaAnalyticsSchema>;
+export type Client = typeof clients.$inferSelect;
+export type InsertClient = z.infer<typeof insertClientSchema>;
+export type ClientConfiguration = typeof clientConfigurations.$inferSelect;
+export type InsertClientConfiguration = z.infer<typeof insertClientConfigurationSchema>;
