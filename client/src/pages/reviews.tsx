@@ -143,10 +143,10 @@ export default function Reviews() {
             <div className="flex items-center space-x-2">
               <Badge variant="secondary" className="bg-orange-100 text-orange-800">
                 <AlertCircle className="w-3 h-3 mr-1" />
-                API Key Needs Authorization
+                Places API Authorization Issue
               </Badge>
               <Badge variant="outline" className="text-gray-600 border-gray-600">
-                Demo Data Active
+                Check Billing & API Enable Status
               </Badge>
             </div>
             <BusinessSearchButton />

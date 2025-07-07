@@ -1,8 +1,25 @@
 # Google Places API Setup Guide
 
-## Current Status: API Key Added ✅ - Authorization Needed ⚠️
+## Current Status: API Key Added ✅ - Still Getting 403 Error ⚠️
 
-Your Google Places API key has been successfully added to KasamaAI. However, we're getting a 403 error: "This API key is not authorized to use this service or API." This means your API key needs proper authorization.
+Your Google Places API key is configured with the correct API restrictions (Places API New is selected), but we're still getting: "This API key is not authorized to use this service or API."
+
+## Likely Issues to Check:
+
+### 1. Billing Account Required
+The Places API requires a linked billing account even for free usage. Check:
+- Go to Google Cloud Console → Billing
+- Ensure a billing account is linked to your project
+- Even with $200 free credit, billing must be enabled
+
+### 2. API Not Enabled
+Even with restrictions set, ensure the API is enabled:
+- Go to APIs & Services → Library
+- Search for "Places API (New)"
+- Click and ensure it shows "ENABLED" (not just restricted)
+
+### 3. Propagation Delay
+API changes can take 5-10 minutes to propagate. If you just made changes, wait a few minutes.
 
 ## Required Google Cloud Console Configuration
 
