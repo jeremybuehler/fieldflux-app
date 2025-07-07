@@ -629,6 +629,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/analytics/keywords", async (req, res) => {
+    try {
+      const period = (req.query.period as '7d' | '30d' | '90d') || '30d';
+      const keywords = await googleAnalyticsService.getSearchConsoleKeywords(period);
+      res.json(keywords);
+    } catch (error) {
+      console.error("Error fetching keyword data:", error);
+      res.status(500).json({ message: "Failed to fetch keyword data" });
+    }
+  });
+
+  app.get("/api/analytics/reviews", async (req, res) => {
+    try {
+      const period = (req.query.period as '7d' | '30d' | '90d') || '30d';
+      const reviews = await googleAnalyticsService.getReviewsAnalytics(period);
+      res.json(reviews);
+    } catch (error) {
+      console.error("Error fetching reviews data:", error);
+      res.status(500).json({ message: "Failed to fetch reviews data" });
+    }
+  });
+
   app.get("/api/analytics/status", async (req, res) => {
     try {
       const hasServiceAccount = !!process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT_KEY;

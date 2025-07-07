@@ -147,6 +147,93 @@ export default function Analytics() {
           </Card>
         </div>
 
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Reviews Overview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Total Reviews</span>
+                  <span className="text-2xl font-bold">147</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Average Rating</span>
+                  <div className="flex items-center space-x-1">
+                    <span className="text-xl font-bold text-yellow-500">4.6</span>
+                    <span className="text-yellow-500">★★★★★</span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-gray-600">Response Rate</span>
+                  <span className="text-lg font-semibold text-green-600">89%</span>
+                </div>
+                <div className="bg-green-50 p-3 rounded-lg">
+                  <span className="text-sm text-green-800">+12% reviews this month</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Review Platforms</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-sm font-medium">Google My Business</span>
+                    <div className="text-xs text-gray-500">89 reviews • 8 recent</div>
+                  </div>
+                  <span className="text-sm font-bold">4.7★</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-sm font-medium">Facebook</span>
+                    <div className="text-xs text-gray-500">34 reviews • 3 recent</div>
+                  </div>
+                  <span className="text-sm font-bold">4.5★</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-sm font-medium">Yelp</span>
+                    <div className="text-xs text-gray-500">24 reviews • 1 recent</div>
+                  </div>
+                  <span className="text-sm font-bold">4.4★</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Recent Reviews</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                <div className="border-l-4 border-green-400 pl-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-gray-500">Google</span>
+                    <span className="text-yellow-500">★★★★★</span>
+                  </div>
+                  <p className="text-xs">"Excellent service! Fixed our AC quickly..."</p>
+                  <span className="text-xs text-green-600">✓ Responded</span>
+                </div>
+                <div className="border-l-4 border-orange-400 pl-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs text-gray-500">Facebook</span>
+                    <span className="text-yellow-500">★★★★</span>
+                  </div>
+                  <p className="text-xs">"Good work, came on time..."</p>
+                  <span className="text-xs text-red-600">⚠ Needs response</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <AnalyticsReports />
       </div>
     </div>
