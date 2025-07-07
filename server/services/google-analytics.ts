@@ -261,30 +261,9 @@ export class GoogleAnalyticsService {
     recentReviews: Array<{ platform: string; rating: number; text: string; date: string; responded: boolean }>;
     sentimentTrends: Array<{ date: string; positive: number; neutral: number; negative: number }>;
   }> {
-    // This would integrate with Google My Business API, Facebook Reviews API, etc.
-    return {
-      overview: {
-        totalReviews: 147,
-        averageRating: 4.6,
-        responseRate: 89,
-        trend: '+12% this month'
-      },
-      platforms: [
-        { platform: 'Google My Business', reviews: 89, rating: 4.7, recentReviews: 8 },
-        { platform: 'Facebook', reviews: 34, rating: 4.5, recentReviews: 3 },
-        { platform: 'Yelp', reviews: 24, rating: 4.4, recentReviews: 1 }
-      ],
-      recentReviews: [
-        { platform: 'Google', rating: 5, text: 'Excellent service! Fixed our AC quickly and professionally.', date: '2025-01-05', responded: true },
-        { platform: 'Facebook', rating: 4, text: 'Good work, came on time and explained everything clearly.', date: '2025-01-04', responded: false },
-        { platform: 'Google', rating: 5, text: 'Best HVAC company in town. Highly recommend!', date: '2025-01-03', responded: true }
-      ],
-      sentimentTrends: [
-        { date: '2025-01-01', positive: 85, neutral: 12, negative: 3 },
-        { date: '2025-01-02', positive: 88, neutral: 10, negative: 2 },
-        { date: '2025-01-03', positive: 92, neutral: 6, negative: 2 }
-      ]
-    };
+    // Import Google Reviews service for real data
+    const { googleReviewsService } = await import('./google-reviews');
+    return await googleReviewsService.getReviewsAnalytics(period);
   }
 
   async getSearchConsoleKeywords(period: '7d' | '30d' | '90d' = '30d'): Promise<Array<{ keyword: string; clicks: number; impressions: number; ctr: number; position: number; trend: string; difficulty: string; searchVolume: number }>> {

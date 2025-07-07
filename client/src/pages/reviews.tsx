@@ -1,11 +1,23 @@
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import ReviewsPanel from "@/components/dashboard/reviews-panel";
 import TopNavigation from "@/components/layout/top-navigation";
-import { ArrowLeft, Star, MessageSquare, TrendingUp } from "lucide-react";
+import { ArrowLeft, Star, MessageSquare, TrendingUp, CheckCircle, AlertCircle } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Reviews() {
+  // Get real review analytics
+  const { data: reviewAnalytics, isLoading } = useQuery({
+    queryKey: ["/api/reviews/analytics"],
+  });
+
+  // Get real Google reviews
+  const { data: googleReviews } = useQuery({
+    queryKey: ["/api/reviews/google"],
+  });
+
   return (
     <div className="min-h-screen bg-gray-50">
       <TopNavigation title="Reviews Management" />
@@ -20,6 +32,21 @@ export default function Reviews() {
               <p className="text-gray-600">Monitor and respond to customer reviews across platforms</p>
             </div>
           </div>
+          
+          {/* Real Data Status Indicator */}
+          <div className="flex items-center space-x-2 mb-4">
+            {googleReviews && reviewAnalytics ? (
+              <Badge variant="default" className="bg-green-100 text-green-800">
+                <CheckCircle className="w-3 h-3 mr-1" />
+                Live Data Connected
+              </Badge>
+            ) : (
+              <Badge variant="secondary" className="bg-orange-100 text-orange-800">
+                <AlertCircle className="w-3 h-3 mr-1" />
+                Demo Data - Connect Google My Business for real reviews
+              </Badge>
+            )}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
@@ -28,7 +55,9 @@ export default function Reviews() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Average Rating</p>
-                  <p className="text-2xl font-bold">4.8</p>
+                  <p className="text-2xl font-bold">
+                    {isLoading ? "..." : reviewAnalytics?.overview?.averageRating || "4.8"}
+                  </p>
                 </div>
                 <Star className="w-8 h-8 text-yellow-500" />
               </div>
@@ -40,7 +69,9 @@ export default function Reviews() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600">Total Reviews</p>
-                  <p className="text-2xl font-bold">127</p>
+                  <p className="text-2xl font-bold">
+                    {isLoading ? "..." : reviewAnalytics?.overview?.totalReviews || "127"}
+                  </p>
                 </div>
                 <MessageSquare className="w-8 h-8 text-blue-500" />
               </div>
@@ -51,10 +82,14 @@ export default function Reviews() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">This Month</p>
-                  <p className="text-2xl font-bold">18</p>
+                  <p className="text-sm text-gray-600">Response Rate</p>
+                  <p className="text-2xl font-bold">
+                    {isLoading ? "..." : `${reviewAnalytics?.overview?.responseRate || "94"}%`}
+                  </p>
                 </div>
-                <TrendingUp className="w-8 h-8 text-green-500" />
+                <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
+                  <span className="text-xs font-bold text-purple-600">%</span>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -63,12 +98,12 @@ export default function Reviews() {
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-gray-600">Response Rate</p>
-                  <p className="text-2xl font-bold">94%</p>
+                  <p className="text-sm text-gray-600">Trend</p>
+                  <p className="text-lg font-bold">
+                    {isLoading ? "..." : reviewAnalytics?.overview?.trend || "+18"}
+                  </p>
                 </div>
-                <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
-                  <span className="text-xs font-bold text-purple-600">%</span>
-                </div>
+                <TrendingUp className="w-8 h-8 text-green-500" />
               </div>
             </CardContent>
           </Card>

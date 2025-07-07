@@ -499,11 +499,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages: [
           {
             role: "system",
-            content: "You are a professional HVAC business owner responding to customer reviews. Be courteous, professional, and address any concerns mentioned. Keep responses concise and grateful.",
+            content: "You are a professional business owner responding to customer reviews. Be courteous, professional, and address any concerns mentioned. Keep responses concise and grateful.",
           },
           {
             role: "user",
-            content: `Generate a professional response to this ${review.rating}-star review: "${review.content}" from ${review.customerName}. The business is a local HVAC company in Winter Haven/Lakeland, Florida.`,
+            content: `Generate a professional response to this ${review.rating}-star review: "${review.content}" from ${review.customerName}. The business is KasamaAI, a marketing automation platform.`,
           },
         ],
         response_format: { type: "json_object" },
@@ -528,6 +528,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to generate review response" });
     }
   });
+
+  // Get real Google reviews
+  app.get("/api/reviews/google", async (req, res) => {
+    try {
+      const { googleReviewsService } = await import('./services/google-reviews');
+      const reviews = await googleReviewsService.getBusinessReviews();
+      res.json(reviews);
+    } catch (error) {
+      console.error("Error fetching Google reviews:", error);
+      res.status(500).json({ message: "Failed to fetch Google reviews" });
+    }
+  });
+
+  // Get review analytics (now uses real data)
+  app.get("/api/reviews/analytics", async (req, res) => {
+    try {
+      const period = req.query.period as '7d' | '30d' | '90d' || '30d';
+      const analytics = await googleAnalyticsService.getReviewsAnalytics(period);
+      res.json(analytics);
+    } catch (error) {
+      console.error("Error fetching review analytics:", error);
+      res.status(500).json({ message: "Failed to fetch review analytics" });
+    }
+  });
+
+  // Reply to Google review
+  app.post("/api/reviews/google/:reviewId/reply", async (req, res) => {
+    const { reviewId } = req.params;
+    const { businessId, replyText } = req.body;
+    
+    try {
+      const { googleReviewsService } = await import('./services/google-reviews');
+      const success = await googleReviewsService.replyToReview(businessId, reviewId, replyText);
+      
+      if (success) {
+        res.json({ message: "Reply posted successfully" });
+      } else {
+        res.status(500).json({ message: "Failed to post reply" });
+      }
+    } catch (error) {
+      console.error("Error posting review reply:", error);
+      res.status(500).json({ message: "Failed to post review reply" });
+    }
+  });;
 
   // WordPress with GoDaddy Integration
   app.post("/api/wordpress/publish-to-godaddy", async (req, res) => {
