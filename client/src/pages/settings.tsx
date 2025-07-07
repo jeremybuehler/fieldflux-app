@@ -172,21 +172,13 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <TopNavigation title="Settings" />
       <div className="flex min-h-screen">
         <MobileSidebar />
         
         <main className="flex-1 lg:ml-64">
           <div className="p-4 pt-16 lg:pt-6 lg:pl-6">
             <div className="mb-6 lg:mb-8">
-              <div className="flex items-center space-x-4 mb-4">
-                <Link href="/dashboard">
-                  <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
-                    <ArrowLeft className="w-4 h-4 mr-2" />
-                    <span className="hidden sm:inline">Back to Dashboard</span>
-                    <span className="sm:hidden">Back</span>
-                  </Button>
-                </Link>
-              </div>
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                   <SettingsIcon className="w-5 h-5 text-blue-600" />
