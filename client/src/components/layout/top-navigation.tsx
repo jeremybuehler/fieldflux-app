@@ -40,12 +40,10 @@ export default function TopNavigation({ title }: TopNavigationProps) {
 
   const handleLogout = () => {
     toast({
-      title: "Logged Out",
-      description: "You have been successfully logged out.",
+      title: "Logging Out",
+      description: "You are being logged out.",
     });
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 1000);
+    window.location.href = "/api/logout";
   };
 
   return (

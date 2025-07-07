@@ -6,10 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect } from "react";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
-// import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import Dashboard from "@/pages/dashboard-simple";
 import Settings from "@/pages/settings-fixed";
-import Landing from "@/pages/landing";
+import Landing from "@/pages/landing-auth";
 import Social from "@/pages/social";
 import Leads from "@/pages/leads";
 import Reviews from "@/pages/reviews";
@@ -22,19 +22,26 @@ import NotFound from "@/pages/not-found";
 function Router() {
   // Track page views when routes change
   useAnalytics();
-  
+  const { isAuthenticated, isLoading } = useAuth();
+
   return (
     <Switch>
-      <Route path="/" component={Landing} />
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/social" component={Social} />
-      <Route path="/leads" component={Leads} />
-      <Route path="/reviews" component={Reviews} />
-      <Route path="/analytics" component={Analytics} />
-      <Route path="/seo" component={SEO} />
-      <Route path="/website" component={Website} />
-      <Route path="/godaddy" component={GoDaddy} />
-      <Route path="/settings" component={Settings} />
+      {isLoading || !isAuthenticated ? (
+        <Route path="/" component={Landing} />
+      ) : (
+        <>
+          <Route path="/" component={Dashboard} />
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/social" component={Social} />
+          <Route path="/leads" component={Leads} />
+          <Route path="/reviews" component={Reviews} />
+          <Route path="/analytics" component={Analytics} />
+          <Route path="/seo" component={SEO} />
+          <Route path="/website" component={Website} />
+          <Route path="/godaddy" component={GoDaddy} />
+          <Route path="/settings" component={Settings} />
+        </>
+      )}
       <Route component={NotFound} />
     </Switch>
   );

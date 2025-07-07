@@ -28,6 +28,8 @@ import {
   type InsertAnalyticsReport,
   type UpsertUser,
 } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   // User methods
@@ -107,8 +109,13 @@ export class MemStorage implements IStorage {
   }
 
   // User methods
-  async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+  async getUser(id: string): Promise<User | undefined> {
+    for (const user of this.users.values()) {
+      if (user.id === id) {
+        return user;
+      }
+    }
+    return undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
@@ -572,4 +579,4 @@ export class DatabaseStorage implements IStorage {
 }
 
 // Use MemStorage for now to avoid database connection issues
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
