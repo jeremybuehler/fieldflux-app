@@ -652,6 +652,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/search-console/status", async (req, res) => {
+    try {
+      const status = await googleAnalyticsService.getSearchConsoleStatus();
+      res.json(status);
+    } catch (error) {
+      console.error("Error fetching Search Console status:", error);
+      res.status(500).json({ message: "Failed to fetch Search Console status" });
+    }
+  });
+
   app.get("/api/analytics/keyword-opportunities", async (req, res) => {
     try {
       const keywords = await googleAnalyticsService.getSearchConsoleKeywords('30d');

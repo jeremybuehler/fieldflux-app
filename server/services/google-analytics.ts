@@ -301,6 +301,7 @@ export class GoogleAnalyticsService {
       startDate.setDate(endDate.getDate() - daysBack);
 
       // First, get the list of sites from Search Console
+      console.log('Attempting to fetch sites from Search Console...');
       const sitesResponse = await this.searchConsole.sites.list();
       
       if (!sitesResponse.data.siteEntry || sitesResponse.data.siteEntry.length === 0) {
@@ -379,6 +380,50 @@ export class GoogleAnalyticsService {
   private estimateSearchVolume(impressions: number): number {
     // Rough estimation - real search volume would come from additional APIs
     return Math.round(impressions * 3.5);
+  }
+
+  async getSearchConsoleStatus(): Promise<{
+    configured: boolean;
+    apiEnabled: boolean;
+    sitesFound: number;
+    sites: string[];
+    serviceAccount: string;
+    error?: string;
+  }> {
+    if (!this.searchConsole) {
+      return {
+        configured: false,
+        apiEnabled: false,
+        sitesFound: 0,
+        sites: [],
+        serviceAccount: 'Not configured'
+      };
+    }
+
+    try {
+      const sitesResponse = await this.searchConsole.sites.list();
+      const sites = sitesResponse.data.siteEntry || [];
+      
+      // Get service account email from credentials
+      const credentials = JSON.parse(process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT_KEY || '{}');
+      
+      return {
+        configured: true,
+        apiEnabled: true,
+        sitesFound: sites.length,
+        sites: sites.map((site: any) => site.siteUrl),
+        serviceAccount: credentials.client_email || 'Unknown'
+      };
+    } catch (error: any) {
+      return {
+        configured: true,
+        apiEnabled: false,
+        sitesFound: 0,
+        sites: [],
+        serviceAccount: 'Error retrieving',
+        error: error.message
+      };
+    }
   }
 
   async getLocationData(period: '7d' | '30d' | '90d' = '30d'): Promise<LocationData[]> {
