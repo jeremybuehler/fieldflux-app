@@ -13,7 +13,8 @@ import {
   Bot,
   Settings as SettingsIcon,
   Menu,
-  X
+  X,
+  Globe
 } from "lucide-react";
 
 const navigation = [
@@ -24,6 +25,7 @@ const navigation = [
   { name: "SEO Optimization", href: "/seo", icon: Search },
   { name: "Reviews", href: "/reviews", icon: Star },
   { name: "Lead Generation", href: "/leads", icon: UserPlus },
+  { name: "GoDaddy", href: "/godaddy", icon: Globe },
   { name: "Settings", href: "/settings", icon: SettingsIcon },
 ];
 
