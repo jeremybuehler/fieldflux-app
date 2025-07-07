@@ -18,13 +18,11 @@ import {
 export default function Website() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
+      <TopNavigation title="Website Management" />
       <div className="flex min-h-screen">
         <main className="flex-1 lg:ml-64">
           <div className="p-4 lg:p-6 pt-16 lg:pt-6">
             <div className="mb-6 lg:mb-8">
-              <div className="flex items-center space-x-4 mb-4">
-                <TopNavigation />
-              </div>
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                   <Globe className="w-5 h-5 text-blue-600" />
