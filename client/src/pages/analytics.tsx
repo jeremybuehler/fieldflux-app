@@ -115,7 +115,55 @@ export default function Analytics() {
           <AnalyticsChart />
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Top Traffic Sources</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg">Top Keywords</CardTitle>
+                <Link href="/keywords">
+                  <Button variant="outline" size="sm">
+                    View All Keywords
+                  </Button>
+                </Link>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="grid grid-cols-4 gap-2 text-xs text-gray-500 font-medium">
+                  <span>Keyword</span>
+                  <span>Clicks</span>
+                  <span>CTR</span>
+                  <span>Position</span>
+                </div>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-4 gap-2 items-center">
+                    <span className="text-sm font-medium">ac repair near me</span>
+                    <span className="text-sm">45</span>
+                    <span className="text-sm text-green-600">3.6%</span>
+                    <span className="text-sm text-blue-600">#2.1</span>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2 items-center">
+                    <span className="text-sm font-medium">hvac installation</span>
+                    <span className="text-sm">32</span>
+                    <span className="text-sm text-green-600">3.6%</span>
+                    <span className="text-sm text-blue-600">#3.2</span>
+                  </div>
+                  <div className="grid grid-cols-4 gap-2 items-center">
+                    <span className="text-sm font-medium">emergency hvac repair</span>
+                    <span className="text-sm">28</span>
+                    <span className="text-sm text-green-600">4.1%</span>
+                    <span className="text-sm text-blue-600">#1.8</span>
+                  </div>
+                </div>
+                <div className="pt-2 text-xs text-gray-500">
+                  Connect Google Search Console for real keyword data
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Traffic Sources</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               {sourcesLoading ? (

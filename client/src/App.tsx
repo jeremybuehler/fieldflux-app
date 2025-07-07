@@ -14,6 +14,7 @@ import Social from "@/pages/social";
 import Leads from "@/pages/leads";
 import Reviews from "@/pages/reviews";
 import Analytics from "@/pages/analytics";
+import Keywords from "@/pages/keywords";
 import SEO from "@/pages/seo";
 import Website from "@/pages/website";
 import GoDaddy from "@/pages/godaddy";
@@ -36,6 +37,7 @@ function Router() {
           <Route path="/leads" component={Leads} />
           <Route path="/reviews" component={Reviews} />
           <Route path="/analytics" component={Analytics} />
+          <Route path="/keywords" component={Keywords} />
           <Route path="/seo" component={SEO} />
           <Route path="/website" component={Website} />
           <Route path="/godaddy" component={GoDaddy} />

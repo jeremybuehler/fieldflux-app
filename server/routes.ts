@@ -640,6 +640,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/analytics/keyword-opportunities", async (req, res) => {
+    try {
+      const keywords = await googleAnalyticsService.getSearchConsoleKeywords('30d');
+      
+      // Analyze optimization opportunities
+      const quickWins = keywords.filter(k => k.position > 3 && k.position <= 10);
+      const lowCtrKeywords = keywords.filter(k => k.ctr < 4.0);
+      const highVolumeEasyKeywords = keywords.filter(k => k.difficulty === 'easy' && k.searchVolume > 1000);
+      
+      res.json({
+        quickWins,
+        lowCtrKeywords,
+        highVolumeEasyKeywords,
+        totalKeywords: keywords.length
+      });
+    } catch (error) {
+      console.error("Error fetching keyword opportunities:", error);
+      res.status(500).json({ message: "Failed to fetch keyword opportunities" });
+    }
+  });
+
   app.get("/api/analytics/reviews", async (req, res) => {
     try {
       const period = (req.query.period as '7d' | '30d' | '90d') || '30d';
