@@ -27,13 +27,13 @@ function ReviewCard({ review, businessName }) {
           businessName: businessName
         })
       });
-      
+
       if (!response.ok) throw new Error('Failed to generate response');
-      
+
       const data = await response.json();
       setGeneratedResponse(data.response);
       setShowResponse(true);
-      
+
       toast({
         title: "Response Generated",
         description: "AI-powered response ready for review",
@@ -86,13 +86,13 @@ function ReviewCard({ review, businessName }) {
         >
           {isGeneratingResponse ? 'Generating...' : 'Generate Response'}
         </Button>
-        
+
         {review.starRating <= 3 && (
           <Button size="sm" variant="outline" className="text-orange-600 border-orange-600">
             Flag for Follow-up
           </Button>
         )}
-        
+
         <Button size="sm" variant="ghost" className="text-blue-600">
           View Full Review
         </Button>
@@ -225,7 +225,7 @@ export default function Reviews() {
                   {isSearching ? 'Searching...' : 'Search'}
                 </Button>
               </div>
-              
+
               {searchResults.length > 0 && (
                 <div className="space-y-2 max-h-64 overflow-y-auto">
                   <h3 className="font-medium text-gray-900">Select your business:</h3>
@@ -320,7 +320,7 @@ export default function Reviews() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -334,7 +334,7 @@ export default function Reviews() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">

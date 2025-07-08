@@ -11,6 +11,7 @@ import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, E
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 import { Link } from "wouter";
+import TopNavigation from "@/components/dashboard/top-navigation";
 
 interface WordPressConfig {
   siteUrl: string;
@@ -223,9 +224,10 @@ export default function Settings() {
   return (
     <div className="min-h-screen bg-gray-50">
       <TopNavigation title="Settings" />
+
       <div className="flex min-h-screen">
         <MobileSidebar />
-        
+
         <main className="flex-1 lg:ml-64">
           <div className="p-4 pt-16 lg:pt-6 lg:pl-6">
             <div className="mb-6 lg:mb-8">
@@ -395,7 +397,7 @@ export default function Settings() {
                           });
                           return;
                         }
-                        
+
                         setGaConfig(prev => ({ ...prev, isConfigured: true }));
                         toast({
                           title: "Google Analytics Connected",

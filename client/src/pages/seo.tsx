@@ -35,7 +35,7 @@ export default function SEO() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -48,7 +48,7 @@ export default function SEO() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -61,7 +61,7 @@ export default function SEO() {
               </div>
             </CardContent>
           </Card>
-          
+
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -82,7 +82,7 @@ export default function SEO() {
           <div className="lg:col-span-2">
             <SEOPerformance />
           </div>
-          
+
           <div className="space-y-6">
             <Card>
               <CardHeader>
