@@ -34,8 +34,6 @@ export default function Dashboard() {
         
         <main className="flex-1 lg:ml-64">
           <div className="p-4 lg:p-6 pt-16 lg:pt-6">
-            
-
             {/* Dashboard Content */}
             <div className="space-y-4 lg:space-y-6">
               <MetricsGrid />
