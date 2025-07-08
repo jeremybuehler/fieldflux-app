@@ -56,7 +56,7 @@ export default function TasksList() {
     {
       id: 3,
       title: "Local Listings Optimization",
-      description: "Updating Google Business Profile and Yelp listings",
+      description: "Updating Google Business Profile and field service listings",
       status: "pending",
       progress: 25,
       type: "seo",
@@ -93,7 +93,7 @@ export default function TasksList() {
           <div className="text-center py-8">
             <p className="text-sm text-gray-500">No active tasks</p>
             <p className="text-xs text-gray-400 mt-1">
-              Dave will create tasks as needed for your HVAC marketing
+              FieldPulse will create tasks as needed for your field service marketing
             </p>
           </div>
         ) : (

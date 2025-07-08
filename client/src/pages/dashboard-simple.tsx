@@ -57,7 +57,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <h1 className="text-lg lg:text-xl font-bold text-hvac-gray text-center lg:text-left">
-                  KasamaAI Marketing Dashboard
+                  FieldPulse
                 </h1>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <div className="hidden sm:flex items-center space-x-1">
@@ -122,10 +122,10 @@ export default function Dashboard() {
               <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between text-center sm:text-left">
                 <div className="space-y-2">
                   <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
-                    Marketing Dashboard
+                    Field Service Marketing Dashboard
                   </h1>
                   <p className="text-sm md:text-base text-gray-600">
-                    Welcome back! Here's your marketing performance and activity overview.
+                    Welcome back! Here's your field service marketing performance and activity overview.
                   </p>
                 </div>
 
@@ -228,7 +228,7 @@ export default function Dashboard() {
                   </CardHeader>
                   <CardContent className="space-y-6 p-6">
                     <p className="text-gray-600">
-                      Create and schedule social media posts to boost your online presence and engage with customers.
+                      Create and schedule field service social media posts to boost your online presence and engage with service customers.
                     </p>
 
                     <div className="space-y-4">
@@ -237,7 +237,7 @@ export default function Dashboard() {
                           <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                             <CheckCircle className="w-4 h-4 text-green-600" />
                           </div>
-                          <span className="font-medium">Facebook Post Scheduled</span>
+                          <span className="font-medium">HVAC Facebook Post Scheduled</span>
                         </div>
                         <Badge variant="secondary" className="bg-white/80 border-green-200">Today 2:00 PM</Badge>
                       </div>
@@ -247,7 +247,7 @@ export default function Dashboard() {
                           <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                             <Calendar className="w-4 h-4 text-blue-600" />
                           </div>
-                          <span className="font-medium">Instagram Story Ready</span>
+                          <span className="font-medium">Service Instagram Story Ready</span>
                         </div>
                         <Badge variant="secondary" className="bg-white/80 border-blue-200">Draft</Badge>
                       </div>
@@ -257,7 +257,7 @@ export default function Dashboard() {
                           <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                             <TrendingUp className="w-4 h-4 text-purple-600" />
                           </div>
-                          <span className="font-medium">LinkedIn Article</span>
+                          <span className="font-medium">Field Service LinkedIn Article</span>
                         </div>
                         <Badge variant="secondary" className="bg-white/80 border-purple-200">Tomorrow</Badge>
                       </div>
@@ -284,7 +284,7 @@ export default function Dashboard() {
                     <div className="space-y-5">
                       <div className="space-y-3">
                         <div className="flex justify-between items-center">
-                          <span className="font-medium">Content Engagement</span>
+                          <span className="font-medium">Service Content Engagement</span>
                           <span className="font-semibold text-green-600">87%</span>
                         </div>
                         <Progress value={87} className="h-3 bg-gray-100" />
@@ -292,7 +292,7 @@ export default function Dashboard() {
 
                       <div className="space-y-3">
                         <div className="flex justify-between items-center">
-                          <span className="font-medium">Lead Generation</span>
+                          <span className="font-medium">Service Lead Generation</span>
                           <span className="font-semibold text-blue-600">72%</span>
                         </div>
                         <Progress value={72} className="h-3 bg-gray-100" />
@@ -326,7 +326,7 @@ export default function Dashboard() {
                       <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div className="w-3 h-3 bg-green-500 rounded-full mt-2 shadow-sm"></div>
                         <div className="flex-1 space-y-1">
-                          <p className="font-medium">Blog post published</p>
+                          <p className="font-medium">Field service blog post published</p>
                           <p className="text-xs text-gray-600">2 hours ago</p>
                         </div>
                       </div>
@@ -334,7 +334,7 @@ export default function Dashboard() {
                       <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div className="w-3 h-3 bg-blue-500 rounded-full mt-2 shadow-sm"></div>
                         <div className="flex-1 space-y-1">
-                          <p className="font-medium">Social media scheduled</p>
+                          <p className="font-medium">Field service social media scheduled</p>
                           <p className="text-xs text-gray-600">4 hours ago</p>
                         </div>
                       </div>
@@ -342,7 +342,7 @@ export default function Dashboard() {
                       <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div className="w-3 h-3 bg-purple-500 rounded-full mt-2 shadow-sm"></div>
                         <div className="flex-1 space-y-1">
-                          <p className="font-medium">New review received</p>
+                          <p className="font-medium">New customer review received</p>
                           <p className="text-xs text-gray-600">1 day ago</p>
                         </div>
                       </div>
@@ -350,7 +350,7 @@ export default function Dashboard() {
                       <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div className="w-3 h-3 bg-orange-500 rounded-full mt-2 shadow-sm"></div>
                         <div className="flex-1 space-y-1">
-                          <p className="font-medium">SEO optimization complete</p>
+                          <p className="font-medium">Field service SEO optimization complete</p>
                           <p className="text-xs text-gray-600">2 days ago</p>
                         </div>
                       </div>

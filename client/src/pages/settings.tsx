@@ -120,7 +120,7 @@ export default function Settings() {
   });
 
   const [whiteLabelConfig, setWhiteLabelConfig] = useState<WhiteLabelConfig>({
-    clientName: "KasamaAI",
+    clientName: "FieldPulse",
     clientDomain: "",
     logoUrl: "",
     primaryColor: "#3b82f6",
@@ -778,7 +778,7 @@ export default function Settings() {
                       <div>
                         <CardTitle>White-label & Multi-Client Configuration</CardTitle>
                         <p className="text-sm text-gray-600 mt-1">
-                          Configure KasamaAI for white-label deployment or multi-client management
+                          Configure FieldPulse for white-label deployment or multi-client management
                         </p>
                       </div>
                       {whiteLabelConfig.isConfigured && (
@@ -892,7 +892,7 @@ export default function Settings() {
                     <Alert>
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription>
-                        White-label mode allows you to rebrand KasamaAI with your own company colors, logo, and contact information. 
+                        White-label mode allows you to rebrand FieldPulse with your own company colors, logo, and contact information. 
                         Perfect for agencies offering marketing services to multiple clients.
                       </AlertDescription>
                     </Alert>

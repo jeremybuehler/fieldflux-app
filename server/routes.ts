@@ -159,11 +159,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages: [
           {
             role: "system",
-            content: "You are an expert HVAC content writer. Create engaging, SEO-optimized content for HVAC businesses serving Winter Haven, Lakeland, and surrounding Florida areas. Always include practical tips and local relevance.",
+            content: "You are an expert field service content writer specializing in HVAC, plumbing, electrical, landscaping, and pest control businesses. Create engaging, SEO-optimized content that helps field service businesses attract more customers and establish expertise. Always include practical tips and seasonal considerations for homeowners and business owners.",
           },
           {
             role: "user",
-            content: `Create a ${type} post about: ${topic}. Include an SEO-optimized title and comprehensive content (800-1000 words). Focus on residential and commercial HVAC services. Make it engaging and informative for homeowners and business owners in Central Florida.`,
+            content: `Create a ${type} post about: ${topic}. Include an SEO-optimized title and comprehensive content (800-1000 words). Focus on field service industries including HVAC, plumbing, electrical, landscaping, and pest control. Make it engaging and informative for homeowners and business owners seeking professional field service solutions.`,
           },
         ],
         response_format: { type: "json_object" },
@@ -172,8 +172,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = JSON.parse(completion.choices[0].message.content || '{}');
 
       const post = await storage.createWordPressPost({
-        title: result.title || `HVAC Guide: ${topic}`,
-        content: result.content || `Comprehensive guide about ${topic} for HVAC services.`,
+        title: result.title || `Field Service Guide: ${topic}`,
+        content: result.content || `Comprehensive guide about ${topic} for field service businesses.`,
         status: "draft",
       });
 
@@ -224,11 +224,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages: [
           {
             role: "system",
-            content: `You are a social media expert for HVAC businesses. Create engaging posts optimized for ${platform}. Include relevant hashtags and call-to-actions. Keep the tone ${tone} but approachable.`,
+            content: `You are a social media expert for field service businesses including HVAC, plumbing, electrical, landscaping, and pest control. Create engaging posts optimized for ${platform}. Include relevant hashtags and call-to-actions. Keep the tone ${tone} but approachable.`,
           },
           {
             role: "user",
-            content: `Create a ${platform} post about: ${topic}. Make it engaging for HVAC customers in Winter Haven and Lakeland, Florida. Include relevant hashtags and encourage engagement.`,
+            content: `Create a ${platform} post about: ${topic}. Make it engaging for field service customers including HVAC, plumbing, electrical, landscaping, and pest control. Include relevant hashtags and encourage engagement.`,
           },
         ],
         response_format: { type: "json_object" },
@@ -238,7 +238,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const post = await storage.createSocialPost({
         platform,
-        content: result.content || `Check out our latest HVAC tips about ${topic}!`,
+        content: result.content || `Check out our latest field service tips about ${topic}!`,
         status: "draft",
       });
 
@@ -432,11 +432,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages: [
           {
             role: "system",
-            content: "You are an SEO expert specializing in local HVAC businesses. Analyze content and provide actionable SEO recommendations.",
+            content: "You are an SEO expert specializing in local field service businesses including HVAC, plumbing, electrical, landscaping, and pest control. Analyze content and provide actionable SEO recommendations.",
           },
           {
             role: "user",
-            content: `Analyze this URL for SEO optimization: ${url}. Focus on local HVAC keywords for Winter Haven and Lakeland Florida areas. Provide specific recommendations for improving search rankings.${keywords ? ` Target keywords: ${keywords}` : ''}`,
+            content: `Analyze this URL for SEO optimization: ${url}. Focus on local field service keywords for businesses including HVAC, plumbing, electrical, landscaping, and pest control. Provide specific recommendations for improving search rankings.${keywords ? ` Target keywords: ${keywords}` : ''}`,
           },
         ],
         response_format: { type: "json_object" },
@@ -503,7 +503,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
           {
             role: "user",
-            content: `Generate a professional response to this ${review.rating}-star review: "${review.content}" from ${review.customerName}. The business is KasamaAI, a marketing automation platform.`,
+            content: `Generate a professional response to this ${review.rating}-star review: "${review.content}" from ${review.customerName}. The business is FieldPulse, a marketing platform for field service businesses.`,
           },
         ],
         response_format: { type: "json_object" },

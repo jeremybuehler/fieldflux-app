@@ -1,8 +1,8 @@
-# KasamaAI - AI-Powered Marketing Platform
+# FieldPulse - Replace 5 Marketing Tools with One
 
 ## Overview
 
-This is KasamaAI - Where Business Meets Smart Marketing. A comprehensive marketing automation platform that transforms how business professionals connect with customers. From intelligent content creation to automated lead management, KasamaAI helps professionals showcase their expertise and grow their business effortlessly.
+This is FieldPulse - Replace 5 Marketing Tools with One. A comprehensive marketing automation platform specifically designed for field service businesses. From intelligent content creation to automated lead management, FieldPulse helps HVAC, plumbing, electrical, landscaping, and other field service professionals consolidate their marketing tools into one affordable platform.
 
 ## System Architecture
 
@@ -20,7 +20,7 @@ The application follows a full-stack architecture with:
 ### Frontend Architecture
 - **React Components**: Modular component structure with shadcn/ui design system
 - **TypeScript**: Full type safety across client and server
-- **Tailwind CSS**: Utility-first CSS framework with custom HVAC branding variables
+- **Tailwind CSS**: Utility-first CSS framework with custom field service branding variables
 - **TanStack Query**: Server state management and caching
 - **Wouter**: Lightweight routing solution
 
@@ -28,21 +28,21 @@ The application follows a full-stack architecture with:
 - **Express.js**: RESTful API server with middleware for logging and error handling
 - **TypeScript**: Type-safe server implementation
 - **Drizzle ORM**: Type-safe database operations with PostgreSQL
-- **OpenAI Integration**: AI-powered content generation for marketing materials
+- **OpenAI Integration**: AI-powered content generation for field service marketing materials
 
 ### Database Schema
-The application manages several core entities:
-- **Users**: Authentication and user management
+The application manages several core field service entities:
+- **Users**: Field service business authentication and user management
 - **WordPress Posts**: Blog content management
 - **Social Posts**: Social media content scheduling
-- **Leads**: Customer lead tracking and management
-- **Tasks**: Marketing task automation
-- **Activities**: Activity feed for user actions
+- **Leads**: Field service customer lead tracking and management
+- **Tasks**: Field service marketing task automation
+- **Activities**: Field service business activity feed
 - **SEO Keywords**: Keyword tracking and performance
 
 ### UI Design System
 - **shadcn/ui**: Modern, accessible component library
-- **Custom HVAC Branding**: Industry-specific color scheme (blue, orange, gray)
+- **Custom Field Service Branding**: Industry-specific color scheme (blue, orange, gray)
 - **Responsive Design**: Mobile-first approach with Tailwind breakpoints
 - **Dark Mode Support**: Complete dark mode implementation
 
@@ -175,13 +175,13 @@ The application is configured for Replit deployment with:
   - Changed dashboard header alignment to center on mobile, left-align on larger screens
   - Improved mobile user experience with cleaner, focused header layout
   - Maintained logout button visibility across all screen sizes
-- June 29, 2025: White-label transformation and rebranding to KasamaAI:
-  - Removed all "Field Service" specific language throughout the platform
-  - Rebranded from "FieldPulse" to "MarketPulse" to "KasamaAI"
-  - Updated tagline to "Where Business Meets Smart Marketing"
-  - Transformed into universal white-label platform suitable for any business type
-  - Updated dashboard title from "Field Service Marketing Dashboard" to "Marketing Dashboard"
-  - Made content creation and messaging universally applicable to all industries
+- June 29, 2025: Strategic rebrand back to FieldPulse:
+  - Rebranded from "KasamaAI" back to "FieldPulse"
+  - Updated tagline to "Replace 5 Marketing Tools with One"
+  - Refocused on field service professionals and their specific pain points
+  - Updated dashboard title from "Marketing Dashboard" to "Field Service Marketing Dashboard"
+  - Made content creation and messaging specifically for field service industries (HVAC, plumbing, electrical, landscaping, etc.)
+  - Positioned as consolidation solution for multiple expensive marketing tools
 - July 7, 2025: Added GoDaddy Configuration page:
   - Created comprehensive GoDaddy integration page with domain management capabilities
   - Added three-tab interface: Connection, Domains, and Settings
@@ -190,7 +190,7 @@ The application is configured for Replit deployment with:
   - Created webhook configuration for domain notifications
   - Added detailed setup instructions for GoDaddy Developer account
   - Integrated GoDaddy page into navigation (top navigation and mobile sidebar)
-  - Positioned as complete domain management solution within KasamaAI platform
+  - Positioned as complete domain management solution within FieldPulse platform
 - July 7, 2025: Implemented Replit Authentication system:
   - Added complete Replit Auth integration with OpenID Connect
   - Created new landing page with professional header containing Login/Sign-Up button
@@ -224,7 +224,7 @@ The application is configured for Replit deployment with:
 
 Preferred communication style: Simple, everyday language.
 API Keys: Will provide Google Analytics ID in the morning.
-Branding: Evolved from "Dave AI" to "HVAC Pro AI" to "FieldPro AI" to "FieldPulse" to "MarketPulse" and finally to "KasamaAI - Where Business Meets Smart Marketing" as a white-label platform with compelling, customer-focused messaging that emphasizes effortless automation and business growth.
+Branding: Evolved from "Dave AI" to "HVAC Pro AI" to "FieldPro AI" to "FieldPulse" to "MarketPulse" to "KasamaAI" and back to "FieldPulse - Replace 5 Marketing Tools with One" as a focused field service platform that consolidates multiple expensive marketing tools into one affordable solution.
 Personalization: UI should reflect logged-in user's first name instead of generic references.
-Market Focus: Universal white-label platform for all business types - service providers, consultants, retailers, contractors, professionals, etc.
+Market Focus: Field service businesses specifically - HVAC, plumbing, electrical, landscaping, pest control, cleaning services, and other field service professionals who need to consolidate their marketing tools.
 Twilio Integration: User has Twilio account - implementing SMS features for lead follow-ups, appointment confirmations, and customer notifications.

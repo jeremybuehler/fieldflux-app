@@ -23,7 +23,7 @@ export default function LandingAuth() {
               <Bot className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-hvac-gray">KasamaAI</h1>
+              <h1 className="text-2xl font-bold text-hvac-gray">FieldPulse</h1>
             </div>
           </div>
           <Button 
@@ -44,17 +44,17 @@ export default function LandingAuth() {
               <Bot className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-hvac-gray">KasamaAI</h1>
-              <p className="text-lg text-gray-600">Where Business Meets Smart Marketing</p>
+              <h1 className="text-4xl font-bold text-hvac-gray">FieldPulse</h1>
+              <p className="text-lg text-gray-600">Replace 5 Marketing Tools with One</p>
             </div>
           </div>
           <h2 className="text-3xl font-bold text-hvac-gray mb-4">
-            Transform Your Business with Intelligent Marketing Automation
+            Stop Paying 5 Companies - Get Everything in One Platform
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            KasamaAI creates compelling content, manages social media, tracks
-            leads, and grows your reputation while you focus on what you do
-            best: serving customers.
+            FieldPulse consolidates social media management, review monitoring, 
+            customer communication, content creation, and analytics into one 
+            affordable solution for field service professionals.
           </p>
         </div>
 
@@ -66,12 +66,12 @@ export default function LandingAuth() {
                 <BarChart3 className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-xl font-semibold text-hvac-gray mb-2">
-                Performance Insights
+                All-in-One Analytics
               </h3>
               <p className="text-gray-600">
-                See what's working with crystal-clear analytics. Track leads,
-                measure engagement, and discover which content brings in the
-                most customers.
+                Replace expensive analytics tools with comprehensive reporting. 
+                Track leads, measure engagement, and see which marketing efforts 
+                bring in the most field service customers.
               </p>
             </CardContent>
           </Card>
@@ -82,12 +82,12 @@ export default function LandingAuth() {
                 <Zap className="w-6 h-6 text-hvac-orange" />
               </div>
               <h3 className="text-xl font-semibold text-hvac-gray mb-2">
-                Content That Converts
+                Field Service Content Creation
               </h3>
               <p className="text-gray-600">
-                Generate professional posts, blogs, and ads that capture
-                attention and drive action. From technical explanations to
-                customer testimonials.
+                Generate HVAC, plumbing, electrical, and landscaping content 
+                that converts. From seasonal maintenance tips to emergency 
+                service promotions - all created for your industry.
               </p>
             </CardContent>
           </Card>
@@ -98,11 +98,12 @@ export default function LandingAuth() {
                 <Users className="w-6 h-6 text-green-600" />
               </div>
               <h3 className="text-xl font-semibold text-hvac-gray mb-2">
-                Smart Lead Management
+                Centralized Lead Management
               </h3>
               <p className="text-gray-600">
-                Never miss an opportunity. Automated follow-ups, priority
-                scoring, and intelligent scheduling keep your pipeline flowing.
+                Stop losing service calls to competitors. Automated follow-ups, 
+                priority scoring, and intelligent scheduling keep your field 
+                service pipeline flowing.
               </p>
             </CardContent>
           </Card>
@@ -114,8 +115,8 @@ export default function LandingAuth() {
             <CardContent className="p-8">
               <h3 className="text-2xl font-bold mb-4">Ready to Get Started?</h3>
               <p className="text-lg mb-6 text-white/90">
-                Join professionals who are already growing their business with
-                intelligent marketing automation.
+                Join HVAC, plumbing, electrical, and landscaping professionals 
+                who stopped overpaying for multiple marketing tools.
               </p>
               
               <Button 
@@ -143,8 +144,8 @@ export default function LandingAuth() {
         {/* Footer */}
         <div className="text-center mt-16 text-gray-500">
           <p className="text-sm">
-            Secure platform designed for professionals. Your business data is
-            protected and private.
+            Secure platform designed for field service professionals. Your 
+            customer data is protected and private.
           </p>
         </div>
       </div>

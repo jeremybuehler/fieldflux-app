@@ -37,7 +37,7 @@ export default function BusinessSearch() {
       setResults(data);
       toast({
         title: "Search Complete",
-        description: `Found ${data.length} businesses`,
+        description: `Found ${data.length} field service businesses`,
       });
     } catch (error) {
       toast({
@@ -56,7 +56,7 @@ export default function BusinessSearch() {
       const details = await response.json();
       
       toast({
-        title: "Business Selected",
+        title: "Field Service Business Selected",
         description: `${business.name} - ${details.reviews?.length || 0} reviews found`,
       });
       
@@ -79,7 +79,7 @@ export default function BusinessSearch() {
         className="flex items-center space-x-2"
       >
         <Search className="w-4 h-4" />
-        <span>Search Business</span>
+        <span>Search Field Service Business</span>
       </Button>
     );
   }
@@ -88,7 +88,7 @@ export default function BusinessSearch() {
     <Card className="fixed top-4 right-4 w-96 z-50 shadow-lg">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg">Search for Business</CardTitle>
+          <CardTitle className="text-lg">Search for Field Service Business</CardTitle>
           <Button 
             variant="ghost" 
             size="sm"
@@ -101,7 +101,7 @@ export default function BusinessSearch() {
       <CardContent className="space-y-4">
         <div className="flex space-x-2">
           <Input
-            placeholder="Business name and location..."
+            placeholder="Field service business name and location..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
