@@ -35,8 +35,8 @@ export default function Sidebar() {
             <Bot className="w-5 h-5 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-hvac-gray">FieldPulse</h1>
-            <p className="text-sm text-gray-500">Smart Marketing for Field Service</p>
+            <h1 className="text-lg font-bold text-hvac-gray">KasamaAI</h1>
+            <p className="text-sm text-gray-500">Where Business Meets Smart Marketing</p>
           </div>
         </div>
       </div>

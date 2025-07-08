@@ -45,20 +45,20 @@ export default function Keywords() {
     }
   };
 
-  const totalClicks = keywordData.reduce((sum, k) => sum + k.clicks, 0);
-  const totalImpressions = keywordData.reduce((sum, k) => sum + k.impressions, 0);
-  const avgPosition = keywordData.reduce((sum, k) => sum + k.position, 0) / keywordData.length;
-  const avgCTR = keywordData.reduce((sum, k) => sum + k.ctr, 0) / keywordData.length;
+  const totalClicks = keywords.reduce((sum, k) => sum + k.clicks, 0);
+  const totalImpressions = keywords.reduce((sum, k) => sum + k.impressions, 0);
+  const avgPosition = keywords.length > 0 ? keywords.reduce((sum, k) => sum + k.position, 0) / keywords.length : 0;
+  const avgCTR = keywords.length > 0 ? keywords.reduce((sum, k) => sum + k.ctr, 0) / keywords.length : 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto p-6">
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-4">
-            <Link href="/analytics">
+            <Link href="/reports">
               <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Analytics
+                Back to Reports
               </Button>
             </Link>
           </div>

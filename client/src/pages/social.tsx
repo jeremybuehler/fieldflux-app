@@ -34,11 +34,11 @@ import { cn } from "@/lib/utils";
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Social Media", href: "/social", icon: Share2 },
-  { name: "Website", href: "/website", icon: Code },
-  { name: "Analytics", href: "/analytics", icon: TrendingUp },
-  { name: "SEO", href: "/seo", icon: Search },
+  { name: "Website Updates", href: "/website", icon: Code },
+  { name: "Reports", href: "/reports", icon: TrendingUp },
+  { name: "SEO Optimization", href: "/seo", icon: Search },
   { name: "Reviews", href: "/reviews", icon: Star },
-  { name: "Leads", href: "/leads", icon: UserPlus },
+  { name: "Lead Generation", href: "/leads", icon: UserPlus },
   { name: "Settings", href: "/settings", icon: SettingsIcon },
 ];
 
