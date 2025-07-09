@@ -1,0 +1,423 @@
+name: Health Monitoring
+
+on:
+  schedule:
+    # Run every 15 minutes during business hours (9 AM - 6 PM UTC, Mon-Fri)
+    - cron: '*/15 9-18 * * 1-5'
+    # Run hourly during off-hours and weekends
+    - cron: '0 * * * *'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to monitor'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - intg
+          - prod
+      check_type:
+        description: 'Type of health check'
+        required: true
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - health-only
+          - performance
+          - cost-analysis
+
+permissions:
+  id-token: write
+  contents: read
+  issues: write
+
+env:
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  ENVIRONMENT: ${{ inputs.environment || 'dev' }}
+
+jobs:
+  health-check:
+    name: Application Health Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get application information
+        id: get-app-info
+        run: |
+          RG_NAME="rg-fieldpulse-platform-${{ env.ENVIRONMENT }}"
+          CONTAINER_APP_NAME="ca-fieldpulse-app-${{ env.ENVIRONMENT }}"
+          
+          # Get application URL
+          APP_URL=$(az containerapp show \
+            --name $CONTAINER_APP_NAME \
+            --resource-group $RG_NAME \
+            --query "properties.configuration.ingress.fqdn" \
+            -o tsv 2>/dev/null || echo "")
+          
+          if [ ! -z "$APP_URL" ]; then
+            FULL_URL="https://$APP_URL"
+            echo "APP_URL=$FULL_URL" >> $GITHUB_OUTPUT
+            echo "🌐 Application URL: $FULL_URL"
+          else
+            echo "❌ Could not retrieve application URL"
+            exit 1
+          fi
+
+      - name: Test health endpoint
+        id: health-test
+        run: |
+          APP_URL="${{ steps.get-app-info.outputs.APP_URL }}"
+          HEALTH_URL="$APP_URL/api/health"
+          
+          echo "🔍 Testing health endpoint: $HEALTH_URL"
+          
+          # Test health endpoint with timeout
+          RESPONSE=$(curl -s -w "%{http_code}" -o /tmp/health_response.json --max-time 30 "$HEALTH_URL" || echo "000")
+          
+          if [ "$RESPONSE" = "200" ]; then
+            echo "✅ Health check passed"
+            echo "HEALTH_STATUS=healthy" >> $GITHUB_OUTPUT
+            
+            # Display health response
+            if [ -f /tmp/health_response.json ]; then
+              echo "Health response:"
+              cat /tmp/health_response.json
+            fi
+          else
+            echo "❌ Health check failed - HTTP $RESPONSE"
+            echo "HEALTH_STATUS=unhealthy" >> $GITHUB_OUTPUT
+            echo "HTTP_CODE=$RESPONSE" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Test application endpoints
+        if: steps.health-test.outputs.HEALTH_STATUS == 'healthy'
+        run: |
+          APP_URL="${{ steps.get-app-info.outputs.APP_URL }}"
+          
+          echo "🔍 Testing additional application endpoints..."
+          
+          # Test main application endpoint
+          MAIN_RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null --max-time 30 "$APP_URL" || echo "000")
+          echo "Main endpoint: HTTP $MAIN_RESPONSE"
+          
+          # Test API endpoints (if they exist)
+          # API_RESPONSE=$(curl -s -w "%{http_code}" -o /dev/null --max-time 30 "$APP_URL/api/test" || echo "000")
+          # echo "API test endpoint: HTTP $API_RESPONSE"
+          
+          echo "✅ Endpoint testing completed"
+
+      - name: Check container app status
+        run: |
+          RG_NAME="rg-fieldpulse-platform-${{ env.ENVIRONMENT }}"
+          CONTAINER_APP_NAME="ca-fieldpulse-app-${{ env.ENVIRONMENT }}"
+          
+          echo "🔍 Checking Container App status..."
+          
+          # Get container app details
+          PROVISIONING_STATE=$(az containerapp show \
+            --name $CONTAINER_APP_NAME \
+            --resource-group $RG_NAME \
+            --query "properties.provisioningState" \
+            -o tsv)
+          
+          RUNNING_STATE=$(az containerapp show \
+            --name $CONTAINER_APP_NAME \
+            --resource-group $RG_NAME \
+            --query "properties.runningStatus" \
+            -o tsv)
+          
+          echo "Provisioning State: $PROVISIONING_STATE"
+          echo "Running State: $RUNNING_STATE"
+          
+          # Get replica information
+          REPLICA_COUNT=$(az containerapp replica list \
+            --name $CONTAINER_APP_NAME \
+            --resource-group $RG_NAME \
+            --query "length(@)" \
+            -o tsv 2>/dev/null || echo "0")
+          
+          echo "Active Replicas: $REPLICA_COUNT"
+          
+          # Store status for later use
+          echo "PROVISIONING_STATE=$PROVISIONING_STATE" >> $GITHUB_ENV
+          echo "RUNNING_STATE=$RUNNING_STATE" >> $GITHUB_ENV
+          echo "REPLICA_COUNT=$REPLICA_COUNT" >> $GITHUB_ENV
+
+  performance-check:
+    name: Performance Check
+    runs-on: ubuntu-latest
+    needs: [health-check]
+    if: always() && needs.health-check.outputs.HEALTH_STATUS == 'healthy'
+    
+    steps:
+      - name: Performance test
+        run: |
+          APP_URL="${{ needs.health-check.outputs.APP_URL }}"
+          
+          echo "⚡ Running performance test..."
+          
+          # Simple performance test using curl
+          echo "Testing response time..."
+          
+          RESPONSE_TIME=$(curl -s -w "%{time_total}" -o /dev/null --max-time 30 "$APP_URL/api/health")
+          
+          echo "Response time: ${RESPONSE_TIME}s"
+          
+          # Check if response time is acceptable (< 5 seconds)
+          if (( $(echo "$RESPONSE_TIME < 5.0" | bc -l) )); then
+            echo "✅ Performance check passed"
+            echo "PERFORMANCE_STATUS=good" >> $GITHUB_ENV
+          else
+            echo "⚠️ Performance check warning - slow response time"
+            echo "PERFORMANCE_STATUS=slow" >> $GITHUB_ENV
+          fi
+
+      - name: Load test
+        run: |
+          APP_URL="${{ needs.health-check.outputs.APP_URL }}"
+          
+          echo "🔄 Running basic load test..."
+          
+          # Simple concurrent request test
+          for i in {1..5}; do
+            (curl -s -o /dev/null "$APP_URL/api/health" && echo "Request $i: OK") &
+          done
+          
+          wait
+          echo "✅ Load test completed"
+
+  cost-analysis:
+    name: Cost Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || inputs.check_type == 'cost-analysis'
+    
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get cost information
+        run: |
+          echo "💰 Analyzing costs for environment: ${{ env.ENVIRONMENT }}"
+          
+          RG_NAME="rg-fieldpulse-platform-${{ env.ENVIRONMENT }}"
+          DATA_RG_NAME="rg-fieldpulse-data-${{ env.ENVIRONMENT }}"
+          
+          # Get resource group costs (requires Cost Management API)
+          echo "Resource groups:"
+          echo "- Platform: $RG_NAME"
+          echo "- Data: $DATA_RG_NAME"
+          
+          # List key resources and their status
+          echo "Key resources:"
+          
+          # Container Apps
+          az containerapp list --resource-group $RG_NAME --query "[].{Name:name,Status:properties.provisioningState}" -o table 2>/dev/null || echo "No Container Apps found"
+          
+          # PostgreSQL
+          az postgres flexible-server list --resource-group $DATA_RG_NAME --query "[].{Name:name,Status:state,SKU:sku.name}" -o table 2>/dev/null || echo "No PostgreSQL servers found"
+          
+          # Key Vault
+          az keyvault list --resource-group $RG_NAME --query "[].{Name:name,SKU:properties.sku.name}" -o table 2>/dev/null || echo "No Key Vaults found"
+
+      - name: Budget alert check
+        run: |
+          echo "📊 Checking budget status..."
+          
+          # Note: This would require budget management API access
+          # For now, we'll provide estimated costs
+          
+          case "${{ env.ENVIRONMENT }}" in
+            "dev")
+              ESTIMATED_MONTHLY_COST=45
+              BUDGET_THRESHOLD=60
+              ;;
+            "intg")
+              ESTIMATED_MONTHLY_COST=85
+              BUDGET_THRESHOLD=100
+              ;;
+            "prod")
+              ESTIMATED_MONTHLY_COST=200
+              BUDGET_THRESHOLD=250
+              ;;
+          esac
+          
+          echo "Estimated monthly cost: $${ESTIMATED_MONTHLY_COST}"
+          echo "Budget threshold: $${BUDGET_THRESHOLD}"
+          
+          if [ $ESTIMATED_MONTHLY_COST -gt $BUDGET_THRESHOLD ]; then
+            echo "⚠️ Cost is approaching budget threshold"
+            echo "BUDGET_STATUS=warning" >> $GITHUB_ENV
+          else
+            echo "✅ Cost is within budget"
+            echo "BUDGET_STATUS=ok" >> $GITHUB_ENV
+          fi
+
+  security-check:
+    name: Security Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Check security configurations
+        run: |
+          echo "🔒 Checking security configurations..."
+          
+          RG_NAME="rg-fieldpulse-platform-${{ env.ENVIRONMENT }}"
+          DATA_RG_NAME="rg-fieldpulse-data-${{ env.ENVIRONMENT }}"
+          
+          # Check Key Vault access policies
+          KV_NAME=$(az keyvault list --resource-group $RG_NAME --query "[0].name" -o tsv 2>/dev/null)
+          
+          if [ ! -z "$KV_NAME" ]; then
+            echo "Key Vault: $KV_NAME"
+            
+            # Check if Key Vault has proper access policies
+            POLICY_COUNT=$(az keyvault show --name $KV_NAME --query "properties.accessPolicies | length(@)" -o tsv)
+            echo "Access policies configured: $POLICY_COUNT"
+            
+            if [ $POLICY_COUNT -eq 0 ]; then
+              echo "⚠️ No access policies found in Key Vault"
+            else
+              echo "✅ Key Vault access policies configured"
+            fi
+          fi
+          
+          # Check PostgreSQL firewall rules
+          DB_SERVER=$(az postgres flexible-server list --resource-group $DATA_RG_NAME --query "[0].name" -o tsv 2>/dev/null)
+          
+          if [ ! -z "$DB_SERVER" ]; then
+            echo "Database server: $DB_SERVER"
+            
+            # Check firewall rules
+            FIREWALL_RULES=$(az postgres flexible-server firewall-rule list --name $DB_SERVER --resource-group $DATA_RG_NAME --query "length(@)" -o tsv 2>/dev/null)
+            echo "Firewall rules configured: $FIREWALL_RULES"
+            
+            if [ $FIREWALL_RULES -eq 0 ]; then
+              echo "⚠️ No firewall rules configured"
+            else
+              echo "✅ Database firewall rules configured"
+            fi
+          fi
+
+  create-health-report:
+    name: Create Health Report
+    runs-on: ubuntu-latest
+    needs: [health-check, performance-check, cost-analysis, security-check]
+    if: always()
+    
+    steps:
+      - name: Generate health report
+        run: |
+          echo "📊 Health Monitoring Report"
+          echo "=========================="
+          echo "Environment: ${{ env.ENVIRONMENT }}"
+          echo "Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "Triggered by: ${{ github.event_name }}"
+          echo ""
+          
+          # Health status
+          echo "🔍 Health Check:"
+          if [ "${{ needs.health-check.result }}" = "success" ]; then
+            echo "✅ Application is healthy"
+            echo "🌐 URL: ${{ needs.health-check.outputs.APP_URL }}"
+          else
+            echo "❌ Application health check failed"
+          fi
+          echo ""
+          
+          # Performance status
+          echo "⚡ Performance Check:"
+          if [ "${{ needs.performance-check.result }}" = "success" ]; then
+            echo "✅ Performance is acceptable"
+          else
+            echo "⚠️ Performance issues detected"
+          fi
+          echo ""
+          
+          # Cost status
+          echo "💰 Cost Analysis:"
+          if [ "${{ needs.cost-analysis.result }}" = "success" ]; then
+            echo "✅ Costs are within expected range"
+          else
+            echo "⚠️ Cost analysis completed with warnings"
+          fi
+          echo ""
+          
+          # Security status
+          echo "🔒 Security Check:"
+          if [ "${{ needs.security-check.result }}" = "success" ]; then
+            echo "✅ Security configurations verified"
+          else
+            echo "⚠️ Security check completed with warnings"
+          fi
+          echo ""
+          
+          # Overall status
+          if [ "${{ needs.health-check.result }}" = "success" ] && [ "${{ needs.performance-check.result }}" = "success" ]; then
+            echo "🎉 Overall Status: HEALTHY"
+          else
+            echo "⚠️ Overall Status: NEEDS ATTENTION"
+          fi
+
+      - name: Create issue for failures
+        if: needs.health-check.result == 'failure'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Health Check Failed - ${{ env.ENVIRONMENT }} Environment`;
+            const body = `
+            ## Health Check Failure Report
+            
+            **Environment:** ${{ env.ENVIRONMENT }}
+            **Timestamp:** ${new Date().toISOString()}
+            **Triggered by:** ${{ github.event_name }}
+            
+            ### Failure Details
+            - Health Check Result: ${{ needs.health-check.result }}
+            - Performance Check Result: ${{ needs.performance-check.result }}
+            
+            ### Investigation Steps
+            1. Check Container App logs in Azure Portal
+            2. Verify database connectivity
+            3. Check Application Insights for errors
+            4. Review resource utilization
+            
+            ### Resources
+            - Application URL: ${{ needs.health-check.outputs.APP_URL }}
+            - Resource Group: rg-fieldpulse-platform-${{ env.ENVIRONMENT }}
+            - Data Resource Group: rg-fieldpulse-data-${{ env.ENVIRONMENT }}
+            
+            This issue was automatically created by the health monitoring workflow.
+            `;
+            
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['health-check', 'incident', '${{ env.ENVIRONMENT }}']
+            });

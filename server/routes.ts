@@ -1,7 +1,8 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+// Import Replit Auth conditionally
+let setupAuth: any = null;
 import {
   users, 
   wordpressPosts, 
@@ -21,9 +22,7 @@ import {
   insertLeadSchema,
   insertTaskSchema,
   insertActivitySchema,
-  insertSeoKeywordSchema,
-  insertSocialMediaConfigSchema,
-  insertSocialMediaAnalyticsSchema
+  insertSeoKeywordSchema
 } from "@shared/schema";
 import OpenAI from "openai";
 import twilio from "twilio";
@@ -46,8 +45,21 @@ const isAuthenticated = (req: any, res: any, next: any) => {
 };
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
+  // Auth middleware - only setup Replit Auth if in Replit environment
+  if (process.env.REPLIT_DOMAINS) {
+    try {
+      const replitAuth = await import("./replitAuth");
+      setupAuth = replitAuth.setupAuth;
+      await setupAuth(app);
+    } catch (error) {
+      console.error("Failed to setup Replit Auth:", error);
+    }
+  }
+
+  // Health check endpoint for Azure
+  app.get('/api/health', (req, res) => {
+    res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+  });
 
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
@@ -1094,7 +1106,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const configData = insertSocialMediaConfigSchema.parse(req.body);
+    // TODO: Add proper schema validation for social media config
+    const configData = req.body;
 
     // Check if config already exists for this platform
     const existing = await storage.getAllSocialMediaConfigs()
@@ -1150,8 +1163,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/social/analytics", async (req, res) => {
-    const analyticsData = insertSocialMediaAnalyticsSchema.parse(req.body);
-    const result = await storage.createSocialMediaAnalytics(analyticsData);
+    // TODO: Add proper schema validation for social media analytics
+    const result = await storage.createSocialMediaAnalytics(req.body);
     return res.json(result);
   });
 

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/kasamaai-marketing-platform.iml" filepath="$PROJECT_DIR$/.idea/kasamaai-marketing-platform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/fieldpulse-marketing-platform.iml" filepath="$PROJECT_DIR$/.idea/fieldpulse-marketing-platform.iml" />
     </modules>
   </component>
 </project>

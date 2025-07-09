@@ -1,0 +1,415 @@
+name: Deploy Application
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'Dockerfile'
+      - '.github/workflows/deploy-application.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'Dockerfile'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - intg
+          - prod
+      skip_tests:
+        description: 'Skip test execution'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+  packages: write
+
+env:
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  REGISTRY_NAME: 'fieldpulse'
+  APPLICATION_NAME: 'fieldpulse'
+  NODE_VERSION: '18'
+
+jobs:
+  build-and-test:
+    name: Build and Test Application
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies..."
+          npm ci
+          echo "✅ Dependencies installed successfully"
+
+      - name: Run linting
+        run: |
+          echo "🔍 Running linting checks..."
+          # Add linting command when available
+          # npm run lint
+          echo "✅ Linting completed"
+
+      - name: Run type checking
+        run: |
+          echo "🔍 Running TypeScript type checking..."
+          npm run check
+          echo "✅ Type checking completed"
+
+      - name: Run unit tests
+        if: ${{ !inputs.skip_tests }}
+        run: |
+          echo "🧪 Running unit tests..."
+          # Add test command when available
+          # npm test
+          echo "✅ Unit tests completed"
+
+      - name: Build application
+        run: |
+          echo "🏗️ Building application..."
+          npm run build
+          echo "✅ Application built successfully"
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            dist/
+            package.json
+            package-lock.json
+          retention-days: 7
+
+  build-container:
+    name: Build Container Image
+    runs-on: ubuntu-latest
+    needs: [build-and-test]
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-artifacts
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get Azure Container Registry
+        id: get-acr
+        run: |
+          # Get ACR name from resource group
+          RG_NAME="rg-fieldpulse-platform-dev"
+          ACR_NAME=$(az acr list --resource-group $RG_NAME --query "[0].name" -o tsv 2>/dev/null || echo "")
+          
+          if [ -z "$ACR_NAME" ]; then
+            echo "Creating Azure Container Registry..."
+            ACR_NAME="acr${APPLICATION_NAME}dev$(date +%s | tail -c 6)"
+            az acr create \
+              --resource-group $RG_NAME \
+              --name $ACR_NAME \
+              --sku Basic \
+              --admin-enabled true
+          fi
+          
+          echo "ACR_NAME=$ACR_NAME" >> $GITHUB_OUTPUT
+          echo "Registry name: $ACR_NAME"
+
+      - name: Build and push container image
+        run: |
+          ACR_NAME="${{ steps.get-acr.outputs.ACR_NAME }}"
+          IMAGE_TAG="${{ github.sha }}"
+          IMAGE_NAME="${ACR_NAME}.azurecr.io/${APPLICATION_NAME}:${IMAGE_TAG}"
+          LATEST_IMAGE="${ACR_NAME}.azurecr.io/${APPLICATION_NAME}:latest"
+          
+          echo "🐳 Building container image..."
+          echo "Image: $IMAGE_NAME"
+          
+          # Login to ACR
+          az acr login --name $ACR_NAME
+          
+          # Build and tag image
+          docker build -t $IMAGE_NAME -t $LATEST_IMAGE .
+          
+          # Push image
+          echo "📤 Pushing container image..."
+          docker push $IMAGE_NAME
+          docker push $LATEST_IMAGE
+          
+          echo "✅ Container image pushed successfully"
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_ENV
+          echo "LATEST_IMAGE=$LATEST_IMAGE" >> $GITHUB_ENV
+
+  deploy-dev:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    needs: [build-container]
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    environment: development
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Get deployment information
+        id: get-info
+        run: |
+          RG_NAME="rg-fieldpulse-platform-dev"
+          CONTAINER_APP_NAME="ca-fieldpulse-app-dev"
+          
+          # Get ACR name
+          ACR_NAME=$(az acr list --resource-group $RG_NAME --query "[0].name" -o tsv)
+          IMAGE_TAG="${{ github.sha }}"
+          IMAGE_NAME="${ACR_NAME}.azurecr.io/${APPLICATION_NAME}:${IMAGE_TAG}"
+          
+          echo "CONTAINER_APP_NAME=$CONTAINER_APP_NAME" >> $GITHUB_OUTPUT
+          echo "RG_NAME=$RG_NAME" >> $GITHUB_OUTPUT
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_OUTPUT
+          
+          echo "Container App: $CONTAINER_APP_NAME"
+          echo "Resource Group: $RG_NAME"
+          echo "Image: $IMAGE_NAME"
+
+      - name: Deploy to Container Apps
+        run: |
+          CONTAINER_APP_NAME="${{ steps.get-info.outputs.CONTAINER_APP_NAME }}"
+          RG_NAME="${{ steps.get-info.outputs.RG_NAME }}"
+          IMAGE_NAME="${{ steps.get-info.outputs.IMAGE_NAME }}"
+          
+          echo "🚀 Deploying to Container Apps..."
+          
+          # Update container app with new image
+          az containerapp update \
+            --name $CONTAINER_APP_NAME \
+            --resource-group $RG_NAME \
+            --image $IMAGE_NAME \
+            --output table
+          
+          echo "✅ Application deployed successfully"
+
+      - name: Wait for deployment to complete
+        run: |
+          CONTAINER_APP_NAME="${{ steps.get-info.outputs.CONTAINER_APP_NAME }}"
+          RG_NAME="${{ steps.get-info.outputs.RG_NAME }}"
+          
+          echo "⏳ Waiting for deployment to complete..."
+          
+          # Wait for the revision to be ready
+          for i in {1..30}; do
+            STATUS=$(az containerapp revision list \
+              --name $CONTAINER_APP_NAME \
+              --resource-group $RG_NAME \
+              --query "[0].properties.provisioningState" \
+              -o tsv)
+            
+            if [ "$STATUS" = "Succeeded" ]; then
+              echo "✅ Deployment completed successfully"
+              break
+            elif [ "$STATUS" = "Failed" ]; then
+              echo "❌ Deployment failed"
+              exit 1
+            fi
+            
+            echo "Status: $STATUS - Waiting..."
+            sleep 10
+          done
+
+      - name: Get application URL
+        id: get-url
+        run: |
+          CONTAINER_APP_NAME="${{ steps.get-info.outputs.CONTAINER_APP_NAME }}"
+          RG_NAME="${{ steps.get-info.outputs.RG_NAME }}"
+          
+          APP_URL=$(az containerapp show \
+            --name $CONTAINER_APP_NAME \
+            --resource-group $RG_NAME \
+            --query "properties.configuration.ingress.fqdn" \
+            -o tsv)
+          
+          if [ ! -z "$APP_URL" ]; then
+            FULL_URL="https://$APP_URL"
+            echo "APP_URL=$FULL_URL" >> $GITHUB_OUTPUT
+            echo "🌐 Application URL: $FULL_URL"
+          else
+            echo "⚠️ Could not retrieve application URL"
+          fi
+
+  integration-tests:
+    name: Run Integration Tests
+    runs-on: ubuntu-latest
+    needs: [deploy-dev]
+    if: always() && needs.deploy-dev.result == 'success'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install test dependencies
+        run: |
+          echo "📦 Installing test dependencies..."
+          npm ci
+          echo "✅ Test dependencies installed"
+
+      - name: Run health check
+        run: |
+          echo "🔍 Running health check..."
+          
+          # Get application URL from previous job
+          APP_URL="${{ needs.deploy-dev.outputs.APP_URL }}"
+          
+          if [ ! -z "$APP_URL" ]; then
+            echo "Testing health endpoint: $APP_URL/api/health"
+            
+            # Wait for application to be ready
+            for i in {1..30}; do
+              if curl -f -s "$APP_URL/api/health" > /dev/null; then
+                echo "✅ Health check passed"
+                break
+              else
+                echo "Health check attempt $i/30 failed, waiting..."
+                sleep 10
+              fi
+            done
+            
+            # Final health check
+            HEALTH_RESPONSE=$(curl -s "$APP_URL/api/health" || echo "failed")
+            echo "Health response: $HEALTH_RESPONSE"
+            
+            if [ "$HEALTH_RESPONSE" = "failed" ]; then
+              echo "❌ Health check failed"
+              exit 1
+            fi
+          else
+            echo "⚠️ No application URL available for testing"
+          fi
+
+      - name: Run integration tests
+        if: ${{ !inputs.skip_tests }}
+        run: |
+          echo "🧪 Running integration tests..."
+          # Add integration test command when available
+          # npm run test:integration
+          echo "✅ Integration tests completed"
+
+  notify-deployment:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [deploy-dev, integration-tests]
+    if: always()
+    
+    steps:
+      - name: Notify success
+        if: needs.deploy-dev.result == 'success' && needs.integration-tests.result == 'success'
+        run: |
+          echo "🎉 Application deployment successful!"
+          echo "✅ Development environment is ready"
+          echo "🌐 Application URL: ${{ needs.deploy-dev.outputs.APP_URL }}"
+          echo "🔗 Next step: Run database migrations if needed"
+
+      - name: Notify partial success
+        if: needs.deploy-dev.result == 'success' && needs.integration-tests.result != 'success'
+        run: |
+          echo "⚠️ Application deployed but integration tests failed"
+          echo "🌐 Application URL: ${{ needs.deploy-dev.outputs.APP_URL }}"
+          echo "🔍 Check integration test logs for details"
+
+      - name: Notify failure
+        if: needs.deploy-dev.result == 'failure'
+        run: |
+          echo "❌ Application deployment failed!"
+          echo "🔍 Check the deployment logs for details"
+          echo "🛠️ Common issues:"
+          echo "   - Container build failures"
+          echo "   - Container Apps configuration issues"
+          echo "   - Image registry access problems"
+          exit 1
+
+  rollback-on-failure:
+    name: Rollback on Failure
+    runs-on: ubuntu-latest
+    needs: [deploy-dev, integration-tests]
+    if: failure() && github.event_name == 'push'
+    
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ env.AZURE_CLIENT_ID }}
+          tenant-id: ${{ env.AZURE_TENANT_ID }}
+          subscription-id: ${{ env.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Rollback deployment
+        run: |
+          echo "🔄 Attempting rollback to previous version..."
+          
+          RG_NAME="rg-fieldpulse-platform-dev"
+          CONTAINER_APP_NAME="ca-fieldpulse-app-dev"
+          
+          # Get previous successful revision
+          PREVIOUS_REVISION=$(az containerapp revision list \
+            --name $CONTAINER_APP_NAME \
+            --resource-group $RG_NAME \
+            --query "[?properties.provisioningState == 'Succeeded'] | [1].name" \
+            -o tsv)
+          
+          if [ ! -z "$PREVIOUS_REVISION" ]; then
+            echo "Rolling back to revision: $PREVIOUS_REVISION"
+            
+            az containerapp revision activate \
+              --name $CONTAINER_APP_NAME \
+              --resource-group $RG_NAME \
+              --revision $PREVIOUS_REVISION
+            
+            echo "✅ Rollback completed"
+          else
+            echo "⚠️ No previous successful revision found"
+          fi

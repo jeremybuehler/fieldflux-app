@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "environment": {
+      "value": "dev"
+    },
+    "location": {
+      "value": "eastus"
+    },
+    "applicationName": {
+      "value": "fieldpulse"
+    },
+    "containerImage": {
+      "value": "fieldpulse:latest"
+    },
+    "openaiApiKey": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/{subscription-id}/resourceGroups/rg-fieldpulse-secrets/providers/Microsoft.KeyVault/vaults/kv-fieldpulse-secrets"
+        },
+        "secretName": "openai-api-key"
+      }
+    },
+    "tags": {
+      "value": {
+        "Environment": "dev",
+        "Application": "fieldpulse",
+        "Owner": "platform-team",
+        "CostCenter": "engineering",
+        "Project": "fieldpulse-platform",
+        "ManagedBy": "bicep-iac",
+        "DeployedBy": "github-actions",
+        "DeployedAt": "{deployment-timestamp}"
+      }
+    }
+  }
+}
