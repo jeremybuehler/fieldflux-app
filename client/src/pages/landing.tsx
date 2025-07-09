@@ -124,7 +124,7 @@ export default function Landing() {
             professionals who need content creation, social media management, lead tracking, 
             and reputation management in one place.
           </p>
-        </div></div>
+        </div>
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
