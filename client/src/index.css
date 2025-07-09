@@ -42,6 +42,12 @@
   --mint-400: hsl(141, 69%, 58%);
   --mint-500: hsl(142, 71%, 45%);
   --mint-600: hsl(142, 76%, 36%);
+  
+  /* HVAC Brand Colors for legacy compatibility */
+  --hvac-blue: hsl(207, 90%, 54%);
+  --hvac-orange: hsl(23, 93%, 53%);
+  --hvac-gray: hsl(217, 19%, 24%);
+  --hvac-light: hsl(220, 14%, 96%);
 }
 
 .dark {
@@ -72,95 +78,215 @@
   }
   
   body {
-    @apply font-sans antialiased text-foreground;
+    @apply font-sans antialiased text-gray-900;
     font-family: 'Inter', sans-serif;
-    background: white !important;
-    background-color: white !important;
+    background: #f8fafc !important;
+    background-color: #f8fafc !important;
   }
   
-  /* Protocol Typography System */
-  .text-display {
-    @apply text-5xl font-bold tracking-tight lg:text-6xl;
+  /* Field Service Typography System */
+  .text-fieldservice-display {
+    @apply text-4xl font-bold tracking-tight text-gray-900 lg:text-5xl;
   }
   
-  .text-headline {
-    @apply text-3xl font-bold tracking-tight lg:text-4xl;
+  .text-fieldservice-headline {
+    @apply text-2xl font-bold tracking-tight text-gray-900 lg:text-3xl;
   }
   
-  .text-title {
-    @apply text-xl font-semibold tracking-tight lg:text-2xl;
+  .text-fieldservice-title {
+    @apply text-lg font-semibold text-gray-900 lg:text-xl;
   }
   
-  .text-body {
-    @apply text-base leading-relaxed;
+  .text-fieldservice-subtitle {
+    @apply text-base font-medium text-gray-700;
   }
   
-  .text-label {
-    @apply text-sm font-medium;
+  .text-fieldservice-body {
+    @apply text-sm text-gray-600 leading-relaxed lg:text-base;
   }
   
-  .text-caption {
-    @apply text-xs text-muted-foreground;
+  .text-fieldservice-label {
+    @apply text-sm font-medium text-gray-700;
+  }
+  
+  .text-fieldservice-caption {
+    @apply text-xs text-gray-500;
+  }
+  
+  .text-fieldservice-muted {
+    @apply text-sm text-gray-500;
+  }
+  
+  /* Field Service Page Headers */
+  .page-header-fieldservice {
+    @apply bg-white border-b border-gray-200 px-6 py-4;
+  }
+  
+  .page-title-fieldservice {
+    @apply text-2xl font-bold text-gray-900;
+  }
+  
+  .page-subtitle-fieldservice {
+    @apply text-sm text-gray-600 mt-1;
   }
 }
 
 @layer components {
-  /* Protocol Card Component */
-  .protocol-card {
-    @apply bg-card text-card-foreground rounded-xl border border-border border-opacity-50 shadow-sm hover:shadow-md transition-all duration-200;
+  /* Field Service Cards - Clean & Professional */
+  .fieldservice-card {
+    @apply bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden;
   }
   
-  /* Protocol Button Variants */
-  .btn-protocol-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary hover:bg-opacity-90 px-6 py-3 rounded-lg font-medium transition-colors duration-200;
+  .fieldservice-card-header {
+    @apply px-6 py-4 border-b border-gray-100 bg-gray-50;
   }
   
-  .btn-protocol-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary hover:bg-opacity-80 px-6 py-3 rounded-lg font-medium transition-colors duration-200;
+  .fieldservice-card-content {
+    @apply px-6 py-4;
   }
   
-  .btn-protocol-outline {
-    @apply border border-input bg-background hover:bg-accent hover:text-accent-foreground px-6 py-3 rounded-lg font-medium transition-colors duration-200;
+  .fieldservice-card-footer {
+    @apply px-6 py-4 border-t border-gray-100 bg-gray-50;
   }
   
-  /* Protocol Input Styling */
-  .input-protocol {
-    @apply flex h-12 w-full rounded-lg border border-input bg-background px-4 py-3 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  /* Field Service Buttons - Professional & Accessible */
+  .btn-fieldservice-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 border-0 shadow-sm hover:shadow-md;
   }
   
-  /* Protocol Navigation */
-  .nav-protocol {
-    @apply flex items-center space-x-1 px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-200 hover:bg-accent hover:text-accent-foreground;
+  .btn-fieldservice-secondary {
+    @apply bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 border border-gray-300;
   }
   
-  .nav-protocol-active {
-    @apply bg-accent text-accent-foreground;
+  .btn-fieldservice-success {
+    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 border-0 shadow-sm;
   }
   
-  /* Protocol Layouts */
-  .container-protocol {
-    @apply container mx-auto px-6 lg:px-8;
+  .btn-fieldservice-warning {
+    @apply bg-orange-500 text-white hover:bg-orange-600 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 border-0 shadow-sm;
   }
   
-  .section-protocol {
-    @apply py-16 lg:py-24;
+  .btn-fieldservice-outline {
+    @apply border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 bg-transparent;
   }
   
-  .grid-protocol {
-    @apply grid gap-8 lg:gap-12;
+  /* Field Service Inputs - Clean & Professional */
+  .input-fieldservice {
+    @apply flex h-11 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-50 transition-all duration-200;
   }
   
-  /* Protocol Gradients */
-  .gradient-protocol-primary {
-    background: linear-gradient(135deg, hsl(207, 90%, 54%) 0%, hsl(207, 90%, 64%) 100%);
+  .input-fieldservice-error {
+    @apply border-red-300 focus:ring-red-500 focus:border-red-500;
   }
   
-  .gradient-protocol-secondary {
-    background: linear-gradient(135deg, hsl(240, 4.8%, 95.9%) 0%, hsl(240, 5%, 84%) 100%);
+  .input-fieldservice-success {
+    @apply border-green-300 focus:ring-green-500 focus:border-green-500;
   }
   
-  .gradient-protocol-hvac {
-    background: linear-gradient(135deg, var(--hvac-blue) 0%, var(--hvac-orange) 100%);
+  /* Field Service Navigation - Sidebar Style */
+  .nav-fieldservice {
+    @apply flex items-center space-x-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-blue-50 hover:text-blue-700 rounded-lg transition-all duration-200;
+  }
+  
+  .nav-fieldservice-active {
+    @apply bg-blue-100 text-blue-700 border-r-2 border-blue-600;
+  }
+  
+  .nav-fieldservice-icon {
+    @apply w-5 h-5 text-gray-500 group-hover:text-blue-600;
+  }
+  
+  /* Field Service Top Navigation */
+  .topnav-fieldservice {
+    @apply bg-white border-b border-gray-200 shadow-sm;
+  }
+  
+  .topnav-fieldservice-item {
+    @apply px-4 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all duration-200;
+  }
+  
+  /* Field Service Layouts */
+  .container-fieldservice {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .section-fieldservice {
+    @apply py-8 lg:py-12;
+  }
+  
+  .grid-fieldservice {
+    @apply grid gap-6 lg:gap-8;
+  }
+  
+  /* Field Service Status Indicators */
+  .status-fieldservice-online {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800;
+  }
+  
+  .status-fieldservice-offline {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800;
+  }
+  
+  .status-fieldservice-pending {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800;
+  }
+  
+  .status-fieldservice-in-progress {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800;
+  }
+  
+  /* Field Service Metrics Cards */
+  .metric-fieldservice {
+    @apply bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200;
+  }
+  
+  .metric-fieldservice-header {
+    @apply flex items-center justify-between;
+  }
+  
+  .metric-fieldservice-title {
+    @apply text-sm font-medium text-gray-600 uppercase tracking-wide;
+  }
+  
+  .metric-fieldservice-value {
+    @apply text-2xl font-bold text-gray-900 mt-2;
+  }
+  
+  .metric-fieldservice-change {
+    @apply text-sm font-medium mt-2;
+  }
+  
+  .metric-fieldservice-change-positive {
+    @apply text-green-600;
+  }
+  
+  .metric-fieldservice-change-negative {
+    @apply text-red-600;
+  }
+  
+  /* Field Service Tables */
+  .table-fieldservice {
+    @apply min-w-full divide-y divide-gray-200 border border-gray-200 rounded-lg overflow-hidden;
+  }
+  
+  .table-fieldservice-header {
+    @apply bg-gray-50;
+  }
+  
+  .table-fieldservice-header-cell {
+    @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+  }
+  
+  .table-fieldservice-body {
+    @apply bg-white divide-y divide-gray-200;
+  }
+  
+  .table-fieldservice-row {
+    @apply hover:bg-gray-50 transition-colors duration-200;
+  }
+  
+  .table-fieldservice-cell {
+    @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
   }
 }
 
@@ -266,20 +392,84 @@
 }
 
 @layer utilities {
-  .bg-navy-50 { background-color: var(--navy-50); }
-  .bg-navy-500 { background-color: var(--navy-500); }
-  .bg-navy-600 { background-color: var(--navy-600); }
-  .bg-navy-700 { background-color: var(--navy-700); }
-  .bg-navy-800 { background-color: var(--navy-800); }
-  .bg-navy-900 { background-color: var(--navy-900); }
+  /* Field Service Background Colors */
+  .bg-fieldservice-blue-50 { background-color: var(--fieldservice-blue-50); }
+  .bg-fieldservice-blue-100 { background-color: var(--fieldservice-blue-100); }
+  .bg-fieldservice-blue-500 { background-color: var(--fieldservice-blue-500); }
+  .bg-fieldservice-blue-600 { background-color: var(--fieldservice-blue-600); }
+  .bg-fieldservice-blue-700 { background-color: var(--fieldservice-blue-700); }
   
-  .bg-mint-50 { background-color: var(--mint-50); }
-  .bg-mint-100 { background-color: var(--mint-100); }
-  .bg-mint-200 { background-color: var(--mint-200); }
-  .bg-mint-300 { background-color: var(--mint-300); }
-  .bg-mint-400 { background-color: var(--mint-400); }
-  .bg-mint-500 { background-color: var(--mint-500); }
-  .bg-mint-600 { background-color: var(--mint-600); }
+  .bg-fieldservice-orange-50 { background-color: var(--fieldservice-orange-50); }
+  .bg-fieldservice-orange-100 { background-color: var(--fieldservice-orange-100); }
+  .bg-fieldservice-orange-500 { background-color: var(--fieldservice-orange-500); }
+  .bg-fieldservice-orange-600 { background-color: var(--fieldservice-orange-600); }
+  
+  .bg-fieldservice-green-50 { background-color: var(--fieldservice-green-50); }
+  .bg-fieldservice-green-100 { background-color: var(--fieldservice-green-100); }
+  .bg-fieldservice-green-500 { background-color: var(--fieldservice-green-500); }
+  .bg-fieldservice-green-600 { background-color: var(--fieldservice-green-600); }
+  
+  /* Field Service Text Colors */
+  .text-fieldservice-blue-600 { color: var(--fieldservice-blue-600); }
+  .text-fieldservice-blue-700 { color: var(--fieldservice-blue-700); }
+  .text-fieldservice-orange-600 { color: var(--fieldservice-orange-600); }
+  .text-fieldservice-green-600 { color: var(--fieldservice-green-600); }
+  
+  /* Field Service Shadows */
+  .shadow-fieldservice-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
+  .shadow-fieldservice { box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1); }
+  .shadow-fieldservice-lg { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
+  
+  /* Field Service Dashboard Layout */
+  .dashboard-fieldservice {
+    @apply min-h-screen bg-gray-50;
+  }
+  
+  .sidebar-fieldservice {
+    @apply fixed inset-y-0 left-0 w-64 bg-white border-r border-gray-200 shadow-sm;
+  }
+  
+  .main-content-fieldservice {
+    @apply ml-64 min-h-screen bg-gray-50;
+  }
+  
+  .content-area-fieldservice {
+    @apply px-6 py-8;
+  }
+  
+  /* Field Service Mobile Responsive */
+  @media (max-width: 1024px) {
+    .sidebar-fieldservice {
+      @apply -translate-x-full transition-transform duration-300;
+    }
+    
+    .sidebar-fieldservice.open {
+      @apply translate-x-0;
+    }
+    
+    .main-content-fieldservice {
+      @apply ml-0;
+    }
+  }
+  
+  /* Field Service Animations */
+  .animate-fieldservice-fade-in {
+    animation: fieldservice-fade-in 0.3s ease-out;
+  }
+  
+  .animate-fieldservice-slide-up {
+    animation: fieldservice-slide-up 0.4s ease-out;
+  }
+  
+  @keyframes fieldservice-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  @keyframes fieldservice-slide-up {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
   
   .text-navy-50 { color: var(--navy-50); }
   .text-navy-500 { color: var(--navy-500); }
