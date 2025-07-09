@@ -34,58 +34,59 @@ export default function LandingAuth() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-field-navy to-primary">
       {/* Header with Login/Sign-Up */}
-      <header className="container mx-auto px-4 py-6 border-b border-gray-200">
+      <header className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-green-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-field-orange rounded-xl flex items-center justify-center">
               <Bot className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">FieldPulse</h1>
-              <p className="text-sm text-gray-600">Intelligent Field Service Marketing</p>
+              <h1 className="text-2xl font-bold text-white">FieldPulse</h1>
+              <p className="text-sm text-white/80">Intelligent Field Service Marketing</p>
             </div>
           </div>
           <Button 
+            variant="outline"
             onClick={handleLogin}
-            className="bg-green-600 hover:bg-green-700 text-white"
+            className="border-white text-white hover:bg-white hover:text-field-navy"
           >
             Login/Sign-Up
           </Button>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-8">
         {/* Hero Section */}
-        <div className="text-center mb-20">
-          <h1 className="text-5xl md:text-6xl font-bold mb-6 text-gray-900">
-            STOP PAYING <span className="text-green-600">5 COMPANIES</span>
+        <div className="text-center mb-16 text-white">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            STOP PAYING <span className="text-field-orange">5 COMPANIES</span>
           </h1>
-          <h2 className="text-2xl md:text-3xl mb-8 font-semibold text-gray-800">
+          <h2 className="text-2xl md:text-3xl mb-8 font-semibold">
             Replace Your Marketing Stack with One Tool Built for Field Service
           </h2>
-          <div className="flex flex-wrap justify-center gap-6 mb-8 text-lg text-gray-700">
+          <div className="flex flex-wrap justify-center gap-4 mb-8 text-lg">
             <div className="flex items-center space-x-2">
-              <span className="text-green-600 font-bold">•</span>
+              <span className="text-field-orange">•</span>
               <span>Save $500+ monthly</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-green-600 font-bold">•</span>
+              <span className="text-field-orange">•</span>
               <span>Gain 18 hours weekly</span>
             </div>
             <div className="flex items-center space-x-2">
-              <span className="text-green-600 font-bold">•</span>
+              <span className="text-field-orange">•</span>
               <span>Increase leads 300%</span>
             </div>
           </div>
-          <p className="text-xl mb-8 text-gray-600">
+          <p className="text-xl mb-8 text-white/90">
             Perfect for HVAC, Plumbing, Electrical & Field Service Pros
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold px-8 py-4 text-lg"
+              className="bg-field-orange text-white hover:bg-field-orange/90 font-semibold px-8 py-4 text-lg"
               onClick={handleLogin}
             >
               Get Started Free
@@ -93,12 +94,12 @@ export default function LandingAuth() {
             <Button 
               size="lg" 
               variant="outline"
-              className="border-green-600 text-green-600 hover:bg-green-50 font-semibold px-8 py-4 text-lg"
+              className="border-white text-white hover:bg-white hover:text-field-navy font-semibold px-8 py-4 text-lg"
             >
               Watch 2-Min Demo
             </Button>
           </div>
-          <div className="mt-8 text-gray-600 italic">
+          <div className="mt-8 text-white/80 italic">
             "Finally, marketing software that gets our business"<br />
             <span className="text-sm">- Winter Haven Air Conditioning, FL</span>
           </div>
