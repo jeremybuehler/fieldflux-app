@@ -111,16 +111,16 @@
 @layer components {
   /* Protocol Card Component */
   .protocol-card {
-    @apply bg-card text-card-foreground rounded-xl border border-border/50 shadow-sm hover:shadow-md transition-all duration-200;
+    @apply bg-card text-card-foreground rounded-xl border border-border border-opacity-50 shadow-sm hover:shadow-md transition-all duration-200;
   }
   
   /* Protocol Button Variants */
   .btn-protocol-primary {
-    @apply bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-3 rounded-lg font-medium transition-colors duration-200;
+    @apply bg-primary text-primary-foreground hover:bg-primary hover:bg-opacity-90 px-6 py-3 rounded-lg font-medium transition-colors duration-200;
   }
   
   .btn-protocol-secondary {
-    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80 px-6 py-3 rounded-lg font-medium transition-colors duration-200;
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary hover:bg-opacity-80 px-6 py-3 rounded-lg font-medium transition-colors duration-200;
   }
   
   .btn-protocol-outline {
@@ -266,11 +266,11 @@
 
 /* Protocol Glass Effect */
 .glass-protocol {
-  @apply bg-white/80 backdrop-blur-sm border border-white/20;
+  @apply bg-white bg-opacity-80 backdrop-blur-sm border border-white border-opacity-20;
 }
 
 .glass-protocol-dark {
-  @apply bg-gray-900/80 backdrop-blur-sm border border-gray-800/20;
+  @apply bg-gray-900 bg-opacity-80 backdrop-blur-sm border border-gray-800 border-opacity-20;
 }
 
 /* Protocol Focus States */
