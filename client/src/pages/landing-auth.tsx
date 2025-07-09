@@ -29,7 +29,7 @@ export default function LandingAuth() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="landing-page min-h-screen bg-white" style={{ background: 'white !important' }}>
       {/* Header with Login/Sign-Up */}
       <header className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center">
