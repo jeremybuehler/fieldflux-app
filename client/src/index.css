@@ -6,7 +6,7 @@
 @tailwind utilities;
 
 :root {
-  --background: #D6F0D1;
+  --background: #F8FDF7;
   --foreground: hsl(240, 10%, 3.9%);
   --muted: hsl(240, 4.8%, 95.9%);
   --muted-foreground: hsl(240, 3.8%, 46.1%);
@@ -76,6 +76,7 @@
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
     @apply bg-background text-foreground;
+    background: linear-gradient(135deg, #ffffff 0%, #F8FDF7 100%);
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-variation-settings: normal;
     -webkit-font-smoothing: antialiased;
