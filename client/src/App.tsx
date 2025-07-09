@@ -27,11 +27,12 @@ function Router() {
 
   return (
     <Switch>
-      {isLoading || !isAuthenticated ? (
-        <Route path="/" component={Landing} />
-      ) : (
+      {/* Landing page - always accessible */}
+      <Route path="/" component={Landing} />
+      
+      {/* Protected routes - require authentication */}
+      {isAuthenticated ? (
         <>
-          <Route path="/" component={Dashboard} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/social" component={Social} />
           <Route path="/leads" component={Leads} />
@@ -43,7 +44,11 @@ function Router() {
           <Route path="/godaddy" component={GoDaddy} />
           <Route path="/settings" component={Settings} />
         </>
+      ) : (
+        /* Redirect unauthenticated users to landing for protected routes */
+        <Route path="/dashboard" component={Landing} />
       )}
+      
       <Route component={NotFound} />
     </Switch>
   );

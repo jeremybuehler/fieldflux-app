@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Bot,
   BarChart3,
@@ -17,8 +18,14 @@ import {
 } from "lucide-react";
 
 export default function LandingAuth() {
+  const { isAuthenticated } = useAuth();
+  
   const handleLogin = () => {
     window.location.href = '/api/login';
+  };
+
+  const handleDashboard = () => {
+    window.location.href = '/dashboard';
   };
 
   return (
@@ -34,13 +41,22 @@ export default function LandingAuth() {
               <h1 className="text-2xl font-bold text-hvac-gray">FieldPulse</h1>
             </div>
           </div>
-          <Button 
-            variant="outline"
-            onClick={handleLogin}
-            className="border-primary text-primary hover:bg-primary hover:text-white"
-          >
-            Login/Sign-Up
-          </Button>
+          {isAuthenticated ? (
+            <Button 
+              onClick={handleDashboard}
+              className="bg-primary text-white hover:bg-primary/90"
+            >
+              Go to Dashboard
+            </Button>
+          ) : (
+            <Button 
+              variant="outline"
+              onClick={handleLogin}
+              className="border-primary text-primary hover:bg-primary hover:text-white"
+            >
+              Login/Sign-Up
+            </Button>
+          )}
         </div>
       </header>
 
@@ -188,10 +204,10 @@ export default function LandingAuth() {
                 <Button
                   size="lg"
                   className="bg-white/90 text-primary hover:bg-white shadow-lg backdrop-blur-sm border-2 border-primary/20"
-                  onClick={handleLogin}
+                  onClick={isAuthenticated ? handleDashboard : handleLogin}
                 >
                   <Play className="w-5 h-5 mr-2" />
-                  Try Live Demo
+                  {isAuthenticated ? 'Access Dashboard' : 'Try Live Demo'}
                 </Button>
               </div>
             </div>
@@ -256,9 +272,9 @@ export default function LandingAuth() {
                 <Button 
                   size="lg" 
                   className="bg-white text-primary hover:bg-gray-50 font-semibold px-12 py-4 text-lg"
-                  onClick={handleLogin}
+                  onClick={isAuthenticated ? handleDashboard : handleLogin}
                 >
-                  Get Started Free
+                  {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
                 
@@ -278,15 +294,17 @@ export default function LandingAuth() {
                 </div>
               </div>
               
-              <div className="mt-6 text-sm text-white/80">
-                Already have an account?{" "}
-                <button 
-                  onClick={handleLogin}
-                  className="underline hover:text-white font-medium"
-                >
-                  Sign In Here
-                </button>
-              </div>
+              {!isAuthenticated && (
+                <div className="mt-6 text-sm text-white/80">
+                  Already have an account?{" "}
+                  <button 
+                    onClick={handleLogin}
+                    className="underline hover:text-white font-medium"
+                  >
+                    Sign In Here
+                  </button>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
