@@ -75,127 +75,153 @@ export default function LandingAuth() {
           </p>
         </div>
 
-        {/* Interactive Demo Section */}
+        {/* Field Service Marketing Infographic */}
         <div className="mb-16">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-hvac-gray mb-4">
-              See FieldPulse in Action
+              Transform Your Field Service Marketing
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Watch how FieldPulse transforms your marketing workflow with AI-powered automation
+              See how FieldPulse eliminates marketing chaos and drives real business growth
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
-            {/* Demo Video/Preview */}
-            <div className="relative">
-              <div className="bg-gray-100 rounded-2xl p-8 border-2 border-gray-200">
-                <div className="bg-white rounded-lg shadow-lg p-6">
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 bg-gradient-to-br from-primary to-hvac-orange rounded-lg flex items-center justify-center">
-                        <Bot className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="font-semibold text-gray-900">FieldPulse Dashboard</span>
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Before: Traditional Marketing Challenges */}
+            <div className="space-y-6">
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-red-600 mb-4">Before FieldPulse</h3>
+                <p className="text-gray-600 mb-6">Traditional marketing chaos costs you customers</p>
+              </div>
+              
+              <div className="bg-red-50 rounded-xl p-6 border-2 border-red-100">
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-red-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-red-600 font-bold text-sm">1</span>
                     </div>
-                    <Badge variant="secondary" className="bg-green-100 text-green-700">
-                      Live Demo
-                    </Badge>
-                  </div>
-                  
-                  {/* Mock Dashboard Elements */}
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <MessageSquare className="w-5 h-5 text-blue-600" />
-                        <span className="text-sm font-medium">Facebook Post Generated</span>
-                      </div>
-                      <CheckCircle className="w-5 h-5 text-green-600" />
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-3 bg-yellow-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <Star className="w-5 h-5 text-yellow-600" />
-                        <span className="text-sm font-medium">5-Star Review Response</span>
-                      </div>
-                      <CheckCircle className="w-5 h-5 text-green-600" />
-                    </div>
-                    
-                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
-                      <div className="flex items-center space-x-3">
-                        <TrendingUp className="w-5 h-5 text-green-600" />
-                        <span className="text-sm font-medium">Lead Qualification Complete</span>
-                      </div>
-                      <CheckCircle className="w-5 h-5 text-green-600" />
+                    <div>
+                      <h4 className="font-semibold text-red-800">5 Different Marketing Tools</h4>
+                      <p className="text-sm text-red-700">Facebook, Google Ads, WordPress, Review Apps, Email Marketing</p>
                     </div>
                   </div>
                   
-                  <div className="mt-6 p-4 bg-gradient-to-r from-primary/10 to-hvac-orange/10 rounded-lg">
-                    <div className="flex items-center space-x-3">
-                      <Target className="w-5 h-5 text-primary" />
-                      <span className="text-sm font-medium text-gray-900">
-                        3 New Leads Generated This Week
-                      </span>
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-red-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-red-600 font-bold text-sm">2</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-red-800">$500+ Monthly Costs</h4>
+                      <p className="text-sm text-red-700">Multiple subscriptions, hidden fees, upgrade costs</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-red-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-red-600 font-bold text-sm">3</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-red-800">20+ Hours Weekly</h4>
+                      <p className="text-sm text-red-700">Creating content, managing reviews, tracking leads</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-red-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <span className="text-red-600 font-bold text-sm">4</span>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-red-800">Missed Opportunities</h4>
+                      <p className="text-sm text-red-700">Slow responses, inconsistent messaging, lost leads</p>
                     </div>
                   </div>
                 </div>
-              </div>
-              
-              {/* Demo Play Button Overlay */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Button
-                  size="lg"
-                  className="bg-white/90 text-primary hover:bg-white shadow-lg backdrop-blur-sm border-2 border-primary/20"
-                  onClick={handleLogin}
-                >
-                  <Play className="w-5 h-5 mr-2" />
-                  Try Live Demo
-                </Button>
               </div>
             </div>
 
-            {/* Demo Features */}
+            {/* After: FieldPulse Solution */}
             <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <MessageSquare className="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    AI Content Generation
-                  </h3>
-                  <p className="text-gray-600">
-                    Watch our AI create professional social media posts, blog articles, and customer responses in seconds.
-                  </p>
+              <div className="text-center">
+                <h3 className="text-2xl font-bold text-green-600 mb-4">After FieldPulse</h3>
+                <p className="text-gray-600 mb-6">One platform that grows your business automatically</p>
+              </div>
+              
+              <div className="bg-green-50 rounded-xl p-6 border-2 border-green-100">
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-green-800">One Unified Platform</h4>
+                      <p className="text-sm text-green-700">All marketing tools integrated seamlessly</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-green-800">80% Cost Reduction</h4>
+                      <p className="text-sm text-green-700">Replace $500+ monthly tools with one affordable solution</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-green-800">90% Time Savings</h4>
+                      <p className="text-sm text-green-700">Automated content creation, review responses, lead follow-ups</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-start space-x-3">
+                    <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-green-800">3x More Leads</h4>
+                      <p className="text-sm text-green-700">Consistent posting, instant responses, smart follow-ups</p>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <Star className="w-5 h-5 text-green-600" />
+            </div>
+          </div>
+          
+          {/* Results Summary */}
+          <div className="mt-12 bg-gradient-to-r from-primary/10 to-hvac-orange/10 rounded-2xl p-8">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-hvac-gray mb-2">The FieldPulse Advantage</h3>
+              <p className="text-gray-600">Real results from field service professionals</p>
+            </div>
+            
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="w-8 h-8 text-primary" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Smart Review Management
-                  </h3>
-                  <p className="text-gray-600">
-                    See how FieldPulse automatically generates professional responses to customer reviews and tracks your reputation.
-                  </p>
-                </div>
+                <h4 className="text-2xl font-bold text-hvac-gray">300%</h4>
+                <p className="text-sm text-gray-600">Average lead increase</p>
               </div>
-
-              <div className="flex items-start space-x-4">
-                <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <TrendingUp className="w-5 h-5 text-purple-600" />
+              
+              <div className="text-center">
+                <div className="w-16 h-16 bg-hvac-orange/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Calendar className="w-8 h-8 text-hvac-orange" />
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                    Performance Analytics
-                  </h3>
-                  <p className="text-gray-600">
-                    Experience real-time insights into your marketing performance with actionable recommendations.
-                  </p>
+                <h4 className="text-2xl font-bold text-hvac-gray">18 hrs</h4>
+                <p className="text-sm text-gray-600">Weekly time saved</p>
+              </div>
+              
+              <div className="text-center">
+                <div className="w-16 h-16 bg-green-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Target className="w-8 h-8 text-green-600" />
                 </div>
+                <h4 className="text-2xl font-bold text-hvac-gray">$2,400</h4>
+                <p className="text-sm text-gray-600">Monthly revenue increase</p>
               </div>
             </div>
           </div>
