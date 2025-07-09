@@ -47,7 +47,7 @@ export default function Landing() {
     if (loginData.username === "admin" && loginData.password === "demo123") {
       toast({
         title: "Login Successful",
-        description: "Welcome back to KasamaAI!",
+        description: "Welcome back to FieldPulse!",
       });
       setTimeout(() => {
         window.location.href = "/dashboard";
@@ -81,7 +81,7 @@ export default function Landing() {
     toast({
       title: "Account Created",
       description:
-        "Welcome to KasamaAI! You can now log in with your credentials.",
+        "Welcome to FieldPulse! You can now log in with your credentials.",
     });
 
     // Reset form and switch to login tab
@@ -105,8 +105,8 @@ export default function Landing() {
               <Bot className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-hvac-gray">KasamaAI</h1>
-              <p className="text-sm text-gray-600">Intelligent Marketing</p>
+              <h1 className="text-2xl font-bold text-hvac-gray">FieldPulse</h1>
+              <p className="text-sm text-gray-600">Replace 5 Marketing Tools with One</p>
             </div>
           </div>
         </div>
@@ -116,14 +116,15 @@ export default function Landing() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h2 className="text-4xl lg:text-5xl font-bold text-hvac-gray mb-6">
-            Transform Your Business with Intelligent Marketing Automation
+            Replace 5 Marketing Tools with One
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            KasamaAI creates compelling content, manages social media, tracks
-            leads, and grows your reputation while you focus on what you do
-            best: serving customers.
+            FieldPulse consolidates your marketing tools into one affordable platform. 
+            Perfect for HVAC, plumbing, electrical, landscaping, and field service 
+            professionals who need content creation, social media management, lead tracking, 
+            and reputation management in one place.
           </p>
-        </div></div>
+        </div>
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
@@ -187,13 +188,13 @@ export default function Landing() {
           <Card className="max-w-2xl mx-auto from-primary to-hvac-orange border-0">
             <CardContent className="p-6 lg:p-8">
               <h3 className="text-xl lg:text-2xl font-bold text-navy mb-3 lg:mb-4">
-                Ready leads into Success Stories?
+                Stop Juggling Multiple Marketing Tools
               </h3>
               <p className="text-100 mb-4 lg:mb-6 text-sm lg:text-base">
-                Join thousands of soloprenuers and professionals who've
-                discovered that great work deserves great marketing. KasamaAI
-                makes it effortless to showcase your expertise and attract more
-                customers.
+                Join thousands of field service professionals who've consolidated 
+                their marketing stack. FieldPulse replaces your content creation tool, 
+                social media scheduler, lead manager, analytics platform, and reputation 
+                management system with one affordable solution.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
@@ -209,7 +210,7 @@ export default function Landing() {
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle className="text-center text-2xl font-bold text-hvac-gray">
-                        Access KasamaAI
+                        Access FieldPulse
                       </DialogTitle>
                     </DialogHeader>
                     <Tabs defaultValue="login" className="w-full">

@@ -23,7 +23,7 @@ export default function LandingAuth() {
               <Bot className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-hvac-gray">KasamaAI</h1>
+              <h1 className="text-2xl font-bold text-hvac-gray">FieldPulse</h1>
             </div>
           </div>
           <Button 
@@ -44,17 +44,18 @@ export default function LandingAuth() {
               <Bot className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-hvac-gray">KasamaAI</h1>
-              <p className="text-lg text-gray-600">Where Business Meets Smart Marketing</p>
+              <h1 className="text-4xl font-bold text-hvac-gray">FieldPulse</h1>
+              <p className="text-lg text-gray-600">Replace 5 Marketing Tools with One</p>
             </div>
           </div>
           <h2 className="text-3xl font-bold text-hvac-gray mb-4">
-            Transform Your Business with Intelligent Marketing Automation
+            Replace 5 Marketing Tools with One
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            KasamaAI creates compelling content, manages social media, tracks
-            leads, and grows your reputation while you focus on what you do
-            best: serving customers.
+            FieldPulse consolidates your marketing tools into one affordable platform. 
+            Perfect for HVAC, plumbing, electrical, landscaping, and field service 
+            professionals who need content creation, social media management, lead tracking, 
+            and reputation management in one place.
           </p>
         </div>
 
