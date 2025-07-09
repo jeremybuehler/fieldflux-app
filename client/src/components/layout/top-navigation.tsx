@@ -66,7 +66,7 @@ export default function TopNavigation({ title }: TopNavigationProps) {
                       variant="secondary"
                       className="bg-primary/10 text-primary border-primary/20"
                     >
-                      AI Powered
+                      Intelligent
                     </Badge>
                     <Badge
                       variant="secondary"
