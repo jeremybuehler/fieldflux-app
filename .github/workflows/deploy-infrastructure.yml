@@ -50,10 +50,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Azure CLI
-        uses: azure/CLI@v1
-        with:
-          azcliversion: latest
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -71,7 +67,7 @@ jobs:
             --location ${{ env.LOCATION }} \
             --template-file infrastructure/main.bicep \
             --parameters infrastructure/parameters/dev.parameters.json \
-            --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY }}"
+            --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}"
           
           echo "✅ Bicep validation completed successfully"
 
@@ -112,10 +108,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Azure CLI
-        uses: azure/CLI@v1
-        with:
-          azcliversion: latest
 
       - name: Login to Azure
         uses: azure/login@v1
@@ -136,7 +128,7 @@ jobs:
             --location ${{ env.LOCATION }} \
             --template-file infrastructure/main.bicep \
             --parameters infrastructure/parameters/dev.parameters.json \
-            --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY }}" \
+            --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}" \
             --parameters tags='{"DeployedBy":"github-actions","DeployedAt":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","GitCommit":"${{ github.sha }}","GitRef":"${{ github.ref }}"}' \
             --output table
           
@@ -211,10 +203,6 @@ jobs:
     if: failure() && github.event_name != 'pull_request'
     
     steps:
-      - name: Setup Azure CLI
-        uses: azure/CLI@v1
-        with:
-          azcliversion: latest
 
       - name: Login to Azure
         uses: azure/login@v1
