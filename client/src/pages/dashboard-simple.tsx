@@ -57,7 +57,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <h1 className="text-lg lg:text-xl font-bold text-hvac-gray text-center lg:text-left">
-                  FieldPulse Marketing Dashboard
+                  FieldPulse
                 </h1>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <div className="hidden sm:flex items-center space-x-1">
@@ -122,7 +122,7 @@ export default function Dashboard() {
               <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between text-center sm:text-left">
                 <div className="space-y-2">
                   <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
-                    Marketing Dashboard
+                    Field Service Marketing Dashboard
                   </h1>
                   <p className="text-sm md:text-base text-gray-600">
                     Welcome back! Here's your marketing performance and activity overview.
