@@ -97,27 +97,33 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-      <div className="container mx-auto px-4 py-16">
-        {/* Header */}
-        <div className="text-left mb-16">
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-hvac-orange rounded-2xl flex items-center justify-center">
-              <Bot className="w-8 h-8 text-white" />
+      {/* Header */}
+      <header className="container mx-auto px-4 py-6">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-primary to-hvac-orange rounded-xl flex items-center justify-center">
+              <Bot className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-hvac-gray">KasamaAI</h1>
-              <p className="text-lg text-gray-600">Intelligent Marketing</p>
+              <h1 className="text-2xl font-bold text-hvac-gray">KasamaAI</h1>
+              <p className="text-sm text-gray-600">Intelligent Marketing</p>
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-hvac-gray mb-4">
+        </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-16">
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl lg:text-5xl font-bold text-hvac-gray mb-6">
             Transform Your Business with Intelligent Marketing Automation
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             KasamaAI creates compelling content, manages social media, tracks
             leads, and grows your reputation while you focus on what you do
             best: serving customers.
           </p>
-        </div>
+        </div></div>
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
