@@ -120,7 +120,7 @@ export default function LandingAuth() {
 
         {/* Enhanced CTA Section */}
         <div className="text-center">
-          <Card className="bg-gradient-to-br from-primary to-hvac-orange text-white border-0 max-w-2xl mx-auto">
+          <Card className="bg-gradient-to-br from-mint-500 to-mint-600 text-white border-0 max-w-2xl mx-auto">
             <CardContent className="p-8">
               <h3 className="text-3xl font-bold mb-4">Ready to Transform Your Marketing?</h3>
               <p className="text-xl mb-6 text-white/90">
