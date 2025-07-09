@@ -169,6 +169,11 @@
   }
 }
 
+/* Landing Page Specific Styles */
+.landing-page {
+  background: white !important;
+}
+
 /* HVAC Specific Utility Classes - Protocol Enhanced */
 .hvac-blue {
   color: var(--hvac-blue);
