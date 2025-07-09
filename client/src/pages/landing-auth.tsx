@@ -120,17 +120,17 @@ export default function LandingAuth() {
 
         {/* Enhanced CTA Section */}
         <div className="text-center">
-          <Card className="bg-gradient-to-br from-mint-500 to-mint-600 text-white border-0 max-w-2xl mx-auto">
+          <Card className="bg-gradient-to-br from-mint-500 to-mint-600 text-black border-0 max-w-2xl mx-auto">
             <CardContent className="p-8">
-              <h3 className="text-3xl font-bold mb-4">Ready to Transform Your Marketing?</h3>
-              <p className="text-xl mb-6 text-white/90">
+              <h3 className="text-3xl font-bold mb-4 text-black">Ready to Transform Your Marketing?</h3>
+              <p className="text-xl mb-6 text-black/80">
                 Join 500+ field service professionals who are already growing their business with FieldPulse.
               </p>
               
               <div className="space-y-4">
                 <Button 
                   size="lg" 
-                  className="bg-white text-primary hover:bg-gray-50 font-semibold px-12 py-4 text-lg"
+                  className="bg-white text-black hover:bg-gray-50 font-semibold px-12 py-4 text-lg"
                   onClick={() => {
                     // Scroll to top to show features, then redirect to login
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -143,7 +143,7 @@ export default function LandingAuth() {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
                 
-                <div className="flex items-center justify-center space-x-6 text-sm text-white/80">
+                <div className="flex items-center justify-center space-x-6 text-sm text-black/70">
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="w-4 h-4" />
                     <span>No Credit Card Required</span>
@@ -159,11 +159,11 @@ export default function LandingAuth() {
                 </div>
               </div>
               
-              <div className="mt-6 text-sm text-white/80">
+              <div className="mt-6 text-sm text-black/70">
                 Already have an account?{" "}
                 <button 
                   onClick={handleLogin}
-                  className="underline hover:text-white font-medium"
+                  className="underline hover:text-black font-medium"
                 >
                   Sign In Here
                 </button>
