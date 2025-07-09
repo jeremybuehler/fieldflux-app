@@ -64,19 +64,11 @@ export default function LandingAuth() {
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-16">
-          <div className="flex items-center justify-center space-x-3 mb-6">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-hvac-orange rounded-2xl flex items-center justify-center">
-              <Bot className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-hvac-gray">FieldPulse</h1>
-            </div>
-          </div>
-          <h2 className="text-3xl font-bold text-hvac-gray mb-4">
+          <h1 className="text-4xl font-bold text-hvac-gray mb-4">
             Where Field Service Meets Smart Marketing
-          </h2>
+          </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            FieldPulse consolidates your marketing tools into one affordable platform. 
+            Consolidate your marketing tools into one affordable platform. 
             Perfect for HVAC, plumbing, electrical, landscaping, and field service 
             professionals who need content creation, social media management, lead tracking, 
             and reputation management in one place.
