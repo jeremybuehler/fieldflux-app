@@ -27,27 +27,35 @@
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
   
-  /* ClaimCompass Brand Colors */
-  --navy-50: hsl(208, 100%, 97%);
-  --navy-500: hsl(207, 39%, 29%);
-  --navy-600: hsl(207, 44%, 24%);
-  --navy-700: hsl(207, 46%, 20%);
-  --navy-800: hsl(207, 51%, 16%);
-  --navy-900: hsl(207, 61%, 12%);
+  /* Field Service Brand Colors */
+  --fieldservice-blue-50: hsl(214, 100%, 97%);
+  --fieldservice-blue-100: hsl(214, 95%, 93%);
+  --fieldservice-blue-500: hsl(217, 91%, 60%);
+  --fieldservice-blue-600: hsl(221, 83%, 53%);
+  --fieldservice-blue-700: hsl(224, 76%, 48%);
+  --fieldservice-blue-800: hsl(226, 71%, 40%);
+  --fieldservice-blue-900: hsl(224, 64%, 33%);
   
-  --mint-50: hsl(138, 76%, 97%);
-  --mint-100: hsl(140, 84%, 92%);
-  --mint-200: hsl(141, 79%, 85%);
-  --mint-300: hsl(141, 76%, 73%);
-  --mint-400: hsl(141, 69%, 58%);
-  --mint-500: hsl(142, 71%, 45%);
-  --mint-600: hsl(142, 76%, 36%);
+  --fieldservice-orange-50: hsl(33, 100%, 96%);
+  --fieldservice-orange-100: hsl(34, 100%, 92%);
+  --fieldservice-orange-500: hsl(25, 95%, 53%);
+  --fieldservice-orange-600: hsl(21, 90%, 48%);
   
-  /* HVAC Brand Colors for legacy compatibility */
-  --hvac-blue: hsl(207, 90%, 54%);
-  --hvac-orange: hsl(23, 93%, 53%);
-  --hvac-gray: hsl(217, 19%, 24%);
-  --hvac-light: hsl(220, 14%, 96%);
+  --fieldservice-green-50: hsl(142, 76%, 96%);
+  --fieldservice-green-100: hsl(141, 84%, 92%);
+  --fieldservice-green-500: hsl(142, 71%, 45%);
+  --fieldservice-green-600: hsl(142, 76%, 36%);
+  
+  --fieldservice-gray-50: hsl(210, 40%, 98%);
+  --fieldservice-gray-100: hsl(210, 40%, 96%);
+  --fieldservice-gray-200: hsl(214, 32%, 91%);
+  --fieldservice-gray-300: hsl(213, 27%, 84%);
+  --fieldservice-gray-400: hsl(215, 20%, 65%);
+  --fieldservice-gray-500: hsl(215, 16%, 47%);
+  --fieldservice-gray-600: hsl(215, 19%, 35%);
+  --fieldservice-gray-700: hsl(215, 25%, 27%);
+  --fieldservice-gray-800: hsl(217, 33%, 17%);
+  --fieldservice-gray-900: hsl(222, 84%, 5%);
 }
 
 .dark {
