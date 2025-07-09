@@ -75,12 +75,16 @@
   
   body {
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    @apply bg-background text-foreground;
-    background: linear-gradient(135deg, #ffffff 0%, #F8FDF7 100%);
+    @apply text-foreground;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     font-variation-settings: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Default app background with light green gradient */
+  .app-background {
+    background: linear-gradient(135deg, #ffffff 0%, #F8FDF7 100%);
   }
   
   /* Protocol Typography System */
@@ -172,6 +176,8 @@
 /* Landing Page Specific Styles */
 .landing-page {
   background: white !important;
+  background-color: white !important;
+  background-image: none !important;
 }
 
 /* HVAC Specific Utility Classes - Protocol Enhanced */
