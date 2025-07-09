@@ -99,8 +99,8 @@ export default function Landing() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
       <div className="container mx-auto px-4 py-16">
         {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center space-x-3 mb-6">
+        <div className="text-left mb-16">
+          <div className="flex items-center space-x-3 mb-6">
             <div className="w-16 h-16 bg-gradient-to-br from-primary to-hvac-orange rounded-2xl flex items-center justify-center">
               <Bot className="w-8 h-8 text-white" />
             </div>
@@ -112,7 +112,7 @@ export default function Landing() {
           <h2 className="text-3xl font-bold text-hvac-gray mb-4">
             Transform Your Business with Intelligent Marketing Automation
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-2xl">
             KasamaAI creates compelling content, manages social media, tracks
             leads, and grows your reputation while you focus on what you do
             best: serving customers.
