@@ -13,8 +13,8 @@
   --card-foreground: hsl(20, 14.3%, 4.1%);
   --border: hsl(20, 5.9%, 90%);
   --input: hsl(20, 5.9%, 90%);
-  --primary: hsl(220, 91%, 33%);
-  --primary-foreground: hsl(0, 0%, 100%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
   --secondary: hsl(60, 4.8%, 95.9%);
   --secondary-foreground: hsl(24, 9.8%, 10%);
   --accent: hsl(60, 4.8%, 95.9%);
@@ -24,13 +24,11 @@
   --ring: hsl(20, 14.3%, 4.1%);
   --radius: 0.5rem;
   
-  /* Field Service Brand Colors */
-  --field-navy: hsl(220, 91%, 33%);
-  --field-orange: hsl(23, 93%, 53%);
-  --field-gray: hsl(220, 9%, 46%);
-  --field-light: hsl(220, 14%, 96%);
-  --field-success: hsl(158, 64%, 52%);
-  --field-warning: hsl(45, 93%, 58%);
+  /* HVAC Brand Colors */
+  --hvac-blue: hsl(207, 90%, 54%);
+  --hvac-orange: hsl(23, 93%, 53%);
+  --hvac-gray: hsl(217, 19%, 24%);
+  --hvac-light: hsl(220, 14%, 96%);
 }
 
 .dark {
@@ -44,8 +42,8 @@
   --card-foreground: hsl(0, 0%, 98%);
   --border: hsl(240, 3.7%, 15.9%);
   --input: hsl(240, 3.7%, 15.9%);
-  --primary: hsl(220, 91%, 33%);
-  --primary-foreground: hsl(0, 0%, 100%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
   --secondary: hsl(240, 3.7%, 15.9%);
   --secondary-foreground: hsl(0, 0%, 98%);
   --accent: hsl(240, 3.7%, 15.9%);
@@ -70,36 +68,36 @@
   }
 }
 
-/* Field Service Specific Utility Classes */
-.field-navy {
-  color: var(--field-navy);
+/* HVAC Specific Utility Classes */
+.hvac-blue {
+  color: var(--hvac-blue);
 }
 
-.bg-field-navy {
-  background-color: var(--field-navy);
+.bg-hvac-blue {
+  background-color: var(--hvac-blue);
 }
 
-.field-orange {
-  color: var(--field-orange);
+.hvac-orange {
+  color: var(--hvac-orange);
 }
 
-.bg-field-orange {
-  background-color: var(--field-orange);
+.bg-hvac-orange {
+  background-color: var(--hvac-orange);
 }
 
-.field-gray {
-  color: var(--field-gray);
+.hvac-gray {
+  color: var(--hvac-gray);
 }
 
-.bg-field-gray {
-  background-color: var(--field-gray);
+.bg-hvac-gray {
+  background-color: var(--hvac-gray);
 }
 
-.field-light {
-  color: var(--field-light);
+.hvac-light {
+  color: var(--hvac-light);
 }
 
-.bg-field-light {
+.bg-hvac-light {
   background-color: var(--hvac-light);
 }
 
