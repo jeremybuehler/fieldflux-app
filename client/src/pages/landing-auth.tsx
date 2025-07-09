@@ -39,7 +39,7 @@ export default function LandingAuth() {
             </div>
             <div>
               <h1 className="text-2xl font-bold text-hvac-gray">FieldPulse</h1>
-              <p className="text-sm text-gray-600">Replacing 5 Marketing Tools with One</p>
+              <p className="text-sm text-gray-600">Intelligent Field Service Marketing</p>
             </div>
           </div>
           {isAuthenticated ? (
