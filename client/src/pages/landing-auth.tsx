@@ -42,22 +42,13 @@ export default function LandingAuth() {
               <p className="text-sm text-gray-600">Intelligent Field Service Marketing</p>
             </div>
           </div>
-          {isAuthenticated ? (
-            <Button 
-              onClick={handleDashboard}
-              className="bg-primary text-white hover:bg-primary/90"
-            >
-              Go to Dashboard
-            </Button>
-          ) : (
-            <Button 
-              variant="outline"
-              onClick={handleLogin}
-              className="border-primary text-primary hover:bg-primary hover:text-white"
-            >
-              Login/Sign-Up
-            </Button>
-          )}
+          <Button 
+            variant="outline"
+            onClick={handleLogin}
+            className="border-primary text-primary hover:bg-primary hover:text-white"
+          >
+            Login/Sign-Up
+          </Button>
         </div>
       </header>
 
@@ -75,157 +66,7 @@ export default function LandingAuth() {
           </p>
         </div>
 
-        {/* Field Service Marketing Infographic */}
-        <div className="mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold text-hvac-gray mb-4">
-              Transform Your Field Service Marketing
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              See how FieldPulse eliminates marketing chaos and drives real business growth
-            </p>
-          </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Before: Traditional Marketing Challenges */}
-            <div className="space-y-6">
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-red-600 mb-4">Before FieldPulse</h3>
-                <p className="text-gray-600 mb-6">Traditional marketing chaos costs you customers</p>
-              </div>
-              
-              <div className="bg-red-50 rounded-xl p-6 border-2 border-red-100">
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-red-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <span className="text-red-600 font-bold text-sm">1</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-red-800">5 Different Marketing Tools</h4>
-                      <p className="text-sm text-red-700">Facebook, Google Ads, WordPress, Review Apps, Email Marketing</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-red-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <span className="text-red-600 font-bold text-sm">2</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-red-800">$500+ Monthly Costs</h4>
-                      <p className="text-sm text-red-700">Multiple subscriptions, hidden fees, upgrade costs</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-red-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <span className="text-red-600 font-bold text-sm">3</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-red-800">20+ Hours Weekly</h4>
-                      <p className="text-sm text-red-700">Creating content, managing reviews, tracking leads</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-red-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <span className="text-red-600 font-bold text-sm">4</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-red-800">Missed Opportunities</h4>
-                      <p className="text-sm text-red-700">Slow responses, inconsistent messaging, lost leads</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* After: FieldPulse Solution */}
-            <div className="space-y-6">
-              <div className="text-center">
-                <h3 className="text-2xl font-bold text-green-600 mb-4">After FieldPulse</h3>
-                <p className="text-gray-600 mb-6">One platform that grows your business automatically</p>
-              </div>
-              
-              <div className="bg-green-50 rounded-xl p-6 border-2 border-green-100">
-                <div className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-green-800">One Unified Platform</h4>
-                      <p className="text-sm text-green-700">All marketing tools integrated seamlessly</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-green-800">80% Cost Reduction</h4>
-                      <p className="text-sm text-green-700">Replace $500+ monthly tools with one affordable solution</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-green-800">90% Time Savings</h4>
-                      <p className="text-sm text-green-700">Automated content creation, review responses, lead follow-ups</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-green-200 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                      <CheckCircle className="w-4 h-4 text-green-600" />
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-green-800">3x More Leads</h4>
-                      <p className="text-sm text-green-700">Consistent posting, instant responses, smart follow-ups</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          {/* Results Summary */}
-          <div className="mt-12 bg-gradient-to-r from-primary/10 to-hvac-orange/10 rounded-2xl p-8">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-hvac-gray mb-2">The FieldPulse Advantage</h3>
-              <p className="text-gray-600">Real results from field service professionals</p>
-            </div>
-            
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="w-8 h-8 text-primary" />
-                </div>
-                <h4 className="text-2xl font-bold text-hvac-gray">300%</h4>
-                <p className="text-sm text-gray-600">Average lead increase</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-hvac-orange/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Calendar className="w-8 h-8 text-hvac-orange" />
-                </div>
-                <h4 className="text-2xl font-bold text-hvac-gray">18 hrs</h4>
-                <p className="text-sm text-gray-600">Weekly time saved</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 bg-green-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Target className="w-8 h-8 text-green-600" />
-                </div>
-                <h4 className="text-2xl font-bold text-hvac-gray">$2,400</h4>
-                <p className="text-sm text-gray-600">Monthly revenue increase</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
@@ -290,9 +131,9 @@ export default function LandingAuth() {
                 <Button 
                   size="lg" 
                   className="bg-white text-primary hover:bg-gray-50 font-semibold px-12 py-4 text-lg"
-                  onClick={isAuthenticated ? handleDashboard : handleLogin}
+                  onClick={handleLogin}
                 >
-                  {isAuthenticated ? 'Go to Dashboard' : 'Get Started Free'}
+                  Get Started Free
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
                 
@@ -312,17 +153,15 @@ export default function LandingAuth() {
                 </div>
               </div>
               
-              {!isAuthenticated && (
-                <div className="mt-6 text-sm text-white/80">
-                  Already have an account?{" "}
-                  <button 
-                    onClick={handleLogin}
-                    className="underline hover:text-white font-medium"
-                  >
-                    Sign In Here
-                  </button>
-                </div>
-              )}
+              <div className="mt-6 text-sm text-white/80">
+                Already have an account?{" "}
+                <button 
+                  onClick={handleLogin}
+                  className="underline hover:text-white font-medium"
+                >
+                  Sign In Here
+                </button>
+              </div>
             </CardContent>
           </Card>
         </div>
