@@ -218,7 +218,7 @@ export default function WordPressIntegration() {
                       <AlertDescription>
                         <div className="space-y-3">
                           <div>
-                            <p className="text-sm font-medium text-blue-900 mb-1">AI Suggestion:</p>
+                            <p className="text-sm font-medium text-blue-900 mb-1">Intelligent Suggestion:</p>
                             <p className="text-sm text-blue-800">{suggestedTopic}</p>
                           </div>
                           <div className="flex space-x-2">
