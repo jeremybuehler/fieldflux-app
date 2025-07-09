@@ -57,7 +57,7 @@ export default function Dashboard() {
               </div>
               <div>
                 <h1 className="text-lg lg:text-xl font-bold text-hvac-gray text-center lg:text-left">
-                  KasamaAI Marketing Dashboard
+                  FieldPulse Marketing Dashboard
                 </h1>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <div className="hidden sm:flex items-center space-x-1">

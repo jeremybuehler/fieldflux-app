@@ -31,11 +31,14 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50">
       <div className="flex min-h-screen">
         <MobileSidebar />
-        
+
         <main className="flex-1 lg:ml-64">
           <div className="p-4 lg:p-6 pt-16 lg:pt-6">
             {/* Dashboard Content */}
             <div className="space-y-4 lg:space-y-6">
+              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
+                    Field Service Marketing Dashboard
+                  </h1>
               <MetricsGrid />
 
               {/* Activity & Analytics Row */}
