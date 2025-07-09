@@ -1,4 +1,4 @@
-# FieldPulse - AI-Powered Marketing Platform
+# FieldPulse - Intelligent Field Service Marketing
 
 ## Overview
 
