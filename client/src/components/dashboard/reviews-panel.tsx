@@ -73,7 +73,7 @@ export default function ReviewsPanel() {
       queryClient.invalidateQueries({ queryKey: ["/api/activities"] });
       toast({
         title: "Response Generated",
-        description: "Intelligent system has generated a professional response for this review.",
+        description: "AI has generated a professional response for this review.",
       });
       trackEvent('review_response_generated', 'reviews', 'ai_generation');
     },
@@ -284,7 +284,7 @@ export default function ReviewsPanel() {
                     </p>
                     {review.aiResponse && (
                       <div className="bg-blue-50 rounded-lg p-3 mt-2">
-                        <p className="text-xs text-gray-500 mb-1">Intelligent Response:</p>
+                        <p className="text-xs text-gray-500 mb-1">AI Generated Response:</p>
                         <p className="text-sm text-gray-700">{review.aiResponse}</p>
                       </div>
                     )}

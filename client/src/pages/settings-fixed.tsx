@@ -203,7 +203,7 @@ export default function Settings() {
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <div className="hidden sm:flex items-center space-x-1">
                     <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                      AI Powered
+                      Intelligent
                     </Badge>
                     <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
                       <MapPin className="w-3 h-3 mr-1" />
