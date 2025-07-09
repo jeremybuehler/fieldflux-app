@@ -96,29 +96,31 @@ export default function Landing() {
   };
 
   return (
-    <div className="landing-page min-h-screen bg-white" style={{ background: 'white !important' }}>
+    <div className="min-h-screen bg-white" style={{ background: 'white !important' }}>
       {/* Header */}
-      <header className="container mx-auto px-4 py-6">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary to-hvac-orange rounded-xl flex items-center justify-center">
-              <Bot className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-hvac-gray">FieldPulse</h1>
-              <p className="text-sm text-gray-600">Replace 5 Marketing Tools with One</p>
+      <header className="topnav-fieldservice">
+        <div className="container-fieldservice">
+          <div className="flex justify-between items-center py-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-gradient-to-br from-fieldservice-blue-600 to-fieldservice-orange-500 rounded-xl flex items-center justify-center shadow-fieldservice">
+                <Bot className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h1 className="text-fieldservice-title text-fieldservice-blue-700">FieldPulse</h1>
+                <p className="text-fieldservice-muted">Replace 5 Marketing Tools with One</p>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-16">
+      <div className="container-fieldservice section-fieldservice">
         {/* Hero Section */}
-        <div className="text-center mb-16">
-          <h2 className="text-4xl lg:text-5xl font-bold text-hvac-gray mb-6">
+        <div className="text-center mb-16 animate-fieldservice-fade-in">
+          <h2 className="text-fieldservice-display mb-6">
             Replace 5 Marketing Tools with One
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-fieldservice-body max-w-3xl mx-auto">
             FieldPulse consolidates your marketing tools into one affordable platform. 
             Perfect for HVAC, plumbing, electrical, landscaping, and field service 
             professionals who need content creation, social media management, lead tracking, 

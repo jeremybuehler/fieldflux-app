@@ -15,6 +15,7 @@ import AnalyticsReports from "@/components/dashboard/analytics-reports";
 import WeatherWidget from "@/components/dashboard/weather-widget";
 import { Button } from "@/components/ui/button";
 import { Wand2, MapPin } from "lucide-react";
+import Sidebar from "@/components/dashboard/sidebar";
 
 export default function Dashboard() {
   useEffect(() => {
@@ -28,17 +29,25 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="flex min-h-screen">
+    <div className="dashboard-fieldservice">
+      <div className="flex">
+        <Sidebar />
         <MobileSidebar />
 
-        <main className="flex-1 lg:ml-64">
-          <div className="p-4 lg:p-6 pt-16 lg:pt-6">
+        <main className="main-content-fieldservice">
+          <div className="content-area-fieldservice">
+            {/* Dashboard Header */}
+            <div className="page-header-fieldservice rounded-lg mb-6">
+              <h1 className="page-title-fieldservice">
+                Field Service Marketing Dashboard
+              </h1>
+              <p className="page-subtitle-fieldservice">
+                Monitor your business performance and manage field operations
+              </p>
+            </div>
+
             {/* Dashboard Content */}
-            <div className="space-y-4 lg:space-y-6">
-              <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
-                    Field Service Marketing Dashboard
-                  </h1>
+            <div className="space-y-6">
               <MetricsGrid />
 
               {/* Activity & Analytics Row */}
