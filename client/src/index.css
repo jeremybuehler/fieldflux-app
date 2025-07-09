@@ -72,17 +72,8 @@
   }
   
   body {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
-    @apply text-foreground;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-    font-variation-settings: normal;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  
-  /* Default app background with light green gradient */
-  .app-background {
-    background: linear-gradient(135deg, #ffffff 0%, #F8FDF7 100%);
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
   }
   
   /* Protocol Typography System */
@@ -178,39 +169,6 @@
   background-image: none !important;
 }
 
-/* HVAC Specific Utility Classes - Protocol Enhanced */
-.hvac-blue {
-  color: var(--hvac-blue);
-}
-
-.bg-hvac-blue {
-  background-color: var(--hvac-blue);
-}
-
-.hvac-orange {
-  color: var(--hvac-orange);
-}
-
-.bg-hvac-orange {
-  background-color: var(--hvac-orange);
-}
-
-.hvac-gray {
-  color: var(--hvac-gray);
-}
-
-.bg-hvac-gray {
-  background-color: var(--hvac-gray);
-}
-
-.hvac-light {
-  color: var(--hvac-light);
-}
-
-.bg-hvac-light {
-  background-color: var(--hvac-light);
-}
-
 /* Protocol Enhanced Animations */
 @keyframes protocol-fade-in {
   from {
@@ -303,4 +261,68 @@
 
 .shadow-protocol-xl {
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+@layer utilities {
+  .bg-navy-50 { background-color: var(--navy-50); }
+  .bg-navy-500 { background-color: var(--navy-500); }
+  .bg-navy-600 { background-color: var(--navy-600); }
+  .bg-navy-700 { background-color: var(--navy-700); }
+  .bg-navy-800 { background-color: var(--navy-800); }
+  .bg-navy-900 { background-color: var(--navy-900); }
+  
+  .bg-mint-50 { background-color: var(--mint-50); }
+  .bg-mint-100 { background-color: var(--mint-100); }
+  .bg-mint-200 { background-color: var(--mint-200); }
+  .bg-mint-300 { background-color: var(--mint-300); }
+  .bg-mint-400 { background-color: var(--mint-400); }
+  .bg-mint-500 { background-color: var(--mint-500); }
+  .bg-mint-600 { background-color: var(--mint-600); }
+  
+  .text-navy-50 { color: var(--navy-50); }
+  .text-navy-500 { color: var(--navy-500); }
+  .text-navy-600 { color: var(--navy-600); }
+  .text-navy-700 { color: var(--navy-700); }
+  .text-navy-800 { color: var(--navy-800); }
+  .text-navy-900 { color: var(--navy-900); }
+  
+  .text-mint-50 { color: var(--mint-50); }
+  .text-mint-100 { color: var(--mint-100); }
+  .text-mint-200 { color: var(--mint-200); }
+  .text-mint-300 { color: var(--mint-300); }
+  .text-mint-400 { color: var(--mint-400); }
+  .text-mint-500 { color: var(--mint-500); }
+  .text-mint-600 { color: var(--mint-600); }
+  
+  .border-navy-200 { border-color: hsl(207, 39%, 85%); }
+  .border-navy-400 { border-color: hsl(207, 39%, 60%); }
+  .border-mint-200 { border-color: var(--mint-200); }
+  .border-mint-400 { border-color: var(--mint-400); }
+  
+  .hover\:bg-navy-400:hover { background-color: hsl(207, 39%, 50%); }
+  .hover\:bg-mint-400:hover { background-color: var(--mint-400); }
+  .hover\:text-mint-600:hover { color: var(--mint-600); }
+  .hover\:text-mint-500:hover { color: var(--mint-500); }
+  .hover\:border-mint-400:hover { border-color: var(--mint-400); }
+  
+  .focus\:ring-mint-500:focus { --tw-ring-color: var(--mint-500); }
+  .focus\:border-mint-500:focus { border-color: var(--mint-500); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
 }
