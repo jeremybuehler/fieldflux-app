@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(60, 4.8%, 95.9%);
+  --muted-foreground: hsl(25, 5.3%, 44.7%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(20, 5.9%, 90%);
+  --input: hsl(20, 5.9%, 90%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(60, 4.8%, 95.9%);
+  --secondary-foreground: hsl(24, 9.8%, 10%);
+  --accent: hsl(60, 4.8%, 95.9%);
+  --accent-foreground: hsl(24, 9.8%, 10%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* ClaimCompass Brand Colors */
+  --navy-50: hsl(208, 100%, 97%);
+  --navy-500: hsl(207, 39%, 29%);
+  --navy-600: hsl(207, 44%, 24%);
+  --navy-700: hsl(207, 46%, 20%);
+  --navy-800: hsl(207, 51%, 16%);
+  --navy-900: hsl(207, 61%, 12%);
+  
+  --mint-50: hsl(138, 76%, 97%);
+  --mint-100: hsl(140, 84%, 92%);
+  --mint-200: hsl(141, 79%, 85%);
+  --mint-300: hsl(141, 76%, 73%);
+  --mint-400: hsl(141, 69%, 58%);
+  --mint-500: hsl(142, 71%, 45%);
+  --mint-600: hsl(142, 76%, 36%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+@layer utilities {
+  .bg-navy-50 { background-color: var(--navy-50); }
+  .bg-navy-500 { background-color: var(--navy-500); }
+  .bg-navy-600 { background-color: var(--navy-600); }
+  .bg-navy-700 { background-color: var(--navy-700); }
+  .bg-navy-800 { background-color: var(--navy-800); }
+  .bg-navy-900 { background-color: var(--navy-900); }
+  
+  .bg-mint-50 { background-color: var(--mint-50); }
+  .bg-mint-100 { background-color: var(--mint-100); }
+  .bg-mint-200 { background-color: var(--mint-200); }
+  .bg-mint-300 { background-color: var(--mint-300); }
+  .bg-mint-400 { background-color: var(--mint-400); }
+  .bg-mint-500 { background-color: var(--mint-500); }
+  .bg-mint-600 { background-color: var(--mint-600); }
+  
+  .text-navy-50 { color: var(--navy-50); }
+  .text-navy-500 { color: var(--navy-500); }
+  .text-navy-600 { color: var(--navy-600); }
+  .text-navy-700 { color: var(--navy-700); }
+  .text-navy-800 { color: var(--navy-800); }
+  .text-navy-900 { color: var(--navy-900); }
+  
+  .text-mint-50 { color: var(--mint-50); }
+  .text-mint-100 { color: var(--mint-100); }
+  .text-mint-200 { color: var(--mint-200); }
+  .text-mint-300 { color: var(--mint-300); }
+  .text-mint-400 { color: var(--mint-400); }
+  .text-mint-500 { color: var(--mint-500); }
+  .text-mint-600 { color: var(--mint-600); }
+  
+  .border-navy-200 { border-color: hsl(207, 39%, 85%); }
+  .border-navy-400 { border-color: hsl(207, 39%, 60%); }
+  .border-mint-200 { border-color: var(--mint-200); }
+  .border-mint-400 { border-color: var(--mint-400); }
+  
+  .hover\:bg-navy-400:hover { background-color: hsl(207, 39%, 50%); }
+  .hover\:bg-mint-400:hover { background-color: var(--mint-400); }
+  .hover\:text-mint-600:hover { color: var(--mint-600); }
+  .hover\:text-mint-500:hover { color: var(--mint-500); }
+  .hover\:border-mint-400:hover { border-color: var(--mint-400); }
+  
+  .focus\:ring-mint-500:focus { --tw-ring-color: var(--mint-500); }
+  .focus\:border-mint-500:focus { border-color: var(--mint-500); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
