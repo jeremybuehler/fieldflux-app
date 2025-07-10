@@ -102,10 +102,10 @@ resource availabilityTest 'Microsoft.Insights/webtests@2022-06-15' = {
     RetryEnabled: true
     Locations: [
       {
-        Id: 'eastus'
+        Id: 'us-va-ash-azr'
       }
       {
-        Id: 'westus2'
+        Id: 'us-ca-sjc-azr'
       }
     ]
     Configuration: {

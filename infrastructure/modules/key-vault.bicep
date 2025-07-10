@@ -115,35 +115,7 @@ resource appPortSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   }
 }
 
-// Diagnostic settings for Key Vault (if Log Analytics workspace exists)
-resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
-  name: 'keyVaultDiagnostics'
-  scope: keyVault
-  properties: {
-    logs: [
-      {
-        category: 'AuditEvent'
-        enabled: true
-        retentionPolicy: {
-          enabled: true
-          days: 365
-        }
-      }
-    ]
-    metrics: [
-      {
-        category: 'AllMetrics'
-        enabled: true
-        retentionPolicy: {
-          enabled: true
-          days: 365
-        }
-      }
-    ]
-    // Log Analytics workspace will be specified during deployment
-    workspaceId: null
-  }
-}
+// Diagnostic settings removed - requires Log Analytics workspace
 
 // Outputs
 output keyVaultName string = keyVault.name
