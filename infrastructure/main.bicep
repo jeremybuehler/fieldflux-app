@@ -80,8 +80,56 @@ module database 'modules/postgresql.bicep' = {
     location: location
     environment: environment
     tags: tags
-    keyVaultName: keyVault.outputs.keyVaultName
-    keyVaultResourceGroupName: platformResourceGroup.name
+  }
+}
+
+// Store database connection string in Key Vault (handled at main scope level)
+resource connectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  name: 'database-connection-string'
+  parent: keyVault.outputs.keyVaultResource
+  properties: {
+    value: database.outputs.connectionString
+    contentType: 'text/plain'
+    attributes: {
+      enabled: true
+    }
+  }
+}
+
+// Store individual database components in Key Vault for flexibility
+resource dbHostSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  name: 'database-host'
+  parent: keyVault.outputs.keyVaultResource
+  properties: {
+    value: database.outputs.fullyQualifiedDomainName
+    contentType: 'text/plain'
+  }
+}
+
+resource dbNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  name: 'database-name'
+  parent: keyVault.outputs.keyVaultResource
+  properties: {
+    value: database.outputs.databaseName
+    contentType: 'text/plain'
+  }
+}
+
+resource dbUserSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  name: 'database-username'
+  parent: keyVault.outputs.keyVaultResource
+  properties: {
+    value: database.outputs.administratorLogin
+    contentType: 'text/plain'
+  }
+}
+
+resource dbPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  name: 'database-password'
+  parent: keyVault.outputs.keyVaultResource
+  properties: {
+    value: database.outputs.administratorPassword
+    contentType: 'text/plain'
   }
 }
 

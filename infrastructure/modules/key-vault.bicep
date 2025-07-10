@@ -149,4 +149,5 @@ resource diagnosticSettings 'Microsoft.Insights/diagnosticSettings@2021-05-01-pr
 output keyVaultName string = keyVault.name
 output keyVaultId string = keyVault.id
 output keyVaultUri string = keyVault.properties.vaultUri
+output keyVaultResource object = keyVault
 output openaiApiKeySecretUri string = openaiApiKeySecret.properties.secretUri

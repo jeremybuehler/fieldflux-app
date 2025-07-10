@@ -13,11 +13,6 @@ param environment string
 @description('Tags for resources')
 param tags object
 
-@description('Key Vault name for storing connection string')
-param keyVaultName string
-
-@description('Key Vault resource group name')
-param keyVaultResourceGroupName string
 
 @description('Database administrator username')
 param administratorLogin string = 'fieldpulseadmin'
@@ -144,67 +139,13 @@ resource connectionLimits 'Microsoft.DBforPostgreSQL/flexibleServers/configurati
   }
 }
 
-// Reference to existing Key Vault
-resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
-  name: keyVaultName
-  scope: resourceGroup(keyVaultResourceGroupName)
-}
-
-// Store database connection string in Key Vault
+// Database connection string for output
 var connectionString = 'postgresql://${administratorLogin}:${administratorPassword}@${postgresqlServer.properties.fullyQualifiedDomainName}:5432/${databaseName}?sslmode=require'
-
-resource connectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyVault
-  name: 'database-connection-string'
-  properties: {
-    value: connectionString
-    contentType: 'text/plain'
-    attributes: {
-      enabled: true
-    }
-  }
-}
-
-// Store individual database components in Key Vault for flexibility
-resource dbHostSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyVault
-  name: 'database-host'
-  properties: {
-    value: postgresqlServer.properties.fullyQualifiedDomainName
-    contentType: 'text/plain'
-  }
-}
-
-resource dbNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyVault
-  name: 'database-name'
-  properties: {
-    value: databaseName
-    contentType: 'text/plain'
-  }
-}
-
-resource dbUserSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyVault
-  name: 'database-username'
-  properties: {
-    value: administratorLogin
-    contentType: 'text/plain'
-  }
-}
-
-resource dbPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  parent: keyVault
-  name: 'database-password'
-  properties: {
-    value: administratorPassword
-    contentType: 'text/plain'
-  }
-}
 
 // Outputs
 output serverName string = postgresqlServer.name
 output fullyQualifiedDomainName string = postgresqlServer.properties.fullyQualifiedDomainName
 output databaseName string = database.name
-output connectionStringSecretUri string = connectionStringSecret.properties.secretUri
+output connectionString string = connectionString
+output administratorPassword string = administratorPassword
 output administratorLogin string = administratorLogin
