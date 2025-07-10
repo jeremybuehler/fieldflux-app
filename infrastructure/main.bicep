@@ -20,6 +20,10 @@ param containerImage string = 'fieldpulse:latest'
 @secure()
 param openaiApiKey string
 
+@description('GitHub Token for Container Registry access')
+@secure()
+param githubToken string
+
 @description('Tags to apply to all resources')
 param tags object = {
   Environment: environment
@@ -111,6 +115,7 @@ module containerApps 'modules/container-apps.bicep' = {
     keyVaultName: keyVault.outputs.keyVaultName
     appInsightsConnectionString: appInsights.outputs.connectionString
     databaseConnectionStringSecretUri: databaseSecrets.outputs.connectionStringSecretUri
+    githubToken: githubToken
   }
 }
 
