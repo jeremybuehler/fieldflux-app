@@ -27,7 +27,7 @@ param enableSoftDelete bool = true
 param softDeleteRetentionInDays int = 90
 
 @description('Enable purge protection')
-param enablePurgeProtection bool = environment == 'prod'
+param enablePurgeProtection bool = true
 
 // Get current user/service principal for access policies
 var currentUserObjectId = 'PLACEHOLDER' // This will be replaced in the deployment workflow

@@ -102,10 +102,10 @@ resource availabilityTest 'Microsoft.Insights/webtests@2022-06-15' = {
     RetryEnabled: true
     Locations: [
       {
-        Id: 'us-east-1'
+        Id: 'eastus'
       }
       {
-        Id: 'us-west-2'
+        Id: 'westus2'
       }
     ]
     Configuration: {
@@ -171,7 +171,7 @@ resource errorRateAlert 'Microsoft.Insights/metricAlerts@2018-03-01' = {
           metricName: 'requests/failed'
           operator: 'GreaterThan'
           threshold: 5
-          timeAggregation: 'Average'
+          timeAggregation: 'Count'
           criterionType: 'StaticThresholdCriterion'
         }
       ]

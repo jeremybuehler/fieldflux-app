@@ -119,15 +119,7 @@ resource allowContainerApps 'Microsoft.DBforPostgreSQL/flexibleServers/firewallR
   }
 }
 
-// Configuration for SSL enforcement
-resource sslEnforcement 'Microsoft.DBforPostgreSQL/flexibleServers/configurations@2023-06-01-preview' = {
-  parent: postgresqlServer
-  name: 'ssl'
-  properties: {
-    value: 'on'
-    source: 'user-override'
-  }
-}
+// SSL is enabled by default in PostgreSQL Flexible Server and cannot be modified
 
 // Configuration for connection limits
 resource connectionLimits 'Microsoft.DBforPostgreSQL/flexibleServers/configurations@2023-06-01-preview' = {
