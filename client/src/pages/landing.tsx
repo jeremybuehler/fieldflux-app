@@ -47,7 +47,7 @@ export default function Landing() {
     if (loginData.username === "admin" && loginData.password === "demo123") {
       toast({
         title: "Login Successful",
-        description: "Welcome back to KasamaAI!",
+        description: "Welcome back to FieldPulse!",
       });
       setTimeout(() => {
         window.location.href = "/dashboard";
@@ -81,7 +81,7 @@ export default function Landing() {
     toast({
       title: "Account Created",
       description:
-        "Welcome to KasamaAI! You can now log in with your credentials.",
+        "Welcome to FieldPulse! You can now log in with your credentials.",
     });
 
     // Reset form and switch to login tab
@@ -105,17 +105,17 @@ export default function Landing() {
               <Bot className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-bold text-hvac-gray">KasamaAI</h1>
-              <p className="text-lg text-gray-600">Intelligent Marketing</p>
+              <h1 className="text-4xl font-bold text-hvac-gray">FieldPulse</h1>
+              <p className="text-lg text-gray-600">Replace 5 Marketing Tools with One</p>
             </div>
           </div>
           <h2 className="text-3xl font-bold text-hvac-gray mb-4">
             Transform Your Business with Intelligent Marketing Automation
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            KasamaAI creates compelling content, manages social media, tracks
+            FieldPulse creates compelling content, manages social media, tracks
             leads, and grows your reputation while you focus on what you do
-            best: serving customers.
+            best: serving field service customers.
           </p>
         </div>
 
@@ -150,9 +150,9 @@ export default function Landing() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                Never stare at a blank page again. KasamaAI creates professional
+                Never stare at a blank page again. FieldPulse creates professional
                 posts, helpful tips, and customer stories that showcase your
-                expertise and attract new business.
+                field service expertise and attract new business.
               </p>
             </CardContent>
           </Card>
@@ -184,10 +184,10 @@ export default function Landing() {
                 Ready leads into Success Stories?
               </h3>
               <p className="text-100 mb-4 lg:mb-6 text-sm lg:text-base">
-                Join thousands of soloprenuers and professionals who've
-                discovered that great work deserves great marketing. KasamaAI
+                Join thousands of field service professionals who've
+                discovered that great work deserves great marketing. FieldPulse
                 makes it effortless to showcase your expertise and attract more
-                customers.
+                field service customers.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
@@ -203,7 +203,7 @@ export default function Landing() {
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle className="text-center text-2xl font-bold text-hvac-gray">
-                        Access KasamaAI
+                        Access FieldPulse
                       </DialogTitle>
                     </DialogHeader>
                     <Tabs defaultValue="login" className="w-full">

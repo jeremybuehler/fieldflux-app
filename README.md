@@ -4,6 +4,20 @@
 
 This is FieldPulse - Replace 5 Marketing Tools with One. A comprehensive marketing automation platform specifically designed for field service businesses. From intelligent content creation to automated lead management, FieldPulse helps HVAC, plumbing, electrical, landscaping, and other field service professionals consolidate their marketing tools into one affordable platform.
 
+## Company: FieldService
+
+FieldService is a technology company focused on empowering field service professionals with modern marketing tools. Founded to address the unique challenges faced by service-based businesses, FieldService develops software solutions that help HVAC, plumbing, electrical, landscaping, and other field service professionals grow their businesses.
+
+**What FieldService Provides:**
+- Marketing automation specifically designed for field service industries
+- Cost-effective platform that replaces multiple expensive marketing tools
+- AI-powered content generation tailored to field service professionals
+- Comprehensive lead management and customer communication tools
+- Review monitoring and response automation
+- Analytics and reporting optimized for field service business metrics
+
+**Value Proposition:** "Replace 5 Marketing Tools with One" - FieldService eliminates the need for multiple expensive marketing subscriptions by providing an all-in-one platform that includes social media management, content creation, lead tracking, review monitoring, and analytics - all optimized for field service businesses.
+
 ## System Architecture
 
 The application follows a full-stack architecture with:
@@ -176,7 +190,7 @@ The application is configured for Replit deployment with:
   - Improved mobile user experience with cleaner, focused header layout
   - Maintained logout button visibility across all screen sizes
 - June 29, 2025: Strategic rebrand back to FieldPulse:
-  - Rebranded from "KasamaAI" back to "FieldPulse"
+  - Rebranded from "FieldPulse" to "KasamaAI" back to "FieldPulse"
   - Updated tagline to "Replace 5 Marketing Tools with One"
   - Refocused on field service professionals and their specific pain points
   - Updated dashboard title from "Marketing Dashboard" to "Field Service Marketing Dashboard"
@@ -224,7 +238,7 @@ The application is configured for Replit deployment with:
 
 Preferred communication style: Simple, everyday language.
 API Keys: Will provide Google Analytics ID in the morning.
-Branding: Evolved from "Dave AI" to "HVAC Pro AI" to "FieldPro AI" to "FieldPulse" to "MarketPulse" to "KasamaAI" and back to "FieldPulse - Replace 5 Marketing Tools with One" as a focused field service platform that consolidates multiple expensive marketing tools into one affordable solution.
+Branding: Evolved from "Dave AI" to "HVAC Pro AI" to "FieldPro AI" to "FieldPulse" to "MarketPulse" to "FieldPulse - Replace 5 Marketing Tools with One" as a focused field service platform that consolidates multiple expensive marketing tools into one affordable solution.
 Personalization: UI should reflect logged-in user's first name instead of generic references.
 Market Focus: Field service businesses specifically - HVAC, plumbing, electrical, landscaping, pest control, cleaning services, and other field service professionals who need to consolidate their marketing tools.
 Twilio Integration: User has Twilio account - implementing SMS features for lead follow-ups, appointment confirmations, and customer notifications.

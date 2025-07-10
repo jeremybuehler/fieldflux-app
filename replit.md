@@ -1,8 +1,22 @@
-# KasamaAI - AI-Powered Marketing Platform
+# FieldPulse - Replace 5 Marketing Tools with One
 
 ## Overview
 
-This is KasamaAI - Where Business Meets Smart Marketing. A comprehensive marketing automation platform that transforms how business professionals connect with customers. From intelligent content creation to automated lead management, KasamaAI helps professionals showcase their expertise and grow their business effortlessly.
+This is FieldPulse - Replace 5 Marketing Tools with One. A comprehensive marketing automation platform specifically designed for field service businesses. From intelligent content creation to automated lead management, FieldPulse helps HVAC, plumbing, electrical, landscaping, and other field service professionals consolidate their marketing tools into one affordable platform.
+
+## Company: FieldService
+
+FieldService is a technology company focused on empowering field service professionals with modern marketing tools. Founded to address the unique challenges faced by service-based businesses, FieldService develops software solutions that help HVAC, plumbing, electrical, landscaping, and other field service professionals grow their businesses.
+
+**What FieldService Provides:**
+- Marketing automation specifically designed for field service industries
+- Cost-effective platform that replaces multiple expensive marketing tools
+- AI-powered content generation tailored to field service professionals
+- Comprehensive lead management and customer communication tools
+- Review monitoring and response automation
+- Analytics and reporting optimized for field service business metrics
+
+**Value Proposition:** "Replace 5 Marketing Tools with One" - FieldService eliminates the need for multiple expensive marketing subscriptions by providing an all-in-one platform that includes social media management, content creation, lead tracking, review monitoring, and analytics - all optimized for field service businesses.
 
 ## System Architecture
 
@@ -175,13 +189,13 @@ The application is configured for Replit deployment with:
   - Changed dashboard header alignment to center on mobile, left-align on larger screens
   - Improved mobile user experience with cleaner, focused header layout
   - Maintained logout button visibility across all screen sizes
-- June 29, 2025: White-label transformation and rebranding to KasamaAI:
-  - Removed all "Field Service" specific language throughout the platform
-  - Rebranded from "FieldPulse" to "MarketPulse" to "KasamaAI"
-  - Updated tagline to "Where Business Meets Smart Marketing"
-  - Transformed into universal white-label platform suitable for any business type
-  - Updated dashboard title from "Field Service Marketing Dashboard" to "Marketing Dashboard"
-  - Made content creation and messaging universally applicable to all industries
+- June 29, 2025: White-label transformation and rebranding to FieldPulse:
+  - Focused on field service businesses with "Replace 5 Marketing Tools with One"
+  - Rebranded from "FieldPulse" to "MarketPulse" to "FieldPulse"
+  - Updated tagline to "Replace 5 Marketing Tools with One"
+  - Transformed into field service-focused platform for HVAC, plumbing, electrical, landscaping
+  - Updated dashboard title from "Marketing Dashboard" to "Field Service Marketing Dashboard"
+  - Made content creation and messaging specifically tailored for field service industries
 - July 7, 2025: Added GoDaddy Configuration page:
   - Created comprehensive GoDaddy integration page with domain management capabilities
   - Added three-tab interface: Connection, Domains, and Settings
@@ -190,7 +204,7 @@ The application is configured for Replit deployment with:
   - Created webhook configuration for domain notifications
   - Added detailed setup instructions for GoDaddy Developer account
   - Integrated GoDaddy page into navigation (top navigation and mobile sidebar)
-  - Positioned as complete domain management solution within KasamaAI platform
+  - Positioned as complete domain management solution within FieldPulse platform
 - July 7, 2025: Implemented Replit Authentication system:
   - Added complete Replit Auth integration with OpenID Connect
   - Created new landing page with professional header containing Login/Sign-Up button
@@ -250,7 +264,7 @@ The application is configured for Replit deployment with:
   - Extended database schema with clients and clientConfigurations tables for multi-tenant support
   - Implemented business details management: name, address, phone, email, website, industry, timezone
   - Added business search default configuration to optimize Google Places API review fetching
-  - Created white-label mode toggle for agencies to rebrand KasamaAI with their own identity
+  - Created white-label mode toggle for agencies to rebrand FieldPulse with their own identity
 
 ## Architecture Updates
 - **Database Schema**: Added `reviews` and `analytics_reports` tables with PostgreSQL backend
@@ -266,7 +280,7 @@ The application is configured for Replit deployment with:
 
 Preferred communication style: Simple, everyday language.
 API Keys: Will provide Google Analytics ID in the morning.
-Branding: Evolved from "Dave AI" to "HVAC Pro AI" to "FieldPro AI" to "FieldPulse" to "MarketPulse" and finally to "KasamaAI - Where Business Meets Smart Marketing" as a white-label platform with compelling, customer-focused messaging that emphasizes effortless automation and business growth.
+Branding: Evolved from "Dave AI" to "HVAC Pro AI" to "FieldPro AI" to "FieldPulse" to "MarketPulse" and finally to "FieldPulse - Replace 5 Marketing Tools with One" as a field service-focused platform that consolidates multiple expensive marketing tools into one affordable solution.
 Personalization: UI should reflect logged-in user's first name instead of generic references.
-Market Focus: Universal white-label platform for all business types - service providers, consultants, retailers, contractors, professionals, etc.
+Market Focus: Field service businesses - HVAC, plumbing, electrical, landscaping, pest control, cleaning services, and other field service professionals.
 Twilio Integration: User has Twilio account - implementing SMS features for lead follow-ups, appointment confirmations, and customer notifications.

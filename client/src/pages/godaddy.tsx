@@ -377,7 +377,7 @@ export default function GoDaddy() {
                         <div>
                           <p className="font-medium">DNS Management</p>
                           <p className="text-sm text-gray-600">
-                            Allow KasamaAI to manage DNS records
+                            Allow FieldPulse to manage DNS records
                           </p>
                         </div>
                         <Switch />

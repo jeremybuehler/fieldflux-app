@@ -25,7 +25,7 @@
 
 1. **Find Your Service Account Email**
    - Your service account email is: `firebase-adminsdk-xyz123@your-project.iam.gserviceaccount.com`
-   - (This appears in your KasamaAI dashboard when you can access it)
+   - (This appears in your FieldPulse dashboard when you can access it)
 
 2. **Add the Service Account as a User**
    - In Google Search Console, click the gear icon (Settings)
@@ -38,7 +38,7 @@
 ## Step 3: Wait for Data
 
 - It can take 24-48 hours for data to appear in Search Console
-- Your KasamaAI dashboard will automatically detect when data is available
+- Your FieldPulse dashboard will automatically detect when data is available
 - The status will change from "Demo Data" to "Live Data"
 
 ## Troubleshooting
