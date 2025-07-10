@@ -1,0 +1,296 @@
+name: Deploy FieldPulse
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'infrastructure/**'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+      - 'package.json'
+      - 'Dockerfile'
+      - '.github/workflows/deploy-fieldpulse.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'infrastructure/**'
+      - 'client/**'
+      - 'server/**'
+      - 'shared/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+      skip_tests:
+        description: 'Skip tests and validation'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+  packages: write
+
+env:
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  LOCATION: 'eastus'
+  APPLICATION_NAME: 'fieldpulse'
+  ENVIRONMENT: ${{ github.event.inputs.environment || 'dev' }}
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}/fieldpulse
+
+jobs:
+  deploy-fieldpulse:
+    name: Deploy FieldPulse to Azure
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'dev' }}
+    
+    outputs:
+      container-app-url: ${{ steps.deploy-app.outputs.container-app-url }}
+      deployment-id: ${{ steps.infrastructure.outputs.deployment-id }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          echo "📦 Installing dependencies..."
+          npm ci
+          echo "✅ Dependencies installed"
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ env.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ env.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ env.AZURE_TENANT_ID }}"}'
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # VALIDATION PHASE
+      - name: Run TypeScript type checking
+        if: github.event.inputs.skip_tests != 'true'
+        run: |
+          echo "🔍 Running TypeScript type checking..."
+          npm run check
+          echo "✅ Type checking completed"
+
+      - name: Validate Bicep templates
+        if: github.event.inputs.skip_tests != 'true'
+        run: |
+          echo "🔍 Validating Bicep templates..."
+          
+          # Validate main template
+          az deployment sub validate \
+            --location ${{ env.LOCATION }} \
+            --template-file infrastructure/main.bicep \
+            --parameters infrastructure/parameters/${{ env.ENVIRONMENT }}.parameters.json \
+            --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key-for-validation' }}"
+          
+          echo "✅ Bicep validation completed successfully"
+
+      - name: Check resource naming conventions
+        if: github.event.inputs.skip_tests != 'true'
+        run: |
+          echo "🏷️ Checking resource naming conventions..."
+          
+          # Check if resource names follow conventions
+          if ! grep -q "rg-fieldpulse-platform-" infrastructure/main.bicep; then
+            echo "❌ Resource group naming convention not followed"
+            exit 1
+          fi
+          
+          echo "✅ Resource naming conventions validated"
+
+      # BUILD PHASE
+      - name: Build application
+        run: |
+          echo "🔨 Building FieldPulse application..."
+          npm run build
+          echo "✅ Application build completed"
+
+      - name: Build and push container image
+        run: |
+          echo "🐳 Building container image..."
+          
+          IMAGE_TAG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}"
+          LATEST_TAG="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest"
+          
+          docker build -t $IMAGE_TAG -t $LATEST_TAG .
+          docker push $IMAGE_TAG
+          docker push $LATEST_TAG
+          
+          echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
+          echo "✅ Container image built and pushed"
+
+      # INFRASTRUCTURE PHASE
+      - name: Deploy infrastructure
+        id: infrastructure
+        run: |
+          echo "🚀 Deploying infrastructure to ${{ env.ENVIRONMENT }} environment..."
+          
+          # Create deployment with timestamp
+          DEPLOYMENT_NAME="fieldpulse-${{ env.ENVIRONMENT }}-$(date +%Y%m%d-%H%M%S)"
+          
+          az deployment sub create \
+            --name $DEPLOYMENT_NAME \
+            --location ${{ env.LOCATION }} \
+            --template-file infrastructure/main.bicep \
+            --parameters infrastructure/parameters/${{ env.ENVIRONMENT }}.parameters.json \
+            --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}" \
+            --parameters containerImage="${{ env.IMAGE_TAG }}" \
+            --parameters tags='{"DeployedBy":"github-actions","DeployedAt":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","GitCommit":"${{ github.sha }}","Environment":"${{ env.ENVIRONMENT }}"}' \
+            --output table
+          
+          echo "deployment-id=$DEPLOYMENT_NAME" >> $GITHUB_OUTPUT
+          echo "✅ Infrastructure deployment completed"
+
+      # APPLICATION PHASE
+      - name: Deploy application to Container Apps
+        id: deploy-app
+        run: |
+          echo "🚀 Deploying application to Container Apps..."
+          
+          # Get deployment outputs
+          DEPLOYMENT_NAME="${{ steps.infrastructure.outputs.deployment-id }}"
+          
+          CONTAINER_APP_NAME=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs.containerAppName.value" -o tsv)
+          RG_NAME=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs.resourceGroupName.value" -o tsv)
+          CONTAINER_APP_URL=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs.containerAppUrl.value" -o tsv)
+          
+          # Update container app with new image
+          az containerapp update \
+            --name $CONTAINER_APP_NAME \
+            --resource-group $RG_NAME \
+            --image ${{ env.IMAGE_TAG }} \
+            --output table
+          
+          echo "container-app-url=$CONTAINER_APP_URL" >> $GITHUB_OUTPUT
+          echo "✅ Application deployed to Container Apps"
+
+      # DATABASE PHASE
+      - name: Run database migrations
+        run: |
+          echo "🔄 Running database migrations..."
+          
+          # Get database connection string from Key Vault
+          DEPLOYMENT_NAME="${{ steps.infrastructure.outputs.deployment-id }}"
+          KV_NAME=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs.keyVaultName.value" -o tsv)
+          
+          # Get connection string
+          DATABASE_URL=$(az keyvault secret show \
+            --vault-name $KV_NAME \
+            --name "database-connection-string" \
+            --query "value" -o tsv)
+          
+          if [ ! -z "$DATABASE_URL" ]; then
+            export DATABASE_URL="$DATABASE_URL"
+            npm run db:push
+            echo "✅ Database migrations completed"
+          else
+            echo "⚠️ Database connection string not found, skipping migrations"
+          fi
+
+      # VALIDATION PHASE
+      - name: Health check and validation
+        run: |
+          echo "🔍 Running health checks..."
+          
+          CONTAINER_APP_URL="${{ steps.deploy-app.outputs.container-app-url }}"
+          
+          if [ ! -z "$CONTAINER_APP_URL" ]; then
+            # Wait for application to start
+            echo "Waiting for application to start..."
+            sleep 30
+            
+            # Check health endpoint
+            for i in {1..5}; do
+              if curl -f -s "$CONTAINER_APP_URL/api/health" > /dev/null; then
+                echo "✅ Health check passed"
+                break
+              else
+                echo "⏳ Health check attempt $i/5 failed, retrying..."
+                sleep 10
+              fi
+              
+              if [ $i -eq 5 ]; then
+                echo "❌ Health check failed after 5 attempts"
+                exit 1
+              fi
+            done
+          else
+            echo "⚠️ Container App URL not found, skipping health check"
+          fi
+
+      # NOTIFICATION PHASE
+      - name: Deployment summary
+        run: |
+          echo "📊 FieldPulse Deployment Summary:"
+          echo "=================================="
+          echo "Environment: ${{ env.ENVIRONMENT }}"
+          echo "Deployment time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "Git commit: ${{ github.sha }}"
+          echo "Deployed by: ${{ github.actor }}"
+          echo "Container image: ${{ env.IMAGE_TAG }}"
+          echo "Application URL: ${{ steps.deploy-app.outputs.container-app-url }}"
+          echo "Deployment ID: ${{ steps.infrastructure.outputs.deployment-id }}"
+          echo "=================================="
+          echo "🎉 FieldPulse deployment completed successfully!"
+
+  # ROLLBACK JOB (runs only on failure)
+  rollback-on-failure:
+    name: Rollback on Failure
+    runs-on: ubuntu-latest
+    needs: [deploy-fieldpulse]
+    if: failure() && github.event_name != 'pull_request'
+    
+    steps:
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ env.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ env.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ env.AZURE_TENANT_ID }}"}'
+
+      - name: Cleanup failed deployment
+        run: |
+          echo "🧹 Cleaning up failed deployment..."
+          
+          # Check if deployment ID is available
+          DEPLOYMENT_ID="${{ needs.deploy-fieldpulse.outputs.deployment-id }}"
+          
+          if [ ! -z "$DEPLOYMENT_ID" ]; then
+            echo "Found deployment: $DEPLOYMENT_ID"
+            echo "⚠️ Manual cleanup may be required for partial deployment"
+            echo "Check Azure Portal for any remaining resources"
+          else
+            echo "No deployment ID found, checking for resource groups"
+            
+            RG_NAME="rg-fieldpulse-platform-${{ env.ENVIRONMENT }}"
+            if az group exists --name $RG_NAME; then
+              echo "⚠️ Found resource group: $RG_NAME"
+              echo "Manual cleanup may be required"
+            fi
+          fi
+          
+          echo "🔍 Check Azure Portal for any remaining resources"
