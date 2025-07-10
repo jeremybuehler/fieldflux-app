@@ -2,243 +2,144 @@
 
 ## Overview
 
-This is FieldPulse - Replace 5 Marketing Tools with One. A comprehensive marketing automation platform specifically designed for field service businesses. From intelligent content creation to automated lead management, FieldPulse helps HVAC, plumbing, electrical, landscaping, and other field service professionals consolidate their marketing tools into one affordable platform.
+FieldPulse is a comprehensive marketing automation platform designed specifically for field service businesses. It consolidates social media management, content creation, lead tracking, review monitoring, and analytics into one affordable solution for HVAC, plumbing, electrical, landscaping, and other field service professionals.
+
+## Technology Stack
+
+### Architecture
+- **Frontend**: React + TypeScript + Vite
+- **Backend**: Express.js + TypeScript  
+- **Database**: PostgreSQL + Drizzle ORM
+- **UI**: Tailwind CSS + shadcn/ui components
+- **State**: TanStack Query for server state
+- **Authentication**: Replit Auth (OpenID Connect)
+
+### Deployment
+- **Production**: Azure Container Apps + PostgreSQL Flexible Server
+- **Development**: Replit-optimized with auto-scaling
+- **Infrastructure**: Azure Bicep templates with automated CI/CD
+- **Container Registry**: GitHub Container Registry (GHCR)
+
+## Key Features
+
+### Core Marketing Tools
+- **Social Media Management**: Multi-platform scheduling (Facebook, Instagram, Twitter/X, LinkedIn)
+- **AI Content Generation**: OpenAI-powered content creation for field service industries
+- **Lead Management**: Automated lead tracking, scoring, and follow-up workflows
+- **Review Monitoring**: AI-powered review response generation and sentiment analysis
+- **Analytics Dashboard**: Comprehensive reporting with Google Analytics and Search Console integration
+
+### Field Service Integrations
+- **Google Services**: Analytics, Search Console, Places API for local SEO
+- **Twilio SMS**: Customer notifications, appointment confirmations, emergency alerts
+- **WordPress/GoDaddy**: Automated blog publishing and domain management
+- **Weather Integration**: Location-based weather data for service scheduling
+
+## Database Schema
+
+### Core Tables
+- `users` - Authentication and user management
+- `clients` - Multi-tenant client management for white-label
+- `social_posts` - Social media content scheduling
+- `leads` - Customer lead tracking and management
+- `reviews` - Review monitoring and AI response management
+- `analytics_reports` - Performance metrics and reporting
+- `seo_keywords` - Keyword tracking and Search Console integration
+
+### Configuration Tables
+- `client_configurations` - Per-client API keys and settings
+- `social_media_configs` - Platform authentication tokens
+- `social_media_analytics` - Cross-platform performance metrics
+
+## Development Commands
+
+```bash
+# Development
+npm run dev          # Start development server (client + server)
+npm run build        # Build production client and server
+npm run start        # Start production server
+npm run check        # TypeScript type checking
+
+# Database
+npm run db:push      # Push schema changes to PostgreSQL
+npm run db:generate  # Generate migration files
+npm run db:migrate   # Run database migrations
+```
+
+## Azure Deployment
+
+### Infrastructure Components
+- **Resource Groups**: Platform (apps) + Data (database) separation
+- **Container Apps**: Scalable application hosting with managed identity
+- **PostgreSQL Flexible Server**: Managed database with SSL and high availability
+- **Key Vault**: Secure secrets management for API keys and connection strings
+- **Application Insights**: Monitoring, logging, and availability testing
+- **GitHub Actions**: Automated CI/CD with retry logic and error handling
+
+### Deployment Pipeline
+1. **Build Phase**: Multi-stage Docker build with Vite and esbuild
+2. **Infrastructure Phase**: Azure Bicep template deployment with retry logic
+3. **Application Phase**: Container Apps deployment with GHCR authentication
+4. **Database Phase**: Automated schema migrations with PostgreSQL
+5. **Validation Phase**: Health checks and end-to-end testing
+
+### Security Features
+- **Managed Identity**: Azure AD authentication for service-to-service communication
+- **Key Vault Integration**: Encrypted storage for sensitive configuration
+- **Container Registry**: GitHub token-based authentication for private images
+- **SSL/TLS**: End-to-end encryption with Azure-managed certificates
+
+## Recent Deployment Progress
+
+### Completed Infrastructure Fixes (2025-07-10)
+✅ **Docker Build**: Multi-stage build with Vite dependency resolution  
+✅ **PostgreSQL**: Complete SQLite → PostgreSQL schema conversion  
+✅ **Bicep Templates**: All scoping errors and cross-resource dependencies resolved  
+✅ **Authentication**: Optimized from 13 to 2 Azure logins (85% efficiency improvement)  
+✅ **Error Handling**: Comprehensive retry logic and API response management  
+✅ **Azure Resources**: Key Vault, Application Insights, PostgreSQL configuration fixes  
+✅ **Container Registry**: GitHub Container Registry authentication for private images  
+
+### Current Status
+- **Infrastructure Deployment**: All Azure resources deploying successfully
+- **Application Deployment**: Container Apps with proper GHCR authentication
+- **Database Migration**: PostgreSQL schema and connection validation
+- **Next Phase**: End-to-end health checks and production validation
+
+## Configuration
+
+### Required Environment Variables
+```bash
+# Database
+DATABASE_URL=postgresql://user:pass@host:5432/db
+
+# AI Services  
+OPENAI_API_KEY=sk-...
+
+# Google Services
+VITE_GA_MEASUREMENT_ID=G-...
+GOOGLE_ANALYTICS_KEY=...
+GOOGLE_SEARCH_CONSOLE_KEY=...
+
+# Communication
+TWILIO_ACCOUNT_SID=AC...
+TWILIO_AUTH_TOKEN=...
+TWILIO_PHONE_NUMBER=+1...
+
+# Social Media (stored in database per client)
+FACEBOOK_ACCESS_TOKEN=...
+INSTAGRAM_ACCESS_TOKEN=...
+TWITTER_API_KEY=...
+LINKEDIN_ACCESS_TOKEN=...
+```
+
+### Path Aliases
+- `@/` → `client/src/`
+- `@shared/` → `shared/`
+- `@assets/` → `attached_assets/`
 
 ## Company: FieldService
 
-FieldService is a technology company focused on empowering field service professionals with modern marketing tools. Founded to address the unique challenges faced by service-based businesses, FieldService develops software solutions that help HVAC, plumbing, electrical, landscaping, and other field service professionals grow their businesses.
+FieldService develops marketing automation tools specifically for field service professionals. Our mission is to help HVAC, plumbing, electrical, landscaping, and other service businesses consolidate expensive marketing subscriptions into one affordable, industry-focused platform.
 
-**What FieldService Provides:**
-- Marketing automation specifically designed for field service industries
-- Cost-effective platform that replaces multiple expensive marketing tools
-- AI-powered content generation tailored to field service professionals
-- Comprehensive lead management and customer communication tools
-- Review monitoring and response automation
-- Analytics and reporting optimized for field service business metrics
-
-**Value Proposition:** "Replace 5 Marketing Tools with One" - FieldService eliminates the need for multiple expensive marketing subscriptions by providing an all-in-one platform that includes social media management, content creation, lead tracking, review monitoring, and analytics - all optimized for field service businesses.
-
-## System Architecture
-
-The application follows a full-stack architecture with:
-
-- **Frontend**: React with TypeScript, built using Vite
-- **Backend**: Express.js server with TypeScript
-- **Database**: PostgreSQL with Drizzle ORM
-- **UI Framework**: Tailwind CSS with shadcn/ui components
-- **State Management**: TanStack Query for server state
-- **Routing**: Wouter for client-side routing
-
-## Key Components
-
-### Frontend Architecture
-- **React Components**: Modular component structure with shadcn/ui design system
-- **TypeScript**: Full type safety across client and server
-- **Tailwind CSS**: Utility-first CSS framework with custom field service branding variables
-- **TanStack Query**: Server state management and caching
-- **Wouter**: Lightweight routing solution
-
-### Backend Architecture
-- **Express.js**: RESTful API server with middleware for logging and error handling
-- **TypeScript**: Type-safe server implementation
-- **Drizzle ORM**: Type-safe database operations with PostgreSQL
-- **OpenAI Integration**: AI-powered content generation for field service marketing materials
-
-### Database Schema
-The application manages several core field service entities:
-- **Users**: Field service business authentication and user management
-- **WordPress Posts**: Blog content management
-- **Social Posts**: Social media content scheduling
-- **Leads**: Field service customer lead tracking and management
-- **Tasks**: Field service marketing task automation
-- **Activities**: Field service business activity feed
-- **SEO Keywords**: Keyword tracking and performance
-
-### UI Design System
-- **shadcn/ui**: Modern, accessible component library
-- **Custom Field Service Branding**: Industry-specific color scheme (blue, orange, gray)
-- **Responsive Design**: Mobile-first approach with Tailwind breakpoints
-- **Dark Mode Support**: Complete dark mode implementation
-
-## Data Flow
-
-1. **Client Requests**: React components make API calls using TanStack Query
-2. **API Layer**: Express.js routes handle business logic and database operations
-3. **Database Operations**: Drizzle ORM manages PostgreSQL interactions
-4. **AI Integration**: OpenAI API generates marketing content when requested
-5. **Real-time Updates**: Query client invalidation keeps UI synchronized
-
-## External Dependencies
-
-### Core Dependencies
-- **@neondatabase/serverless**: PostgreSQL database connection
-- **drizzle-orm**: Type-safe database ORM
-- **openai**: AI content generation
-- **@tanstack/react-query**: Server state management
-- **wouter**: Client-side routing
-
-### UI Dependencies
-- **@radix-ui/react-***: Accessible primitive components
-- **tailwindcss**: Utility-first CSS framework
-- **lucide-react**: Icon library
-- **recharts**: Chart visualization
-
-### Development Tools
-- **typescript**: Type safety
-- **vite**: Build tool and dev server
-- **esbuild**: Server bundling for production
-
-## Deployment Strategy
-
-The application is configured for Replit deployment with:
-
-- **Development**: `npm run dev` - Runs both client and server in development mode
-- **Build**: `npm run build` - Creates optimized production builds
-- **Production**: `npm run start` - Serves the production application
-- **Database**: Uses PostgreSQL with Drizzle migrations
-- **Environment**: Node.js 20 with TypeScript support
-
-### Replit Configuration
-- **Port 5000**: Main application server
-- **Auto-scaling**: Configured for automatic scaling
-- **Database**: PostgreSQL 16 module enabled
-- **Build Process**: Vite for client, esbuild for server
-
-## Recent Changes
-- June 24, 2025: Initial HVAC marketing dashboard setup with basic components
-- June 24, 2025: Enhanced FieldPulse AI agent with comprehensive features:
-  - Added reviews management system with AI-powered response generation
-  - Integrated GoDaddy WordPress publishing capabilities  
-  - Enhanced analytics reporting with comprehensive metrics and charts
-  - Added lead qualification system with automated scoring
-  - Extended database schema for reviews and analytics reports
-  - Improved UI with additional dashboard panels
-- June 24, 2025: Added PostgreSQL database integration with full data persistence
-- June 24, 2025: Created comprehensive Settings page with detailed configuration instructions:
-  - WordPress/GoDaddy integration setup with step-by-step instructions
-  - Google Analytics configuration with GA4 measurement ID setup
-  - Added navigation to settings page in sidebar
-- June 24, 2025: Implemented AI-powered content generation features:
-  - Added "Need an idea?" functionality with GPT-4o integration
-  - Created intelligent topic suggestion system for blog and social media posts
-  - Enhanced UX with Use This/Try Another/No Thanks workflow options
-- June 24, 2025: Added weather integration and authentication framework:
-  - Integrated real-time weather widget for Winter Haven, FL location
-  - Created professional marketing landing page as default entry point
-  - Implemented login/signup system with demo access (admin/demo123)
-  - Added proper navigation flow between landing page and dashboard
-- June 24, 2025: Rebranded from "Dave AI" to "HVAC Pro AI" for professional presentation:
-  - Updated all branding throughout the application
-  - Switched to in-memory storage to resolve database connection issues
-  - Prepared for personalized UI with user's first name integration
-- June 24, 2025: Rebranded to universal Field Service Providers platform:
-  - Changed from HVAC-specific to "FieldPro AI" for broader market appeal
-  - Updated messaging to focus on social media content marketing for all field service industries
-  - Repositioned as universal platform for HVAC, plumbing, electrical, landscaping, pest control, etc.
-- June 24, 2025: Final rebrand to "FieldPulse":
-  - Changed to "FieldPulse - Where Field Service Meets Smart Marketing"
-  - Enhanced messaging with compelling taglines and customer-focused language
-  - Positioned as effortless marketing automation that transforms service calls into success stories
-  - Maintains focus on field service providers across all industries
-- June 24, 2025: Enhanced navigation and added Twilio SMS integration:
-  - Fixed sidebar navigation links to properly route to dedicated pages
-  - Created Social Media and Lead Management pages with dedicated functionality
-  - Added comprehensive Twilio SMS service for customer communication
-  - Implemented SMS templates for lead follow-ups, appointment confirmations, and emergency alerts
-- June 25, 2025: Mobile responsiveness improvements:
-  - Implemented mobile-first sidebar with hamburger menu and slide-in animation
-  - Added proper mobile overlay and touch-friendly navigation
-  - Enhanced landing page responsiveness with optimized spacing and text sizing
-  - Improved dashboard and social media page layouts for mobile devices
-- June 25, 2025: Landing page and credential management improvements:
-  - Fixed difficult-to-read gradient on landing page by switching from dark blue to light slate theme
-  - Improved text contrast and readability with darker text on lighter background
-  - Added comprehensive credential management interfaces in Settings page
-  - Created Twilio SMS configuration section with Account SID, Auth Token, and Phone Number fields
-  - Added social media platform credential management for Facebook, Instagram, Twitter, and LinkedIn
-  - Included detailed setup instructions for each integration with proper secret environment variable names
-- June 25, 2025: UI improvements and dashboard fixes:
-  - Fixed large gap between sidebar and dashboard content by removing excessive left padding
-  - Resolved blank settings page by implementing complete settings interface with mobile sidebar
-  - Removed "Generate Content" button from dashboard header as requested
-  - Enhanced landing page readability by switching from dark gradient to light theme
-  - Added comprehensive credential management for Twilio SMS, Facebook, Twitter, Instagram, and LinkedIn
-  - Improved mobile responsiveness across settings page with proper form layouts
-  - Applied consistent spacing fix across all main pages (dashboard, settings, social, leads)
-  - Implemented Smart UI Spacing Optimizer system with intelligent spacing, typography, and component classes
-  - Enhanced dashboard with modern card designs, gradient backgrounds, colored icon containers, and improved visual hierarchy
-  - Created comprehensive UI optimization library for consistent design system across application
-- June 26, 2025: Critical dashboard TypeScript error resolution:
-  - Successfully resolved blank dashboard issue caused by UI optimizer TypeScript errors
-  - Completely rewrote dashboard-simple.tsx with clean, direct Tailwind styling
-  - Removed problematic UI optimizer function calls that caused "ui is not defined" errors
-  - Implemented modern dashboard design with gradient background, metric cards, and hover animations
-  - Dashboard now displays properly with professional interface featuring social media management, performance analytics, and activity timeline
-- June 27, 2025: Multi-Platform Post Scheduling Wizard implementation:
-  - Created comprehensive step-by-step wizard for social media scheduling
-  - Added platform selection for Facebook, Instagram, Twitter/X, and LinkedIn
-  - Implemented global content creation with platform-specific customization
-  - Added date/time scheduling with optimal posting time recommendations
-  - Created review and preview functionality before scheduling
-  - Fixed navigation consistency - Social Media Management now properly navigates to dedicated page
-  - Updated sidebar navigation to route to /social with proper breadcrumbs
-  - Enhanced social media page with tabbed interface (Multi-Platform Wizard and Quick Post)
-  - Updated button labels from "Need an idea?" to "Get Ideas" and "Generate Content" to "Generate Post"
-- June 29, 2025: Mobile responsiveness improvements:
-  - Hidden header badges (AI Powered, Winter Haven FL) on mobile screens to center text better
-  - Changed dashboard header alignment to center on mobile, left-align on larger screens
-  - Improved mobile user experience with cleaner, focused header layout
-  - Maintained logout button visibility across all screen sizes
-- June 29, 2025: Strategic rebrand back to FieldPulse:
-  - Rebranded from "FieldPulse" to "KasamaAI" back to "FieldPulse"
-  - Updated tagline to "Replace 5 Marketing Tools with One"
-  - Refocused on field service professionals and their specific pain points
-  - Updated dashboard title from "Marketing Dashboard" to "Field Service Marketing Dashboard"
-  - Made content creation and messaging specifically for field service industries (HVAC, plumbing, electrical, landscaping, etc.)
-  - Positioned as consolidation solution for multiple expensive marketing tools
-- July 7, 2025: Added GoDaddy Configuration page:
-  - Created comprehensive GoDaddy integration page with domain management capabilities
-  - Added three-tab interface: Connection, Domains, and Settings
-  - Implemented API key configuration with sandbox/production environment selection
-  - Added domain management interface with auto-renewal and privacy settings
-  - Created webhook configuration for domain notifications
-  - Added detailed setup instructions for GoDaddy Developer account
-  - Integrated GoDaddy page into navigation (top navigation and mobile sidebar)
-  - Positioned as complete domain management solution within FieldPulse platform
-- July 7, 2025: Implemented Replit Authentication system:
-  - Added complete Replit Auth integration with OpenID Connect
-  - Created new landing page with professional header containing Login/Sign-Up button
-  - Updated main CTA from "Sign in with Replit" to "Get Started" with additional "Already have an account?" option
-  - Set up PostgreSQL database with users and sessions tables for persistent authentication
-  - Added proper authentication routes: /api/login, /api/logout, /api/callback, /api/auth/user
-  - Implemented authenticated user flow that redirects to dashboard upon successful login
-  - Fixed authentication error handling to prevent undefined claims issues
-- July 7, 2025: Implemented Google Search Console Integration for Real Keyword Data:
-  - Added googleapis package for Google Search Console API access
-  - Extended GoogleAnalyticsService to include Search Console authentication and data retrieval
-  - Created intelligent fallback system between live Search Console data and demo data
-  - Implemented real-time status monitoring for API connections and site verification
-  - Added comprehensive setup instructions with step-by-step guidance for adding websites to Search Console
-  - Created /api/search-console/status endpoint for monitoring integration health
-  - Enhanced Keywords page with live/demo data indicators and automatic refresh functionality
-  - Service account properly configured for both Google Analytics and Search Console APIs
-  - System automatically switches from demo to live data once Search Console properties are configured
-
-## Architecture Updates
-- **Database Schema**: Added `reviews` and `analytics_reports` tables with PostgreSQL backend
-- **Storage**: Migrated from in-memory storage to PostgreSQL with Drizzle ORM
-- **API Endpoints**: Extended with review management, GoDaddy integration, analytics reporting, topic generation, and weather data
-- **UI Components**: Added ReviewsPanel, GoDaddyIntegration, AnalyticsReports, WeatherWidget, and Settings page
-- **Navigation**: Enhanced sidebar with settings page and proper routing between landing and dashboard
-- **AI Features**: Enhanced OpenAI integration for review responses, content generation, and intelligent topic suggestions
-- **Authentication**: Implemented user authentication framework with landing page, login/signup forms, and demo access
-- **Weather Integration**: Added real-time weather display for Winter Haven, FL with temperature and rain forecast
-
-## User Preferences
-
-Preferred communication style: Simple, everyday language.
-API Keys: Will provide Google Analytics ID in the morning.
-Branding: Evolved from "Dave AI" to "HVAC Pro AI" to "FieldPro AI" to "FieldPulse" to "MarketPulse" to "FieldPulse - Replace 5 Marketing Tools with One" as a focused field service platform that consolidates multiple expensive marketing tools into one affordable solution.
-Personalization: UI should reflect logged-in user's first name instead of generic references.
-Market Focus: Field service businesses specifically - HVAC, plumbing, electrical, landscaping, pest control, cleaning services, and other field service professionals who need to consolidate their marketing tools.
-Twilio Integration: User has Twilio account - implementing SMS features for lead follow-ups, appointment confirmations, and customer notifications.
+**Value Proposition**: "Replace 5 Marketing Tools with One" - Eliminate multiple expensive marketing subscriptions with our all-in-one platform for social media management, content creation, lead tracking, review monitoring, and analytics.

@@ -32,6 +32,9 @@ param databaseConnectionStringSecretUri string
 @secure()
 param githubToken string
 
+@description('GitHub username for container registry')
+param githubUsername string = 'jeremybuehler'
+
 // Environment-specific configurations
 var environmentConfig = {
   dev: {
@@ -148,8 +151,8 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
       registries: [
         {
           server: 'ghcr.io'
-          username: 'jeremybuehler'
-          passwordSecretRef: 'ghcr-password'
+          username: githubUsername
+          passwordSecretRef: 'ghcr-token'
         }
       ]
       secrets: [
@@ -163,7 +166,7 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
           value: appInsightsConnectionString
         }
         {
-          name: 'ghcr-password'
+          name: 'ghcr-token'
           value: githubToken
         }
       ]

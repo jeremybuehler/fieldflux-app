@@ -169,6 +169,7 @@ jobs:
               --parameters infrastructure/parameters/${{ env.ENVIRONMENT }}.parameters.json \
               --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}" \
               --parameters githubToken="${{ secrets.GITHUB_TOKEN }}" \
+              --parameters githubUsername="${{ github.actor }}" \
               --parameters containerImage="${{ env.IMAGE_TAG }}" \
               --parameters tags='{"DeployedBy":"github-actions","DeployedAt":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","GitCommit":"${{ github.sha }}","Environment":"${{ env.ENVIRONMENT }}"}' \
               --output table; then
@@ -187,6 +188,38 @@ jobs:
           done
           
           echo "deployment-id=$DEPLOYMENT_NAME" >> $GITHUB_OUTPUT
+
+      # REGISTRY VALIDATION PHASE
+      - name: Validate container registry access
+        run: |
+          echo "🔍 Validating container registry access..."
+          
+          # Test if image exists and can be pulled
+          echo "Testing image pull: ${{ env.IMAGE_TAG }}"
+          if docker pull ${{ env.IMAGE_TAG }}; then
+            echo "✅ Container image pulled successfully"
+          else
+            echo "❌ Failed to pull container image"
+            exit 1
+          fi
+          
+          # Test image locally
+          echo "Testing container startup locally..."
+          CONTAINER_ID=$(docker run -d -p 8080:8080 ${{ env.IMAGE_TAG }})
+          sleep 10
+          
+          # Test health endpoint locally
+          if curl -f http://localhost:8080/api/health; then
+            echo "✅ Container health check passed locally"
+          else
+            echo "⚠️ Container health check failed locally"
+          fi
+          
+          # Cleanup
+          docker stop $CONTAINER_ID || true
+          docker rm $CONTAINER_ID || true
+          
+          echo "✅ Registry validation completed"
 
       # APPLICATION PHASE
       - name: Deploy application to Container Apps
@@ -297,18 +330,47 @@ jobs:
             echo "Waiting for application to start..."
             sleep 30
             
-            # Check health endpoint
+            # Check health endpoint with detailed diagnostics
             for i in {1..5}; do
-              if curl -f -s "$CONTAINER_APP_URL/api/health" > /dev/null; then
-                echo "✅ Health check passed"
+              echo "🔍 Health check attempt $i/5 for: $CONTAINER_APP_URL/api/health"
+              
+              # Try to get detailed response
+              HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$CONTAINER_APP_URL/api/health" || echo "000")
+              
+              if [ "$HTTP_STATUS" = "200" ]; then
+                echo "✅ Health check passed (HTTP $HTTP_STATUS)"
+                curl -s "$CONTAINER_APP_URL/api/health" | jq '.' 2>/dev/null || echo "Response received"
                 break
               else
-                echo "⏳ Health check attempt $i/5 failed, retrying..."
+                echo "⏳ Health check attempt $i/5 failed (HTTP $HTTP_STATUS)"
+                
+                # Additional diagnostics
+                if [ "$HTTP_STATUS" = "000" ]; then
+                  echo "   Connection failed - checking DNS resolution..."
+                  nslookup $(echo "$CONTAINER_APP_URL" | sed 's|https://||' | sed 's|/.*||') || echo "   DNS resolution failed"
+                fi
+                
+                # Get container logs if possible
+                if [ $i -eq 3 ]; then
+                  echo "   Getting container logs for troubleshooting..."
+                  DEPLOYMENT_NAME="${{ steps.infrastructure.outputs.deployment-id }}"
+                  DEPLOYMENT_OUTPUTS=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs" -o json)
+                  CONTAINER_APP_NAME=$(echo "$DEPLOYMENT_OUTPUTS" | jq -r '.containerAppName.value // empty')
+                  RG_NAME=$(echo "$DEPLOYMENT_OUTPUTS" | jq -r '.resourceGroupName.value // empty')
+                  
+                  if [ ! -z "$CONTAINER_APP_NAME" ] && [ ! -z "$RG_NAME" ]; then
+                    az containerapp logs show --name $CONTAINER_APP_NAME --resource-group $RG_NAME --tail 50 || echo "   Could not retrieve logs"
+                  fi
+                fi
+                
                 sleep 10
               fi
               
               if [ $i -eq 5 ]; then
                 echo "❌ Health check failed after 5 attempts"
+                echo "Final diagnostics:"
+                echo "   URL: $CONTAINER_APP_URL"
+                echo "   Last HTTP Status: $HTTP_STATUS"
                 exit 1
               fi
             done

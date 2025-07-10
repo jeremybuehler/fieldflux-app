@@ -24,6 +24,9 @@ param openaiApiKey string
 @secure()
 param githubToken string
 
+@description('GitHub username for container registry')
+param githubUsername string = 'jeremybuehler'
+
 @description('Tags to apply to all resources')
 param tags object = {
   Environment: environment
@@ -116,6 +119,7 @@ module containerApps 'modules/container-apps.bicep' = {
     appInsightsConnectionString: appInsights.outputs.connectionString
     databaseConnectionStringSecretUri: databaseSecrets.outputs.connectionStringSecretUri
     githubToken: githubToken
+    githubUsername: githubUsername
   }
 }
 
