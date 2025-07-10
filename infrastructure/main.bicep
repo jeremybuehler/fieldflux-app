@@ -118,6 +118,7 @@ module containerApps 'modules/container-apps.bicep' = {
 output resourceGroupName string = platformResourceGroup.name
 output dataResourceGroupName string = dataResourceGroup.name
 output keyVaultName string = keyVault.outputs.keyVaultName
+output containerAppName string = containerApps.outputs.containerAppName
 output containerAppUrl string = containerApps.outputs.containerAppUrl
 output databaseServerName string = database.outputs.serverName
 output appInsightsName string = appInsights.outputs.appInsightsName

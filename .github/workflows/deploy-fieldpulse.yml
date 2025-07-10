@@ -153,19 +153,39 @@ jobs:
           
           # Create deployment with timestamp
           DEPLOYMENT_NAME="fieldpulse-${{ env.ENVIRONMENT }}-$(date +%Y%m%d-%H%M%S)"
+          echo "Deployment name: $DEPLOYMENT_NAME"
           
-          az deployment sub create \
-            --name $DEPLOYMENT_NAME \
-            --location ${{ env.LOCATION }} \
-            --template-file infrastructure/main.bicep \
-            --parameters infrastructure/parameters/${{ env.ENVIRONMENT }}.parameters.json \
-            --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}" \
-            --parameters containerImage="${{ env.IMAGE_TAG }}" \
-            --parameters tags='{"DeployedBy":"github-actions","DeployedAt":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","GitCommit":"${{ github.sha }}","Environment":"${{ env.ENVIRONMENT }}"}' \
-            --output table
+          # Add retry logic for Azure deployment
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+            echo "Deployment attempt $((RETRY_COUNT + 1))/$MAX_RETRIES..."
+            
+            if az deployment sub create \
+              --name $DEPLOYMENT_NAME \
+              --location ${{ env.LOCATION }} \
+              --template-file infrastructure/main.bicep \
+              --parameters infrastructure/parameters/${{ env.ENVIRONMENT }}.parameters.json \
+              --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}" \
+              --parameters containerImage="${{ env.IMAGE_TAG }}" \
+              --parameters tags='{"DeployedBy":"github-actions","DeployedAt":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","GitCommit":"${{ github.sha }}","Environment":"${{ env.ENVIRONMENT }}"}' \
+              --output table; then
+              echo "✅ Infrastructure deployment completed successfully"
+              break
+            else
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "⚠️ Deployment failed, waiting 30 seconds before retry..."
+                sleep 30
+              else
+                echo "❌ Infrastructure deployment failed after $MAX_RETRIES attempts"
+                exit 1
+              fi
+            fi
+          done
           
           echo "deployment-id=$DEPLOYMENT_NAME" >> $GITHUB_OUTPUT
-          echo "✅ Infrastructure deployment completed"
 
       # APPLICATION PHASE
       - name: Deploy application to Container Apps
@@ -173,14 +193,37 @@ jobs:
         run: |
           echo "🚀 Deploying application to Container Apps..."
           
-          # Get deployment outputs
+          # Get deployment outputs with retry logic
           DEPLOYMENT_NAME="${{ steps.infrastructure.outputs.deployment-id }}"
+          echo "Getting deployment outputs for: $DEPLOYMENT_NAME"
           
-          CONTAINER_APP_NAME=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs.containerAppName.value" -o tsv)
-          RG_NAME=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs.resourceGroupName.value" -o tsv)
-          CONTAINER_APP_URL=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs.containerAppUrl.value" -o tsv)
+          # Wait for deployment to be fully processed
+          echo "Waiting for deployment to be ready..."
+          sleep 15
+          
+          # Get all outputs in a single call to avoid "content consumed" issues
+          DEPLOYMENT_OUTPUTS=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs" -o json)
+          
+          if [ -z "$DEPLOYMENT_OUTPUTS" ] || [ "$DEPLOYMENT_OUTPUTS" == "null" ]; then
+            echo "❌ Failed to get deployment outputs"
+            exit 1
+          fi
+          
+          CONTAINER_APP_NAME=$(echo "$DEPLOYMENT_OUTPUTS" | jq -r '.containerAppName.value // empty')
+          RG_NAME=$(echo "$DEPLOYMENT_OUTPUTS" | jq -r '.resourceGroupName.value // empty')
+          CONTAINER_APP_URL=$(echo "$DEPLOYMENT_OUTPUTS" | jq -r '.containerAppUrl.value // empty')
+          
+          echo "Container App Name: $CONTAINER_APP_NAME"
+          echo "Resource Group: $RG_NAME"
+          echo "Container App URL: $CONTAINER_APP_URL"
+          
+          if [ -z "$CONTAINER_APP_NAME" ] || [ -z "$RG_NAME" ]; then
+            echo "❌ Missing required deployment outputs"
+            exit 1
+          fi
           
           # Update container app with new image
+          echo "Updating container app with image: ${{ env.IMAGE_TAG }}"
           az containerapp update \
             --name $CONTAINER_APP_NAME \
             --resource-group $RG_NAME \
@@ -195,22 +238,50 @@ jobs:
         run: |
           echo "🔄 Running database migrations..."
           
-          # Get database connection string from Key Vault
+          # Get Key Vault name from previous deployment outputs
           DEPLOYMENT_NAME="${{ steps.infrastructure.outputs.deployment-id }}"
-          KV_NAME=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs.keyVaultName.value" -o tsv)
           
-          # Get connection string
-          DATABASE_URL=$(az keyvault secret show \
-            --vault-name $KV_NAME \
-            --name "database-connection-string" \
-            --query "value" -o tsv)
+          # Use the same deployment outputs we already retrieved to avoid multiple API calls
+          DEPLOYMENT_OUTPUTS=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs" -o json)
+          KV_NAME=$(echo "$DEPLOYMENT_OUTPUTS" | jq -r '.keyVaultName.value // empty')
           
-          if [ ! -z "$DATABASE_URL" ]; then
+          if [ -z "$KV_NAME" ]; then
+            echo "❌ Key Vault name not found in deployment outputs"
+            exit 1
+          fi
+          
+          echo "Using Key Vault: $KV_NAME"
+          
+          # Get connection string with retry logic
+          MAX_RETRIES=3
+          RETRY_COUNT=0
+          DATABASE_URL=""
+          
+          while [ $RETRY_COUNT -lt $MAX_RETRIES ] && [ -z "$DATABASE_URL" ]; do
+            echo "Attempting to get database connection string (attempt $((RETRY_COUNT + 1))/$MAX_RETRIES)..."
+            
+            DATABASE_URL=$(az keyvault secret show \
+              --vault-name $KV_NAME \
+              --name "database-connection-string" \
+              --query "value" -o tsv 2>/dev/null || echo "")
+            
+            if [ -z "$DATABASE_URL" ]; then
+              RETRY_COUNT=$((RETRY_COUNT + 1))
+              if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+                echo "⚠️ Failed to get connection string, waiting 15 seconds before retry..."
+                sleep 15
+              fi
+            fi
+          done
+          
+          if [ ! -z "$DATABASE_URL" ] && [ "$DATABASE_URL" != "null" ]; then
+            echo "✅ Database connection string retrieved successfully"
             export DATABASE_URL="$DATABASE_URL"
             npm run db:push
             echo "✅ Database migrations completed"
           else
-            echo "⚠️ Database connection string not found, skipping migrations"
+            echo "⚠️ Database connection string not found after $MAX_RETRIES attempts, skipping migrations"
+            echo "This may be expected if the infrastructure deployment didn't complete successfully"
           fi
 
       # VALIDATION PHASE
