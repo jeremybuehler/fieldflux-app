@@ -83,10 +83,16 @@ module database 'modules/postgresql.bicep' = {
   }
 }
 
+// Key Vault reference for secret creation
+resource keyVaultRef 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
+  name: keyVault.outputs.keyVaultName
+  scope: platformResourceGroup
+}
+
 // Store database connection string in Key Vault (handled at main scope level)
 resource connectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   name: 'database-connection-string'
-  parent: keyVault.outputs.keyVaultResource
+  parent: keyVaultRef
   properties: {
     value: database.outputs.connectionString
     contentType: 'text/plain'
@@ -99,7 +105,7 @@ resource connectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' =
 // Store individual database components in Key Vault for flexibility
 resource dbHostSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   name: 'database-host'
-  parent: keyVault.outputs.keyVaultResource
+  parent: keyVaultRef
   properties: {
     value: database.outputs.fullyQualifiedDomainName
     contentType: 'text/plain'
@@ -108,7 +114,7 @@ resource dbHostSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
 
 resource dbNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   name: 'database-name'
-  parent: keyVault.outputs.keyVaultResource
+  parent: keyVaultRef
   properties: {
     value: database.outputs.databaseName
     contentType: 'text/plain'
@@ -117,7 +123,7 @@ resource dbNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
 
 resource dbUserSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   name: 'database-username'
-  parent: keyVault.outputs.keyVaultResource
+  parent: keyVaultRef
   properties: {
     value: database.outputs.administratorLogin
     contentType: 'text/plain'
@@ -126,7 +132,7 @@ resource dbUserSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
 
 resource dbPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   name: 'database-password'
-  parent: keyVault.outputs.keyVaultResource
+  parent: keyVaultRef
   properties: {
     value: database.outputs.administratorPassword
     contentType: 'text/plain'
@@ -146,7 +152,7 @@ module containerApps 'modules/container-apps.bicep' = {
     tags: tags
     keyVaultName: keyVault.outputs.keyVaultName
     appInsightsConnectionString: appInsights.outputs.connectionString
-    databaseConnectionStringSecretUri: database.outputs.connectionStringSecretUri
+    databaseConnectionStringSecretUri: connectionStringSecret.properties.secretUri
   }
 }
 
