@@ -107,7 +107,9 @@ jobs:
             --location ${{ env.LOCATION }} \
             --template-file infrastructure/main.bicep \
             --parameters infrastructure/parameters/${{ env.ENVIRONMENT }}.parameters.json \
-            --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key-for-validation' }}"
+            --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key-for-validation' }}" \
+            --parameters githubToken="${{ secrets.GITHUB_TOKEN }}" \
+            --parameters githubUsername="${{ github.actor }}"
           
           echo "✅ Bicep validation completed successfully"
 

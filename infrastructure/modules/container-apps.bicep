@@ -28,9 +28,8 @@ param appInsightsConnectionString string
 @description('Database connection string secret URI from Key Vault')
 param databaseConnectionStringSecretUri string
 
-@description('GitHub Container Registry token')
-@secure()
-param githubToken string
+@description('GitHub Container Registry token secret URI from Key Vault')
+param githubTokenSecretUri string
 
 @description('GitHub username for container registry')
 param githubUsername string = 'jeremybuehler'
@@ -167,7 +166,8 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
         }
         {
           name: 'ghcr-token'
-          value: githubToken
+          keyVaultUrl: githubTokenSecretUri
+          identity: managedIdentity.id
         }
       ]
     }

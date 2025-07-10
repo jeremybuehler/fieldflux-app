@@ -64,6 +64,7 @@ module keyVault 'modules/key-vault.bicep' = {
     location: location
     tags: tags
     openaiApiKey: openaiApiKey
+    githubToken: githubToken
   }
 }
 
@@ -118,7 +119,7 @@ module containerApps 'modules/container-apps.bicep' = {
     keyVaultName: keyVault.outputs.keyVaultName
     appInsightsConnectionString: appInsights.outputs.connectionString
     databaseConnectionStringSecretUri: databaseSecrets.outputs.connectionStringSecretUri
-    githubToken: githubToken
+    githubTokenSecretUri: keyVault.outputs.githubTokenSecretUri
     githubUsername: githubUsername
   }
 }

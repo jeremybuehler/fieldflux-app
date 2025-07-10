@@ -14,6 +14,10 @@ param tags object
 @secure()
 param openaiApiKey string
 
+@description('GitHub Token for container registry')
+@secure()
+param githubToken string
+
 @description('Environment (dev, intg, prod)')
 param environment string = 'dev'
 
@@ -76,6 +80,19 @@ resource openaiApiKeySecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   }
 }
 
+// Store GitHub Token
+resource githubTokenSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
+  parent: keyVault
+  name: 'github-token'
+  properties: {
+    value: githubToken
+    contentType: 'text/plain'
+    attributes: {
+      enabled: true
+    }
+  }
+}
+
 // Store application configuration secrets
 resource appEnvironmentSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
   parent: keyVault
@@ -123,3 +140,4 @@ output keyVaultId string = keyVault.id
 output keyVaultUri string = keyVault.properties.vaultUri
 output keyVaultResource object = keyVault
 output openaiApiKeySecretUri string = openaiApiKeySecret.properties.secretUri
+output githubTokenSecretUri string = githubTokenSecret.properties.secretUri
