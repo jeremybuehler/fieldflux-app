@@ -24,8 +24,6 @@ param openaiApiKey string
 @secure()
 param githubToken string
 
-@description('GitHub username for container registry')
-param githubUsername string = 'jeremybuehler'
 
 @description('Tags to apply to all resources')
 param tags object = {
@@ -65,6 +63,18 @@ module keyVault 'modules/key-vault.bicep' = {
     tags: tags
     openaiApiKey: openaiApiKey
     githubToken: githubToken
+  }
+}
+
+// Container Registry Module
+module containerRegistry 'modules/container-registry.bicep' = {
+  name: 'container-registry-deployment'
+  scope: platformResourceGroup
+  params: {
+    registryName: 'cr${applicationName}${environment}${uniqueSuffix}'
+    location: location
+    tags: tags
+    environment: environment
   }
 }
 
@@ -119,8 +129,8 @@ module containerApps 'modules/container-apps.bicep' = {
     keyVaultName: keyVault.outputs.keyVaultName
     appInsightsConnectionString: appInsights.outputs.connectionString
     databaseConnectionStringSecretUri: databaseSecrets.outputs.connectionStringSecretUri
-    githubTokenSecretUri: keyVault.outputs.githubTokenSecretUri
-    githubUsername: githubUsername
+    containerRegistryName: containerRegistry.outputs.registryName
+    containerRegistryUrl: containerRegistry.outputs.registryUrl
   }
 }
 
@@ -132,3 +142,5 @@ output containerAppName string = containerApps.outputs.containerAppName
 output containerAppUrl string = containerApps.outputs.containerAppUrl
 output databaseServerName string = database.outputs.serverName
 output appInsightsName string = appInsights.outputs.appInsightsName
+output containerRegistryName string = containerRegistry.outputs.registryName
+output containerRegistryUrl string = containerRegistry.outputs.registryUrl

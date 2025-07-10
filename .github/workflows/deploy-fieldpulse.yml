@@ -48,8 +48,8 @@ env:
   LOCATION: 'eastus'
   APPLICATION_NAME: 'fieldpulse'
   ENVIRONMENT: ${{ github.event.inputs.environment || 'dev' }}
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}/fieldpulse
+  REGISTRY: ''  # Will be set dynamically from ACR
+  IMAGE_NAME: 'fieldpulse'
 
 jobs:
   deploy-fieldpulse:
@@ -82,12 +82,7 @@ jobs:
         with:
           creds: '{"clientId":"${{ env.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ env.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ env.AZURE_TENANT_ID }}"}'
 
-      - name: Login to Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+      # Container Registry login will be handled after ACR is deployed
 
       # VALIDATION PHASE
       - name: Run TypeScript type checking
@@ -108,8 +103,7 @@ jobs:
             --template-file infrastructure/main.bicep \
             --parameters infrastructure/parameters/${{ env.ENVIRONMENT }}.parameters.json \
             --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key-for-validation' }}" \
-            --parameters githubToken="${{ secrets.GITHUB_TOKEN }}" \
-            --parameters githubUsername="${{ github.actor }}"
+            --parameters githubToken="${{ secrets.GITHUB_TOKEN }}"
           
           echo "✅ Bicep validation completed successfully"
 
@@ -171,7 +165,6 @@ jobs:
               --parameters infrastructure/parameters/${{ env.ENVIRONMENT }}.parameters.json \
               --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}" \
               --parameters githubToken="${{ secrets.GITHUB_TOKEN }}" \
-              --parameters githubUsername="${{ github.actor }}" \
               --parameters containerImage="${{ env.IMAGE_TAG }}" \
               --parameters tags='{"DeployedBy":"github-actions","DeployedAt":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","GitCommit":"${{ github.sha }}","Environment":"${{ env.ENVIRONMENT }}"}' \
               --output table; then

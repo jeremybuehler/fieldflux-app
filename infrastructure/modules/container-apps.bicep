@@ -28,11 +28,11 @@ param appInsightsConnectionString string
 @description('Database connection string secret URI from Key Vault')
 param databaseConnectionStringSecretUri string
 
-@description('GitHub Container Registry token secret URI from Key Vault')
-param githubTokenSecretUri string
+@description('Container Registry name')
+param containerRegistryName string
 
-@description('GitHub username for container registry')
-param githubUsername string = 'jeremybuehler'
+@description('Container Registry URL')
+param containerRegistryUrl string
 
 // Environment-specific configurations
 var environmentConfig = {
@@ -103,6 +103,11 @@ resource keyVault 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
   name: keyVaultName
 }
 
+// Container Registry access for managed identity
+resource containerRegistry 'Microsoft.ContainerRegistry/registries@2023-07-01' existing = {
+  name: containerRegistryName
+}
+
 resource keyVaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2023-07-01' = {
   name: 'add'
   parent: keyVault
@@ -119,6 +124,17 @@ resource keyVaultAccessPolicy 'Microsoft.KeyVault/vaults/accessPolicies@2023-07-
         }
       }
     ]
+  }
+}
+
+// Container Registry role assignment for managed identity
+resource acrPullRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(containerRegistry.id, managedIdentity.id, 'AcrPull')
+  scope: containerRegistry
+  properties: {
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', '7f951dda-4ed3-4680-a7ca-43fe172d538d') // AcrPull
+    principalId: managedIdentity.properties.principalId
+    principalType: 'ServicePrincipal'
   }
 }
 
@@ -149,9 +165,8 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
       }
       registries: [
         {
-          server: 'ghcr.io'
-          username: githubUsername
-          passwordSecretRef: 'ghcr-token'
+          server: containerRegistry.properties.loginServer
+          identity: managedIdentity.id
         }
       ]
       secrets: [
@@ -163,11 +178,6 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
         {
           name: 'app-insights-connection-string'
           value: appInsightsConnectionString
-        }
-        {
-          name: 'ghcr-token'
-          keyVaultUrl: githubTokenSecretUri
-          identity: managedIdentity.id
         }
       ]
     }
@@ -254,6 +264,7 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
   }
   dependsOn: [
     keyVaultAccessPolicy
+    acrPullRoleAssignment
   ]
 }
 
