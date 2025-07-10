@@ -83,59 +83,17 @@ module database 'modules/postgresql.bicep' = {
   }
 }
 
-// Key Vault reference for secret creation
-resource keyVaultRef 'Microsoft.KeyVault/vaults@2023-07-01' existing = {
-  name: keyVault.outputs.keyVaultName
+// Database secrets module to handle cross-scope secret creation
+module databaseSecrets 'modules/database-secrets.bicep' = {
+  name: 'database-secrets-deployment'
   scope: platformResourceGroup
-}
-
-// Store database connection string in Key Vault (handled at main scope level)
-resource connectionStringSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  name: 'database-connection-string'
-  parent: keyVaultRef
-  properties: {
-    value: database.outputs.connectionString
-    contentType: 'text/plain'
-    attributes: {
-      enabled: true
-    }
-  }
-}
-
-// Store individual database components in Key Vault for flexibility
-resource dbHostSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  name: 'database-host'
-  parent: keyVaultRef
-  properties: {
-    value: database.outputs.fullyQualifiedDomainName
-    contentType: 'text/plain'
-  }
-}
-
-resource dbNameSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  name: 'database-name'
-  parent: keyVaultRef
-  properties: {
-    value: database.outputs.databaseName
-    contentType: 'text/plain'
-  }
-}
-
-resource dbUserSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  name: 'database-username'
-  parent: keyVaultRef
-  properties: {
-    value: database.outputs.administratorLogin
-    contentType: 'text/plain'
-  }
-}
-
-resource dbPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2023-07-01' = {
-  name: 'database-password'
-  parent: keyVaultRef
-  properties: {
-    value: database.outputs.administratorPassword
-    contentType: 'text/plain'
+  params: {
+    keyVaultName: keyVault.outputs.keyVaultName
+    connectionString: database.outputs.connectionString
+    databaseHost: database.outputs.fullyQualifiedDomainName
+    databaseName: database.outputs.databaseName
+    administratorLogin: database.outputs.administratorLogin
+    administratorPassword: database.outputs.administratorPassword
   }
 }
 
@@ -152,7 +110,7 @@ module containerApps 'modules/container-apps.bicep' = {
     tags: tags
     keyVaultName: keyVault.outputs.keyVaultName
     appInsightsConnectionString: appInsights.outputs.connectionString
-    databaseConnectionStringSecretUri: connectionStringSecret.properties.secretUri
+    databaseConnectionStringSecretUri: databaseSecrets.outputs.connectionStringSecretUri
   }
 }
 
