@@ -88,8 +88,8 @@
   body {
     @apply font-sans antialiased text-gray-900;
     font-family: 'Inter', sans-serif;
-    background: #f8fafc !important;
-    background-color: #f8fafc !important;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    background-attachment: fixed !important;
   }
   
   /* Field Service Typography System */
@@ -142,45 +142,47 @@
 @layer components {
   /* Field Service Cards - Clean & Professional */
   .fieldservice-card {
-    @apply bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden;
+    @apply bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden backdrop-blur-sm;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(229, 231, 235, 0.8);
   }
   
   .fieldservice-card-header {
-    @apply px-6 py-4 border-b border-gray-100 bg-gray-50;
+    @apply px-6 py-5 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100;
   }
   
   .fieldservice-card-content {
-    @apply px-6 py-4;
+    @apply px-6 py-5;
   }
   
   .fieldservice-card-footer {
-    @apply px-6 py-4 border-t border-gray-100 bg-gray-50;
+    @apply px-6 py-5 border-t border-gray-100 bg-gradient-to-r from-gray-50 to-gray-100;
   }
   
   /* Field Service Buttons - Professional & Accessible */
   .btn-fieldservice-primary {
-    @apply bg-blue-600 text-white hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 border-0 shadow-sm hover:shadow-md;
+    @apply bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border-0 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
   }
   
   .btn-fieldservice-secondary {
-    @apply bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 border border-gray-300;
+    @apply bg-gradient-to-r from-gray-100 to-gray-200 text-gray-900 hover:from-gray-200 hover:to-gray-300 focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border border-gray-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
   }
   
   .btn-fieldservice-success {
-    @apply bg-green-600 text-white hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 border-0 shadow-sm;
+    @apply bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border-0 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
   }
   
   .btn-fieldservice-warning {
-    @apply bg-orange-500 text-white hover:bg-orange-600 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 border-0 shadow-sm;
+    @apply bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 border-0 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5;
   }
   
   .btn-fieldservice-outline {
-    @apply border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-4 py-2.5 rounded-lg font-medium transition-all duration-200 bg-transparent;
+    @apply border-2 border-blue-600 text-blue-600 hover:bg-gradient-to-r hover:from-blue-600 hover:to-blue-700 hover:text-white focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 bg-transparent shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
   }
   
   /* Field Service Inputs - Clean & Professional */
   .input-fieldservice {
-    @apply flex h-11 w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-50 transition-all duration-200;
+    @apply flex h-12 w-full rounded-xl border border-gray-300 bg-white bg-opacity-80 backdrop-blur-sm px-5 py-3 text-sm placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-50 transition-all duration-300 shadow-sm hover:shadow-md focus:shadow-lg;
   }
   
   .input-fieldservice-error {
@@ -245,23 +247,24 @@
   
   /* Field Service Metrics Cards */
   .metric-fieldservice {
-    @apply bg-white p-6 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200;
+    @apply bg-white bg-opacity-95 backdrop-blur-sm p-7 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
   }
   
   .metric-fieldservice-header {
-    @apply flex items-center justify-between;
+    @apply flex items-center justify-between mb-3;
   }
   
   .metric-fieldservice-title {
-    @apply text-sm font-medium text-gray-600 uppercase tracking-wide;
+    @apply text-sm font-semibold text-gray-600 uppercase tracking-wider;
   }
   
   .metric-fieldservice-value {
-    @apply text-2xl font-bold text-gray-900 mt-2;
+    @apply text-3xl font-bold text-gray-900 mt-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
   }
   
   .metric-fieldservice-change {
-    @apply text-sm font-medium mt-2;
+    @apply text-sm font-semibold mt-3;
   }
   
   .metric-fieldservice-change-positive {
@@ -300,16 +303,67 @@
 
 /* Landing Page Specific Styles */
 .landing-page {
-  background: white !important;
-  background-color: white !important;
-  background-image: none !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  background-attachment: fixed !important;
 }
 
-/* Protocol Enhanced Animations */
+/* Modern Glass Morphism Effects */
+.glass-morphism {
+  @apply backdrop-blur-md bg-white bg-opacity-25 border border-white border-opacity-20 shadow-lg;
+}
+
+.glass-morphism-dark {
+  @apply backdrop-blur-md bg-gray-900 bg-opacity-25 border border-gray-800 border-opacity-20 shadow-lg;
+}
+
+/* Enhanced Hover Effects */
+.hover-lift {
+  @apply transition-all duration-300 hover:transform hover:-translate-y-2 hover:shadow-xl;
+}
+
+.hover-glow {
+  @apply transition-all duration-300 hover:shadow-2xl hover:shadow-blue-500/25;
+}
+
+/* Modern Status Indicators with Glow */
+.status-modern-online {
+  @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-green-400 to-green-600 text-white shadow-lg shadow-green-500/30;
+}
+
+.status-modern-offline {
+  @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-red-400 to-red-600 text-white shadow-lg shadow-red-500/30;
+}
+
+.status-modern-pending {
+  @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-yellow-400 to-yellow-600 text-white shadow-lg shadow-yellow-500/30;
+}
+
+.status-modern-processing {
+  @apply inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-400 to-blue-600 text-white shadow-lg shadow-blue-500/30;
+}
+
+/* Enhanced Layout Containers */
+.container-modern {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative;
+}
+
+.container-modern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Enhanced Animations */
 @keyframes protocol-fade-in {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -320,23 +374,64 @@
 @keyframes protocol-scale-in {
   from {
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.9) rotate(-1deg);
   }
   to {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) rotate(0deg);
   }
 }
 
 @keyframes protocol-slide-in {
   from {
     opacity: 0;
-    transform: translateX(-10px);
+    transform: translateX(-20px);
   }
   to {
     opacity: 1;
     transform: translateX(0);
   }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
 }
 
 .animate-protocol-fade-in {
