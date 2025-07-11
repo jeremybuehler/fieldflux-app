@@ -126,13 +126,23 @@ export default function LandingAuth() {
               </div>
               <span className="text-xl font-semibold text-gray-900">FieldPulse</span>
             </div>
-            <Button 
-              variant="outline"
-              onClick={handleLogin}
-              className="text-blue-600 border-blue-600 hover:bg-blue-50"
-            >
-              Login
-            </Button>
+            {isAuthenticated ? (
+              <Button 
+                variant="outline"
+                onClick={handleDashboard}
+                className="text-blue-600 border-blue-600 hover:bg-blue-50"
+              >
+                Dashboard
+              </Button>
+            ) : (
+              <Button 
+                variant="outline"
+                onClick={handleLogin}
+                className="text-blue-600 border-blue-600 hover:bg-blue-50"
+              >
+                Login
+              </Button>
+            )}
           </div>
         </div>
       </header>
@@ -346,14 +356,25 @@ export default function LandingAuth() {
               
               <div className="space-y-4">
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button 
-                    size="lg" 
-                    className="bg-white text-black hover:bg-gray-50 font-semibold px-12 py-4 text-lg"
-                    onClick={handleLogin}
-                  >
-                    Sign in with Replit
-                    <ArrowRight className="w-5 h-5 ml-2" />
-                  </Button>
+                  {isAuthenticated ? (
+                    <Button 
+                      size="lg" 
+                      className="bg-white text-black hover:bg-gray-50 font-semibold px-12 py-4 text-lg"
+                      onClick={handleDashboard}
+                    >
+                      Go to Dashboard
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  ) : (
+                    <Button 
+                      size="lg" 
+                      className="bg-white text-black hover:bg-gray-50 font-semibold px-12 py-4 text-lg"
+                      onClick={handleLogin}
+                    >
+                      Sign in with Replit
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                  )}
                   
                   <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
                     <DialogTrigger asChild>
