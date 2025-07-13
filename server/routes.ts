@@ -28,6 +28,7 @@ import {
 import OpenAI from "openai";
 import twilio from "twilio";
 import { googleAnalyticsService } from "./services/google-analytics";
+import { leadScoringService } from "./services/leadScoringService";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "default_key",
@@ -326,13 +327,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const data = insertLeadSchema.parse(req.body);
       const lead = await storage.createLead(data);
 
-      await storage.createActivity({
-        type: "lead",
-        title: "New Lead Received",
-        description: `New ${data.service} inquiry from ${data.name} in ${data.location}`,
-      });
+      // Score the lead with AI
+      try {
+        const scoringFactors = {
+          service: data.service,
+          location: data.location,
+          contactMethod: data.email && data.phone ? "form" : data.email ? "email" : "phone",
+          timeOfInquiry: new Date(),
+          referralSource: req.body.referralSource
+        };
 
-      res.json(lead);
+        const scoringResult = await leadScoringService.scoreLeadWithAI(lead, scoringFactors);
+        
+        // Update lead with AI scoring results
+        const updatedLead = await storage.updateLead(lead.id, {
+          leadScore: scoringResult.leadScore,
+          urgencyScore: scoringResult.urgencyScore,
+          conversionProbability: scoringResult.conversionProbability.toString(),
+          predictedValue: scoringResult.predictedValue,
+          engagementLevel: scoringResult.engagementLevel,
+          aiRecommendations: scoringResult.aiRecommendations,
+          priority: leadScoringService.calculateLeadPriority(scoringResult.leadScore, scoringResult.urgencyScore),
+          nextFollowUpAt: scoringResult.nextFollowUpAt
+        });
+
+        await storage.createActivity({
+          type: "lead",
+          title: "New Lead Received & Scored",
+          description: `New ${data.service} inquiry from ${data.name} in ${data.location}. AI Score: ${scoringResult.leadScore}/100`,
+        });
+
+        res.json(updatedLead || lead);
+      } catch (scoringError) {
+        console.error("Lead scoring error:", scoringError);
+        
+        await storage.createActivity({
+          type: "lead",
+          title: "New Lead Received",
+          description: `New ${data.service} inquiry from ${data.name} in ${data.location}`,
+        });
+
+        res.json(lead);
+      }
     } catch (error) {
       res.status(400).json({ message: "Invalid lead data" });
     }
@@ -351,6 +387,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(lead);
     } catch (error) {
       res.status(400).json({ message: "Failed to update lead" });
+    }
+  });
+
+  // AI Lead Scoring Endpoints
+  app.post("/api/leads/:id/score", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const lead = await storage.getLead(id);
+      
+      if (!lead) {
+        return res.status(404).json({ message: "Lead not found" });
+      }
+
+      const scoringFactors = {
+        service: lead.service,
+        location: lead.location,
+        contactMethod: lead.email && lead.phone ? "form" : lead.email ? "email" : "phone",
+        timeOfInquiry: lead.createdAt || new Date(),
+        responseTime: req.body.responseTime,
+        previousInteractions: req.body.previousInteractions,
+        referralSource: req.body.referralSource
+      };
+
+      const scoringResult = await leadScoringService.scoreLeadWithAI(lead, scoringFactors);
+      
+      // Update lead with new scoring
+      const updatedLead = await storage.updateLead(id, {
+        leadScore: scoringResult.leadScore,
+        urgencyScore: scoringResult.urgencyScore,
+        conversionProbability: scoringResult.conversionProbability.toString(),
+        predictedValue: scoringResult.predictedValue,
+        engagementLevel: scoringResult.engagementLevel,
+        aiRecommendations: scoringResult.aiRecommendations,
+        priority: leadScoringService.calculateLeadPriority(scoringResult.leadScore, scoringResult.urgencyScore),
+        nextFollowUpAt: scoringResult.nextFollowUpAt
+      });
+
+      await storage.createActivity({
+        type: "lead",
+        title: "Lead Re-scored",
+        description: `Updated AI score for ${lead.name}: ${scoringResult.leadScore}/100`,
+      });
+
+      res.json(updatedLead);
+    } catch (error) {
+      console.error("Lead scoring error:", error);
+      res.status(500).json({ message: "Failed to score lead" });
+    }
+  });
+
+  app.get("/api/leads/:id/recommendations", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const lead = await storage.getLead(id);
+      
+      if (!lead) {
+        return res.status(404).json({ message: "Lead not found" });
+      }
+
+      const recommendations = await leadScoringService.generateRecommendations(lead);
+      
+      res.json({ recommendations });
+    } catch (error) {
+      console.error("Recommendations error:", error);
+      res.status(500).json({ message: "Failed to generate recommendations" });
+    }
+  });
+
+  app.get("/api/leads/analytics/scores", async (req, res) => {
+    try {
+      const leads = await storage.getAllLeads();
+      
+      const analytics = {
+        totalLeads: leads.length,
+        avgLeadScore: leads.reduce((sum, lead) => sum + (lead.leadScore || 0), 0) / leads.length || 0,
+        avgUrgencyScore: leads.reduce((sum, lead) => sum + (lead.urgencyScore || 0), 0) / leads.length || 0,
+        avgConversionProbability: leads.reduce((sum, lead) => sum + (parseFloat(lead.conversionProbability || "0")), 0) / leads.length || 0,
+        highPriorityLeads: leads.filter(lead => lead.priority === "high").length,
+        mediumPriorityLeads: leads.filter(lead => lead.priority === "medium").length,
+        lowPriorityLeads: leads.filter(lead => lead.priority === "low").length,
+        totalPredictedValue: leads.reduce((sum, lead) => sum + (lead.predictedValue || 0), 0),
+        engagementLevels: {
+          high: leads.filter(lead => lead.engagementLevel === "high").length,
+          medium: leads.filter(lead => lead.engagementLevel === "medium").length,
+          low: leads.filter(lead => lead.engagementLevel === "low").length
+        }
+      };
+
+      res.json(analytics);
+    } catch (error) {
+      console.error("Lead analytics error:", error);
+      res.status(500).json({ message: "Failed to get lead analytics" });
     }
   });
 

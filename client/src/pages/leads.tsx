@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Progress } from "@/components/ui/progress";
 import TopNavigation from "@/components/layout/top-navigation";
-import { UserPlus, Mail, Phone, Calendar, Filter, Search, MoreVertical, MessageSquare, CheckCircle, Clock, AlertCircle, TrendingUp, Star, Target } from "lucide-react";
+import { UserPlus, Mail, Phone, Calendar, Filter, Search, MoreVertical, MessageSquare, CheckCircle, Clock, AlertCircle, TrendingUp, Star, Target, Brain, Zap, Trophy, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,6 +42,50 @@ export default function Leads() {
 
   const { data: leads, isLoading } = useQuery<Lead[]>({
     queryKey: ["/api/leads"],
+  });
+
+  const { data: leadAnalytics } = useQuery({
+    queryKey: ["/api/leads/analytics/scores"],
+  });
+
+  const scoreLeadMutation = useMutation({
+    mutationFn: async (leadId: number) => {
+      const response = await apiRequest("POST", `/api/leads/${leadId}/score`, {});
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/leads/analytics/scores"] });
+      toast({
+        title: "Lead Scored",
+        description: "AI scoring has been updated for this lead.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to score lead. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const { data: recommendations, refetch: refetchRecommendations } = useQuery({
+    queryKey: ["/api/leads/recommendations"],
+    enabled: false,
+  });
+
+  const getRecommendationsMutation = useMutation({
+    mutationFn: async (leadId: number) => {
+      const response = await apiRequest("GET", `/api/leads/${leadId}/recommendations`, {});
+      return response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "AI Recommendations",
+        description: `Generated ${data.recommendations.length} personalized recommendations.`,
+      });
+    },
   });
 
   const addLeadMutation = useMutation({
@@ -228,6 +272,59 @@ export default function Leads() {
             </CardContent>
           </Card>
         </div>
+
+        {/* AI Scoring Analytics Dashboard */}
+        {leadAnalytics && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-indigo-100 text-sm font-medium">Avg Lead Score</p>
+                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgLeadScore)}/100</p>
+                  </div>
+                  <Brain className="w-8 h-8 text-indigo-200" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-r from-pink-500 to-pink-600 text-white">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-pink-100 text-sm font-medium">Avg Urgency</p>
+                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgUrgencyScore)}/100</p>
+                  </div>
+                  <Zap className="w-8 h-8 text-pink-200" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-emerald-100 text-sm font-medium">Conversion Prob</p>
+                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgConversionProbability)}%</p>
+                  </div>
+                  <Trophy className="w-8 h-8 text-emerald-200" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-r from-amber-500 to-amber-600 text-white">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-amber-100 text-sm font-medium">Predicted Value</p>
+                    <p className="text-2xl font-bold">${Math.round(leadAnalytics.totalPredictedValue).toLocaleString()}</p>
+                  </div>
+                  <Star className="w-8 h-8 text-amber-200" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Controls */}
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
@@ -450,6 +547,34 @@ export default function Leads() {
                           {lead.service} • {lead.location}
                         </p>
                         
+                        {/* AI Scoring Information */}
+                        {lead.leadScore !== null && (
+                          <div className="flex flex-wrap items-center gap-3 mb-2">
+                            <div className="flex items-center gap-1">
+                              <Brain className="w-4 h-4 text-indigo-600" />
+                              <span className="text-sm font-medium text-indigo-600">Score: {lead.leadScore}/100</span>
+                            </div>
+                            {lead.urgencyScore !== null && (
+                              <div className="flex items-center gap-1">
+                                <Zap className="w-4 h-4 text-pink-600" />
+                                <span className="text-sm font-medium text-pink-600">Urgency: {lead.urgencyScore}/100</span>
+                              </div>
+                            )}
+                            {lead.conversionProbability && (
+                              <div className="flex items-center gap-1">
+                                <Trophy className="w-4 h-4 text-emerald-600" />
+                                <span className="text-sm font-medium text-emerald-600">Conv: {Math.round(parseFloat(lead.conversionProbability))}%</span>
+                              </div>
+                            )}
+                            {lead.predictedValue && (
+                              <div className="flex items-center gap-1">
+                                <Star className="w-4 h-4 text-amber-600" />
+                                <span className="text-sm font-medium text-amber-600">Value: ${lead.predictedValue}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        
                         <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
                           {lead.email && (
                             <span className="flex items-center gap-1">
@@ -471,6 +596,29 @@ export default function Leads() {
                       </div>
                       
                       <div className="flex flex-wrap gap-2">
+                        {/* AI Scoring Actions */}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => scoreLeadMutation.mutate(lead.id)}
+                          disabled={scoreLeadMutation.isPending}
+                          className="border-indigo-200 text-indigo-600 hover:bg-indigo-50"
+                        >
+                          <Brain className="w-4 h-4 mr-1" />
+                          {scoreLeadMutation.isPending ? "Scoring..." : "AI Score"}
+                        </Button>
+                        
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => getRecommendationsMutation.mutate(lead.id)}
+                          disabled={getRecommendationsMutation.isPending}
+                          className="border-purple-200 text-purple-600 hover:bg-purple-50"
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          {getRecommendationsMutation.isPending ? "Getting..." : "Get Tips"}
+                        </Button>
+                        
                         {lead.status === "new" && (
                           <Button
                             size="sm"

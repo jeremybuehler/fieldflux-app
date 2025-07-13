@@ -91,6 +91,14 @@ export const leads = pgTable("leads", {
   location: text("location").notNull(),
   priority: text("priority").notNull().default("medium"),
   status: text("status").notNull().default("new"),
+  leadScore: integer("lead_score").default(0),
+  aiRecommendations: text("ai_recommendations").array(),
+  engagementLevel: text("engagement_level").default("unknown"),
+  predictedValue: integer("predicted_value"),
+  urgencyScore: integer("urgency_score").default(50),
+  conversionProbability: decimal("conversion_probability", { precision: 5, scale: 2 }),
+  lastContactedAt: timestamp("last_contacted_at"),
+  nextFollowUpAt: timestamp("next_follow_up_at"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
