@@ -8,6 +8,7 @@ import {
   seoKeywords,
   reviews,
   analyticsReports,
+  socialMediaAnalytics,
   type User,
   type InsertUser,
   type WordPressPost,
@@ -26,6 +27,8 @@ import {
   type InsertReview,
   type AnalyticsReport,
   type InsertAnalyticsReport,
+  type SocialMediaAnalytics,
+  type InsertSocialMediaAnalytics,
   type UpsertUser,
 } from "@shared/schema";
 import { db } from "./db";
@@ -81,6 +84,12 @@ export interface IStorage {
   getAllAnalyticsReports(): Promise<AnalyticsReport[]>;
   getAnalyticsReport(id: number): Promise<AnalyticsReport | undefined>;
   createAnalyticsReport(report: InsertAnalyticsReport): Promise<AnalyticsReport>;
+
+  // Social Media Analytics methods
+  getAllSocialMediaAnalytics(): Promise<SocialMediaAnalytics[]>;
+  createSocialMediaAnalytics(
+    data: InsertSocialMediaAnalytics
+  ): Promise<SocialMediaAnalytics>;
 }
 
 export class MemStorage implements IStorage {
@@ -93,6 +102,7 @@ export class MemStorage implements IStorage {
   private seoKeywords: Map<number, SeoKeyword>;
   private reviews: Map<number, Review>;
   private analyticsReports: Map<number, AnalyticsReport>;
+  private socialMediaAnalytics: Map<number, SocialMediaAnalytics>;
   private currentId: number;
 
   constructor() {
@@ -105,6 +115,7 @@ export class MemStorage implements IStorage {
     this.seoKeywords = new Map();
     this.reviews = new Map();
     this.analyticsReports = new Map();
+    this.socialMediaAnalytics = new Map();
     this.currentId = 1;
   }
 
@@ -352,6 +363,25 @@ export class MemStorage implements IStorage {
     this.analyticsReports.set(id, report);
     return report;
   }
+
+  async getAllSocialMediaAnalytics(): Promise<SocialMediaAnalytics[]> {
+    return Array.from(this.socialMediaAnalytics.values()).sort((a, b) =>
+      new Date(b.dateRecorded!).getTime() - new Date(a.dateRecorded!).getTime()
+    );
+  }
+
+  async createSocialMediaAnalytics(
+    data: InsertSocialMediaAnalytics
+  ): Promise<SocialMediaAnalytics> {
+    const id = this.currentId++;
+    const record: SocialMediaAnalytics = {
+      ...data,
+      id,
+      dateRecorded: new Date(),
+    };
+    this.socialMediaAnalytics.set(id, record);
+    return record;
+  }
 }
 
 // Database Storage Implementation
@@ -575,6 +605,23 @@ export class DatabaseStorage implements IStorage {
       .values(insertReport)
       .returning();
     return report;
+  }
+
+  async getAllSocialMediaAnalytics(): Promise<SocialMediaAnalytics[]> {
+    return await db
+      .select()
+      .from(socialMediaAnalytics)
+      .orderBy(socialMediaAnalytics.dateRecorded);
+  }
+
+  async createSocialMediaAnalytics(
+    data: InsertSocialMediaAnalytics
+  ): Promise<SocialMediaAnalytics> {
+    const [record] = await db
+      .insert(socialMediaAnalytics)
+      .values(data)
+      .returning();
+    return record;
   }
 }
 
