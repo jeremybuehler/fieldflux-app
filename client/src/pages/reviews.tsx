@@ -353,7 +353,11 @@ export default function Reviews() {
         {/* Reviews List with Response Actions */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Reviews</CardTitle>
+            <CardTitle>
+              <h1 className="text-lg lg:text-xl font-bold text-hvac-gray">
+                  FieldFlux Reviews
+                </h1>
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {reviewsLoading ? (

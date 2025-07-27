@@ -1,4 +1,4 @@
-# Google Places API Setup Guide
+# Google Places API Setup Guide for FieldFlux
 
 ## Current Status: API Key Added ✅ - Still Getting 403 Error ⚠️
 
