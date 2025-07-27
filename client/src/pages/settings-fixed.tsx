@@ -198,7 +198,7 @@ export default function Settings() {
               </div>
               <div>
                 <h1 className="text-lg lg:text-xl font-bold text-hvac-gray">
-                  FieldPulse Settings & Integrations
+                  FieldFlux Settings & Integrations
                 </h1>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <div className="hidden sm:flex items-center space-x-1">

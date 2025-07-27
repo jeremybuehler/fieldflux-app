@@ -195,10 +195,10 @@ export default function Leads() {
     const now = new Date();
     const createdDate = new Date(date);
     const diffInHours = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) return "Less than an hour ago";
     if (diffInHours < 24) return `${diffInHours} hours ago`;
-    
+
     const diffInDays = Math.floor(diffInHours / 24);
     return `${diffInDays} days ago`;
   };
@@ -221,7 +221,7 @@ export default function Leads() {
 
       {/* Main Content */}
       <div className="p-4 lg:p-8 space-y-6">
-        
+
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
@@ -338,7 +338,7 @@ export default function Leads() {
                 className="pl-10 w-full sm:w-64"
               />
             </div>
-            
+
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-full sm:w-40">
                 <SelectValue placeholder="Filter by Status" />
@@ -394,7 +394,7 @@ export default function Leads() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="email"
@@ -408,7 +408,7 @@ export default function Leads() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="phone"
@@ -422,7 +422,7 @@ export default function Leads() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="service"
@@ -436,7 +436,7 @@ export default function Leads() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="location"
@@ -450,7 +450,7 @@ export default function Leads() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="priority"
@@ -501,7 +501,11 @@ export default function Leads() {
         {/* Leads List */}
         <Card>
           <CardHeader>
-            <CardTitle>Leads ({filteredLeads.length})</CardTitle>
+            <CardTitle>
+              <h1 className="text-lg lg:text-xl font-bold text-hvac-gray">
+                  FieldFlux Leads
+                </h1>
+            </CardTitle>
             <CardDescription>
               Manage and track your business leads
             </CardDescription>
@@ -542,11 +546,11 @@ export default function Leads() {
                             {leadPriorities.find(p => p.value === lead.priority)?.label}
                           </Badge>
                         </div>
-                        
+
                         <p className="text-sm text-gray-600 mb-2">
                           {lead.service} • {lead.location}
                         </p>
-                        
+
                         {/* AI Scoring Information */}
                         {lead.leadScore !== null && (
                           <div className="flex flex-wrap items-center gap-3 mb-2">
@@ -574,7 +578,7 @@ export default function Leads() {
                             )}
                           </div>
                         )}
-                        
+
                         <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
                           {lead.email && (
                             <span className="flex items-center gap-1">
@@ -594,7 +598,7 @@ export default function Leads() {
                           </span>
                         </div>
                       </div>
-                      
+
                       <div className="flex flex-wrap gap-2">
                         {/* AI Scoring Actions */}
                         <Button
@@ -607,7 +611,7 @@ export default function Leads() {
                           <Brain className="w-4 h-4 mr-1" />
                           {scoreLeadMutation.isPending ? "Scoring..." : "AI Score"}
                         </Button>
-                        
+
                         <Button
                           size="sm"
                           variant="outline"
@@ -618,7 +622,7 @@ export default function Leads() {
                           <Eye className="w-4 h-4 mr-1" />
                           {getRecommendationsMutation.isPending ? "Getting..." : "Get Tips"}
                         </Button>
-                        
+
                         {lead.status === "new" && (
                           <Button
                             size="sm"
@@ -630,7 +634,7 @@ export default function Leads() {
                             Qualify
                           </Button>
                         )}
-                        
+
                         <Button
                           size="sm"
                           variant="outline"
@@ -643,7 +647,7 @@ export default function Leads() {
                           <MessageSquare className="w-4 h-4 mr-1" />
                           {lead.status === "contacted" ? "Mark New" : "Contact"}
                         </Button>
-                        
+
                         {lead.status !== "converted" && (
                           <Button
                             size="sm"

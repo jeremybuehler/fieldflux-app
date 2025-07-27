@@ -106,7 +106,7 @@ export default function Landing() {
                 <Bot className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-fieldservice-title text-fieldservice-blue-700">FieldPulse</h1>
+                <h1 className="text-fieldservice-title text-fieldservice-blue-700">FieldFlux</h1>
                 <p className="text-fieldservice-muted">Replace 5 Marketing Tools with One</p>
               </div>
             </div>
@@ -121,7 +121,7 @@ export default function Landing() {
             Replace 5 Marketing Tools with One
           </h2>
           <p className="text-fieldservice-body max-w-3xl mx-auto">
-            FieldPulse consolidates your marketing tools into one affordable platform. 
+            FieldFlux consolidates your marketing tools into one affordable platform. 
             Perfect for HVAC, plumbing, electrical, landscaping, and field service 
             professionals who need content creation, social media management, lead tracking, 
             and reputation management in one place.

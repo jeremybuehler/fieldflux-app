@@ -1,12 +1,12 @@
-# FieldPulse Customer Onboarding Plan
+# FieldFlux Customer Onboarding Plan
 
 ## Executive Summary
 
-This comprehensive onboarding plan transforms new FieldPulse users from signup to full platform activation. Designed specifically for field service professionals (HVAC, plumbing, electrical, landscaping), this structured approach ensures maximum user adoption and business value realization.
+This comprehensive onboarding plan transforms new FieldFlux users from signup to full platform activation. Designed specifically for field service professionals (HVAC, plumbing, electrical, landscaping), this structured approach ensures maximum user adoption and business value realization.
 
 ## Platform Overview
 
-**FieldPulse** is a comprehensive marketing automation platform that replaces 5 marketing tools with one unified solution. Our target users are field service professionals who need:
+**FieldFlux** is a comprehensive marketing automation platform that replaces 5 marketing tools with one unified solution. Our target users are field service professionals who need:
 
 - **AI-powered content creation** for social media and blogs
 - **Smart review management** with automated responses
