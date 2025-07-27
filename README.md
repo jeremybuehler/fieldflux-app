@@ -1,9 +1,9 @@
 
-# FieldPulse - Intelligent Field Service Marketing
+# FieldFlux - Intelligent Field Service Marketing
 
 ## Overview
 
-FieldPulse is a comprehensive marketing intelligence platform designed for field service professionals to transform marketing, lead generation, and business management through advanced technological solutions. From intelligent content creation to automated lead management, FieldPulse helps professionals showcase their expertise and grow their business effortlessly.
+FieldFlux is a comprehensive marketing intelligence platform designed for field service professionals to transform marketing, lead generation, and business management through advanced technological solutions. From intelligent content creation to automated lead management, FieldFlux helps professionals showcase their expertise and grow their business effortlessly.
 
 **Tagline**: "Where Field Service Meets Smart Marketing"
 
@@ -98,7 +98,7 @@ The application follows a full-stack architecture with:
 ## Project Structure
 
 ```
-FieldPulse/
+FieldFlux/
 ├── client/                 # React frontend
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
@@ -246,4 +246,4 @@ FieldPulse is actively developed. For feature requests or bug reports, please co
 
 ---
 
-**FieldPulse - Transforming Field Service Marketing Through Intelligent Automation**
+**FieldFlux - Transforming Field Service Marketing Through Intelligent Automation**

@@ -1,9 +1,8 @@
-
-# Google My Business Setup Guide for FieldPulse
+# Google My Business Setup Guide for FieldFlux
 
 ## Overview
 
-This guide helps you connect your Google My Business (GMB) profile to FieldPulse for automated review management, local SEO tracking, and customer engagement features.
+This guide helps you connect your Google My Business (GMB) profile to FieldFlux for automated review management, local SEO tracking, and customer engagement features.
 
 ## Prerequisites
 
@@ -11,7 +10,7 @@ Before starting, ensure you have:
 - A verified Google My Business profile
 - Administrative access to your business listing
 - A Google Cloud Platform account (free tier available)
-- FieldPulse account with appropriate permissions
+- FieldFlux account with appropriate permissions
 
 ## Step 1: Google Cloud Platform Setup
 
@@ -41,7 +40,7 @@ gcloud services enable maps-backend.googleapis.com
    - Places API
    - Maps JavaScript API
 4. Add HTTP referrer restrictions for security
-5. Copy the API key for FieldPulse configuration
+5. Copy the API key for FieldFlux configuration
 
 ## Step 2: Google My Business Account Verification
 
@@ -59,10 +58,10 @@ You need one of these permission levels:
 - **Manager**: Can manage reviews and posts
 - **Site Manager**: Limited posting abilities
 
-## Step 3: FieldPulse Integration
+## Step 3: FieldFlux Integration
 
 ### 3.1 Configure API Settings
-In FieldPulse Settings page:
+In FieldFlux Settings page:
 
 1. Navigate to **Settings > Integrations > Google My Business**
 2. Enter your Google Places API key
@@ -88,7 +87,7 @@ Find your Place ID:
 5. Copy the Place ID from the URL or use the Place ID Finder tool
 
 ### 3.3 Permissions Setup
-Grant FieldPulse access to:
+Grant FieldFlux access to:
 - ✅ Read business profile information
 - ✅ Access customer reviews
 - ✅ View business insights and analytics
@@ -128,7 +127,7 @@ Connect GMB insights:
 
 ### 5.1 Connection Test
 Verify the integration:
-1. Check FieldPulse can fetch your business information
+1. Check FieldFlux can fetch your business information
 2. Confirm recent reviews appear in the dashboard
 3. Test review response generation (draft mode)
 4. Validate analytics data synchronization
@@ -136,14 +135,14 @@ Verify the integration:
 ### 5.2 Review Response Test
 Test automated responses:
 1. Create a test review (using a different account)
-2. Verify FieldPulse detects the new review
+2. Verify FieldFlux detects the new review
 3. Check automated response generation
 4. Confirm response posting (if auto-posting enabled)
 
 ## Step 6: Ongoing Management
 
 ### 6.1 Regular Monitoring
-- Review FieldPulse dashboard daily
+- Review FieldFlux dashboard daily
 - Monitor review response performance
 - Check for any API errors or connection issues
 - Update business information as needed
@@ -205,11 +204,11 @@ const responseTemplates = {
     hvac: "Thank you {{customerName}} for the fantastic 5-star review! We're thrilled that our HVAC team exceeded your expectations. Your recommendation means the world to us!",
     plumbing: "{{customerName}}, thank you for the outstanding review! We're so glad our plumbing services solved your issue quickly and professionally."
   },
-  
+
   fourStars: {
     general: "Hi {{customerName}}, thank you for the 4-star review! We appreciate your feedback and would love to know how we can earn that 5th star next time."
   },
-  
+
   negative: {
     escalation: "Hi {{customerName}}, we sincerely apologize for not meeting your expectations. Please contact us directly at {{businessPhone}} so we can make this right."
   }
@@ -231,7 +230,7 @@ Track advanced metrics:
 - [API Documentation](https://developers.google.com/my-business)
 - [Community Forums](https://support.google.com/business/community)
 
-### FieldPulse Support
+### FieldFlux Support
 - In-app help documentation
 - Video tutorials for GMB integration
 - Email support for technical issues

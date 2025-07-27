@@ -1,9 +1,9 @@
 
-# Google Search Console Setup Guide for FieldPulse
+# Google Search Console Setup Guide for FieldFlux
 
 ## Overview
 
-This comprehensive guide walks you through connecting Google Search Console to FieldPulse for advanced SEO tracking, keyword monitoring, and search performance analytics tailored for field service businesses.
+This comprehensive guide walks you through connecting Google Search Console to FieldFlux for advanced SEO tracking, keyword monitoring, and search performance analytics tailored for field service businesses.
 
 ## Prerequisites
 
@@ -11,7 +11,7 @@ Before starting, ensure you have:
 - A verified website in Google Search Console
 - Website owner or full user permissions
 - Google account with administrative access
-- FieldPulse account with SEO tracking features enabled
+- FieldFlux account with SEO tracking features enabled
 
 ## Step 1: Google Search Console Verification
 
@@ -61,16 +61,16 @@ After verification, configure:
    ```
 
 ### 2.2 Service Account Creation
-Create a service account for FieldPulse integration:
+Create a service account for FieldFlux integration:
 
 1. Navigate to **IAM & Admin > Service Accounts**
 2. Click **Create Service Account**
 3. Configure service account:
    ```json
    {
-     "name": "fieldpulse-search-console",
-     "displayName": "FieldPulse Search Console Integration",
-     "description": "Service account for FieldPulse SEO tracking"
+     "name": "fieldflux-search-console",
+     "displayName": "FieldFlux Search Console Integration",
+     "description": "Service account for FieldFlux SEO tracking"
    }
    ```
 4. Download the JSON key file
@@ -83,9 +83,9 @@ Grant the service account access:
 3. Enter service account email address
 4. Set permission level to **Full** or **Restricted**
 
-## Step 3: FieldPulse Integration Setup
+## Step 3: FieldFlux Integration Setup
 
-### 3.1 Configuration in FieldPulse
+### 3.1 Configuration in FieldFlux
 Navigate to **Settings > Integrations > Google Search Console**:
 
 ```javascript
@@ -135,7 +135,7 @@ Target Keywords:
 ## Step 4: Performance Monitoring
 
 ### 4.1 Key Metrics Dashboard
-Monitor these essential SEO metrics in FieldPulse:
+Monitor these essential SEO metrics in FieldFlux:
 
 **Search Performance**:
 - Total clicks and impressions

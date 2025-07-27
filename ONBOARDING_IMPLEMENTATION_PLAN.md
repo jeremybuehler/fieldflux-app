@@ -1,8 +1,8 @@
-# FieldPulse Customer Onboarding Implementation Plan
+# FieldFlux Customer Onboarding Implementation Plan
 
 ## Executive Summary
 
-This plan outlines the complete implementation of a user onboarding system for FieldPulse - a comprehensive marketing automation platform for field service professionals. The onboarding process will guide new users from initial signup through full platform activation, ensuring optimal user adoption and success.
+This plan outlines the complete implementation of a user onboarding system for FieldFlux - a comprehensive marketing automation platform for field service professionals. The onboarding process will guide new users from initial signup through full platform activation, ensuring optimal user adoption and success.
 
 ## Current Platform Context
 

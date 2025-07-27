@@ -1,9 +1,9 @@
 
-# FieldPulse - Replit Project Documentation
+# FieldFlux - Replit Project Documentation
 
 ## Project Overview
 
-FieldPulse is a comprehensive marketing automation platform for field service professionals (HVAC, plumbing, electrical, landscaping) built on Replit. The platform combines intelligent content creation, review management, lead generation, and business analytics into a unified solution.
+FieldFlux is a comprehensive marketing automation platform for field service professionals (HVAC, plumbing, electrical, landscaping) built on Replit. The platform combines intelligent content creation, review management, lead generation, and business analytics into a unified solution.
 
 ## Architecture Overview
 
