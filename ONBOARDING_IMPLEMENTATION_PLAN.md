@@ -111,7 +111,7 @@ interface OnboardingStep {
 const onboardingSteps: OnboardingStep[] = [
   {
     id: 'welcome',
-    title: 'Welcome to FieldPulse',
+    title: 'Welcome to FieldFlux',
     description: 'Let\'s get your marketing automation set up',
     component: WelcomeStep,
   },
@@ -388,6 +388,6 @@ const socialMediaSetup = {
 
 ## Conclusion
 
-This comprehensive onboarding implementation will transform the FieldPulse user experience, ensuring new customers can quickly realize value from the platform. The phased approach allows for iterative improvements while maintaining platform stability.
+This comprehensive onboarding implementation will transform the FieldFlux user experience, ensuring new customers can quickly realize value from the platform. The phased approach allows for iterative improvements while maintaining platform stability.
 
 The success of this implementation will be measured by improved user activation rates, reduced churn, and increased feature adoption across the field service professional user base.

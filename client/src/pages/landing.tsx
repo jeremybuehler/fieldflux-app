@@ -47,7 +47,7 @@ export default function Landing() {
     if (loginData.username === "admin" && loginData.password === "demo123") {
       toast({
         title: "Login Successful",
-        description: "Welcome back to FieldPulse!",
+        description: "Welcome back to FieldFlux!",
       });
       setTimeout(() => {
         window.location.href = "/dashboard";
@@ -81,7 +81,7 @@ export default function Landing() {
     toast({
       title: "Account Created",
       description:
-        "Welcome to FieldPulse! You can now log in with your credentials.",
+        "Welcome to FieldFlux! You can now log in with your credentials.",
     });
 
     // Reset form and switch to login tab
@@ -194,7 +194,7 @@ export default function Landing() {
               </h3>
               <p className="text-100 mb-4 lg:mb-6 text-sm lg:text-base">
                 Join thousands of field service professionals who've consolidated 
-                their marketing stack. FieldPulse replaces your content creation tool, 
+                their marketing stack. FieldFlux replaces your content creation tool, 
                 social media scheduler, lead manager, analytics platform, and reputation 
                 management system with one affordable solution.
               </p>
@@ -212,7 +212,7 @@ export default function Landing() {
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
                       <DialogTitle className="text-center text-2xl font-bold text-hvac-gray">
-                        Access FieldPulse
+                        Access FieldFlux
                       </DialogTitle>
                     </DialogHeader>
                     <Tabs defaultValue="login" className="w-full">
