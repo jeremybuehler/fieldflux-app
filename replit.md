@@ -83,7 +83,9 @@ analytics_reports (id, user_id, report_type, data, generated_at)
 
 ## Recent Major Updates
 
-### January 2025 - Landing Page & Authentication
+### January 2025 - Brand Updates & AI Enhancement
+- **Brand Rebranding**: Updated from "FieldPulse" to "FieldFlux" across all platform references
+- **AI Lead Scoring System**: Comprehensive OpenAI-powered lead scoring with analytics dashboard
 - **Professional Landing Page**: Complete redesign with marketing focus
 - **Replit Auth Integration**: Seamless authentication with OpenID Connect
 - **Protocol Design System**: Modern UI with glass morphism effects

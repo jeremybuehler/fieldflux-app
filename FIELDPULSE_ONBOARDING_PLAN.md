@@ -110,7 +110,7 @@ Guided content creation:
 ```typescript
 const businessTypeContent = {
   hvac: {
-    welcomeMessage: "Welcome to FieldPulse for HVAC professionals!",
+    welcomeMessage: "Welcome to FieldFlux for HVAC professionals!",
     samplePosts: [
       "Winter heating system maintenance checklist",
       "Energy-efficient HVAC upgrades for homeowners",
@@ -122,7 +122,7 @@ const businessTypeContent = {
     ]
   },
   plumbing: {
-    welcomeMessage: "Welcome to FieldPulse for plumbing professionals!",
+    welcomeMessage: "Welcome to FieldFlux for plumbing professionals!",
     samplePosts: [
       "Prevent frozen pipes with these winter tips",
       "Professional drain cleaning vs. DIY methods",
@@ -134,7 +134,7 @@ const businessTypeContent = {
     ]
   },
   electrical: {
-    welcomeMessage: "Welcome to FieldPulse for electrical contractors!",
+    welcomeMessage: "Welcome to FieldFlux for electrical contractors!",
     samplePosts: [
       "Electrical safety tips for homeowners",
       "LED lighting upgrades - save money and energy",
@@ -146,7 +146,7 @@ const businessTypeContent = {
     ]
   },
   landscaping: {
-    welcomeMessage: "Welcome to FieldPulse for landscaping professionals!",
+    welcomeMessage: "Welcome to FieldFlux for landscaping professionals!",
     samplePosts: [
       "Spring lawn care preparation guide",
       "Drought-resistant landscaping solutions",
@@ -464,9 +464,9 @@ const trackFeatureUsage = (userId: string, feature: string) => {
 
 ## Conclusion
 
-This comprehensive onboarding plan addresses the critical gap between user signup and platform activation. By providing a structured, personalized experience tailored to field service professionals, FieldPulse will achieve higher user adoption, reduced churn, and faster time-to-value.
+This comprehensive onboarding plan addresses the critical gap between user signup and platform activation. By providing a structured, personalized experience tailored to field service professionals, FieldFlux will achieve higher user adoption, reduced churn, and faster time-to-value.
 
-The phased implementation approach ensures minimal disruption to existing functionality while systematically building a world-class onboarding experience that sets FieldPulse apart in the competitive marketing automation landscape.
+The phased implementation approach ensures minimal disruption to existing functionality while systematically building a world-class onboarding experience that sets FieldFlux apart in the competitive marketing automation landscape.
 
 **Expected Outcomes:**
 - 75% onboarding completion rate

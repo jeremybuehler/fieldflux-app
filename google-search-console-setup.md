@@ -74,7 +74,7 @@ Create a service account for FieldFlux integration:
    }
    ```
 4. Download the JSON key file
-5. Store securely in FieldPulse environment variables
+5. Store securely in FieldFlux environment variables
 
 ### 2.3 Search Console Permissions
 Grant the service account access:
@@ -375,7 +375,7 @@ Adjust strategy for field service seasonality:
 - [SEO Starter Guide](https://developers.google.com/search/docs/beginner/seo-starter-guide)
 - [API Documentation](https://developers.google.com/webmaster-tools/)
 
-### FieldPulse Support
+### FieldFlux Support
 - Integrated help documentation
 - Video tutorials for Search Console features
 - Best practices for field service SEO

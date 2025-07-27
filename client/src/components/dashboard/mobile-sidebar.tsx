@@ -84,7 +84,7 @@ export default function MobileSidebar({ className }: SidebarProps) {
                   <Bot className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold text-gray-900">FieldPulse</h1>
+                  <h1 className="text-lg font-bold text-gray-900">FieldFlux</h1>
                   <p className="text-sm text-gray-500">Where Field Service Meets Smart Marketing</p>
                 </div>
               </div>

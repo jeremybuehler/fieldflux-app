@@ -242,7 +242,7 @@ This project is proprietary software developed for field service professionals. 
 
 ## Contributing
 
-FieldPulse is actively developed. For feature requests or bug reports, please contact the development team through the appropriate channels.
+FieldFlux is actively developed. For feature requests or bug reports, please contact the development team through the appropriate channels.
 
 ---
 

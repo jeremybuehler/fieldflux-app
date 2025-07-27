@@ -328,7 +328,7 @@ export default function Settings() {
                         <li>Log into your WordPress admin dashboard</li>
                         <li>Go to Users → Your Profile</li>
                         <li>Scroll down to "Application Passwords"</li>
-                        <li>Enter "FieldPulse" as the application name and click "Add New Application Password"</li>
+                        <li>Enter "FieldFlux" as the application name and click "Add New Application Password"</li>
                         <li>Copy the generated password and paste it above</li>
                         <li>Your site URL should be your main domain (e.g., https://yourbusiness.com)</li>
                       </ol>
@@ -1218,7 +1218,7 @@ export default function Settings() {
                         <li>Log into your WordPress admin dashboard</li>
                         <li>Go to Users → Your Profile</li>
                         <li>Scroll down to "Application Passwords"</li>
-                        <li>Enter "FieldPulse" as the application name and click "Add New Application Password"</li>
+                        <li>Enter "FieldFlux" as the application name and click "Add New Application Password"</li>
                         <li>Copy the generated password and paste it above</li>
                         <li>Your site URL should be your main domain (e.g., https://yourbusiness.com)</li>
                       </ol>

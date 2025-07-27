@@ -66,7 +66,7 @@ export default function LandingAuth() {
     if (loginData.username === "admin" && loginData.password === "demo123") {
       toast({
         title: "Login Successful",
-        description: "Welcome back to FieldPulse!",
+        description: "Welcome back to FieldFlux!",
       });
       setTimeout(() => {
         window.location.href = "/dashboard";
@@ -100,7 +100,7 @@ export default function LandingAuth() {
     toast({
       title: "Account Created",
       description:
-        "Welcome to FieldPulse! You can now log in with your credentials.",
+        "Welcome to FieldFlux! You can now log in with your credentials.",
     });
 
     // Reset form and switch to login tab
@@ -124,7 +124,7 @@ export default function LandingAuth() {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <Bot className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-semibold text-gray-900">FieldPulse</span>
+              <span className="text-xl font-semibold text-gray-900">FieldFlux</span>
             </div>
             {isAuthenticated ? (
               <Button 
@@ -311,7 +311,7 @@ export default function LandingAuth() {
                   </div>
                 </div>
                 <p className="text-gray-600 italic">
-                  "With FieldPulse, we can perform on our work to our marketing practically manages itself."
+                  "With FieldFlux, we can perform on our work to our marketing practically manages itself."
                 </p>
               </CardContent>
             </Card>
@@ -351,7 +351,7 @@ export default function LandingAuth() {
             <CardContent className="p-8">
               <h3 className="text-3xl font-bold mb-4 text-black">Ready to Transform Your Marketing?</h3>
               <p className="text-xl mb-6 text-black/80">
-                Join 500+ field service professionals who are already growing their business with FieldPulse.
+                Join 500+ field service professionals who are already growing their business with FieldFlux.
               </p>
               
               <div className="space-y-4">
