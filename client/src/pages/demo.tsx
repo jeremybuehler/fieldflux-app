@@ -34,6 +34,7 @@ export default function Demo() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [progress, setProgress] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [autoStartCountdown, setAutoStartCountdown] = useState(3);
 
   const demoSteps: DemoStep[] = [
     {
@@ -450,12 +451,38 @@ export default function Demo() {
     setProgress(0);
   }, [currentStep, demoSteps]);
 
+  // Auto-start demo with countdown
+  useEffect(() => {
+    const countdownInterval = setInterval(() => {
+      setAutoStartCountdown(prev => {
+        if (prev <= 1) {
+          setIsPlaying(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    // Clear countdown after 3 seconds
+    const autoStartTimer = setTimeout(() => {
+      clearInterval(countdownInterval);
+      setAutoStartCountdown(0);
+    }, 3000);
+
+    return () => {
+      clearInterval(countdownInterval);
+      clearTimeout(autoStartTimer);
+    };
+  }, []); // Only run on mount
+
   const handlePlay = () => {
     setIsPlaying(true);
+    setAutoStartCountdown(0); // Clear countdown when user manually starts
   };
 
   const handlePause = () => {
     setIsPlaying(false);
+    setAutoStartCountdown(0); // Clear countdown when user manually pauses
   };
 
   const handleRestart = () => {
@@ -463,6 +490,7 @@ export default function Demo() {
     setProgress(0);
     setTimeLeft(demoSteps[0].duration);
     setIsPlaying(true);
+    setAutoStartCountdown(0); // Clear countdown when user manually restarts
   };
 
   const handleStepSelect = (stepIndex: number) => {
@@ -470,6 +498,7 @@ export default function Demo() {
     setProgress(0);
     setTimeLeft(demoSteps[stepIndex].duration);
     setIsPlaying(false);
+    setAutoStartCountdown(0); // Clear countdown when user manually selects step
   };
 
   const currentDemoStep = demoSteps[currentStep];
@@ -512,7 +541,7 @@ export default function Demo() {
                   {!isPlaying ? (
                     <Button onClick={handlePlay} size="lg" className="bg-blue-600 hover:bg-blue-700">
                       <Play className="w-5 h-5 mr-2" />
-                      Start Demo
+                      {autoStartCountdown > 0 ? `Starting in ${autoStartCountdown}s` : "Start Demo"}
                     </Button>
                   ) : (
                     <Button onClick={handlePause} size="lg" variant="outline">
@@ -525,6 +554,15 @@ export default function Demo() {
                     Restart
                   </Button>
                 </div>
+                
+                {autoStartCountdown > 0 && !isPlaying && (
+                  <div className="flex items-center space-x-2 bg-blue-50 px-3 py-2 rounded-lg">
+                    <div className="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></div>
+                    <span className="text-sm text-blue-700 font-medium">
+                      Demo starting automatically in {autoStartCountdown}s
+                    </span>
+                  </div>
+                )}
               </div>
               
               <div className="flex items-center space-x-4 text-sm text-gray-600">
