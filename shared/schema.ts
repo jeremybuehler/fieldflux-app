@@ -35,6 +35,68 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// User onboarding and progress tracking
+export const userOnboarding = pgTable("user_onboarding", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  businessName: text("business_name"),
+  businessType: text("business_type"),
+  teamSize: text("team_size"),
+  yearsInBusiness: text("years_in_business"),
+  serviceArea: text("service_area"),
+  monthlyBudget: text("monthly_budget"),
+  primaryGoals: text("primary_goals").array(),
+  currentChallenges: text("current_challenges").array(),
+  currentMarketing: text("current_marketing").array(),
+  socialPlatforms: text("social_platforms").array(),
+  hasWebsite: boolean("has_website").default(false),
+  websiteUrl: text("website_url"),
+  businessDescription: text("business_description"),
+  aiRecommendations: jsonb("ai_recommendations"),
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User achievements and gamification
+export const userAchievements = pgTable("user_achievements", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  achievementId: text("achievement_id").notNull(),
+  progress: integer("progress").default(0),
+  maxProgress: integer("max_progress").default(1),
+  isUnlocked: boolean("is_unlocked").default(false),
+  isCompleted: boolean("is_completed").default(false),
+  unlockedAt: timestamp("unlocked_at"),
+  completedAt: timestamp("completed_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User progress and leveling
+export const userProgress = pgTable("user_progress", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id).notNull().unique(),
+  totalPoints: integer("total_points").default(0),
+  level: integer("level").default(1),
+  experiencePoints: integer("experience_points").default(0),
+  streak: integer("streak").default(0),
+  lastActivity: timestamp("last_activity").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Email delivery tracking
+export const emailLogs = pgTable("email_logs", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id),
+  emailType: text("email_type").notNull(), // 'onboarding_plan', 'achievement_unlock', etc.
+  recipientEmail: text("recipient_email").notNull(),
+  subject: text("subject").notNull(),
+  status: text("status").notNull().default("pending"), // 'pending', 'sent', 'failed'
+  errorMessage: text("error_message"),
+  sentAt: timestamp("sent_at"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 export const wordpressPosts = pgTable("wordpress_posts", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -415,3 +477,23 @@ export type Client = typeof clients.$inferSelect;
 export type InsertClient = z.infer<typeof insertClientSchema>;
 export type ClientConfiguration = typeof clientConfigurations.$inferSelect;
 export type InsertClientConfiguration = z.infer<typeof insertClientConfigurationSchema>;
+
+// User onboarding types
+export const insertUserOnboardingSchema = createInsertSchema(userOnboarding).omit({ id: true, createdAt: true });
+export type InsertUserOnboarding = z.infer<typeof insertUserOnboardingSchema>;
+export type UserOnboarding = typeof userOnboarding.$inferSelect;
+
+// User achievements types
+export const insertUserAchievementSchema = createInsertSchema(userAchievements).omit({ id: true, createdAt: true });
+export type InsertUserAchievement = z.infer<typeof insertUserAchievementSchema>;
+export type UserAchievement = typeof userAchievements.$inferSelect;
+
+// User progress types
+export const insertUserProgressSchema = createInsertSchema(userProgress).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertUserProgress = z.infer<typeof insertUserProgressSchema>;
+export type UserProgressData = typeof userProgress.$inferSelect;
+
+// Email logs types
+export const insertEmailLogSchema = createInsertSchema(emailLogs).omit({ id: true, createdAt: true });
+export type InsertEmailLog = z.infer<typeof insertEmailLogSchema>;
+export type EmailLog = typeof emailLogs.$inferSelect;
