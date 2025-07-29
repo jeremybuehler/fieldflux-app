@@ -36,7 +36,7 @@ function ReviewCard({ review, businessName }) {
 
       toast({
         title: "Response Generated",
-        description: "AI-powered response ready for review",
+        description: "AI-native response ready for review",
       });
     } catch (error) {
       toast({

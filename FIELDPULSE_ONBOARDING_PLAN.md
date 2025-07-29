@@ -8,7 +8,7 @@ This comprehensive onboarding plan transforms new FieldFlux users from signup to
 
 **FieldFlux** is a comprehensive marketing automation platform that replaces 5 marketing tools with one unified solution. Our target users are field service professionals who need:
 
-- **AI-powered content creation** for social media and blogs
+- **AI-native content creation** for social media and blogs
 - **Smart review management** with automated responses
 - **Lead generation and qualification** systems
 - **Performance analytics** and reporting

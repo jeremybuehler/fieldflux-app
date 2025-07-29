@@ -375,7 +375,7 @@ const socialMediaSetup = {
 ## Future Enhancements
 
 ### Advanced Features
-- **AI-Powered Recommendations**: Machine learning for personalization
+- **AI-Native Recommendations**: Machine learning for personalization
 - **Video Onboarding**: Interactive tutorials
 - **Team Collaboration**: Multi-user onboarding
 - **White-Label Customization**: Agency-specific flows
