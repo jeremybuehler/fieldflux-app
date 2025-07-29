@@ -15,6 +15,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -34,6 +41,9 @@ import {
   Lightbulb,
   Clock,
   TrendingUp,
+  Mail,
+  Send,
+  Gift,
 } from "lucide-react";
 
 interface OnboardingData {
@@ -101,6 +111,8 @@ export default function Onboarding() {
   
   const [aiRecommendations, setAiRecommendations] = useState<AIRecommendation[]>([]);
   const [isGeneratingPlan, setIsGeneratingPlan] = useState(false);
+  const [showEmailDialog, setShowEmailDialog] = useState(false);
+  const [emailAddress, setEmailAddress] = useState("");
   const { toast } = useToast();
 
   // Generate AI recommendations based on user input
@@ -161,6 +173,50 @@ export default function Onboarding() {
       });
       window.location.href = '/dashboard';
     }
+  });
+
+  const sendEmailPlan = useMutation({
+    mutationFn: async ({ email }: { email: string }) => {
+      const response = await fetch('/api/user/send-onboarding-plan', {
+        method: 'POST',
+        body: JSON.stringify({ 
+          email,
+          businessName: data.businessName,
+          recommendations: aiRecommendations,
+          userProfile: {
+            businessType: data.businessType,
+            teamSize: data.teamSize,
+            primaryGoals: data.primaryGoals,
+            currentChallenges: data.currentChallenges,
+          }
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to send email');
+      }
+      
+      return response.json();
+    },
+    onSuccess: () => {
+      toast({
+        title: "Email Sent!",
+        description: `Your personalized marketing plan has been sent to ${emailAddress}`,
+      });
+      setShowEmailDialog(false);
+      setEmailAddress("");
+    },
+    onError: (error) => {
+      toast({
+        title: "Email Failed",
+        description: "Failed to send email. Please try again or check your email address.",
+        variant: "destructive",
+      });
+      console.error('Error sending email:', error);
+    },
   });
 
   const updateData = (field: string, value: any) => {
@@ -740,24 +796,89 @@ export default function Onboarding() {
           </Button>
 
           {currentStep === steps.length - 1 ? (
-            <Button
-              onClick={handleComplete}
-              disabled={aiRecommendations.length === 0 || saveOnboardingData.isPending}
-              size="lg"
-              className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white order-1 sm:order-2"
-            >
-              {saveOnboardingData.isPending ? (
-                <>
-                  <CheckCircle className="w-4 h-4 mr-2 animate-spin" />
-                  Completing Setup...
-                </>
-              ) : (
-                <>
-                  <CheckCircle className="w-4 h-4 mr-2" />
-                  Complete Setup
-                </>
-              )}
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Dialog open={showEmailDialog} onOpenChange={setShowEmailDialog}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    disabled={aiRecommendations.length === 0}
+                    className="w-full sm:w-auto border-blue-200 text-blue-700 hover:bg-blue-50"
+                  >
+                    <Mail className="w-4 h-4 mr-2" />
+                    Email Plan to Me
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center space-x-2">
+                      <Gift className="w-5 h-5 text-blue-600" />
+                      <span>Email Your Marketing Plan</span>
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <p className="text-sm text-gray-600">
+                      Get your personalized marketing plan delivered to your inbox for easy reference and implementation.
+                    </p>
+                    <div>
+                      <Label htmlFor="email">Email Address</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="your@email.com"
+                        value={emailAddress}
+                        onChange={(e) => setEmailAddress(e.target.value)}
+                        className="mt-1"
+                      />
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setShowEmailDialog(false)}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={() => sendEmailPlan.mutate({ email: emailAddress })}
+                        disabled={!emailAddress || sendEmailPlan.isPending}
+                        className="bg-blue-600 hover:bg-blue-700 text-white"
+                      >
+                        {sendEmailPlan.isPending ? (
+                          <>
+                            <Send className="w-4 h-4 mr-2 animate-pulse" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-4 h-4 mr-2" />
+                            Send Plan
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
+              
+              <Button
+                onClick={handleComplete}
+                disabled={aiRecommendations.length === 0 || saveOnboardingData.isPending}
+                size="lg"
+                className="w-full sm:w-auto bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white"
+              >
+                {saveOnboardingData.isPending ? (
+                  <>
+                    <CheckCircle className="w-4 h-4 mr-2 animate-spin" />
+                    Completing Setup...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="w-4 h-4 mr-2" />
+                    Complete Setup
+                  </>
+                )}
+              </Button>
+            </div>
           ) : (
             <Button
               onClick={nextStep}

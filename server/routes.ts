@@ -1757,6 +1757,48 @@ Format as JSON array with this structure:
     }
   });
 
+  // Send onboarding plan via email
+  app.post('/api/user/send-onboarding-plan', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      
+      if (!userId) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const { email, businessName, recommendations, userProfile } = req.body;
+      
+      if (!email || !businessName || !recommendations) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      // Import email service
+      const { emailService } = await import("./services/emailService");
+      
+      // Send the onboarding plan email
+      const success = await emailService.sendOnboardingPlan(userId, email, {
+        businessName,
+        recommendations,
+        userProfile
+      });
+
+      if (success) {
+        res.json({ 
+          success: true, 
+          message: "Email sent successfully"
+        });
+      } else {
+        res.status(500).json({ 
+          error: "Failed to send email - Email service may not be configured",
+          message: "Please contact support if you need email functionality" 
+        });
+      }
+    } catch (error) {
+      console.error("Error sending onboarding plan email:", error);
+      res.status(500).json({ error: "Failed to send email" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
