@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { Link, useLocation } from "wouter";
 import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, ExternalLink, ArrowLeft, MessageSquare, Facebook, Twitter, Instagram, Linkedin, Share2, Code, Search, Star, UserPlus, LayoutDashboard, TrendingUp, Bot, MapPin, LogOut } from "lucide-react";
+import BillingSettings from "@/components/settings/billing-settings";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -257,12 +258,18 @@ export default function Settings() {
       {/* Main Content */}
       <div className="p-4 lg:p-8">
         <Tabs defaultValue="wordpress" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 bg-gray-100 p-1 rounded-lg">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5 bg-gray-100 p-1 rounded-lg">
             <TabsTrigger 
               value="wordpress" 
               className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm text-gray-700 font-medium"
             >
               WordPress
+            </TabsTrigger>
+            <TabsTrigger 
+              value="billing" 
+              className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-gray-700 font-medium hover:text-green-600"
+            >
+              Billing
             </TabsTrigger>
             <TabsTrigger 
               value="analytics" 
@@ -672,6 +679,12 @@ export default function Settings() {
               </Alert>
             </div>
           </TabsContent>
+
+          {/* Billing Tab */}
+          <TabsContent value="billing" className="space-y-6">
+            <BillingSettings />
+          </TabsContent>
+
         </Tabs>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import type { Express } from "express";
+import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
@@ -1796,6 +1797,136 @@ Format as JSON array with this structure:
     } catch (error) {
       console.error("Error sending onboarding plan email:", error);
       res.status(500).json({ error: "Failed to send email" });
+    }
+  });
+
+  // Stripe payment routes
+  app.post('/api/stripe/create-payment-intent', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      const { amount, description, metadata } = req.body;
+
+      if (!amount || !description) {
+        return res.status(400).json({ error: 'Amount and description are required' });
+      }
+
+      const { stripeService } = await import('./services/stripeService');
+      const result = await stripeService.createPaymentIntent(userId, amount, description, metadata);
+
+      res.json(result);
+    } catch (error) {
+      console.error('Error creating payment intent:', error);
+      res.status(500).json({ error: 'Failed to create payment intent' });
+    }
+  });
+
+  app.post('/api/stripe/create-subscription', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      const { priceId } = req.body;
+
+      if (!priceId) {
+        return res.status(400).json({ error: 'Price ID is required' });
+      }
+
+      const { stripeService } = await import('./services/stripeService');
+      const result = await stripeService.getOrCreateSubscription(userId, priceId);
+
+      res.json(result);
+    } catch (error) {
+      console.error('Error creating subscription:', error);
+      res.status(500).json({ error: 'Failed to create subscription' });
+    }
+  });
+
+  app.post('/api/stripe/cancel-subscription', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      const { stripeService } = await import('./services/stripeService');
+      await stripeService.cancelSubscription(userId);
+
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error canceling subscription:', error);
+      res.status(500).json({ error: 'Failed to cancel subscription' });
+    }
+  });
+
+  app.post('/api/stripe/create-billing-portal', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      const { returnUrl } = req.body;
+      const { stripeService } = await import('./services/stripeService');
+      const url = await stripeService.createBillingPortalSession(userId, returnUrl || 'http://localhost:5000');
+
+      res.json({ url });
+    } catch (error) {
+      console.error('Error creating billing portal:', error);
+      res.status(500).json({ error: 'Failed to create billing portal' });
+    }
+  });
+
+  app.get('/api/stripe/subscription-plans', async (req, res) => {
+    try {
+      const { stripeService } = await import('./services/stripeService');
+      const plans = await stripeService.getSubscriptionPlans();
+      res.json(plans);
+    } catch (error) {
+      console.error('Error fetching subscription plans:', error);
+      res.status(500).json({ error: 'Failed to fetch subscription plans' });
+    }
+  });
+
+  app.get('/api/stripe/payment-history', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: 'Unauthorized' });
+      }
+
+      const { stripeService } = await import('./services/stripeService');
+      const payments = await stripeService.getUserPaymentHistory(userId);
+      res.json(payments);
+    } catch (error) {
+      console.error('Error fetching payment history:', error);
+      res.status(500).json({ error: 'Failed to fetch payment history' });
+    }
+  });
+
+  // Stripe webhooks endpoint (no auth required)
+  app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+    try {
+      const signature = req.headers['stripe-signature'] as string;
+      const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+      if (!endpointSecret) {
+        console.warn('STRIPE_WEBHOOK_SECRET not configured');
+        return res.status(400).json({ error: 'Webhook secret not configured' });
+      }
+
+      const { stripeService } = await import('./services/stripeService');
+      await stripeService.handleWebhook(req.body, signature, endpointSecret);
+
+      res.json({ received: true });
+    } catch (error) {
+      console.error('Webhook error:', error);
+      res.status(400).json({ error: 'Webhook validation failed' });
     }
   });
 
