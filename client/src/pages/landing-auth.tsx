@@ -107,15 +107,16 @@ export default function LandingAuth() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-700 rounded-xl flex items-center justify-center shadow-lg">
-                <Zap className="w-6 h-6 text-white" />
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex justify-between items-center h-14 sm:h-16">
+            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-purple-700 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                <Zap className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
-              <div>
-                <span className="text-xl font-bold text-gray-900">FieldFlux</span>
-                <div className="text-xs text-gray-500 font-medium">Intelligent Field Service Marketing</div>
+              <div className="min-w-0 flex-1">
+                <span className="text-lg sm:text-xl font-bold text-gray-900">FieldFlux</span>
+                <div className="text-xs text-gray-500 font-medium hidden sm:block">Intelligent Field Service Marketing</div>
+                <div className="text-xs text-gray-500 font-medium sm:hidden">Smart Marketing</div>
               </div>
             </div>
             
@@ -125,30 +126,35 @@ export default function LandingAuth() {
               <a href="#support" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Support</a>
             </nav>
 
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
               {isAuthenticated ? (
                 <Button 
                   onClick={handleDashboard}
-                  className="bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white shadow-lg"
+                  size="sm"
+                  className="bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white shadow-lg text-sm sm:text-base"
                 >
-                  Dashboard
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                  <span className="hidden sm:inline">Dashboard</span>
+                  <span className="sm:hidden">App</span>
+                  <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
                 </Button>
               ) : (
                 <>
                   <Button 
                     variant="ghost"
+                    size="sm"
                     onClick={handleLogin}
-                    className="text-gray-700 hover:text-gray-900 font-medium"
+                    className="text-gray-700 hover:text-gray-900 font-medium hidden sm:inline-flex"
                   >
                     Sign In
                   </Button>
                   <Button 
                     onClick={handleLogin}
-                    className="bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white shadow-lg"
+                    size="sm"
+                    className="bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white shadow-lg text-sm sm:text-base px-3 sm:px-4"
                   >
-                    Get Started
-                    <ArrowRight className="w-4 h-4 ml-2" />
+                    <span className="hidden sm:inline">Get Started</span>
+                    <span className="sm:hidden">Start</span>
+                    <ArrowRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
                   </Button>
                 </>
               )}
