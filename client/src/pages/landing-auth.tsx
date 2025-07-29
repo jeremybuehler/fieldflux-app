@@ -100,7 +100,7 @@ export default function LandingAuth() {
   };
 
   const handleDemoAccess = () => {
-    window.location.href = "/dashboard";
+    window.location.href = "/demo";
   };
 
   return (
