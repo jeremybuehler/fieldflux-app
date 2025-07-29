@@ -14,7 +14,8 @@ import {
   Settings as SettingsIcon,
   Menu,
   X,
-  Globe
+  Globe,
+  Zap
 } from "lucide-react";
 
 const navigation = [
@@ -81,7 +82,7 @@ export default function MobileSidebar({ className }: SidebarProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-primary to-hvac-orange rounded-lg flex items-center justify-center">
-                  <Bot className="w-5 h-5 text-white" />
+                  <Zap className="w-5 h-5 text-white" />
                 </div>
                 <div>
                   <h1 className="text-lg font-bold text-gray-900">FieldFlux</h1>
