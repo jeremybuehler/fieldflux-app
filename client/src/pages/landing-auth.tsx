@@ -122,7 +122,7 @@ export default function LandingAuth() {
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Bot className="w-5 h-5 text-white" />
+                <Zap className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-semibold text-gray-900">FieldFlux</span>
             </div>
@@ -151,13 +151,12 @@ export default function LandingAuth() {
         {/* Hero Section */}
         <div className="pt-16 pb-12 text-center">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-5xl font-bold text-gray-900 mb-6 leading-tight">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
               Where Field Service<br />
               Meets Smart Marketing
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              A powerful platform to streamline content,<br />
-              automate leads, and grow your service business.
+            <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-2xl mx-auto px-4">
+              A powerful platform to streamline content, automate leads, and grow your service business.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -193,13 +192,13 @@ export default function LandingAuth() {
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-16">
           <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow">
-            <CardContent className="p-8">
+            <CardContent className="p-6 sm:p-8">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
                 <BarChart3 className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">
                 Performance Insights
               </h3>
               <p className="text-gray-600 leading-relaxed">
@@ -209,11 +208,11 @@ export default function LandingAuth() {
           </Card>
 
           <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow">
-            <CardContent className="p-8">
+            <CardContent className="p-6 sm:p-8">
               <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
                 <Zap className="w-6 h-6 text-orange-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">
                 Content That Converts
               </h3>
               <p className="text-gray-600 leading-relaxed">
@@ -223,11 +222,11 @@ export default function LandingAuth() {
           </Card>
 
           <Card className="bg-white border-0 shadow-sm hover:shadow-md transition-shadow">
-            <CardContent className="p-8">
+            <CardContent className="p-6 sm:p-8">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
                 <Users className="w-6 h-6 text-green-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-3">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3">
                 Smart Lead Management
               </h3>
               <p className="text-gray-600 leading-relaxed">
@@ -240,10 +239,10 @@ export default function LandingAuth() {
         {/* How It Works Section */}
         <div className="py-16">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">How It Works</h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12 mb-16">
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <BarChart3 className="w-8 h-8 text-blue-600" />
@@ -254,7 +253,7 @@ export default function LandingAuth() {
 
             <div className="text-center">
               <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Bot className="w-8 h-8 text-purple-600" />
+                <Zap className="w-8 h-8 text-purple-600" />
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">AI-Native Content</h3>
               <p className="text-gray-600">Generate professional marketing materials</p>
@@ -270,7 +269,7 @@ export default function LandingAuth() {
           </div>
 
           {/* Testimonials */}
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-16">
             <Card className="bg-white border-0 shadow-sm">
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
