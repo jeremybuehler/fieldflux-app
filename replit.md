@@ -87,6 +87,7 @@ analytics_reports (id, user_id, report_type, data, generated_at)
 - **Brand Rebranding**: Updated from "FieldPulse" to "FieldFlux" across all platform references
 - **AI Lead Scoring System**: Comprehensive OpenAI-native lead scoring with analytics dashboard
 - **Professional Landing Page**: Complete redesign with clean, modern aesthetic and improved footer
+- **Automated Demo System**: Non-interactive guided tour showcasing all key features with step-by-step progression
 - **Personalized AI Coach**: Full implementation with engagement tracking, goal setting, and analytics
 - **Replit Auth Integration**: Seamless authentication with OpenID Connect
 - **Protocol Design System**: Modern UI with glass morphism effects and gradient accents
@@ -131,6 +132,7 @@ components/
 
 pages/
 ├── landing.tsx         # Marketing landing page
+├── demo.tsx            # Automated product demo
 ├── dashboard.tsx       # Main application dashboard
 ├── social.tsx          # Social media management
 ├── leads.tsx           # Lead management

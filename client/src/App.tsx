@@ -18,6 +18,7 @@ import Keywords from "@/pages/keywords";
 import SEO from "@/pages/seo";
 import Website from "@/pages/website";
 import AICoach from "@/pages/ai-coach";
+import Demo from "@/pages/demo";
 import GoDaddy from "@/pages/godaddy";
 import NotFound from "@/pages/not-found";
 
@@ -30,6 +31,9 @@ function Router() {
     <Switch>
       {/* Landing page - always accessible */}
       <Route path="/" component={Landing} />
+      
+      {/* Demo page - accessible to everyone */}
+      <Route path="/demo" component={Demo} />
       
       {/* Protected routes - require authentication */}
       {isAuthenticated ? (
