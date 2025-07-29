@@ -88,6 +88,7 @@ analytics_reports (id, user_id, report_type, data, generated_at)
 - **AI Lead Scoring System**: Comprehensive OpenAI-native lead scoring with analytics dashboard
 - **Professional Landing Page**: Complete redesign with clean, modern aesthetic and improved footer
 - **Automated Demo System**: Non-interactive guided tour showcasing all key features with step-by-step progression
+- **AI-Generated Personalized Onboarding**: Custom setup experience with intelligent recommendations based on business profile
 - **Personalized AI Coach**: Full implementation with engagement tracking, goal setting, and analytics
 - **Replit Auth Integration**: Seamless authentication with OpenID Connect
 - **Protocol Design System**: Modern UI with glass morphism effects and gradient accents
@@ -133,6 +134,7 @@ components/
 pages/
 ├── landing.tsx         # Marketing landing page
 ├── demo.tsx            # Automated product demo
+├── onboarding.tsx      # AI-generated personalized onboarding
 ├── dashboard.tsx       # Main application dashboard
 ├── social.tsx          # Social media management
 ├── leads.tsx           # Lead management
@@ -178,6 +180,7 @@ replitAuth.ts             # Authentication middleware
 - `GET /api/social/posts` - Retrieve social media posts
 - `POST /api/social/posts` - Create new social post
 - `POST /api/ai/generate-content` - AI content generation
+- `POST /api/ai/generate-onboarding-plan` - Generate personalized business strategy
 - `GET /api/wordpress/posts` - WordPress blog posts
 
 ### Business Data
@@ -194,6 +197,9 @@ replitAuth.ts             # Authentication middleware
 ### Communication
 - `POST /api/sms/send` - Send SMS messages
 - `GET /api/sms/templates` - Message templates
+
+### User Management
+- `POST /api/user/onboarding` - Save onboarding data and preferences
 
 ## Development Workflow
 

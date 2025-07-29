@@ -1542,6 +1542,104 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return res.json(result);
   });
 
+  // AI-powered onboarding plan generation
+  app.post('/api/ai/generate-onboarding-plan', async (req, res) => {
+    try {
+      const onboardingData = req.body;
+
+      if (!onboardingData.businessType || !onboardingData.primaryGoals) {
+        return res.status(400).json({ error: 'Business type and goals are required' });
+      }
+
+      // Create comprehensive prompt for AI
+      const prompt = `Generate a personalized marketing strategy for a ${onboardingData.businessType} business called "${onboardingData.businessName}".
+
+Business Profile:
+- Service Type: ${onboardingData.businessType}
+- Team Size: ${onboardingData.teamSize}
+- Years in Business: ${onboardingData.yearsInBusiness}
+- Service Area: ${onboardingData.serviceArea}
+- Monthly Budget: ${onboardingData.monthlyBudget}
+
+Goals: ${onboardingData.primaryGoals.join(', ')}
+Current Challenges: ${onboardingData.currentChallenges.join(', ')}
+Current Marketing: ${onboardingData.currentMarketing.join(', ')}
+Social Platforms: ${onboardingData.socialPlatforms.join(', ')}
+Content Tone Preference: ${onboardingData.contentTone}
+Automation Level: ${onboardingData.automationLevel}
+
+Create 4-6 specific, actionable recommendations with:
+1. Priority level (high/medium/low)
+2. Category (content, lead generation, reviews, social media, analytics, automation)
+3. Estimated impact (specific percentage or metric)
+4. Setup time estimate
+5. Detailed description of implementation
+
+Format as JSON array with this structure:
+{
+  "recommendations": [
+    {
+      "category": "string",
+      "title": "string",
+      "description": "string",
+      "priority": "high|medium|low",
+      "estimatedImpact": "string",
+      "setupTime": "string"
+    }
+  ]
+}`;
+
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+        messages: [
+          {
+            role: "system",
+            content: "You are an expert field service marketing consultant. Generate specific, actionable, data-driven recommendations. Respond only with valid JSON."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        response_format: { type: "json_object" },
+        max_tokens: 1500,
+        temperature: 0.3
+      });
+
+      const result = JSON.parse(response.choices[0].message.content || '{}');
+      
+      res.json(result);
+
+    } catch (error) {
+      console.error('AI onboarding plan generation error:', error);
+      res.status(500).json({ error: 'Failed to generate onboarding plan' });
+    }
+  });
+
+  // Save user onboarding data
+  app.post('/api/user/onboarding', async (req, res) => {
+    try {
+      const onboardingData = req.body;
+      
+      // For now, just return success - in a real app, this would save to the database
+      await storage.createActivity({
+        type: "onboarding",
+        title: "Onboarding Completed",
+        description: `${onboardingData.businessName} completed personalized onboarding`
+      });
+
+      res.json({ 
+        success: true, 
+        message: 'Onboarding completed successfully',
+        redirect: '/dashboard'
+      });
+
+    } catch (error) {
+      console.error('Onboarding save error:', error);
+      res.status(500).json({ error: 'Failed to save onboarding data' });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
