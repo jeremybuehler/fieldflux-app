@@ -40,17 +40,13 @@ if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
   twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 }
 
-// Simple authentication middleware for now
-const isAuthenticated = (req: any, res: any, next: any) => {
-  // For now, allow all requests - we'll implement proper auth later
-  next();
-};
+// Remove duplicate authentication middleware - using the one from replitAuth
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
-  // Auth routes
+  // Auth routes (using the isAuthenticated from replitAuth, not the removed duplicate)
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       if (!req.user || !req.user.claims) {
@@ -144,6 +140,141 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       res.status(400).json({ message: "Invalid post data" });
     }
+  });
+
+  // AI Content Generation Routes
+  app.post('/api/ai/generate-blog', isAuthenticated, async (req: any, res) => {
+    try {
+      const { topic, tone, length, targetAudience, keywords, includeCallToAction } = req.body;
+      
+      const wordCount = length === 'short' ? '400-600' : length === 'medium' ? '800-1200' : '1500-2000';
+      const keywordText = keywords && keywords.length > 0 ? `Focus on these SEO keywords: ${keywords.join(', ')}.` : '';
+      const ctaText = includeCallToAction ? 'Include a compelling call-to-action at the end.' : '';
+      
+      const prompt = `Write a comprehensive ${tone} blog post about "${topic}" for ${targetAudience}. 
+        The post should be ${wordCount} words long. 
+        ${keywordText}
+        ${ctaText}
+        
+        Structure the post with:
+        1. Engaging title
+        2. Clear introduction
+        3. Well-organized main content with subheadings
+        4. Practical tips and actionable advice
+        5. Professional conclusion
+        
+        Write in a ${tone} tone that resonates with ${targetAudience}. Make it informative, engaging, and valuable for field service professionals.`;
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 2000,
+        temperature: 0.7,
+      });
+
+      const content = completion.choices[0].message.content;
+      res.json({ content, topic, tone, length, targetAudience });
+    } catch (error) {
+      console.error('Blog generation error:', error);
+      res.status(500).json({ error: 'Failed to generate blog post' });
+    }
+  });
+
+  app.post('/api/ai/generate-medium', isAuthenticated, async (req: any, res) => {
+    try {
+      const { topic, tone, length, targetAudience, keywords } = req.body;
+      
+      const wordCount = length === 'short' ? '800-1200' : length === 'medium' ? '1500-2000' : '2500-3000';
+      const keywordText = keywords && keywords.length > 0 ? `Incorporate these keywords naturally: ${keywords.join(', ')}.` : '';
+      
+      const prompt = `Write a compelling Medium article about "${topic}" for ${targetAudience}. 
+        The article should be ${wordCount} words long and follow Medium's best practices.
+        ${keywordText}
+        
+        Structure for Medium:
+        1. Hook-filled opening that grabs attention
+        2. Personal story or relatable scenario
+        3. Data-driven insights and examples
+        4. Actionable takeaways
+        5. Thought-provoking conclusion
+        
+        Use a ${tone} tone with storytelling elements. Include subheadings, bullet points, and make it scannable. 
+        Write for field service professionals and business owners who want to grow their business.`;
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 3000,
+        temperature: 0.8,
+      });
+
+      const content = completion.choices[0].message.content;
+      res.json({ content, topic, tone, length, targetAudience, platform: 'medium' });
+    } catch (error) {
+      console.error('Medium generation error:', error);
+      res.status(500).json({ error: 'Failed to generate Medium article' });
+    }
+  });
+
+  app.post('/api/ai/generate-substack', isAuthenticated, async (req: any, res) => {
+    try {
+      const { topic, tone, length, targetAudience, keywords } = req.body;
+      
+      const wordCount = length === 'short' ? '600-1000' : length === 'medium' ? '1200-1800' : '2000-2500';
+      const keywordText = keywords && keywords.length > 0 ? `Naturally include these keywords: ${keywords.join(', ')}.` : '';
+      
+      const prompt = `Write an engaging Substack newsletter article about "${topic}" for ${targetAudience}. 
+        The article should be ${wordCount} words long and follow newsletter best practices.
+        ${keywordText}
+        
+        Structure for Substack:
+        1. Personal greeting and connection with subscribers
+        2. Current relevant context or news hook
+        3. Main content with clear sections
+        4. Industry insights and analysis
+        5. Community engagement question
+        6. Clear next steps or resources
+        
+        Use a ${tone} but personal tone that builds community. Make it feel like a conversation with subscribers.
+        Focus on field service industry insights, tips, and trends that subscribers can apply immediately.`;
+
+      const completion = await openai.chat.completions.create({
+        model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: 2500,
+        temperature: 0.8,
+      });
+
+      const content = completion.choices[0].message.content;
+      res.json({ content, topic, tone, length, targetAudience, platform: 'substack' });
+    } catch (error) {
+      console.error('Substack generation error:', error);
+      res.status(500).json({ error: 'Failed to generate Substack article' });
+    }
+  });
+
+  // Website Content Routes
+  app.get('/api/website/blog-posts', isAuthenticated, async (req: any, res) => {
+    // Return sample blog posts for now
+    const samplePosts = [
+      {
+        id: '1',
+        title: 'HVAC Maintenance Tips for Summer',
+        excerpt: 'Essential tips to keep your HVAC system running efficiently during hot weather.',
+        status: 'published',
+        readingTime: 5,
+        createdAt: new Date().toISOString()
+      },
+      {
+        id: '2',
+        title: 'Plumbing Emergency Prevention Guide',
+        excerpt: 'How to prevent common plumbing emergencies and what to do when they happen.',
+        status: 'draft',
+        readingTime: 7,
+        createdAt: new Date().toISOString()
+      }
+    ];
+    res.json(samplePosts);
   });
 
   app.post("/api/wordpress/generate-post", async (req, res) => {
