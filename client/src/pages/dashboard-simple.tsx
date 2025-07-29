@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Link, useLocation } from "wouter";
 import { Bot, MapPin, TrendingUp, Users, MessageSquare, Star, LogOut, Calendar, Share2, Code, Search, UserPlus, Settings as SettingsIcon, LayoutDashboard, CheckCircle, Globe, Target, Zap } from "lucide-react";
+import { useEngagementTracking } from "@/hooks/useEngagementTracking";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +14,7 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Social Media", href: "/social", icon: Share2 },
   { name: "Website Updates", href: "/website", icon: Code },
+  { name: "AI Coach", href: "/ai-coach", icon: Bot },
   { name: "Reports", href: "/reports", icon: TrendingUp },
   { name: "SEO Optimization", href: "/seo", icon: Search },
   { name: "Reviews", href: "/reviews", icon: Star },
@@ -23,6 +25,7 @@ const navigation = [
 export default function Dashboard() {
   const { toast } = useToast();
   const [location] = useLocation();
+  const { trackAction } = useEngagementTracking();
 
   useEffect(() => {
     trackEvent('dashboard_view', 'navigation', 'dashboard_page');
@@ -39,6 +42,7 @@ export default function Dashboard() {
   };
 
   const handleGenerateContent = () => {
+    trackAction("generate_content_clicked");
     toast({
       title: "Generate Content",
       description: "Content generation feature coming soon!",

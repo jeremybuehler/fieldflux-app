@@ -29,6 +29,7 @@ import OpenAI from "openai";
 import twilio from "twilio";
 import { googleAnalyticsService } from "./services/google-analytics";
 import { leadScoringService } from "./services/leadScoringService";
+import { aiCoachService } from "./services/aiCoachService";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "default_key",
@@ -275,6 +276,133 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     ];
     res.json(samplePosts);
+  });
+
+  // AI Coach Routes
+  app.get('/api/ai-coach/insights', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      const insights = await aiCoachService.getUserInsights(userId);
+      res.json(insights);
+    } catch (error) {
+      console.error('Error fetching AI coach insights:', error);
+      res.status(500).json({ error: 'Failed to fetch insights' });
+    }
+  });
+
+  app.post('/api/ai-coach/insights/:id/read', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      const insightId = parseInt(req.params.id);
+      
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      await aiCoachService.markInsightAsRead(userId, insightId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error marking insight as read:', error);
+      res.status(500).json({ error: 'Failed to mark insight as read' });
+    }
+  });
+
+  app.get('/api/ai-coach/goals', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      const goals = await aiCoachService.getUserGoals(userId);
+      res.json(goals);
+    } catch (error) {
+      console.error('Error fetching goals:', error);
+      res.status(500).json({ error: 'Failed to fetch goals' });
+    }
+  });
+
+  app.post('/api/ai-coach/goals', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      const goal = await aiCoachService.createGoal(userId, req.body);
+      res.json(goal);
+    } catch (error) {
+      console.error('Error creating goal:', error);
+      res.status(500).json({ error: 'Failed to create goal' });
+    }
+  });
+
+  app.get('/api/ai-coach/metrics', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      const metrics = await aiCoachService.getUserMetrics(userId);
+      
+      // Return default metrics if none exist yet
+      const defaultMetrics = {
+        totalSessions: 0,
+        totalTimeSpent: 0,
+        averageSessionDuration: 0,
+        featuresUsed: [],
+        actionsCompleted: 0,
+        goalsAchieved: 0,
+        engagementScore: 0,
+        productivityScore: 0,
+        weeklyProgress: {
+          contentCreated: 0,
+          leadsGenerated: 0,
+          reviewsManaged: 0,
+          socialPosts: 0,
+        },
+      };
+
+      res.json(metrics || defaultMetrics);
+    } catch (error) {
+      console.error('Error fetching metrics:', error);
+      res.status(500).json({ error: 'Failed to fetch metrics' });
+    }
+  });
+
+  app.post('/api/ai-coach/generate-recommendations', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      const insights = await aiCoachService.generatePersonalizedInsights(userId);
+      res.json({ insights, count: insights.length });
+    } catch (error) {
+      console.error('Error generating recommendations:', error);
+      res.status(500).json({ error: 'Failed to generate recommendations' });
+    }
+  });
+
+  app.post('/api/ai-coach/track-session', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user?.claims?.sub;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      const session = await aiCoachService.trackEngagementSession(userId, req.body);
+      res.json(session);
+    } catch (error) {
+      console.error('Error tracking session:', error);
+      res.status(500).json({ error: 'Failed to track session' });
+    }
   });
 
   app.post("/api/wordpress/generate-post", async (req, res) => {
