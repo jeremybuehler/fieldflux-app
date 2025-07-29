@@ -106,16 +106,22 @@ export default function Onboarding() {
   // Generate AI recommendations based on user input
   const generateRecommendations = useMutation({
     mutationFn: async (onboardingData: OnboardingData) => {
-      return apiRequest('/api/ai/generate-onboarding-plan', {
+      const response = await fetch('/api/ai/generate-onboarding-plan', {
         method: 'POST',
         body: JSON.stringify(onboardingData),
         headers: {
           'Content-Type': 'application/json',
         },
       });
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate recommendations');
+      }
+      
+      return response.json();
     },
     onSuccess: (result) => {
-      setAiRecommendations(result.recommendations);
+      setAiRecommendations(result.recommendations || []);
       setIsGeneratingPlan(false);
       toast({
         title: "Personalized Plan Generated!",
@@ -134,13 +140,19 @@ export default function Onboarding() {
 
   const saveOnboardingData = useMutation({
     mutationFn: async (onboardingData: OnboardingData & { recommendations?: AIRecommendation[] }) => {
-      return apiRequest('/api/user/onboarding', {
+      const response = await fetch('/api/user/onboarding', {
         method: 'POST',
         body: JSON.stringify(onboardingData),
         headers: {
           'Content-Type': 'application/json',
         },
       });
+      
+      if (!response.ok) {
+        throw new Error('Failed to save onboarding data');
+      }
+      
+      return response.json();
     },
     onSuccess: () => {
       toast({
@@ -560,40 +572,62 @@ export default function Onboarding() {
               </div>
 
               <div className="space-y-4">
-                {aiRecommendations.map((rec, index) => (
-                  <Card key={index} className={`border-l-4 ${
-                    rec.priority === 'high' ? 'border-l-red-500 bg-red-50/50' :
-                    rec.priority === 'medium' ? 'border-l-yellow-500 bg-yellow-50/50' :
-                    'border-l-blue-500 bg-blue-50/50'
-                  }`}>
-                    <CardContent className="p-4">
-                      <div className="flex items-start space-x-3">
-                        <div className="flex-shrink-0">
-                          {rec.icon}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <h4 className="font-semibold text-gray-900">{rec.title}</h4>
-                            <Badge variant={rec.priority === 'high' ? 'destructive' : rec.priority === 'medium' ? 'default' : 'secondary'}>
-                              {rec.priority} priority
-                            </Badge>
+                {aiRecommendations.map((rec, index) => {
+                  // Map category to icon
+                  const getIconForCategory = (category: string) => {
+                    switch (category.toLowerCase()) {
+                      case 'content':
+                        return <Bot className="w-6 h-6 text-orange-600" />;
+                      case 'lead generation':
+                        return <Users className="w-6 h-6 text-green-600" />;
+                      case 'reviews':
+                        return <MessageSquare className="w-6 h-6 text-purple-600" />;
+                      case 'social media':
+                        return <Calendar className="w-6 h-6 text-blue-600" />;
+                      case 'analytics':
+                        return <BarChart3 className="w-6 h-6 text-indigo-600" />;
+                      case 'automation':
+                        return <Zap className="w-6 h-6 text-yellow-600" />;
+                      default:
+                        return <Target className="w-6 h-6 text-gray-600" />;
+                    }
+                  };
+
+                  return (
+                    <Card key={index} className={`border-l-4 ${
+                      rec.priority === 'high' ? 'border-l-red-500 bg-red-50/50' :
+                      rec.priority === 'medium' ? 'border-l-yellow-500 bg-yellow-50/50' :
+                      'border-l-blue-500 bg-blue-50/50'
+                    }`}>
+                      <CardContent className="p-4">
+                        <div className="flex items-start space-x-3">
+                          <div className="flex-shrink-0">
+                            {getIconForCategory(rec.category)}
                           </div>
-                          <p className="text-sm text-gray-600 mb-3">{rec.description}</p>
-                          <div className="flex items-center space-x-4 text-xs text-gray-500">
-                            <div className="flex items-center space-x-1">
-                              <TrendingUp className="w-3 h-3" />
-                              <span>Impact: {rec.estimatedImpact}</span>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center space-x-2 mb-2">
+                              <h4 className="font-semibold text-gray-900">{rec.title}</h4>
+                              <Badge variant={rec.priority === 'high' ? 'destructive' : rec.priority === 'medium' ? 'default' : 'secondary'}>
+                                {rec.priority} priority
+                              </Badge>
                             </div>
-                            <div className="flex items-center space-x-1">
-                              <Clock className="w-3 h-3" />
-                              <span>Setup: {rec.setupTime}</span>
+                            <p className="text-sm text-gray-600 mb-3">{rec.description}</p>
+                            <div className="flex items-center space-x-4 text-xs text-gray-500">
+                              <div className="flex items-center space-x-1">
+                                <TrendingUp className="w-3 h-3" />
+                                <span>Impact: {rec.estimatedImpact}</span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <Clock className="w-3 h-3" />
+                                <span>Setup: {rec.setupTime}</span>
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
               </div>
 
               <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6">
