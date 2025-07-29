@@ -274,14 +274,16 @@ export default function LandingAuth() {
             <Card className="bg-white border-0 shadow-sm">
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+                  <div className="w-12 h-12 bg-blue-100 rounded-full mr-4 flex items-center justify-center">
+                    <span className="text-blue-600 font-semibold text-lg">MR</span>
+                  </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Kelly Patterson</div>
-                    <div className="text-sm text-gray-600">Elite HVAC</div>
+                    <div className="font-semibold text-gray-900">Mike Rodriguez</div>
+                    <div className="text-sm text-gray-600">Rodriguez HVAC Services</div>
                   </div>
                 </div>
                 <p className="text-gray-600 italic">
-                  "An indispensable tool for our business."
+                  "FieldFlux saved me 10 hours a week on marketing tasks. The AI content creation is spot-on for HVAC services, and I've seen a 40% increase in qualified leads."
                 </p>
               </CardContent>
             </Card>
@@ -289,14 +291,16 @@ export default function LandingAuth() {
             <Card className="bg-white border-0 shadow-sm">
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+                  <div className="w-12 h-12 bg-green-100 rounded-full mr-4 flex items-center justify-center">
+                    <span className="text-green-600 font-semibold text-lg">ST</span>
+                  </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Kelly Patterson</div>
-                    <div className="text-sm text-gray-600">Elite HVAC</div>
+                    <div className="font-semibold text-gray-900">Sarah Thompson</div>
+                    <div className="text-sm text-gray-600">Thompson Electrical</div>
                   </div>
                 </div>
                 <p className="text-gray-600 italic">
-                  "An indispensable tool for our basic service needs and remarkable growth in leads and customer inquiries."
+                  "Before FieldFlux, I was juggling five different tools for marketing. Now everything is in one place, and my Google reviews have improved dramatically."
                 </p>
               </CardContent>
             </Card>
@@ -304,14 +308,16 @@ export default function LandingAuth() {
             <Card className="bg-white border-0 shadow-sm">
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
-                  <div className="w-12 h-12 bg-gray-200 rounded-full mr-4"></div>
+                  <div className="w-12 h-12 bg-purple-100 rounded-full mr-4 flex items-center justify-center">
+                    <span className="text-purple-600 font-semibold text-lg">JC</span>
+                  </div>
                   <div>
-                    <div className="font-semibold text-gray-900">Lisa Owens</div>
-                    <div className="text-sm text-gray-600">Prolemica Plumbing</div>
+                    <div className="font-semibold text-gray-900">James Carter</div>
+                    <div className="text-sm text-gray-600">Carter Plumbing & Repair</div>
                   </div>
                 </div>
                 <p className="text-gray-600 italic">
-                  "With FieldFlux, we can perform on our work to our marketing practically manages itself."
+                  "The lead scoring feature is a game-changer. I can focus on the hottest prospects first and close deals faster. ROI paid for itself in the first month."
                 </p>
               </CardContent>
             </Card>
