@@ -19,6 +19,7 @@ import SEO from "@/pages/seo";
 import Website from "@/pages/website";
 import AICoach from "@/pages/ai-coach";
 import Demo from "@/pages/demo";
+import Onboarding from "@/pages/onboarding";
 import GoDaddy from "@/pages/godaddy";
 import NotFound from "@/pages/not-found";
 
@@ -34,6 +35,9 @@ function Router() {
       
       {/* Demo page - accessible to everyone */}
       <Route path="/demo" component={Demo} />
+      
+      {/* Onboarding page - accessible to everyone */}
+      <Route path="/onboarding" component={Onboarding} />
       
       {/* Protected routes - require authentication */}
       {isAuthenticated ? (
