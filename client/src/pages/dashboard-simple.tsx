@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Link, useLocation } from "wouter";
-import { Bot, MapPin, TrendingUp, Users, MessageSquare, Star, LogOut, Calendar, Share2, Code, Search, UserPlus, Settings as SettingsIcon, LayoutDashboard, CheckCircle, Globe, Target } from "lucide-react";
+import { Bot, MapPin, TrendingUp, Users, MessageSquare, Star, LogOut, Calendar, Share2, Code, Search, UserPlus, Settings as SettingsIcon, LayoutDashboard, CheckCircle, Globe, Target, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -53,7 +53,7 @@ export default function Dashboard() {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-hvac-orange rounded-xl flex items-center justify-center">
-                <Bot className="w-5 h-5 text-white" />
+                <Zap className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h1 className="text-lg lg:text-xl font-bold text-hvac-gray text-center lg:text-left">
@@ -117,38 +117,7 @@ export default function Dashboard() {
       <div className="p-4 lg:p-8">
         <div className="max-w-7xl mx-auto space-y-8">
 
-            {/* Dashboard Header */}
-            <div className="mb-8 border-b border-gray-100 bg-white/80 backdrop-blur-sm rounded-xl p-6">
-              <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between text-center sm:text-left">
-                <div className="space-y-2">
-                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
-                    Field Service Marketing Dashboard
-                  </h1>
-                  <p className="text-sm md:text-base text-gray-600">
-                    Welcome back! Here's your marketing performance and activity overview.
-                  </p>
-                </div>
 
-                <div className="flex items-center space-x-3 mt-4 sm:mt-0">
-                  <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 px-4 py-2 hidden sm:flex">
-                    <Bot className="w-4 h-4 mr-2" />
-                    Intelligent
-                  </Badge>
-                  <div className="flex items-center space-x-2 bg-primary/10 rounded-lg px-3 py-2 hidden sm:flex">
-                    <MapPin className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium text-primary">Winter Haven, FL</span>
-                  </div>
-                  <Button 
-                    onClick={() => window.location.href = '/'}
-                    variant="outline"
-                    size="sm"
-                    className="text-gray-600 hover:text-gray-900"
-                  >
-                    Logout
-                  </Button>
-                </div>
-              </div>
-            </div>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
