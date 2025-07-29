@@ -20,6 +20,8 @@ import Website from "@/pages/website";
 import AICoach from "@/pages/ai-coach";
 import Demo from "@/pages/demo";
 import Onboarding from "@/pages/onboarding";
+import Pricing from "@/pages/pricing";
+import Subscribe from "@/pages/subscribe";
 import GoDaddy from "@/pages/godaddy";
 import NotFound from "@/pages/not-found";
 
@@ -38,6 +40,12 @@ function Router() {
       
       {/* Onboarding page - accessible to everyone */}
       <Route path="/onboarding" component={Onboarding} />
+      
+      {/* Pricing page - accessible to everyone */}
+      <Route path="/pricing" component={Pricing} />
+      
+      {/* Subscribe page - accessible to everyone */}
+      <Route path="/subscribe" component={Subscribe} />
       
       {/* Protected routes - require authentication */}
       {isAuthenticated ? (

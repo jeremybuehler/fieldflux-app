@@ -31,6 +31,11 @@ export const users = pgTable("users", {
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
+  stripeCustomerId: varchar("stripe_customer_id").unique(),
+  stripeSubscriptionId: varchar("stripe_subscription_id"),
+  subscriptionStatus: text("subscription_status").default("free"), // free, active, past_due, canceled
+  subscriptionPlan: text("subscription_plan").default("free"), // free, pro, enterprise
+  subscriptionCurrentPeriodEnd: timestamp("subscription_current_period_end"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -497,3 +502,59 @@ export type UserProgressData = typeof userProgress.$inferSelect;
 export const insertEmailLogSchema = createInsertSchema(emailLogs).omit({ id: true, createdAt: true });
 export type InsertEmailLog = z.infer<typeof insertEmailLogSchema>;
 export type EmailLog = typeof emailLogs.$inferSelect;
+
+// Stripe payment tables
+export const subscriptionPlans = pgTable("subscription_plans", {
+  id: serial("id").primaryKey(),
+  planId: text("plan_id").unique().notNull(), // stripe price id
+  name: text("name").notNull(),
+  description: text("description"),
+  price: decimal("price", { precision: 10, scale: 2 }).notNull(),
+  currency: text("currency").default("usd"),
+  interval: text("interval").notNull(), // month, year
+  intervalCount: integer("interval_count").default(1),
+  features: text("features").array(),
+  maxLeads: integer("max_leads"),
+  maxSocialPosts: integer("max_social_posts"),
+  maxEmailCampaigns: integer("max_email_campaigns"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const payments = pgTable("payments", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  stripePaymentIntentId: text("stripe_payment_intent_id").unique(),
+  stripeInvoiceId: text("stripe_invoice_id"),
+  amount: decimal("amount", { precision: 10, scale: 2 }).notNull(),
+  currency: text("currency").default("usd"),
+  status: text("status").notNull(), // pending, succeeded, failed, canceled
+  description: text("description"),
+  paymentType: text("payment_type").notNull(), // subscription, one_time
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const webhookEvents = pgTable("webhook_events", {
+  id: serial("id").primaryKey(),
+  stripeEventId: text("stripe_event_id").unique().notNull(),
+  eventType: text("event_type").notNull(),
+  processed: boolean("processed").default(false),
+  data: jsonb("data"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Stripe schema types
+export const insertSubscriptionPlanSchema = createInsertSchema(subscriptionPlans).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertSubscriptionPlan = z.infer<typeof insertSubscriptionPlanSchema>;
+export type SubscriptionPlan = typeof subscriptionPlans.$inferSelect;
+
+export const insertPaymentSchema = createInsertSchema(payments).omit({ id: true, createdAt: true, updatedAt: true });
+export type InsertPayment = z.infer<typeof insertPaymentSchema>;
+export type Payment = typeof payments.$inferSelect;
+
+export const insertWebhookEventSchema = createInsertSchema(webhookEvents).omit({ id: true, createdAt: true });
+export type InsertWebhookEvent = z.infer<typeof insertWebhookEventSchema>;
+export type WebhookEvent = typeof webhookEvents.$inferSelect;
