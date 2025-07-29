@@ -222,6 +222,102 @@ export const insertSocialMediaAnalyticsSchema = createInsertSchema(socialMediaAn
   recordedAt: true,
 });
 
+// User Engagement Tracking Tables
+export const userEngagementSessions = pgTable("user_engagement_sessions", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  sessionId: varchar("session_id").notNull(),
+  startTime: timestamp("start_time").defaultNow(),
+  endTime: timestamp("end_time"),
+  duration: integer("duration"), // in seconds
+  pagesVisited: text("pages_visited").array(),
+  actionsPerformed: text("actions_performed").array(),
+  clicksCount: integer("clicks_count").default(0),
+  scrollDepth: decimal("scroll_depth", { precision: 5, scale: 2 }),
+  deviceType: text("device_type"), // desktop, mobile, tablet
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const userEngagementMetrics = pgTable("user_engagement_metrics", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  date: timestamp("date").defaultNow(),
+  totalSessions: integer("total_sessions").default(0),
+  totalTimeSpent: integer("total_time_spent").default(0), // in seconds
+  averageSessionDuration: decimal("average_session_duration", { precision: 10, scale: 2 }),
+  featuresUsed: text("features_used").array(),
+  actionsCompleted: integer("actions_completed").default(0),
+  goalsAchieved: integer("goals_achieved").default(0),
+  engagementScore: decimal("engagement_score", { precision: 5, scale: 2 }),
+  productivityScore: decimal("productivity_score", { precision: 5, scale: 2 }),
+  weeklyGoals: jsonb("weekly_goals"), // JSON array of goals
+  weeklyProgress: jsonb("weekly_progress"), // JSON object with progress data
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const aiCoachInsights = pgTable("ai_coach_insights", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  insightType: text("insight_type").notNull(), // recommendation, achievement, warning, tip
+  title: text("title").notNull(),
+  message: text("message").notNull(),
+  actionable: text("actionable"), // specific action user can take
+  priority: text("priority").notNull().default("medium"), // low, medium, high, urgent
+  category: text("category").notNull(), // engagement, productivity, features, goals
+  isRead: boolean("is_read").default(false),
+  isActionTaken: boolean("is_action_taken").default(false),
+  relatedFeature: text("related_feature"), // which feature this insight relates to
+  metadata: jsonb("metadata"), // additional context data
+  validUntil: timestamp("valid_until"), // when this insight expires
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const userGoals = pgTable("user_goals", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  goalType: text("goal_type").notNull(), // daily, weekly, monthly, custom
+  title: text("title").notNull(),
+  description: text("description"),
+  targetValue: integer("target_value"),
+  currentValue: integer("current_value").default(0),
+  unit: text("unit"), // posts, leads, minutes, etc.
+  category: text("category").notNull(), // content, leads, engagement, productivity
+  status: text("status").notNull().default("active"), // active, completed, paused, cancelled
+  dueDate: timestamp("due_date"),
+  completedAt: timestamp("completed_at"),
+  priority: text("priority").default("medium"),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const insertUserEngagementSessionSchema = createInsertSchema(userEngagementSessions).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertUserEngagementMetricsSchema = createInsertSchema(userEngagementMetrics).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertAiCoachInsightSchema = createInsertSchema(aiCoachInsights).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertUserGoalSchema = createInsertSchema(userGoals).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+// Types for the AI Coach system
+export type UserEngagementSession = typeof userEngagementSessions.$inferSelect;
+export type UserEngagementMetrics = typeof userEngagementMetrics.$inferSelect;
+export type AiCoachInsight = typeof aiCoachInsights.$inferSelect;
+export type UserGoal = typeof userGoals.$inferSelect;
+
 // White-label and multi-client configuration tables
 export const clients = pgTable("clients", {
   id: serial("id").primaryKey(),

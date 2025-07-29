@@ -17,6 +17,7 @@ import Reports from "@/pages/reports";
 import Keywords from "@/pages/keywords";
 import SEO from "@/pages/seo";
 import Website from "@/pages/website";
+import AICoach from "@/pages/ai-coach";
 import GoDaddy from "@/pages/godaddy";
 import NotFound from "@/pages/not-found";
 
@@ -41,6 +42,7 @@ function Router() {
           <Route path="/keywords" component={Keywords} />
           <Route path="/seo" component={SEO} />
           <Route path="/website" component={Website} />
+          <Route path="/ai-coach" component={AICoach} />
           <Route path="/godaddy" component={GoDaddy} />
           <Route path="/settings" component={Settings} />
         </>
