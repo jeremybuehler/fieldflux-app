@@ -36,6 +36,12 @@ export default function Demo() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [autoStartCountdown, setAutoStartCountdown] = useState(3);
 
+  // Debug logging on component mount
+  useEffect(() => {
+    console.log('Demo component mounted');
+    console.log('Initial state:', { currentStep, isPlaying, progress, timeLeft, autoStartCountdown });
+  }, []);
+
   const demoSteps: DemoStep[] = [
     {
       id: 1,
@@ -419,14 +425,17 @@ export default function Demo() {
   useEffect(() => {
     let interval: NodeJS.Timeout;
     
-    if (isPlaying) {
+    if (isPlaying && currentStep < demoSteps.length) {
+      console.log(`Starting timer for step ${currentStep + 1}, duration: ${demoSteps[currentStep].duration}s`);
+      
       interval = setInterval(() => {
         setProgress(prev => {
-          const newProgress = prev + (100 / (demoSteps[currentStep].duration * 10));
+          const increment = 100 / (demoSteps[currentStep].duration * 10); // Update every 0.1s
+          const newProgress = prev + increment;
           
           if (newProgress >= 100) {
             if (currentStep < demoSteps.length - 1) {
-              setCurrentStep(prev => prev + 1);
+              setCurrentStep(prevStep => prevStep + 1);
               return 0;
             } else {
               setIsPlaying(false);
@@ -443,49 +452,71 @@ export default function Demo() {
       }, 100);
     }
 
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, [isPlaying, currentStep, demoSteps]);
 
   useEffect(() => {
-    setTimeLeft(demoSteps[currentStep].duration);
-    setProgress(0);
+    if (currentStep < demoSteps.length) {
+      console.log(`Setting up step ${currentStep + 1}: ${demoSteps[currentStep].title}`);
+      setTimeLeft(demoSteps[currentStep].duration);
+      setProgress(0);
+    }
   }, [currentStep, demoSteps]);
 
   // Auto-start demo with countdown
   useEffect(() => {
-    const countdownInterval = setInterval(() => {
-      setAutoStartCountdown(prev => {
-        if (prev <= 1) {
-          setIsPlaying(true);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    let countdownInterval: NodeJS.Timeout;
+    let autoStartTimer: NodeJS.Timeout;
 
-    // Clear countdown after 3 seconds
-    const autoStartTimer = setTimeout(() => {
-      clearInterval(countdownInterval);
-      setAutoStartCountdown(0);
-    }, 3000);
+    // Only start countdown if not already playing and countdown is greater than 0
+    if (!isPlaying && autoStartCountdown > 0) {
+      countdownInterval = setInterval(() => {
+        setAutoStartCountdown(prev => {
+          if (prev <= 1) {
+            setIsPlaying(true);
+            clearInterval(countdownInterval);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      // Backup timer to ensure countdown stops
+      autoStartTimer = setTimeout(() => {
+        if (countdownInterval) {
+          clearInterval(countdownInterval);
+        }
+        if (autoStartCountdown > 0) {
+          setIsPlaying(true);
+          setAutoStartCountdown(0);
+        }
+      }, 4000); // 4 second safety net
+    }
 
     return () => {
-      clearInterval(countdownInterval);
-      clearTimeout(autoStartTimer);
+      if (countdownInterval) clearInterval(countdownInterval);
+      if (autoStartTimer) clearTimeout(autoStartTimer);
     };
-  }, []); // Only run on mount
+  }, [isPlaying, autoStartCountdown]); // Add dependencies
 
   const handlePlay = () => {
+    console.log('Play button clicked'); // Debug log
     setIsPlaying(true);
     setAutoStartCountdown(0); // Clear countdown when user manually starts
   };
 
   const handlePause = () => {
+    console.log('Pause button clicked'); // Debug log
     setIsPlaying(false);
     setAutoStartCountdown(0); // Clear countdown when user manually pauses
   };
 
   const handleRestart = () => {
+    console.log('Restart button clicked'); // Debug log
     setCurrentStep(0);
     setProgress(0);
     setTimeLeft(demoSteps[0].duration);
