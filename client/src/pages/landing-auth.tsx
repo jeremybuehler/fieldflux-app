@@ -18,7 +18,7 @@ import {
   Zap,
   Users,
   ArrowRight,
-  Play,
+
   MessageSquare,
   Star,
   TrendingUp,
@@ -99,9 +99,7 @@ export default function LandingAuth() {
     }, 1500);
   };
 
-  const handleDemoAccess = () => {
-    window.location.href = "/demo";
-  };
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
@@ -185,7 +183,7 @@ export default function LandingAuth() {
               Generate leads, create content, and grow revenue—all in one platform.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            <div className="flex justify-center mb-12">
               <Button 
                 size="lg" 
                 className="bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white px-10 py-4 text-lg shadow-xl hover:shadow-2xl transition-all duration-200"
@@ -193,15 +191,6 @@ export default function LandingAuth() {
               >
                 Start Free Trial
                 <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                onClick={handleDemoAccess}
-                className="px-10 py-4 text-lg border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-900 bg-white/50 backdrop-blur-sm"
-              >
-                <Play className="w-5 h-5 mr-2" />
-                Watch Demo
               </Button>
             </div>
 
@@ -338,7 +327,7 @@ export default function LandingAuth() {
               Join hundreds of contractors who've already boosted their leads and revenue with FieldFlux
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex justify-center">
               <Button 
                 size="lg" 
                 onClick={handleLogin}
@@ -346,15 +335,6 @@ export default function LandingAuth() {
               >
                 Start Free Trial
                 <ArrowRight className="w-5 h-5 ml-2" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                onClick={handleDemoAccess}
-                className="border-2 border-white text-white hover:bg-white/10 px-10 py-4 text-lg bg-transparent"
-              >
-                <Play className="w-5 h-5 mr-2" />
-                Watch Demo
               </Button>
             </div>
           </div>
