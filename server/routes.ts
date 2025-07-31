@@ -592,7 +592,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const scoringFactors = {
           service: data.service,
           location: data.location,
-          contactMethod: data.email && data.phone ? "form" : data.email ? "email" : "phone",
+          contactMethod: (data.email && data.phone ? "form" : data.email ? "email" : "phone") as "form" | "email" | "phone" | "chat",
           timeOfInquiry: new Date(),
           referralSource: req.body.referralSource
         };
@@ -663,7 +663,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const scoringFactors = {
         service: lead.service,
         location: lead.location,
-        contactMethod: lead.email && lead.phone ? "form" : lead.email ? "email" : "phone",
+        contactMethod: (lead.email && lead.phone ? "form" : lead.email ? "email" : "phone") as "form" | "email" | "phone" | "chat",
         timeOfInquiry: lead.createdAt || new Date(),
         responseTime: req.body.responseTime,
         previousInteractions: req.body.previousInteractions,
@@ -1333,9 +1333,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Log the SMS activity
       await storage.createActivity({
         type: "sms",
-        description: `SMS sent to ${to}: ${type || 'general'}`,
-        status: "completed",
-        metadata: { messageId: twilioMessage.sid, type }
+        title: "SMS Sent",
+        description: `SMS sent to ${to}: ${type || 'general'}`
       });
 
       res.json({ 
@@ -1347,7 +1346,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error("SMS send error:", error);
       res.status(500).json({ 
         message: "Failed to send SMS", 
-        error: error.message 
+        error: error instanceof Error ? error.message : "Unknown error"
       });
     }
   });
@@ -1501,7 +1500,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
 
     const platform = req.params.platform;
-    await storage.deleteSocialMediaConfig(platform)
+    await storage.deleteSocialMediaConfig(parseInt(platform) || 0)
 
     return res.json({ success: true });
   });
@@ -1624,7 +1623,7 @@ Format as JSON array with this structure:
       
       // Last resort fallback - generate basic recommendations
       console.log('Falling back to basic recommendations due to general error');
-      const basicRecommendations = generatePersonalizedRecommendations(onboardingData);
+      const basicRecommendations = generatePersonalizedRecommendations(req.body);
       res.json({ recommendations: basicRecommendations });
     }
   });
