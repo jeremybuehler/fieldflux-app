@@ -18,7 +18,6 @@ import {
   Zap,
   Users,
   ArrowRight,
-
   MessageSquare,
   Star,
   TrendingUp,
@@ -42,13 +41,13 @@ export default function LandingAuth() {
     password: "",
   });
   const { toast } = useToast();
-  
+
   const handleLogin = () => {
-    window.location.href = '/api/login';
+    window.location.href = "/api/login";
   };
 
   const handleDashboard = () => {
-    window.location.href = '/dashboard';
+    window.location.href = "/dashboard";
   };
 
   const handleDemoLogin = async () => {
@@ -72,14 +71,20 @@ export default function LandingAuth() {
     } else {
       toast({
         title: "Login Failed",
-        description: "Invalid username or password. Try admin/demo123 for demo access.",
+        description:
+          "Invalid username or password. Try admin/demo123 for demo access.",
         variant: "destructive",
       });
     }
   };
 
   const handleSignup = async () => {
-    if (!signupData.name || !signupData.email || !signupData.username || !signupData.password) {
+    if (
+      !signupData.name ||
+      !signupData.email ||
+      !signupData.username ||
+      !signupData.password
+    ) {
       toast({
         title: "Missing Information",
         description: "Please fill in all fields to create your account.",
@@ -90,7 +95,8 @@ export default function LandingAuth() {
 
     toast({
       title: "Account Created",
-      description: "Welcome to FieldFlux! You can now log in with your credentials.",
+      description:
+        "Welcome to FieldFlux! You can now log in with your credentials.",
     });
 
     setSignupData({ name: "", email: "", username: "", password: "" });
@@ -98,8 +104,6 @@ export default function LandingAuth() {
       setIsAuthOpen(false);
     }, 1500);
   };
-
-
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
@@ -112,21 +116,42 @@ export default function LandingAuth() {
                 <Zap className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0 flex-1">
-                <span className="text-lg sm:text-xl font-bold text-gray-900">FieldFlux</span>
-                <div className="text-xs text-gray-500 font-medium hidden sm:block">Intelligent Field Service Marketing</div>
-                <div className="text-xs text-gray-500 font-medium sm:hidden">Smart Marketing</div>
+                <span className="text-lg sm:text-xl font-bold text-gray-900">
+                  FieldFlux
+                </span>
+                <div className="text-xs text-gray-500 font-medium hidden sm:block">
+                  Intelligent Field Service Marketing
+                </div>
+                <div className="text-xs text-gray-500 font-medium sm:hidden">
+                  Smart Marketing
+                </div>
               </div>
             </div>
-            
+
             <nav className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Features</a>
-              <a href="#pricing" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Pricing</a>
-              <a href="#support" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Support</a>
+              <a
+                href="#features"
+                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              >
+                Features
+              </a>
+              <a
+                href="#pricing"
+                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              >
+                Pricing
+              </a>
+              <a
+                href="#support"
+                className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              >
+                Support
+              </a>
             </nav>
 
             <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
               {isAuthenticated ? (
-                <Button 
+                <Button
                   onClick={handleDashboard}
                   size="sm"
                   className="bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white shadow-lg text-sm sm:text-base"
@@ -137,7 +162,7 @@ export default function LandingAuth() {
                 </Button>
               ) : (
                 <>
-                  <Button 
+                  <Button
                     variant="ghost"
                     size="sm"
                     onClick={handleLogin}
@@ -145,7 +170,7 @@ export default function LandingAuth() {
                   >
                     Sign In
                   </Button>
-                  <Button 
+                  <Button
                     onClick={handleLogin}
                     size="sm"
                     className="bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white shadow-lg text-sm sm:text-base px-3 sm:px-4"
@@ -173,19 +198,21 @@ export default function LandingAuth() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 mb-8 leading-tight">
-              Where Field Service<br />
+              Where Field Service
+              <br />
               <span className="bg-gradient-to-r from-blue-600 to-purple-700 bg-clip-text text-transparent">
                 Meets Smart Marketing
               </span>
             </h1>
             <p className="text-xl sm:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Transform your field service business with AI-native marketing automation. 
-              Generate leads, create content, and grow revenue—all in one platform.
+              Enable your field service business with the AI-native Field
+              Service Marketing platform empowering contractors with tools for
+              lead generation and business growth.
             </p>
 
             <div className="flex justify-center mb-12">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 className="bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white px-10 py-4 text-lg shadow-xl hover:shadow-2xl transition-all duration-200"
                 onClick={handleLogin}
               >
@@ -226,7 +253,8 @@ export default function LandingAuth() {
               Everything You Need to Grow Your Business
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Powerful tools designed specifically for field service professionals to streamline operations and accelerate growth.
+              Powerful tools designed specifically for field service
+              professionals to streamline operations and accelerate growth.
             </p>
           </div>
 
@@ -240,7 +268,8 @@ export default function LandingAuth() {
                   Performance Analytics
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Track key metrics, monitor lead generation, and optimize your marketing strategy with comprehensive analytics and reporting.
+                  Track key metrics, monitor lead generation, and optimize your
+                  marketing strategy with comprehensive analytics and reporting.
                 </p>
               </CardContent>
             </Card>
@@ -254,7 +283,8 @@ export default function LandingAuth() {
                   AI-Native Content
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Generate professional social media posts, blog articles, and marketing content with our advanced AI writing assistant.
+                  Generate professional social media posts, blog articles, and
+                  marketing content with our advanced AI writing assistant.
                 </p>
               </CardContent>
             </Card>
@@ -268,7 +298,8 @@ export default function LandingAuth() {
                   Smart Lead Management
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Automate follow-ups, qualify prospects, and manage your sales pipeline with intelligent lead scoring and CRM integration.
+                  Automate follow-ups, qualify prospects, and manage your sales
+                  pipeline with intelligent lead scoring and CRM integration.
                 </p>
               </CardContent>
             </Card>
@@ -282,7 +313,8 @@ export default function LandingAuth() {
                   Review Management
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Monitor and respond to customer reviews across all platforms with AI-powered response suggestions and sentiment analysis.
+                  Monitor and respond to customer reviews across all platforms
+                  with AI-powered response suggestions and sentiment analysis.
                 </p>
               </CardContent>
             </Card>
@@ -296,7 +328,8 @@ export default function LandingAuth() {
                   Social Scheduling
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Plan and schedule content across Facebook, Instagram, LinkedIn, and Twitter with optimal timing recommendations.
+                  Plan and schedule content across Facebook, Instagram,
+                  LinkedIn, and Twitter with optimal timing recommendations.
                 </p>
               </CardContent>
             </Card>
@@ -310,7 +343,8 @@ export default function LandingAuth() {
                   Campaign Management
                 </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Launch targeted marketing campaigns with A/B testing, conversion tracking, and ROI optimization across all channels.
+                  Launch targeted marketing campaigns with A/B testing,
+                  conversion tracking, and ROI optimization across all channels.
                 </p>
               </CardContent>
             </Card>
@@ -324,12 +358,13 @@ export default function LandingAuth() {
               Ready to Transform Your Field Service Marketing?
             </h2>
             <p className="text-xl text-blue-100 mb-10 max-w-2xl mx-auto">
-              Join hundreds of contractors who've already boosted their leads and revenue with FieldFlux
+              Join hundreds of contractors who've already boosted their leads
+              and revenue with FieldFlux
             </p>
-            
+
             <div className="flex justify-center">
-              <Button 
-                size="lg" 
+              <Button
+                size="lg"
                 onClick={handleLogin}
                 className="bg-white text-blue-600 hover:bg-gray-100 px-10 py-4 text-lg font-semibold shadow-xl"
               >
@@ -354,17 +389,33 @@ export default function LandingAuth() {
                 <h3 className="text-xl font-bold text-gray-900">FieldFlux</h3>
               </div>
               <p className="text-gray-600 text-sm leading-relaxed">
-                Intelligent Field Service Marketing platform empowering contractors with AI-native tools for lead generation and business growth.
+                Intelligent Field Service Marketing platform empowering
+                contractors with AI-native tools for lead generation and
+                business growth.
               </p>
               <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-blue-600 transition-colors">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-blue-600 transition-colors"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
                   </svg>
                 </a>
-                <a href="#" className="text-gray-400 hover:text-blue-600 transition-colors">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                <a
+                  href="#"
+                  className="text-gray-400 hover:text-blue-600 transition-colors"
+                >
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
                   </svg>
                 </a>
               </div>
@@ -374,11 +425,36 @@ export default function LandingAuth() {
             <div>
               <h4 className="font-semibold text-gray-900 mb-6">Solutions</h4>
               <div className="space-y-3">
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Lead Generation</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Content Creation</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Review Management</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Social Media</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Analytics</a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Lead Generation
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Content Creation
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Review Management
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Social Media
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Analytics
+                </a>
               </div>
             </div>
 
@@ -386,11 +462,36 @@ export default function LandingAuth() {
             <div>
               <h4 className="font-semibold text-gray-900 mb-6">Industries</h4>
               <div className="space-y-3">
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">HVAC Contractors</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Plumbing Services</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Electrical Services</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Landscaping</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Home Services</a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  HVAC Contractors
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Plumbing Services
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Electrical Services
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Landscaping
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Home Services
+                </a>
               </div>
             </div>
 
@@ -398,11 +499,36 @@ export default function LandingAuth() {
             <div>
               <h4 className="font-semibold text-gray-900 mb-6">Support</h4>
               <div className="space-y-3">
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Help Center</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Documentation</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">Contact Support</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">System Status</a>
-                <a href="#" className="block text-gray-600 hover:text-gray-900 text-sm transition-colors">API Reference</a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Help Center
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Documentation
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  Contact Support
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  System Status
+                </a>
+                <a
+                  href="#"
+                  className="block text-gray-600 hover:text-gray-900 text-sm transition-colors"
+                >
+                  API Reference
+                </a>
               </div>
             </div>
           </div>
@@ -415,9 +541,24 @@ export default function LandingAuth() {
                   © 2025 FieldFlux. All rights reserved.
                 </p>
                 <div className="flex space-x-6">
-                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Privacy Policy</a>
-                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Terms of Service</a>
-                  <a href="#" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Cookie Policy</a>
+                  <a
+                    href="#"
+                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    Privacy Policy
+                  </a>
+                  <a
+                    href="#"
+                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    Terms of Service
+                  </a>
+                  <a
+                    href="#"
+                    className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+                  >
+                    Cookie Policy
+                  </a>
                 </div>
               </div>
               <div className="flex items-center space-x-4">
