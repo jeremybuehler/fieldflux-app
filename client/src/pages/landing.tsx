@@ -1,98 +1,22 @@
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Bot,
   Shield,
   BarChart3,
   Zap,
   ArrowRight,
-  User,
-  Lock,
-  Mail,
+  LogIn,
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 export default function Landing() {
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
-  const [loginData, setLoginData] = useState({ username: "", password: "" });
-  const [signupData, setSignupData] = useState({
-    name: "",
-    email: "",
-    username: "",
-    password: "",
-  });
-  const { toast } = useToast();
-
-  const handleLogin = async () => {
-    if (!loginData.username || !loginData.password) {
-      toast({
-        title: "Missing Information",
-        description: "Please enter your username and password.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Simulate login for demo - in real implementation, this would call an API
-    if (loginData.username === "admin" && loginData.password === "demo123") {
-      toast({
-        title: "Login Successful",
-        description: "Welcome back to FieldFlux!",
-      });
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 1000);
-    } else {
-      toast({
-        title: "Login Failed",
-        description:
-          "Invalid username or password. Try admin/demo123 for demo access.",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const handleSignup = async () => {
-    if (
-      !signupData.name ||
-      !signupData.email ||
-      !signupData.username ||
-      !signupData.password
-    ) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all fields to create your account.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Simulate signup for demo
-    toast({
-      title: "Account Created",
-      description:
-        "Welcome to FieldFlux! You can now log in with your credentials.",
-    });
-
-    // Reset form and switch to login tab
-    setSignupData({ name: "", email: "", username: "", password: "" });
-    setTimeout(() => {
-      setIsAuthOpen(false);
-    }, 1500);
+  const handleLogin = () => {
+    // Redirect to Replit Auth login endpoint
+    window.location.href = "/api/login";
   };
 
   const handleDemoAccess = () => {
-    window.location.href = "/dashboard";
+    window.location.href = "/demo";
   };
 
   return (
@@ -117,263 +41,140 @@ export default function Landing() {
       <div className="container-fieldservice section-fieldservice">
         {/* Hero Section */}
         <div className="text-center mb-16 animate-fieldservice-fade-in">
-          <h2 className="text-fieldservice-display mb-6">
-            Replace 5 Marketing Tools with One
-          </h2>
-          <p className="text-fieldservice-body max-w-3xl mx-auto">
-            FieldFlux consolidates your marketing tools into one affordable platform. 
-            Perfect for HVAC, plumbing, electrical, landscaping, and field service 
-            professionals who need content creation, social media management, lead tracking, 
-            and reputation management in one place.
+          <div className="mb-8">
+            <span className="badge-fieldservice">
+              <Zap className="w-4 h-4" />
+              Intelligent Field Service Marketing
+            </span>
+          </div>
+          
+          <h1 className="text-5xl md:text-6xl font-bold text-fieldservice-blue-700 mb-6 leading-tight">
+            Grow Your
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-fieldservice-blue-600 to-fieldservice-orange-500 block md:inline md:ml-4">
+              Service Business
+            </span>
+          </h1>
+          
+          <p className="text-xl text-fieldservice-muted max-w-3xl mx-auto mb-12 leading-relaxed">
+            Streamline marketing, generate quality leads, and manage customer relationships 
+            with our AI-powered platform designed specifically for HVAC, plumbing, electrical, 
+            and field service professionals.
           </p>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+            <Button
+              onClick={handleLogin}
+              size="lg"
+              className="bg-fieldservice-orange-500 hover:bg-fieldservice-orange-600 text-white font-semibold px-8 py-4 text-lg shadow-fieldservice"
+            >
+              <LogIn className="mr-2 h-5 w-5" />
+              Get Started
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+
+            <Button
+              onClick={handleDemoAccess}
+              size="lg"
+              variant="outline"
+              className="bg-white/20 text-fieldservice-blue-700 border-fieldservice-blue-200 hover:bg-fieldservice-blue-50 font-semibold px-8 py-4 text-lg"
+            >
+              View Demo
+            </Button>
+          </div>
         </div>
 
         {/* Features Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <BarChart3 className="w-6 h-6 text-primary" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+          <Card className="card-fieldservice group">
+            <CardHeader className="pb-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-fieldservice-blue-500 to-fieldservice-blue-600 rounded-xl flex items-center justify-center mb-4 shadow-fieldservice group-hover:shadow-lg transition-all">
+                <Bot className="w-7 h-7 text-white" />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">
-                Performance Insights
-              </CardTitle>
+              <CardTitle className="text-fieldservice-blue-700 text-xl">AI-Powered Content</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
-                See what's working with crystal-clear analytics. Track leads,
-                measure engagement, and discover which content brings in the
-                most customers.
+              <p className="text-fieldservice-muted leading-relaxed">
+                Generate professional social media posts, blog content, and marketing materials 
+                tailored to your field service business with advanced AI.
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-hvac-orange/10 rounded-lg flex items-center justify-center mb-4">
-                <Zap className="w-6 h-6 text-hvac-orange" />
+          <Card className="card-fieldservice group">
+            <CardHeader className="pb-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-fieldservice-orange-500 to-fieldservice-orange-600 rounded-xl flex items-center justify-center mb-4 shadow-fieldservice group-hover:shadow-lg transition-all">
+                <Shield className="w-7 h-7 text-white" />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">
-                Content That Converts
-              </CardTitle>
+              <CardTitle className="text-fieldservice-blue-700 text-xl">Lead Generation</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
-                Never stare at a blank page again. KasamaAI creates professional
-                posts, helpful tips, and customer stories that showcase your
-                expertise and attract new business.
+              <p className="text-fieldservice-muted leading-relaxed">
+                Smart lead scoring and qualification system that identifies high-value prospects 
+                and automates follow-up sequences to maximize conversions.
               </p>
             </CardContent>
           </Card>
 
-          <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <Shield className="w-6 h-6 text-green-600" />
+          <Card className="card-fieldservice group">
+            <CardHeader className="pb-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-fieldservice-blue-500 to-fieldservice-orange-500 rounded-xl flex items-center justify-center mb-4 shadow-fieldservice group-hover:shadow-lg transition-all">
+                <BarChart3 className="w-7 h-7 text-white" />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">
-                Smart Lead Pipeline
-              </CardTitle>
+              <CardTitle className="text-fieldservice-blue-700 text-xl">Analytics Dashboard</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600">
-                Turn inquiries into appointments effortlessly. Smart follow-ups,
-                automated reminders, and lead scoring help you close more deals
-                without the hassle.
+              <p className="text-fieldservice-muted leading-relaxed">
+                Comprehensive business insights with real-time metrics, performance tracking, 
+                and actionable recommendations to grow your service business.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="card-fieldservice group">
+            <CardHeader className="pb-4">
+              <div className="w-14 h-14 bg-gradient-to-br from-fieldservice-orange-400 to-fieldservice-orange-500 rounded-xl flex items-center justify-center mb-4 shadow-fieldservice group-hover:shadow-lg transition-all">
+                <Zap className="w-7 h-7 text-white" />
+              </div>
+              <CardTitle className="text-fieldservice-blue-700 text-xl">Automation</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-fieldservice-muted leading-relaxed">
+                Streamline your marketing workflow with intelligent scheduling, automated 
+                responses, and smart task management designed for busy field service pros.
               </p>
             </CardContent>
           </Card>
         </div>
 
         {/* CTA Section */}
-        <div className="text-center px-2">
-          <Card className="max-w-2xl mx-auto from-primary to-hvac-orange border-0">
-            <CardContent className="p-6 lg:p-8">
-              <h3 className="text-xl lg:text-2xl font-bold text-navy mb-3 lg:mb-4">
-                Stop Juggling Multiple Marketing Tools
-              </h3>
-              <p className="text-100 mb-4 lg:mb-6 text-sm lg:text-base">
-                Join thousands of field service professionals who've consolidated 
-                their marketing stack. FieldFlux replaces your content creation tool, 
-                social media scheduler, lead manager, analytics platform, and reputation 
-                management system with one affordable solution.
+        <div className="text-center">
+          <Card className="card-fieldservice max-w-2xl mx-auto bg-gradient-to-br from-fieldservice-blue-50 to-fieldservice-orange-50 border-0">
+            <CardHeader>
+              <CardTitle className="text-3xl text-fieldservice-blue-700 mb-4">
+                Ready to Transform Your Marketing?
+              </CardTitle>
+              <p className="text-fieldservice-muted text-lg leading-relaxed mb-8">
+                Join hundreds of field service professionals who have streamlined their 
+                marketing and grown their businesses with FieldFlux.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
-                  <DialogTrigger asChild>
-                    <Button
-                      size="lg"
-                      className="bg-navy text-primary hover:bg-gray-50 font-semibold px-8"
-                    >
-                      Get Started
-                      <ArrowRight className="w-5 h-5 ml-2" />
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                      <DialogTitle className="text-center text-2xl font-bold text-hvac-gray">
-                        Access FieldFlux
-                      </DialogTitle>
-                    </DialogHeader>
-                    <Tabs defaultValue="login" className="w-full">
-                      <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="login">Login</TabsTrigger>
-                        <TabsTrigger value="signup">Sign Up</TabsTrigger>
-                      </TabsList>
-
-                      <TabsContent value="login" className="space-y-4">
-                        <div className="space-y-4">
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Username
-                            </label>
-                            <div className="relative">
-                              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <Input
-                                type="text"
-                                placeholder="Enter your username"
-                                value={loginData.username}
-                                onChange={(e) =>
-                                  setLoginData({
-                                    ...loginData,
-                                    username: e.target.value,
-                                  })
-                                }
-                                className="pl-10"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Password
-                            </label>
-                            <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <Input
-                                type="password"
-                                placeholder="Enter your password"
-                                value={loginData.password}
-                                onChange={(e) =>
-                                  setLoginData({
-                                    ...loginData,
-                                    password: e.target.value,
-                                  })
-                                }
-                                className="pl-10"
-                                onKeyPress={(e) =>
-                                  e.key === "Enter" && handleLogin()
-                                }
-                              />
-                            </div>
-                          </div>
-                          <div className="text-xs text-gray-500 bg-blue-50 p-2 rounded">
-                            Demo access: Use <strong>admin</strong> /{" "}
-                            <strong>demo123</strong>
-                          </div>
-                          <Button
-                            onClick={handleLogin}
-                            className="w-full bg-primary hover:bg-primary/90"
-                          >
-                            Sign In
-                          </Button>
-                        </div>
-                      </TabsContent>
-
-                      <TabsContent value="signup" className="space-y-4">
-                        <div className="space-y-4">
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Full Name
-                            </label>
-                            <Input
-                              type="text"
-                              placeholder="Enter your full name"
-                              value={signupData.name}
-                              onChange={(e) =>
-                                setSignupData({
-                                  ...signupData,
-                                  name: e.target.value,
-                                })
-                              }
-                            />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Email
-                            </label>
-                            <div className="relative">
-                              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <Input
-                                type="email"
-                                placeholder="Enter your email"
-                                value={signupData.email}
-                                onChange={(e) =>
-                                  setSignupData({
-                                    ...signupData,
-                                    email: e.target.value,
-                                  })
-                                }
-                                className="pl-10"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Username
-                            </label>
-                            <div className="relative">
-                              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <Input
-                                type="text"
-                                placeholder="Choose a username"
-                                value={signupData.username}
-                                onChange={(e) =>
-                                  setSignupData({
-                                    ...signupData,
-                                    username: e.target.value,
-                                  })
-                                }
-                                className="pl-10"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium text-gray-700 mb-2 block">
-                              Password
-                            </label>
-                            <div className="relative">
-                              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                              <Input
-                                type="password"
-                                placeholder="Create a password"
-                                value={signupData.password}
-                                onChange={(e) =>
-                                  setSignupData({
-                                    ...signupData,
-                                    password: e.target.value,
-                                  })
-                                }
-                                className="pl-10"
-                              />
-                            </div>
-                          </div>
-                          <Button
-                            onClick={handleSignup}
-                            className="w-full bg-hvac-orange hover:bg-hvac-orange/90"
-                          >
-                            Create Account
-                          </Button>
-                        </div>
-                      </TabsContent>
-                    </Tabs>
-                  </DialogContent>
-                </Dialog>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Button
+                  onClick={handleLogin}
+                  size="lg"
+                  className="bg-fieldservice-orange-500 hover:bg-fieldservice-orange-600 text-white font-semibold px-8 py-4"
+                >
+                  <LogIn className="mr-2 h-5 w-5" />
+                  Sign In to Get Started
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
 
                 <Button
                   onClick={handleDemoAccess}
                   size="lg"
                   variant="outline"
-                  className="bg-white/20 text-white border-white hover:bg-white/30 font-semibold px-8"
+                  className="bg-white/20 text-fieldservice-blue-700 border-fieldservice-blue-200 hover:bg-white/30 font-semibold px-8 py-4"
                 >
                   View Demo
                 </Button>
@@ -383,13 +184,13 @@ export default function Landing() {
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-16 text-gray-500">
+        <div className="text-center mt-16 text-fieldservice-muted">
           <p className="text-sm">
             Secure platform designed for professionals. Your business data is
             protected and private.
           </p>
           <p className="text-xs mt-2">
-            Already have an account? Click "Get Started" to sign in.
+            Click "Sign In to Get Started" to access your account or create a new one.
           </p>
         </div>
       </div>
