@@ -51,7 +51,7 @@ export default function Landing() {
         <div className="container mx-auto px-6">
           <div className="max-w-4xl mx-auto text-center">
             <Badge variant="secondary" className="mb-6 bg-teal-50 text-teal-700 border-teal-200">
-              AI-Powered Marketing Platform
+              AI-Native Marketing Platform
             </Badge>
             <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight">
               Where Field Service Meets{" "}
