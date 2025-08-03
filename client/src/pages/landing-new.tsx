@@ -155,7 +155,7 @@ export default function Landing() {
         <div className="container mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
-              <h2 className="text-4xl font-bold text-slate-900 mb-6">
+              <h2 className="text-4xl font-bold text-slate-900 mb-6 text-center lg:text-left">
                 Built for field service professionals who demand results
               </h2>
               <p className="text-lg text-slate-600 mb-8">
