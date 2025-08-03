@@ -1,23 +1,22 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Bot,
-  Shield,
-  BarChart3,
-  ArrowRight,
-  User,
-  Lock,
-  Mail,
+import { Separator } from "@/components/ui/separator";
+import { 
+  CheckCircle, 
+  Star, 
+  Zap, 
+  Users, 
+  BarChart3, 
+  Settings, 
+  TrendingUp, 
+  ArrowRight, 
+  Play, 
+  Shield, 
+  Clock, 
+  Target 
 } from "lucide-react";
 import fieldFluxLogo from "@assets/fieldFlux_logo_updated_1754198391343.avif";
 import { useToast } from "@/hooks/use-toast";
