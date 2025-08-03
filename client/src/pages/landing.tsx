@@ -14,12 +14,12 @@ import {
   Bot,
   Shield,
   BarChart3,
-  Zap,
   ArrowRight,
   User,
   Lock,
   Mail,
 } from "lucide-react";
+import fieldFluxLogo from "@assets/fieldFlux_logo_updated_1754198391343.avif";
 import { useToast } from "@/hooks/use-toast";
 
 export default function Landing() {
@@ -150,8 +150,12 @@ export default function Landing() {
 
           <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300">
             <CardHeader>
-              <div className="w-12 h-12 bg-hvac-orange/10 rounded-lg flex items-center justify-center mb-4">
-                <Zap className="w-6 h-6 text-hvac-orange" />
+              <div className="w-12 h-12 bg-hvac-orange/10 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
+                <img 
+                  src={fieldFluxLogo} 
+                  alt="FieldFlux Logo" 
+                  className="w-8 h-8 object-contain"
+                />
               </div>
               <CardTitle className="text-xl text-hvac-gray">
                 Content That Converts
