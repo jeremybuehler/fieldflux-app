@@ -9,7 +9,7 @@ import { useAnalytics } from "./hooks/use-analytics";
 import { useAuth } from "@/hooks/useAuth";
 import Dashboard from "@/pages/dashboard-simple";
 import Settings from "@/pages/settings-fixed";
-import Landing from "@/pages/landing-auth";
+import Landing from "@/pages/landing-new";
 import Social from "@/pages/social";
 import Leads from "@/pages/leads";
 import Reviews from "@/pages/reviews";
