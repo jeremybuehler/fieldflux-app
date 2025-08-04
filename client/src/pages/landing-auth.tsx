@@ -30,6 +30,7 @@ import {
   Mail,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import fieldFluxLogo from "@assets/fieldFlux_logo_updated_1754198391343.avif";
 
 export default function LandingAuth() {
   const { isAuthenticated } = useAuth();
@@ -108,8 +109,8 @@ export default function LandingAuth() {
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
           <div className="flex justify-between items-center h-14 sm:h-16">
             <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-blue-600 to-purple-700 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
-                <Zap className="w-4 h-4 sm:w-6 sm:h-6 text-white" />
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl shadow-lg flex-shrink-0 overflow-hidden">
+                <img src={fieldFluxLogo} alt="FieldFlux Logo" className="w-full h-full object-cover" />
               </div>
               <div className="min-w-0 flex-1">
                 <span className="text-lg sm:text-xl font-bold text-gray-900">FieldFlux</span>

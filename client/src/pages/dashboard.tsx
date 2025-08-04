@@ -12,9 +12,7 @@ import LeadsPanel from "@/components/dashboard/leads-panel";
 import ReviewsPanel from "@/components/dashboard/reviews-panel";
 import GoDaddyIntegration from "@/components/dashboard/godaddy-integration";
 import AnalyticsReports from "@/components/dashboard/analytics-reports";
-import WeatherWidget from "@/components/dashboard/weather-widget";
-import { Button } from "@/components/ui/button";
-import { Wand2, MapPin } from "lucide-react";
+
 import Sidebar from "@/components/dashboard/sidebar";
 
 export default function Dashboard() {
