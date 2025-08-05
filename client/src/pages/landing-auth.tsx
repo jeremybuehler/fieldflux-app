@@ -326,7 +326,7 @@ export default function LandingAuth() {
                 onClick={handleLogin}
                 className="bg-white text-blue-600 hover:bg-gray-100 px-10 py-4 text-lg font-semibold shadow-xl"
               >
-                Start Free Trial
+                Get Started
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </div>
