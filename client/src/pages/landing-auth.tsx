@@ -190,7 +190,7 @@ export default function LandingAuth() {
                 className="bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white px-10 py-4 text-lg shadow-xl hover:shadow-2xl transition-all duration-200"
                 onClick={handleLogin}
               >
-                Start Free Trial
+                Get Started
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
             </div>
@@ -199,15 +199,7 @@ export default function LandingAuth() {
             <div className="flex flex-wrap justify-center gap-8 text-sm text-gray-600 mb-16">
               <div className="flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-lg px-4 py-2 border border-gray-200">
                 <CheckCircle className="w-5 h-5 text-green-600" />
-                <span className="font-medium">No Credit Card Required</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-lg px-4 py-2 border border-gray-200">
-                <CheckCircle className="w-5 h-5 text-green-600" />
                 <span className="font-medium">Setup in 5 Minutes</span>
-              </div>
-              <div className="flex items-center gap-2 bg-white/60 backdrop-blur-sm rounded-lg px-4 py-2 border border-gray-200">
-                <CheckCircle className="w-5 h-5 text-green-600" />
-                <span className="font-medium">Cancel Anytime</span>
               </div>
             </div>
           </div>
