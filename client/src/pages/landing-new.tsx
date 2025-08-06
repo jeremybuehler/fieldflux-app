@@ -72,21 +72,7 @@ export default function Landing() {
               </Button>
             </div>
             
-            {/* Trust Indicators */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-8 text-sm text-slate-500">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-teal-600" />
-                Free 14-day trial
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-teal-600" />
-                No credit card required
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-teal-600" />
-                Cancel anytime
-              </div>
-            </div>
+            
           </div>
         </div>
       </section>
