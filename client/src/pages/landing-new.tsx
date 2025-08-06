@@ -18,7 +18,7 @@ import fieldFluxLogo from "@assets/fieldFlux_logo_updated_1754198391343.avif";
 
 export default function Landing() {
   const handleDemoAccess = () => {
-    window.location.href = "/dashboard";
+    window.location.href = "/api/login";
   };
 
   return (
