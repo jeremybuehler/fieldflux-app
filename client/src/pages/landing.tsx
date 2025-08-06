@@ -33,65 +33,17 @@ export default function Landing() {
   const { toast } = useToast();
 
   const handleLogin = async () => {
-    if (!loginData.username || !loginData.password) {
-      toast({
-        title: "Missing Information",
-        description: "Please enter your username and password.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Simulate login for demo - in real implementation, this would call an API
-    if (loginData.username === "admin" && loginData.password === "demo123") {
-      toast({
-        title: "Login Successful",
-        description: "Welcome back to FieldFlux!",
-      });
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 1000);
-    } else {
-      toast({
-        title: "Login Failed",
-        description:
-          "Invalid username or password. Try admin/demo123 for demo access.",
-        variant: "destructive",
-      });
-    }
+    // Use Replit's OIDC authentication system
+    window.location.href = "/api/login";
   };
 
   const handleSignup = async () => {
-    if (
-      !signupData.name ||
-      !signupData.email ||
-      !signupData.username ||
-      !signupData.password
-    ) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all fields to create your account.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Simulate signup for demo
-    toast({
-      title: "Account Created",
-      description:
-        "Welcome to FieldFlux! You can now log in with your credentials.",
-    });
-
-    // Reset form and switch to login tab
-    setSignupData({ name: "", email: "", username: "", password: "" });
-    setTimeout(() => {
-      setIsAuthOpen(false);
-    }, 1500);
+    // Use Replit's OIDC authentication system for signup as well
+    window.location.href = "/api/login";
   };
 
   const handleDemoAccess = () => {
-    window.location.href = "/dashboard";
+    window.location.href = "/api/login";
   };
 
   return (
