@@ -266,9 +266,6 @@ export default function Landing() {
               Get Started
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            <Button size="lg" variant="outline" className="border-slate-600 text-white hover:bg-slate-700 text-lg px-8 py-3">
-              Schedule a Demo
-            </Button>
           </div>
           <div className="flex items-center justify-center gap-2 text-slate-400">
             <Clock className="h-4 w-4" />
