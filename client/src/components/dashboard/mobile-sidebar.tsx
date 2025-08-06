@@ -2,33 +2,12 @@ import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
+import { getNavigation } from "@/lib/navigation";
 import {
-  LayoutDashboard,
-  Share2,
-  Code,
-  TrendingUp,
-  Search,
-  Star,
-  UserPlus,
-  Bot,
-  Settings as SettingsIcon,
   Menu,
   X,
-  Globe,
   Zap
 } from "lucide-react";
-
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Social Media", href: "/social", icon: Share2 },
-  { name: "Website Updates", href: "/website", icon: Code },
-  { name: "Reports", href: "/reports", icon: TrendingUp },
-  { name: "SEO Optimization", href: "/seo", icon: Search },
-  { name: "Reviews", href: "/reviews", icon: Star },
-  { name: "Lead Generation", href: "/leads", icon: UserPlus },
-  { name: "GoDaddy", href: "/godaddy", icon: Globe },
-  { name: "Settings", href: "/settings", icon: SettingsIcon },
-];
 
 interface SidebarProps {
   className?: string;
@@ -103,7 +82,7 @@ export default function MobileSidebar({ className }: SidebarProps) {
 
           {/* Navigation Menu */}
           <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-            {navigation.map((item) => {
+            {getNavigation(true).map((item) => {
               const Icon = item.icon;
               const isActive = location === item.href;
               return (
