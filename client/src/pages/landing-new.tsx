@@ -63,7 +63,7 @@ export default function Landing() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Button size="lg" className="bg-slate-800 hover:bg-slate-700 text-lg px-8 py-3" onClick={handleDemoAccess}>
-                Start Free Trial
+                Get Started
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button size="lg" variant="outline" className="text-lg px-8 py-3">
@@ -263,7 +263,7 @@ export default function Landing() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
             <Button size="lg" className="bg-teal-600 hover:bg-teal-700 text-lg px-8 py-3" onClick={handleDemoAccess}>
-              Start Your Free Trial
+              Get Started
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button size="lg" variant="outline" className="border-slate-600 text-white hover:bg-slate-700 text-lg px-8 py-3">
