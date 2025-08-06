@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
+import Sidebar from "@/components/dashboard/sidebar";
 import { 
   Code, 
   FileText, 
@@ -192,8 +193,11 @@ export default function Website() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 lg:p-8">
-      <div className="max-w-7xl mx-auto space-y-8">
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 overflow-y-auto p-4 lg:p-8">
+          <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between space-y-4 lg:space-y-0">
           <div>
@@ -441,10 +445,10 @@ export default function Website() {
                       </div>
                     ) : (
                       <div className="space-y-4">
-                        {blogPosts.length === 0 ? (
+                        {(Array.isArray(blogPosts) ? blogPosts.length : 0) === 0 ? (
                           <p className="text-gray-500 text-sm">No blog posts yet. Generate your first one!</p>
                         ) : (
-                          (blogPosts as any[]).slice(0, 5).map((post: any, index: number) => (
+                          Array.isArray(blogPosts) ? blogPosts.slice(0, 5).map((post: any, index: number) => (
                             <div key={post.id || index} className="border-b border-gray-100 pb-3 last:border-b-0">
                               <h4 className="font-medium text-sm text-gray-900 mb-1">{post.title || 'Sample Blog Post'}</h4>
                               <p className="text-xs text-gray-600 mb-2">{post.excerpt || 'Sample excerpt...'}</p>
@@ -455,7 +459,7 @@ export default function Website() {
                                 <span className="text-xs text-gray-500">{post.readingTime || '5'} min read</span>
                               </div>
                             </div>
-                          ))
+                          )) : null
                         )}
                       </div>
                     )}
@@ -530,6 +534,8 @@ export default function Website() {
             </Card>
           </TabsContent>
         </Tabs>
+          </div>
+        </div>
       </div>
     </div>
   );
