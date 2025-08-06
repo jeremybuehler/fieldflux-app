@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
-import Sidebar from "@/components/dashboard/sidebar";
+import TopNavigation from "@/components/layout/top-navigation";
 import { 
   Code, 
   FileText, 
@@ -193,11 +193,11 @@ export default function Website() {
   ];
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <div className="flex-1 overflow-y-auto p-4 lg:p-8">
-          <div className="max-w-7xl mx-auto space-y-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+      <TopNavigation title="Website Management" />
+      
+      <div className="p-4 lg:p-8">
+        <div className="max-w-7xl mx-auto space-y-8">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between space-y-4 lg:space-y-0">
           <div>
@@ -534,7 +534,6 @@ export default function Website() {
             </Card>
           </TabsContent>
         </Tabs>
-          </div>
         </div>
       </div>
     </div>
