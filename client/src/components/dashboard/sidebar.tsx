@@ -1,27 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Link, useLocation } from "wouter";
-import { 
-  LayoutDashboard, 
-  Share2, 
-  Code, 
-  TrendingUp, 
-  Search, 
-  Star, 
-  UserPlus,
-  Settings as SettingsIcon
-} from "lucide-react";
+import { getNavigation } from "@/lib/navigation";
 import fieldFluxLogo from "@assets/fieldFlux_logo_updated_1754198391343.avif";
-
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Social Media", href: "/social", icon: Share2 },
-  { name: "Website Updates", href: "/website", icon: Code },
-  { name: "Reports", href: "/reports", icon: TrendingUp },
-  { name: "SEO Optimization", href: "/seo", icon: Search },
-  { name: "Reviews", href: "/reviews", icon: Star },
-  { name: "Lead Generation", href: "/leads", icon: UserPlus },
-  { name: "Settings", href: "/settings", icon: SettingsIcon },
-];
 
 export default function Sidebar() {
   const [location] = useLocation();
@@ -47,7 +27,7 @@ export default function Sidebar() {
 
       {/* Navigation Menu */}
       <nav className="flex-1 p-4 space-y-2">
-        {navigation.map((item) => {
+        {getNavigation().map((item) => {
           const Icon = item.icon;
           const isActive = location === item.href;
           return (

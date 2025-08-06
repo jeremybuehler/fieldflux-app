@@ -3,32 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { getNavigation } from "@/lib/navigation";
 import {
   Bot,
   MapPin,
   LogOut,
-  LayoutDashboard,
-  Share2,
-  Code,
-  TrendingUp,
-  Search,
-  Star,
-  UserPlus,
-  Settings as SettingsIcon,
-  Globe,
 } from "lucide-react";
-
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Social Media", href: "/social", icon: Share2 },
-  { name: "Website Updates", href: "/website", icon: Code },
-  { name: "Reports", href: "/reports", icon: TrendingUp },
-  { name: "SEO Optimization", href: "/seo", icon: Search },
-  { name: "Reviews", href: "/reviews", icon: Star },
-  { name: "Lead Generation", href: "/leads", icon: UserPlus },
-  { name: "GoDaddy", href: "/godaddy", icon: Globe },
-  { name: "Settings", href: "/settings", icon: SettingsIcon },
-];
 
 interface TopNavigationProps {
   title: string;
@@ -96,7 +76,7 @@ export default function TopNavigation({ title }: TopNavigationProps) {
       {/* Top Navigation */}
       <div className="bg-white border-b border-gray-200 px-4 lg:px-8 py-3">
         <nav className="flex space-x-1 overflow-x-auto">
-          {navigation.map((item) => {
+          {getNavigation(true).map((item) => {
             const Icon = item.icon;
             const isActive = location === item.href;
             return (

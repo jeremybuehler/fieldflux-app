@@ -13,34 +13,14 @@ import { Link, useLocation } from "wouter";
 import MultiPlatformWizard from "@/components/social/multi-platform-wizard";
 import TopNavigation from "@/components/layout/top-navigation";
 import {
-  Bot,
-  MapPin,
   Wand2,
   PlusCircle,
-  LogOut,
   Calendar,
-  Share2,
-  Code,
-  Search,
-  Star,
-  UserPlus,
-  Settings as SettingsIcon,
-  LayoutDashboard,
-  TrendingUp,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Social Media", href: "/social", icon: Share2 },
-  { name: "Website Updates", href: "/website", icon: Code },
-  { name: "Reports", href: "/reports", icon: TrendingUp },
-  { name: "SEO Optimization", href: "/seo", icon: Search },
-  { name: "Reviews", href: "/reviews", icon: Star },
-  { name: "Lead Generation", href: "/leads", icon: UserPlus },
-  { name: "Settings", href: "/settings", icon: SettingsIcon },
-];
+// Navigation now imported from shared constants
 
 export default function Social() {
   const [generatedContent, setGeneratedContent] = useState("");
