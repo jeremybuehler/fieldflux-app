@@ -253,10 +253,7 @@ export default function Landing() {
               <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
-          <div className="flex items-center justify-center gap-2 text-slate-400">
-            <Clock className="h-4 w-4" />
-            <span className="text-sm">14-day free trial • No setup fees • Cancel anytime</span>
-          </div>
+          
         </div>
       </section>
 
