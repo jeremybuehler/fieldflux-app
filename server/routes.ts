@@ -11,7 +11,7 @@ import {
   socialPosts, 
   leads, 
   tasks, 
-  activities, 
+  activities,
   seoKeywords,
   socialMediaConfigs,
   socialMediaAnalytics,
@@ -22,10 +22,12 @@ import {
   insertLeadSchema,
   insertTaskSchema,
   insertActivitySchema,
-  insertSeoKeywordSchema
+  insertSeoKeywordSchema,
+  insertSocialMediaConfigSchema
 } from "@shared/schema";
 import OpenAI from "openai";
 import twilio from "twilio";
+import { z } from "zod";
 import { googleAnalyticsService } from "./services/google-analytics";
 
 const openai = new OpenAI({
@@ -1106,17 +1108,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    // TODO: Add proper schema validation for social media config
-    const configData = req.body;
-
-    // Check if config already exists for this platform
-    const existing = await storage.getAllSocialMediaConfigs()
-
-    let result;
-
-    result = await storage.createSocialMediaConfig(configData);
-
-    return res.json(result);
+    try {
+      const configData = insertSocialMediaConfigSchema.parse(req.body);
+      const result = await storage.createSocialMediaConfig(configData);
+      return res.json(result);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ errors: error.errors });
+      }
+      console.error("Error creating social media config:", error);
+      return res
+        .status(500)
+        .json({ error: "Failed to create social media config" });
+    }
   });
 
   app.delete("/api/social-configs/:platform", async (req, res) => {
