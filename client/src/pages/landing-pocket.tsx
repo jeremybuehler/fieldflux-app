@@ -29,7 +29,7 @@ export default function LandingPocket() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-background">
       {/* Navigation */}
       <nav className="relative z-50">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -40,20 +40,20 @@ export default function LandingPocket() {
                 alt="FieldFlux Logo" 
                 className="h-10 w-10 object-contain"
               />
-              <span className="text-2xl font-bold text-slate-900">FieldFlux</span>
+              <span className="text-2xl font-bold text-foreground">FieldFlux</span>
             </div>
             
             <div className="hidden lg:flex lg:items-center lg:space-x-10">
-              <a href="#features" className="text-base font-medium text-slate-600 hover:text-slate-900 transition-colors">
+              <a href="#features" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Features
               </a>
-              <a href="#testimonials" className="text-base font-medium text-slate-600 hover:text-slate-900 transition-colors">
+              <a href="#testimonials" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Success Stories
               </a>
-              <a href="#pricing" className="text-base font-medium text-slate-600 hover:text-slate-900 transition-colors">
+              <a href="#pricing" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Pricing
               </a>
-              <a href="#support" className="text-base font-medium text-slate-600 hover:text-slate-900 transition-colors">
+              <a href="#support" className="text-base font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Support
               </a>
             </div>
@@ -62,7 +62,7 @@ export default function LandingPocket() {
               <Button variant="ghost" onClick={handleGetStarted} className="hidden lg:inline-flex">
                 Sign In
               </Button>
-              <Button onClick={handleGetStarted} className="bg-slate-900 hover:bg-slate-800 text-white">
+              <Button onClick={handleGetStarted} className="bg-primary hover:bg-primary/90 text-primary-foreground">
                 Get Started
               </Button>
             </div>
@@ -71,21 +71,21 @@ export default function LandingPocket() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-white">
+      <section className="relative overflow-hidden bg-gradient-to-br from-secondary to-background">
         <div className="mx-auto max-w-7xl px-4 pb-16 pt-16 sm:px-6 lg:px-8 lg:pb-20 lg:pt-20">
           <div className="text-center">
-            <Badge className="mb-6 inline-flex items-center rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700">
+            <Badge className="mb-6 inline-flex items-center rounded-full bg-accent px-4 py-2 text-sm font-medium text-accent-foreground">
               <Zap className="mr-2 h-4 w-4" />
               AI-Powered Field Service Marketing
             </Badge>
             
-            <h1 className="mx-auto max-w-4xl text-5xl font-bold tracking-tight text-slate-900 sm:text-6xl lg:text-7xl">
+            <h1 className="mx-auto max-w-4xl text-5xl font-bold tracking-tight text-foreground sm:text-6xl lg:text-7xl">
               Transform your field service business with
-              <span className="relative whitespace-nowrap text-slate-900">
+              <span className="relative whitespace-nowrap text-primary">
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 418 42"
-                  className="absolute left-0 top-2/3 h-[0.58em] w-full fill-slate-300/70"
+                  className="absolute left-0 top-2/3 h-[0.58em] w-full fill-primary/20"
                   preserveAspectRatio="none"
                 >
                   <path d="m203.371.916c-26.013-2.078-76.686 1.963-124.73 9.946L67.3 12.749C35.421 18.062 18.2 21.766 6.004 25.934 1.244 27.561.828 27.778.874 28.61c.07 1.214.828 1.121 9.595-1.176 9.072-2.377 17.15-3.92 39.246-7.496C123.565 7.986 157.869 4.492 195.942 5.046c7.461.108 19.25 1.696 19.17 2.582-.107 1.183-7.874 4.31-25.75 10.366-21.992 7.45-35.43 12.534-36.701 13.884-2.173 2.308-.202 4.407 4.442 4.734 2.654.187 3.263.157 15.593-.78 35.401-2.686 57.944-3.488 88.365-3.143 46.327.526 75.721 2.23 130.788 7.584 19.787 1.924 20.814 1.98 24.557 1.332l.066-.011c1.201-.203 1.53-1.825.399-2.335-2.911-1.31-4.893-1.604-22.048-3.261-57.509-5.556-87.871-7.36-132.059-7.842-23.239-.254-33.617-.116-50.627.674-11.629.54-42.371 2.494-46.696 2.967-2.359.259 8.133-3.625 26.504-9.81 23.239-7.825 27.934-10.149 28.304-14.005.417-4.348-3.529-6-16.878-7.066Z" />
@@ -94,7 +94,7 @@ export default function LandingPocket() {
               </span>
             </h1>
             
-            <p className="mx-auto mt-8 max-w-2xl text-xl leading-8 text-slate-600">
+            <p className="mx-auto mt-8 max-w-2xl text-xl leading-8 text-muted-foreground">
               Generate more leads, create better content, and grow your revenue with our AI-native marketing platform designed specifically for field service professionals.
             </p>
             
@@ -102,7 +102,7 @@ export default function LandingPocket() {
               <Button 
                 size="lg" 
                 onClick={handleGetStarted}
-                className="group bg-slate-900 px-8 py-4 text-lg font-semibold hover:bg-slate-800"
+                className="group bg-primary px-8 py-4 text-lg font-semibold hover:bg-primary/90 text-primary-foreground"
               >
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -120,7 +120,7 @@ export default function LandingPocket() {
 
             {/* Trusted by Section */}
             <div className="mt-16">
-              <p className="text-base font-semibold text-slate-600">
+              <p className="text-base font-semibold text-muted-foreground">
                 Trusted by leading field service companies
               </p>
               <div className="mt-6 grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-5">
@@ -132,8 +132,8 @@ export default function LandingPocket() {
                   "Quick Fix Services"
                 ].map((company, index) => (
                   <div key={index} className="col-span-1 flex justify-center">
-                    <div className="h-12 w-32 bg-slate-200 rounded-lg flex items-center justify-center">
-                      <span className="text-xs font-medium text-slate-500">{company}</span>
+                    <div className="h-12 w-32 bg-muted rounded-lg flex items-center justify-center">
+                      <span className="text-xs font-medium text-muted-foreground">{company}</span>
                     </div>
                   </div>
                 ))}
@@ -154,16 +154,16 @@ export default function LandingPocket() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="bg-white py-24 sm:py-32">
+      <section id="features" className="bg-card py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-base font-semibold leading-7 text-slate-600">
+            <h2 className="text-base font-semibold leading-7 text-muted-foreground">
               Everything you need
             </h2>
-            <p className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            <p className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Built for field service success
             </p>
-            <p className="mt-6 text-lg leading-8 text-slate-600">
+            <p className="mt-6 text-lg leading-8 text-muted-foreground">
               From lead generation to customer retention, our platform handles every aspect of your marketing needs
             </p>
           </div>
@@ -203,13 +203,13 @@ export default function LandingPocket() {
                 },
               ].map((feature) => (
                 <div key={feature.name} className="flex flex-col">
-                  <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-slate-900">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-100">
+                  <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-foreground">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary text-primary">
                       {feature.icon}
                     </div>
                     {feature.name}
                   </dt>
-                  <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-slate-600">
+                  <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-muted-foreground">
                     <p className="flex-auto">{feature.description}</p>
                   </dd>
                 </div>
@@ -220,18 +220,18 @@ export default function LandingPocket() {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="bg-slate-50 py-24 sm:py-32">
+      <section id="testimonials" className="bg-secondary py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-xl text-center">
-            <h2 className="text-lg font-semibold leading-8 tracking-tight text-slate-600">
+            <h2 className="text-lg font-semibold leading-8 tracking-tight text-muted-foreground">
               Testimonials
             </h2>
-            <p className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+            <p className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
               Loved by field service professionals
             </p>
           </div>
           
-          <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 grid-rows-1 gap-8 text-sm leading-6 text-slate-900 sm:mt-20 sm:grid-cols-2 xl:mx-0 xl:max-w-none xl:grid-flow-col xl:grid-cols-4">
+          <div className="mx-auto mt-16 grid max-w-2xl grid-cols-1 grid-rows-1 gap-8 text-sm leading-6 text-foreground sm:mt-20 sm:grid-cols-2 xl:mx-0 xl:max-w-none xl:grid-flow-col xl:grid-cols-4">
             {[
               {
                 quote: "FieldFlux increased our lead generation by 150% in just 3 months. The AI content creation saves us hours every week.",
@@ -262,13 +262,13 @@ export default function LandingPocket() {
                 <CardContent className="p-6">
                   <div className="flex gap-1 mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                      <Star key={i} className="h-4 w-4 fill-chart-3 text-chart-3" />
                     ))}
                   </div>
-                  <p className="text-slate-600 mb-4">"{testimonial.quote}"</p>
+                  <p className="text-muted-foreground mb-4">"{testimonial.quote}"</p>
                   <div className="text-sm">
-                    <p className="font-semibold text-slate-900">{testimonial.author}</p>
-                    <p className="text-slate-600">{testimonial.role}</p>
+                    <p className="font-semibold text-foreground">{testimonial.author}</p>
+                    <p className="text-muted-foreground">{testimonial.role}</p>
                   </div>
                 </CardContent>
               </Card>
