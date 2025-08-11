@@ -739,3 +739,46 @@ html {
 .animate-slide-up {
   animation: slideUp 0.3s ease-out;
 }
+
+/* Pocket Template Enhancements */
+.pocket-gradient-text {
+  background: linear-gradient(135deg, #1e293b 0%, #0f766e 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pocket-shadow {
+  box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.pocket-shadow-lg {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.pocket-transition {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pocket-backdrop-blur {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Modern Hero Enhancements */
+.hero-bg-pattern {
+  background-image: radial-gradient(circle at 25px 25px, rgba(255, 255, 255, 0.3) 2px, transparent 0);
+  background-size: 50px 50px;
+}
+
+/* Enhanced Card Hover Effects */
+.card-hover-lift {
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
