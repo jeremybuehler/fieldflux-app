@@ -9,7 +9,7 @@ import { useAnalytics } from "./hooks/use-analytics";
 import { useAuth } from "@/hooks/useAuth";
 import Dashboard from "@/pages/dashboard-simple";
 import Settings from "@/pages/settings-fixed";
-import Landing from "@/pages/landing-new";
+import Landing from "@/pages/landing-pocket";
 import Social from "@/pages/social";
 import Leads from "@/pages/leads";
 import Reviews from "@/pages/reviews";
@@ -64,7 +64,19 @@ function Router() {
         </>
       ) : (
         /* Redirect unauthenticated users to landing for protected routes */
-        <Route path="/dashboard" component={Landing} />
+        <>
+          <Route path="/dashboard" component={Landing} />
+          <Route path="/social" component={Landing} />
+          <Route path="/leads" component={Landing} />
+          <Route path="/reviews" component={Landing} />
+          <Route path="/reports" component={Landing} />
+          <Route path="/keywords" component={Landing} />
+          <Route path="/seo" component={Landing} />
+          <Route path="/website" component={Landing} />
+          <Route path="/ai-coach" component={Landing} />
+          <Route path="/godaddy" component={Landing} />
+          <Route path="/settings" component={Landing} />
+        </>
       )}
       
       <Route component={NotFound} />
