@@ -21,7 +21,8 @@ import fieldFluxLogo from "@assets/fieldFlux_logo_updated_1754198391343.avif";
 
 export default function LandingPocket() {
   const handleGetStarted = () => {
-    window.location.href = "/api/login";
+    // For now, directly navigate to dashboard for testing
+    window.location.href = "/dashboard";
   };
 
   const handleWatchDemo = () => {

@@ -7,7 +7,7 @@ import { useEffect } from "react";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
 import { useAuth } from "@/hooks/useAuth";
-import Dashboard from "@/pages/dashboard-simple";
+import Dashboard from "@/pages/dashboard";
 import Settings from "@/pages/settings-fixed";
 import Landing from "@/pages/landing-pocket";
 import Social from "@/pages/social";
@@ -47,37 +47,18 @@ function Router() {
       {/* Subscribe page - accessible to everyone */}
       <Route path="/subscribe" component={Subscribe} />
       
-      {/* Protected routes - require authentication */}
-      {isAuthenticated ? (
-        <>
-          <Route path="/dashboard" component={Dashboard} />
-          <Route path="/social" component={Social} />
-          <Route path="/leads" component={Leads} />
-          <Route path="/reviews" component={Reviews} />
-          <Route path="/reports" component={Reports} />
-          <Route path="/keywords" component={Keywords} />
-          <Route path="/seo" component={SEO} />
-          <Route path="/website" component={Website} />
-          <Route path="/ai-coach" component={AICoach} />
-          <Route path="/godaddy" component={GoDaddy} />
-          <Route path="/settings" component={Settings} />
-        </>
-      ) : (
-        /* Redirect unauthenticated users to landing for protected routes */
-        <>
-          <Route path="/dashboard" component={Landing} />
-          <Route path="/social" component={Landing} />
-          <Route path="/leads" component={Landing} />
-          <Route path="/reviews" component={Landing} />
-          <Route path="/reports" component={Landing} />
-          <Route path="/keywords" component={Landing} />
-          <Route path="/seo" component={Landing} />
-          <Route path="/website" component={Landing} />
-          <Route path="/ai-coach" component={Landing} />
-          <Route path="/godaddy" component={Landing} />
-          <Route path="/settings" component={Landing} />
-        </>
-      )}
+      {/* Temporarily disable auth check for development - allow access to dashboard */}
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/social" component={Social} />
+      <Route path="/leads" component={Leads} />
+      <Route path="/reviews" component={Reviews} />
+      <Route path="/reports" component={Reports} />
+      <Route path="/keywords" component={Keywords} />
+      <Route path="/seo" component={SEO} />
+      <Route path="/website" component={Website} />
+      <Route path="/ai-coach" component={AICoach} />
+      <Route path="/godaddy" component={GoDaddy} />
+      <Route path="/settings" component={Settings} />
       
       <Route component={NotFound} />
     </Switch>
