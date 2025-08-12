@@ -15,8 +15,10 @@ import {
   Eye,
   ExternalLink,
   Copy,
-  Download
+  Download,
+  Monitor
 } from "lucide-react";
+import { ResponsivePreview } from './responsive-preview';
 
 interface ChatMessage {
   id: string;
@@ -48,6 +50,7 @@ export default function LandingPageChat({ onLandingPageGenerated }: LandingPageC
   const [inputMessage, setInputMessage] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedPages, setGeneratedPages] = useState<any[]>([]);
+  const [previewPage, setPreviewPage] = useState<any>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -268,8 +271,18 @@ export default function LandingPageChat({ onLandingPageGenerated }: LandingPageC
                       <Button
                         size="sm"
                         variant="outline"
+                        onClick={() => setPreviewPage(message.landingPageData)}
+                        className="glass-morphism border-white/20"
+                        title="Responsive Preview"
+                      >
+                        <Monitor className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
                         onClick={() => copyPageCode(message.landingPageData)}
                         className="glass-morphism border-white/20"
+                        title="Copy Code"
                       >
                         <Copy className="w-4 h-4" />
                       </Button>
@@ -353,6 +366,14 @@ export default function LandingPageChat({ onLandingPageGenerated }: LandingPageC
           ))}
         </div>
       </div>
+
+      {/* Responsive Preview Modal */}
+      {previewPage && (
+        <ResponsivePreview 
+          landingPage={previewPage}
+          onClose={() => setPreviewPage(null)}
+        />
+      )}
     </div>
   );
 }
