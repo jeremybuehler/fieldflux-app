@@ -7,7 +7,7 @@ export default function Sidebar() {
   const [location] = useLocation();
 
   return (
-    <div className="w-64 glass-morphism shadow-protocol-lg border-r border-white/20 flex flex-col bg-white/95 backdrop-blur-xl">
+    <div className="hidden lg:flex fixed inset-y-0 left-0 z-50 w-64 glass-morphism shadow-protocol-lg border-r border-white/20 flex-col bg-white/95 backdrop-blur-xl">
       {/* Header */}
       <div className="p-6 border-b border-white/20">
         <div className="flex items-center space-x-3 animate-protocol-slide-in">
