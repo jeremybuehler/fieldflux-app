@@ -9,7 +9,7 @@ import { useAnalytics } from "./hooks/use-analytics";
 import { useAuth } from "@/hooks/useAuth";
 import Dashboard from "@/pages/dashboard";
 import Settings from "@/pages/settings-fixed";
-import Landing from "@/pages/landing-pocket";
+import Landing from "@/pages/landing-new";
 import Social from "@/pages/social";
 import Leads from "@/pages/leads";
 import Reviews from "@/pages/reviews";
@@ -35,22 +35,22 @@ function Router() {
     <Switch>
       {/* Landing page - always accessible */}
       <Route path="/" component={Landing} />
-      
+
       {/* Demo page - accessible to everyone */}
       <Route path="/demo" component={Demo} />
-      
+
       {/* Onboarding page - accessible to everyone */}
       <Route path="/onboarding" component={Onboarding} />
-      
+
       {/* Pricing page - accessible to everyone */}
       <Route path="/pricing" component={Pricing} />
-      
+
       {/* Subscribe page - accessible to everyone */}
       <Route path="/subscribe" component={Subscribe} />
-      
+
       {/* Style Demo page - accessible to everyone */}
       <Route path="/style-demo" component={StyleDemo} />
-      
+
       {/* Temporarily disable auth check for development - allow access to dashboard */}
       <Route path="/dashboard" component={Dashboard} />
       <Route path="/social" component={Social} />
@@ -63,7 +63,7 @@ function Router() {
       <Route path="/ai-coach" component={AICoach} />
       <Route path="/godaddy" component={GoDaddy} />
       <Route path="/settings" component={Settings} />
-      
+
       <Route component={NotFound} />
     </Switch>
   );
@@ -74,7 +74,9 @@ function App() {
   useEffect(() => {
     // Verify required environment variable is present
     if (!import.meta.env.VITE_GA_MEASUREMENT_ID) {
-      console.warn('Missing required Google Analytics key: VITE_GA_MEASUREMENT_ID');
+      console.warn(
+        "Missing required Google Analytics key: VITE_GA_MEASUREMENT_ID",
+      );
     } else {
       initGA();
     }
