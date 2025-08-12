@@ -11,17 +11,30 @@ FieldFlux is a comprehensive marketing automation platform for field service pro
 - **Frontend**: React 18 + TypeScript + Vite
 - **Backend**: Express.js + TypeScript
 - **Database**: PostgreSQL with Drizzle ORM
-- **UI Framework**: Tailwind CSS + shadcn/ui + Protocol design system
+- **UI Framework**: Tailwind CSS + shadcn/ui + FieldPulse design system
 - **Authentication**: Replit Auth with OpenID Connect
 - **State Management**: TanStack Query for server state
 
+### Design System Implementation (Updated August 12, 2025)
+- **Modern Effects**: Glass morphism, hover animations, floating elements
+- **Color Palette**: Professional slate (primary) + teal (accent) scheme
+- **Animations**: Protocol-specific animations (fade-in, scale-in, slide-in)
+- **Status Indicators**: Multiple modern styling options with glow effects
+- **Interactive Elements**: Hover-lift, hover-glow, and pulse-glow effects
+
 ### Core Technology Stack
 - **Build System**: Vite for client, esbuild for server
-- **Styling**: Tailwind CSS with Protocol template integration
-- **Components**: shadcn/ui with custom HVAC branding
+- **Styling**: Tailwind CSS with FieldPulse design system including glass morphism, gradient effects, and modern animations
+- **Components**: shadcn/ui with custom field service branding and enhanced visual effects
 - **Database ORM**: Drizzle with PostgreSQL
 - **API Integrations**: OpenAI, Google APIs, Twilio SMS
 - **Routing**: Wouter for client-side navigation
+
+### Available Style Classes (Added August 12, 2025)
+- **Visual Effects**: `glass-morphism`, `hover-lift`, `hover-glow`, `gradient-primary`, `gradient-accent`, `shadow-fieldflux`
+- **Animations**: `animate-float`, `animate-pulse-glow`, `animate-protocol-fade-in`, `animate-protocol-scale-in`, `animate-shimmer`
+- **Status Indicators**: `status-modern-online`, `status-fieldservice-*`, `metric-fieldservice`
+- **Layout**: `container-modern`, `landing-page` with enhanced backgrounds and effects
 
 ## Database Schema
 
