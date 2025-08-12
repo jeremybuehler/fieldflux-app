@@ -222,22 +222,22 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen landing-page">
       <TopNavigation title="Settings" />
 
       <div className="flex min-h-screen">
         <MobileSidebar />
 
         <main className="flex-1 lg:ml-64">
-          <div className="p-4 pt-16 lg:pt-6 lg:pl-6">
-            <div className="mb-6 lg:mb-8">
+          <div className="p-4 pt-16 lg:pt-6 lg:pl-6 container-modern">
+            <div className="mb-6 lg:mb-8 animate-protocol-fade-in">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <SettingsIcon className="w-5 h-5 text-blue-600" />
+                <div className="w-12 h-12 gradient-accent rounded-xl flex items-center justify-center shadow-lg animate-pulse-glow">
+                  <SettingsIcon className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl lg:text-2xl font-bold text-hvac-gray">Settings</h1>
-                  <p className="text-gray-600 text-sm lg:text-base">Configure your integrations and preferences</p>
+                  <h1 className="text-2xl lg:text-3xl font-bold gradient-text">Settings</h1>
+                  <p className="text-fieldflux-secondary text-sm lg:text-base">Configure your integrations and preferences</p>
                 </div>
               </div>
             </div>

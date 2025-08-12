@@ -50,7 +50,7 @@ function ReviewCard({ review, businessName }) {
   };
 
   return (
-    <div className="border rounded-lg p-4 space-y-3">
+    <div className="glass-morphism hover-lift rounded-xl p-6 space-y-4 animate-protocol-fade-in shadow-fieldflux">
       <div className="flex items-start space-x-3">
         <img 
           src={review.reviewer.profilePhotoUrl || `https://ui-avatars.com/api/?name=${review.reviewer.displayName}&size=40&background=random`}

@@ -16,6 +16,10 @@ import {
   Wand2,
   PlusCircle,
   Calendar,
+  RefreshCw,
+  BarChart3,
+  TrendingUp,
+  Users,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -36,16 +40,19 @@ export default function Social() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+    <div className="min-h-screen landing-page">
       <TopNavigation title="Social Media Management" />
 
       {/* Main Content */}
-      <div className="p-4 lg:p-8">
-        <div className="space-y-4">
-          <Card>
+      <div className="p-4 lg:p-8 container-modern">
+        <div className="space-y-6 animate-protocol-fade-in">
+          <Card className="glass-morphism hover-lift shadow-fieldflux animate-protocol-scale-in">
             <CardHeader>
-              <CardTitle>AI Content Generation</CardTitle>
-              <CardDescription>
+              <CardTitle className="gradient-text flex items-center">
+                <Wand2 className="w-5 h-5 mr-2 text-teal-600 animate-float" />
+                AI Content Generation
+              </CardTitle>
+              <CardDescription className="text-fieldflux-secondary">
                 Generate engaging social media content with AI.
               </CardDescription>
             </CardHeader>
@@ -58,7 +65,16 @@ export default function Social() {
                     rows={4}
                     onChange={(e) => setGeneratedContent(e.target.value)}
                   />
-                  <Button onClick={() => setIsGenerating(true)}>
+                  <Button 
+                    onClick={() => setIsGenerating(true)} 
+                    className="gradient-accent hover-glow text-white"
+                    disabled={isGenerating}
+                  >
+                    {isGenerating ? (
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Wand2 className="w-4 h-4" />
+                    )}
                     Generate
                   </Button>
                 </div>
@@ -95,19 +111,43 @@ export default function Social() {
             </TabsContent>
           </Tabs>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Card>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="glass-morphism hover-lift shadow-fieldflux animate-protocol-scale-in" style={{animationDelay: '0.1s'}}>
               <CardHeader>
-                <CardTitle>Performance Overview</CardTitle>
+                <CardTitle className="gradient-text flex items-center">
+                  <BarChart3 className="w-5 h-5 mr-2 text-teal-600" />
+                  Performance Overview
+                </CardTitle>
               </CardHeader>
-              <CardContent>Performance data here</CardContent>
+              <CardContent className="p-6">
+                <div className="metric-fieldservice-header">
+                  <div className="metric-fieldservice-title">Engagement Rate</div>
+                  <TrendingUp className="w-6 h-6 text-green-600 animate-float" />
+                </div>
+                <div className="metric-fieldservice-value">87.3%</div>
+                <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                  +15% from last month
+                </div>
+              </CardContent>
             </Card>
 
-            <Card>
+            <Card className="glass-morphism hover-lift shadow-fieldflux animate-protocol-scale-in" style={{animationDelay: '0.2s'}}>
               <CardHeader>
-                <CardTitle>Platform Performance</CardTitle>
+                <CardTitle className="gradient-text flex items-center">
+                  <Users className="w-5 h-5 mr-2 text-blue-600" />
+                  Platform Performance
+                </CardTitle>
               </CardHeader>
-              <CardContent>Platform specific data here</CardContent>
+              <CardContent className="p-6">
+                <div className="metric-fieldservice-header">
+                  <div className="metric-fieldservice-title">Total Followers</div>
+                  <Users className="w-6 h-6 text-blue-600 animate-pulse-glow" />
+                </div>
+                <div className="metric-fieldservice-value">2,347</div>
+                <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                  +124 new followers
+                </div>
+              </CardContent>
             </Card>
           </div>
         </div>

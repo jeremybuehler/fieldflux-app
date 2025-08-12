@@ -50,20 +50,20 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen landing-page">
       <div className="flex">
         <Sidebar />
         <MobileSidebar />
 
         <main className="flex-1 lg:ml-64">
-          <div className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="flex h-16 items-center justify-between px-6">
+          <div className="sticky top-0 z-40 border-b border-white/20 glass-morphism backdrop-blur-xl">
+            <div className="flex h-16 items-center justify-between px-6 animate-protocol-slide-in">
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-                <p className="text-sm text-muted-foreground">Welcome back! Here's what's happening with your business.</p>
+                <h1 className="text-2xl font-bold gradient-text">Dashboard</h1>
+                <p className="text-sm text-fieldflux-secondary">Welcome back! Here's what's happening with your business.</p>
               </div>
               <div className="flex items-center space-x-3">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" className="glass-morphism hover-lift border-white/20">
                   <Filter className="h-4 w-4 mr-2" />
                   Filter
                 </Button>
@@ -72,11 +72,12 @@ export default function Dashboard() {
                   size="sm"
                   onClick={handleRefresh}
                   disabled={refreshing}
+                  className="glass-morphism hover-lift border-white/20"
                 >
                   <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
                   Refresh
                 </Button>
-                <Button size="sm" className="bg-primary hover:bg-primary/90">
+                <Button size="sm" className="gradient-accent hover-glow text-white shadow-lg">
                   <Plus className="h-4 w-4 mr-2" />
                   New Campaign
                 </Button>
@@ -84,7 +85,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="p-6 space-y-8">
+          <div className="p-6 space-y-8 container-modern">
             {/* Enhanced Metrics Overview - Top Priority */}
             <EnhancedMetricsOverview timeRange={timeRange} onTimeRangeChange={setTimeRange} />
 
