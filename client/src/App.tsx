@@ -23,6 +23,7 @@ import Onboarding from "@/pages/onboarding";
 import Pricing from "@/pages/pricing";
 import Subscribe from "@/pages/subscribe";
 import GoDaddy from "@/pages/godaddy";
+import StyleDemo from "@/pages/style-demo";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -46,6 +47,9 @@ function Router() {
       
       {/* Subscribe page - accessible to everyone */}
       <Route path="/subscribe" component={Subscribe} />
+      
+      {/* Style Demo page - accessible to everyone */}
+      <Route path="/style-demo" component={StyleDemo} />
       
       {/* Temporarily disable auth check for development - allow access to dashboard */}
       <Route path="/dashboard" component={Dashboard} />
