@@ -30,18 +30,20 @@ export default function LandingPocket() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen landing-page">
       {/* Navigation */}
-      <nav className="relative z-50">
+      <nav className="relative z-50 glass-morphism border-b border-white/20 backdrop-blur-md bg-white/80">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between py-6">
-            <div className="flex items-center space-x-3">
-              <img 
-                src={fieldFluxLogo} 
-                alt="FieldFlux Logo" 
-                className="h-10 w-10 object-contain"
-              />
-              <span className="text-2xl font-bold text-foreground">FieldFlux</span>
+            <div className="flex items-center space-x-3 animate-protocol-slide-in">
+              <div className="p-2 bg-gradient-to-r from-teal-500 to-blue-600 rounded-lg shadow-lg">
+                <img 
+                  src={fieldFluxLogo} 
+                  alt="FieldFlux Logo" 
+                  className="h-6 w-6 object-contain filter brightness-0 invert"
+                />
+              </div>
+              <span className="gradient-text text-2xl font-bold">FieldFlux</span>
             </div>
             
             <div className="hidden lg:flex lg:items-center lg:space-x-10">
@@ -59,11 +61,11 @@ export default function LandingPocket() {
               </a>
             </div>
             
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" onClick={handleGetStarted} className="hidden lg:inline-flex">
+            <div className="flex items-center space-x-4 animate-protocol-fade-in">
+              <Button variant="ghost" onClick={handleGetStarted} className="hidden lg:inline-flex hover-lift">
                 Sign In
               </Button>
-              <Button onClick={handleGetStarted} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+              <Button onClick={handleGetStarted} className="gradient-accent hover-glow text-white shadow-lg">
                 Get Started
               </Button>
             </div>
@@ -72,11 +74,11 @@ export default function LandingPocket() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-secondary to-background">
+      <section className="relative overflow-hidden container-modern">
         <div className="mx-auto max-w-7xl px-4 pb-16 pt-16 sm:px-6 lg:px-8 lg:pb-20 lg:pt-20">
-          <div className="text-center">
-            <Badge className="mb-6 inline-flex items-center rounded-full bg-accent px-4 py-2 text-sm font-medium text-accent-foreground">
-              <Zap className="mr-2 h-4 w-4" />
+          <div className="text-center animate-protocol-fade-in">
+            <Badge className="mb-6 inline-flex items-center rounded-full gradient-accent px-4 py-2 text-sm font-medium text-white shadow-lg animate-pulse-glow">
+              <Zap className="mr-2 h-4 w-4 animate-float" />
               AI-Powered Field Service Marketing
             </Badge>
             
@@ -99,11 +101,11 @@ export default function LandingPocket() {
               Generate more leads, create better content, and grow your revenue with our AI-native marketing platform designed specifically for field service professionals.
             </p>
             
-            <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <div className="mt-12 flex flex-col items-center justify-center gap-4 sm:flex-row animate-protocol-scale-in">
               <Button 
                 size="lg" 
                 onClick={handleGetStarted}
-                className="group bg-primary px-8 py-4 text-lg font-semibold hover:bg-primary/90 text-primary-foreground"
+                className="group gradient-accent px-8 py-4 text-lg font-semibold text-white hover-glow shadow-xl"
               >
                 Start Free Trial
                 <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
@@ -112,7 +114,7 @@ export default function LandingPocket() {
                 size="lg" 
                 variant="outline" 
                 onClick={handleWatchDemo}
-                className="px-8 py-4 text-lg font-semibold"
+                className="px-8 py-4 text-lg font-semibold glass-morphism hover-lift border-teal-200"
               >
                 <Play className="mr-2 h-5 w-5" />
                 Watch Demo
@@ -155,15 +157,15 @@ export default function LandingPocket() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="bg-card py-24 sm:py-32">
+      <section id="features" className="bg-card py-24 sm:py-32 container-modern">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
-            <h2 className="text-base font-semibold leading-7 text-muted-foreground">
+          <div className="mx-auto max-w-2xl text-center animate-protocol-fade-in">
+            <Badge className="mb-4 bg-teal-50 text-teal-700 border-teal-200">
               Everything you need
-            </h2>
-            <p className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            </Badge>
+            <h2 className="mt-2 text-3xl font-bold tracking-tight gradient-text sm:text-4xl">
               Built for field service success
-            </p>
+            </h2>
             <p className="mt-6 text-lg leading-8 text-muted-foreground">
               From lead generation to customer retention, our platform handles every aspect of your marketing needs
             </p>
@@ -202,10 +204,10 @@ export default function LandingPocket() {
                   name: 'Reliable Support',
                   description: '24/7 customer support and dedicated success manager to help you achieve your goals.',
                 },
-              ].map((feature) => (
-                <div key={feature.name} className="flex flex-col">
+              ].map((feature, index) => (
+                <div key={feature.name} className={`flex flex-col hover-lift glass-morphism p-6 rounded-2xl animate-protocol-scale-in`} style={{animationDelay: `${index * 0.1}s`}}>
                   <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-foreground">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary text-primary">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl gradient-accent text-white shadow-lg animate-float">
                       {feature.icon}
                     </div>
                     {feature.name}
@@ -259,17 +261,17 @@ export default function LandingPocket() {
                 rating: 5
               }
             ].map((testimonial, index) => (
-              <Card key={index} className="flex flex-col justify-between">
+              <Card key={index} className="flex flex-col justify-between hover-lift glass-morphism animate-protocol-fade-in" style={{animationDelay: `${index * 0.15}s`}}>
                 <CardContent className="p-6">
                   <div className="flex gap-1 mb-4">
                     {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="h-4 w-4 fill-chart-3 text-chart-3" />
+                      <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                     ))}
                   </div>
-                  <p className="text-muted-foreground mb-4">"{testimonial.quote}"</p>
+                  <p className="text-muted-foreground mb-4 italic">"{testimonial.quote}"</p>
                   <div className="text-sm">
                     <p className="font-semibold text-foreground">{testimonial.author}</p>
-                    <p className="text-muted-foreground">{testimonial.role}</p>
+                    <p className="text-fieldflux-secondary">{testimonial.role}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -336,13 +338,14 @@ export default function LandingPocket() {
                 ],
                 mostPopular: false,
               },
-            ].map((tier) => (
+            ].map((tier, index) => (
               <Card 
                 key={tier.id} 
-                className={`relative ${tier.mostPopular ? 'border-slate-900 shadow-lg scale-105' : 'border-slate-200'}`}
+                className={`relative hover-lift animate-protocol-scale-in ${tier.mostPopular ? 'border-teal-600 shadow-fieldflux scale-105 glass-morphism' : 'border-slate-200'}`}
+                style={{animationDelay: `${index * 0.1}s`}}
               >
                 {tier.mostPopular && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-slate-900 text-white">
+                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 gradient-accent text-white shadow-lg animate-pulse-glow">
                     Most Popular
                   </Badge>
                 )}
@@ -370,7 +373,7 @@ export default function LandingPocket() {
                     ))}
                   </ul>
                   <Button 
-                    className={`mt-8 w-full ${tier.mostPopular ? 'bg-slate-900 hover:bg-slate-800' : 'bg-slate-100 text-slate-900 hover:bg-slate-200'}`}
+                    className={`mt-8 w-full hover-glow ${tier.mostPopular ? 'gradient-accent text-white shadow-lg' : 'bg-slate-100 text-slate-900 hover:bg-slate-200'}`}
                     onClick={handleGetStarted}
                   >
                     Get Started
@@ -383,20 +386,21 @@ export default function LandingPocket() {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-slate-900">
-        <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8">
-          <div className="mx-auto max-w-2xl text-center">
+      <section className="gradient-primary relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-teal-600/20 to-blue-600/20"></div>
+        <div className="mx-auto max-w-7xl px-4 py-24 sm:px-6 sm:py-32 lg:px-8 relative">
+          <div className="mx-auto max-w-2xl text-center animate-protocol-fade-in">
             <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
               Ready to transform your field service business?
             </h2>
-            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-300">
+            <p className="mx-auto mt-6 max-w-xl text-lg leading-8 text-slate-200">
               Join thousands of field service professionals who are already growing their businesses with FieldFlux.
             </p>
-            <div className="mt-10 flex items-center justify-center gap-x-6">
+            <div className="mt-10 flex items-center justify-center gap-x-6 animate-protocol-scale-in">
               <Button 
                 size="lg"
                 onClick={handleGetStarted}
-                className="bg-white text-slate-900 hover:bg-slate-100"
+                className="bg-white text-slate-900 hover:bg-slate-100 hover-glow shadow-xl"
               >
                 Start Free Trial
               </Button>
@@ -404,13 +408,18 @@ export default function LandingPocket() {
                 size="lg"
                 variant="ghost"
                 onClick={handleWatchDemo}
-                className="text-white hover:bg-slate-800"
+                className="text-white hover:bg-white/10 glass-morphism border border-white/20"
               >
                 <PhoneCall className="mr-2 h-5 w-5" />
                 Talk to Sales
               </Button>
             </div>
           </div>
+          
+          {/* Floating elements */}
+          <div className="absolute top-1/2 left-10 w-16 h-16 bg-white/10 rounded-full animate-float" style={{animationDelay: '0s'}}></div>
+          <div className="absolute top-1/4 right-20 w-8 h-8 bg-teal-300/20 rounded-full animate-float" style={{animationDelay: '1s'}}></div>
+          <div className="absolute bottom-1/4 left-1/4 w-12 h-12 bg-blue-300/20 rounded-full animate-float" style={{animationDelay: '2s'}}></div>
         </div>
       </section>
 

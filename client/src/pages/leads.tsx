@@ -216,58 +216,62 @@ export default function Leads() {
   const stats = getLeadStats();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+    <div className="min-h-screen landing-page">
       <TopNavigation title="Lead Management" />
 
       {/* Main Content */}
-      <div className="p-4 lg:p-8 space-y-6">
+      <div className="p-4 lg:p-8 space-y-6 container-modern">
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-blue-100 text-sm font-medium">Total Leads</p>
-                  <p className="text-2xl font-bold">{stats.total}</p>
-                </div>
-                <UserPlus className="w-8 h-8 text-blue-200" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-protocol-fade-in">
+          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.1s'}}>
+            <CardContent className="p-6">
+              <div className="metric-fieldservice-header">
+                <div className="metric-fieldservice-title">Total Leads</div>
+                <UserPlus className="w-6 h-6 text-teal-600 animate-float" />
+              </div>
+              <div className="metric-fieldservice-value">{stats.total}</div>
+              <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                Active pipeline
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-yellow-100 text-sm font-medium">New Leads</p>
-                  <p className="text-2xl font-bold">{stats.newLeads}</p>
-                </div>
-                <AlertCircle className="w-8 h-8 text-yellow-200" />
+          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.2s'}}>
+            <CardContent className="p-6">
+              <div className="metric-fieldservice-header">
+                <div className="metric-fieldservice-title">New Leads</div>
+                <AlertCircle className="w-6 h-6 text-blue-600 animate-pulse-glow" />
+              </div>
+              <div className="metric-fieldservice-value">{stats.newLeads}</div>
+              <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                Awaiting contact
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-green-100 text-sm font-medium">Qualified</p>
-                  <p className="text-2xl font-bold">{stats.qualified}</p>
-                </div>
-                <Target className="w-8 h-8 text-green-200" />
+          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.3s'}}>
+            <CardContent className="p-6">
+              <div className="metric-fieldservice-header">
+                <div className="metric-fieldservice-title">Qualified</div>
+                <Target className="w-6 h-6 text-green-600" />
+              </div>
+              <div className="metric-fieldservice-value">{stats.qualified}</div>
+              <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                Ready to convert
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-purple-100 text-sm font-medium">Conversion Rate</p>
-                  <p className="text-2xl font-bold">{stats.conversionRate}%</p>
-                </div>
-                <TrendingUp className="w-8 h-8 text-purple-200" />
+          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.4s'}}>
+            <CardContent className="p-6">
+              <div className="metric-fieldservice-header">
+                <div className="metric-fieldservice-title">Conversion Rate</div>
+                <TrendingUp className="w-6 h-6 text-purple-600 animate-float" />
+              </div>
+              <div className="metric-fieldservice-value">{stats.conversionRate}%</div>
+              <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                Above industry avg
               </div>
             </CardContent>
           </Card>
