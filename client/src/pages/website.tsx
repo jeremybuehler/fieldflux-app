@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import TopNavigation from "@/components/layout/top-navigation";
+import LandingPageChat from "@/components/landing-page-generator/chat-interface";
 import { 
   Code, 
   FileText, 
@@ -64,6 +65,7 @@ export default function Website() {
   const [contentType, setContentType] = useState<'blog' | 'medium' | 'substack'>('blog');
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<string>("");
+  const [generatedLandingPages, setGeneratedLandingPages] = useState<any[]>([]);
   const [blogForm, setBlogForm] = useState<BlogGenerationRequest>({
     topic: "",
     tone: "professional",
@@ -136,6 +138,84 @@ export default function Website() {
       }));
       setCurrentKeyword("");
     }
+  };
+
+  // Landing page handlers
+  const handleLandingPageGenerated = (pageData: any) => {
+    setGeneratedLandingPages(prev => [...prev, pageData]);
+  };
+
+  const openLandingPagePreview = (pageData: any) => {
+    const newWindow = window.open('', '_blank');
+    if (newWindow) {
+      newWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>${pageData.title || 'Generated Landing Page'}</title>
+          <style>${pageData.css}</style>
+        </head>
+        <body>
+          ${pageData.html}
+        </body>
+        </html>
+      `);
+      newWindow.document.close();
+    }
+  };
+
+  const copyLandingPageCode = (pageData: any) => {
+    const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${pageData.title || 'Generated Landing Page'}</title>
+  <style>${pageData.css}</style>
+</head>
+<body>
+  ${pageData.html}
+</body>
+</html>`;
+
+    navigator.clipboard.writeText(fullHtml).then(() => {
+      toast({
+        title: "Code Copied",
+        description: "Landing page HTML copied to clipboard!"
+      });
+    });
+  };
+
+  const downloadLandingPage = (pageData: any) => {
+    const fullHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${pageData.title || 'Generated Landing Page'}</title>
+  <style>${pageData.css}</style>
+</head>
+<body>
+  ${pageData.html}
+</body>
+</html>`;
+
+    const blob = new Blob([fullHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${pageData.title?.replace(/[^a-z0-9]/gi, '-').toLowerCase() || 'landing-page'}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    toast({
+      title: "Download Started",
+      description: "Your landing page HTML file is downloading!"
+    });
   };
 
   const removeKeyword = (keyword: string) => {
@@ -523,15 +603,87 @@ export default function Website() {
           </TabsContent>
 
           <TabsContent value="landing">
-            <Card>
-              <CardHeader>
-                <CardTitle>Landing Pages</CardTitle>
-                <CardDescription>Create high-converting landing pages</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600">Landing page builder coming soon...</p>
-              </CardContent>
-            </Card>
+            <div className="space-y-6">
+              <Card className="glass-morphism shadow-fieldflux">
+                <CardHeader>
+                  <CardTitle className="gradient-text flex items-center">
+                    <Zap className="w-5 h-5 mr-2 text-teal-600" />
+                    AI Landing Page Generator
+                  </CardTitle>
+                  <CardDescription>
+                    Create high-converting landing pages with AI assistance. Describe your needs and get a professional page in minutes.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <LandingPageChat onLandingPageGenerated={handleLandingPageGenerated} />
+                </CardContent>
+              </Card>
+
+              {/* Generated Pages Gallery */}
+              {generatedLandingPages.length > 0 && (
+                <Card className="glass-morphism shadow-fieldflux">
+                  <CardHeader>
+                    <CardTitle className="gradient-text flex items-center">
+                      <Globe className="w-5 h-5 mr-2 text-blue-600" />
+                      Generated Landing Pages
+                    </CardTitle>
+                    <CardDescription>
+                      Your AI-generated landing pages are ready for use
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {generatedLandingPages.map((page) => (
+                        <div key={page.id} className="glass-morphism rounded-xl p-4 hover-lift">
+                          <div className="aspect-video bg-gradient-to-br from-slate-100 to-slate-200 rounded-lg mb-4 flex items-center justify-center cursor-pointer"
+                               onClick={() => openLandingPagePreview(page)}>
+                            <div className="text-center">
+                              <Eye className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+                              <p className="text-sm text-slate-600">Click to preview</p>
+                            </div>
+                          </div>
+                          
+                          <h3 className="font-semibold gradient-text mb-2">{page.title}</h3>
+                          <p className="text-sm text-fieldflux-secondary mb-3">{page.description}</p>
+                          
+                          <div className="flex items-center justify-between text-xs text-fieldflux-secondary mb-3">
+                            <span>Generated {new Date(page.createdAt).toLocaleDateString()}</span>
+                            <Badge className="status-modern-online">Ready</Badge>
+                          </div>
+
+                          <div className="flex space-x-2">
+                            <Button 
+                              size="sm" 
+                              onClick={() => openLandingPagePreview(page)}
+                              className="flex-1 gradient-accent hover-glow text-white"
+                            >
+                              <Eye className="w-4 h-4 mr-1" />
+                              Preview
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => copyLandingPageCode(page)}
+                              className="glass-morphism border-white/20"
+                            >
+                              <Copy className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
+                              onClick={() => downloadLandingPage(page)}
+                              className="glass-morphism border-white/20"
+                            >
+                              <Download className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
           </TabsContent>
         </Tabs>
         </div>
