@@ -14,6 +14,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import TopNavigation from "@/components/layout/top-navigation";
 import LandingPageChat from "@/components/landing-page-generator/chat-interface";
+import { ResponsivePreview } from "@/components/landing-page-generator/responsive-preview";
 import { 
   Code, 
   FileText, 
@@ -34,7 +35,8 @@ import {
   Plus,
   Search,
   Filter,
-  CheckCircle
+  CheckCircle,
+  Monitor
 } from "lucide-react";
 
 interface BlogPost {
@@ -66,6 +68,7 @@ export default function Website() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedContent, setGeneratedContent] = useState<string>("");
   const [generatedLandingPages, setGeneratedLandingPages] = useState<any[]>([]);
+  const [previewPage, setPreviewPage] = useState<any>(null);
   const [blogForm, setBlogForm] = useState<BlogGenerationRequest>({
     topic: "",
     tone: "professional",
@@ -663,8 +666,18 @@ export default function Website() {
                             <Button 
                               size="sm" 
                               variant="outline"
+                              onClick={() => setPreviewPage(page)}
+                              className="glass-morphism border-white/20"
+                              title="Responsive Preview"
+                            >
+                              <Monitor className="w-4 h-4" />
+                            </Button>
+                            <Button 
+                              size="sm" 
+                              variant="outline"
                               onClick={() => copyLandingPageCode(page)}
                               className="glass-morphism border-white/20"
+                              title="Copy Code"
                             >
                               <Copy className="w-4 h-4" />
                             </Button>
@@ -673,6 +686,7 @@ export default function Website() {
                               variant="outline"
                               onClick={() => downloadLandingPage(page)}
                               className="glass-morphism border-white/20"
+                              title="Download"
                             >
                               <Download className="w-4 h-4" />
                             </Button>
@@ -688,6 +702,14 @@ export default function Website() {
         </Tabs>
         </div>
       </div>
+
+      {/* Responsive Preview Modal */}
+      {previewPage && (
+        <ResponsivePreview 
+          landingPage={previewPage}
+          onClose={() => setPreviewPage(null)}
+        />
+      )}
     </div>
   );
 }
