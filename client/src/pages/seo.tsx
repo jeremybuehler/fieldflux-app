@@ -2,13 +2,28 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SEOPerformance from "@/components/dashboard/seo-performance";
-import TopNavigation from "@/components/layout/top-navigation";
+import Sidebar from "@/components/dashboard/sidebar";
+import MobileSidebar from "@/components/dashboard/mobile-sidebar";
 import { ArrowLeft, Search, TrendingUp, Target, BarChart3 } from "lucide-react";
 
 export default function SEO() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <TopNavigation title="SEO Optimization" />
+    <div className="min-h-screen landing-page">
+      <div className="flex">
+        <Sidebar />
+        <MobileSidebar />
+        
+        <main className="flex-1 lg:ml-64">
+          <div className="sticky top-0 z-40 border-b border-white/20 glass-morphism backdrop-blur-xl">
+            <div className="flex h-16 items-center justify-between px-6 animate-protocol-slide-in">
+              <div>
+                <h1 className="text-2xl font-bold gradient-text">SEO Optimization</h1>
+                <p className="text-sm text-fieldflux-secondary">Optimize your search engine visibility and keyword rankings</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="container mx-auto p-6">
       <div className="max-w-6xl mx-auto p-6">
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-4">
@@ -180,6 +195,8 @@ export default function SEO() {
             </Card>
           </div>
         </div>
+          </div>
+        </main>
       </div>
     </div>
   );
