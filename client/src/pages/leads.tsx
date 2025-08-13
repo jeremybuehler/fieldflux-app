@@ -9,8 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Progress } from "@/components/ui/progress";
-import Sidebar from "@/components/dashboard/sidebar";
-import MobileSidebar from "@/components/dashboard/mobile-sidebar";
+import TopNav from "@/components/navigation/top-nav";
 import { UserPlus, Mail, Phone, Calendar, Filter, Search, MoreVertical, MessageSquare, CheckCircle, Clock, AlertCircle, TrendingUp, Star, Target, Brain, Zap, Trophy, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
@@ -218,21 +217,21 @@ export default function Leads() {
 
   return (
     <div className="min-h-screen landing-page">
-      <div className="flex">
-        <Sidebar />
-        <MobileSidebar />
-        
-        <main className="flex-1 lg:ml-64">
-          <div className="sticky top-0 z-40 border-b border-white/20 glass-morphism backdrop-blur-xl">
-            <div className="flex h-16 items-center justify-between px-6 animate-protocol-slide-in">
+      <TopNav />
+      
+      <main className="w-full">
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold gradient-text">Lead Generation</h1>
                 <p className="text-sm text-fieldflux-secondary">Intelligent lead scoring and management with AI insights</p>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="container mx-auto p-6 space-y-6">
+        <div className="max-w-7xl mx-auto p-6 space-y-6">
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-protocol-fade-in">
@@ -686,9 +685,8 @@ export default function Leads() {
             )}
           </CardContent>
         </Card>
-          </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

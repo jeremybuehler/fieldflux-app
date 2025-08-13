@@ -2,8 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import Sidebar from "@/components/dashboard/sidebar";
-import MobileSidebar from "@/components/dashboard/mobile-sidebar";
+import TopNav from "@/components/navigation/top-nav";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { TrendingUp, Users, Eye, Mouse, Star, MessageSquare, Calendar, Download, Filter } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -61,21 +60,21 @@ export default function Reports() {
 
   return (
     <div className="min-h-screen landing-page">
-      <div className="flex">
-        <Sidebar />
-        <MobileSidebar />
-        
-        <main className="flex-1 lg:ml-64">
-          <div className="sticky top-0 z-40 border-b border-white/20 glass-morphism backdrop-blur-xl">
-            <div className="flex h-16 items-center justify-between px-6 animate-protocol-slide-in">
+      <TopNav />
+      
+      <main className="w-full">
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold gradient-text">Business Reports</h1>
                 <p className="text-sm text-fieldflux-secondary">Comprehensive insights across all your marketing channels</p>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="max-w-7xl mx-auto p-6">
+        <div className="max-w-7xl mx-auto p-6">
         
         {/* Header */}
         <div className="mb-8">
@@ -227,7 +226,7 @@ export default function Reports() {
                     paddingAngle={5}
                     dataKey="value"
                   >
-                    {(trafficSources || []).map((entry, index) => (
+                    {(trafficSources || []).map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -253,7 +252,7 @@ export default function Reports() {
                   { keyword: 'hvac service', clicks: 189, impressions: 980, position: 2.8 },
                   { keyword: 'emergency ac repair', clicks: 156, impressions: 750, position: 4.1 },
                   { keyword: 'air conditioner installation', clicks: 134, impressions: 890, position: 3.7 }
-                ]).slice(0, 4).map((keyword, index) => (
+                ]).slice(0, 4).map((keyword: any, index: number) => (
                   <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div>
                       <p className="font-medium">{keyword.keyword}</p>
@@ -328,9 +327,8 @@ export default function Reports() {
             </div>
           </CardContent>
         </Card>
-          </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

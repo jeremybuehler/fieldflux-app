@@ -8,8 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Switch } from "@/components/ui/switch";
-import Sidebar from "@/components/dashboard/sidebar";
-import MobileSidebar from "@/components/dashboard/mobile-sidebar";
+import TopNav from "@/components/navigation/top-nav";
 import { useToast } from "@/hooks/use-toast";
 import {
   Globe,
@@ -110,37 +109,21 @@ export default function GoDaddy() {
 
   return (
     <div className="min-h-screen landing-page">
-      <div className="flex">
-        <Sidebar />
-        <MobileSidebar />
-        
-        <main className="flex-1 lg:ml-64">
-          <div className="sticky top-0 z-40 border-b border-white/20 glass-morphism backdrop-blur-xl">
-            <div className="flex h-16 items-center justify-between px-6 animate-protocol-slide-in">
+      <TopNav />
+      
+      <main className="w-full">
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold gradient-text">GoDaddy Configuration</h1>
                 <p className="text-sm text-fieldflux-secondary">Connect and manage your GoDaddy domains and services</p>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="container mx-auto p-6">
-            <div className="mb-6 lg:mb-8">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                  <Globe className="w-5 h-5 text-orange-600" />
-                </div>
-                <div>
-                  <h1 className="text-xl lg:text-2xl font-bold text-gray-900">
-                    GoDaddy Configuration
-                  </h1>
-                  <p className="text-gray-600 text-sm lg:text-base">
-                    Connect and manage your GoDaddy domains and services
-                  </p>
-                </div>
-              </div>
-            </div>
-
+        <div className="max-w-7xl mx-auto p-6">
             <Tabs defaultValue="connection" className="w-full">
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="connection">Connection</TabsTrigger>
@@ -442,9 +425,8 @@ export default function GoDaddy() {
                 </Card>
               </TabsContent>
             </Tabs>
-          </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }
