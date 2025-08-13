@@ -6,7 +6,7 @@ interface UseIntersectionObserverOptions {
   initialValue?: boolean;
 }
 
-export function useIntersectionObserver<T extends Element>({
+export function useIntersectionObserver<T extends HTMLElement>({
   threshold = 0,
   rootMargin = '0px',
   initialValue = false,
