@@ -24,15 +24,12 @@ export default function SEO() {
           </div>
 
           <div className="container mx-auto p-6">
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-6xl mx-auto">
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <Search className="w-5 h-5 text-green-600" />
-            </div>
             <div>
-              <h1 className="text-2xl font-bold text-hvac-gray">SEO Optimization</h1>
-              <p className="text-gray-600">Optimize your search engine visibility and keyword rankings</p>
+              <h2 className="text-xl font-bold gradient-text">SEO Performance Dashboard</h2>
+              <p className="text-sm text-fieldflux-secondary">Monitor and optimize your search engine visibility</p>
             </div>
           </div>
         </div>
@@ -195,6 +192,7 @@ export default function SEO() {
             </Card>
           </div>
         </div>
+      </div>
           </div>
         </main>
       </div>
