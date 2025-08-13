@@ -22,8 +22,7 @@ import {
   Plus,
   Filter
 } from "lucide-react";
-import MobileSidebar from "@/components/dashboard/mobile-sidebar";
-import Sidebar from "@/components/dashboard/sidebar";
+import TopNav from "@/components/navigation/top-nav";
 
 // Enhanced Dashboard Components
 import EnhancedMetricsOverview from "@/components/dashboard/enhanced-metrics-overview";
@@ -51,13 +50,12 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen landing-page">
-      <div className="flex">
-        <Sidebar />
-        <MobileSidebar />
-
-        <main className="flex-1 lg:ml-64">
-          <div className="sticky top-0 z-40 border-b border-white/20 glass-morphism backdrop-blur-xl">
-            <div className="flex h-16 items-center justify-between px-6 animate-protocol-slide-in">
+      <TopNav />
+      
+      <main className="w-full">
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold gradient-text">Dashboard</h1>
                 <p className="text-sm text-fieldflux-secondary">Welcome back! Here's what's happening with your business.</p>
@@ -84,8 +82,9 @@ export default function Dashboard() {
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="p-6 space-y-8 container-modern">
+        <div className="max-w-7xl mx-auto p-6 space-y-8">
             {/* Enhanced Metrics Overview - Top Priority */}
             <EnhancedMetricsOverview timeRange={timeRange} onTimeRangeChange={setTimeRange} />
 
@@ -141,9 +140,8 @@ export default function Dashboard() {
                 </div>
               </TabsContent>
             </Tabs>
-          </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

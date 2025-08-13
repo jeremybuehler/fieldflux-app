@@ -11,8 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
-import Sidebar from "@/components/dashboard/sidebar";
-import MobileSidebar from "@/components/dashboard/mobile-sidebar";
+import TopNav from "@/components/navigation/top-nav";
 import {
   Bot,
   TrendingUp,
@@ -201,21 +200,21 @@ export default function AICoach() {
 
   return (
     <div className="min-h-screen landing-page">
-      <div className="flex">
-        <Sidebar />
-        <MobileSidebar />
-        
-        <main className="flex-1 lg:ml-64">
-          <div className="sticky top-0 z-40 border-b border-white/20 glass-morphism backdrop-blur-xl">
-            <div className="flex h-16 items-center justify-between px-6 animate-protocol-slide-in">
+      <TopNav />
+      
+      <main className="w-full">
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-6 py-4">
+            <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-2xl font-bold gradient-text">AI Coach</h1>
                 <p className="text-sm text-fieldflux-secondary">Your personal AI assistant for engagement and productivity</p>
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="container mx-auto p-6 space-y-8">
+        <div className="max-w-7xl mx-auto p-6 space-y-8">
       {/* AI Coach Action Button */}
       <div className="flex justify-end mb-6">
         <Button 
@@ -579,9 +578,8 @@ export default function AICoach() {
           </Card>
         </TabsContent>
       </Tabs>
-          </div>
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }
