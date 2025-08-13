@@ -24,6 +24,7 @@ import Pricing from "@/pages/pricing";
 import Subscribe from "@/pages/subscribe";
 import GoDaddy from "@/pages/godaddy";
 import PlanetScaleLanding from "@/pages/planetscale-landing";
+import Features from "@/pages/features";
 import StyleDemo from "@/pages/style-demo";
 import NotFound from "@/pages/not-found";
 
@@ -54,6 +55,9 @@ function Router() {
       
       {/* PlanetScale-inspired landing page */}
       <Route path="/planetscale" component={PlanetScaleLanding} />
+      
+      {/* Features page */}
+      <Route path="/features" component={Features} />
 
       {/* Temporarily disable auth check for development - allow access to dashboard */}
       <Route path="/dashboard" component={Dashboard} />

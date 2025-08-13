@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, CheckCircle, Zap, Shield, BarChart3, Users, Star, Database, Globe, Rocket } from "lucide-react";
 import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+import MainNav from "@/components/navigation/main-nav";
 
 // Animation component for reveal on scroll
 const AnimatedElement = ({ children, className = "", delay = 0 }: { 
@@ -223,6 +224,8 @@ export default function PlanetScaleLanding() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
+      {/* Navigation */}
+      <MainNav />
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center">
         <AuroraBackground />
@@ -487,7 +490,7 @@ export default function PlanetScaleLanding() {
             <div>
               <h4 className="font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-slate-400">
-                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="/features" className="hover:text-white transition-colors">Features</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Enterprise</a></li>
               </ul>
