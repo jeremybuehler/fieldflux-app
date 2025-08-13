@@ -8,12 +8,12 @@
 :root {
   --font-size: 14px;
   
-  /* FieldFlux Brand Colors - Muted Version */
-  --fieldflux-primary: #374151;
-  --fieldflux-secondary: #6B7280;
-  --fieldflux-accent: #0F766E;
-  --fieldflux-gradient-start: #374151;
-  --fieldflux-gradient-end: #6B7280;
+  /* FieldFlux Brand Colors - Professional Business Palette */
+  --fieldflux-primary: #1e293b;
+  --fieldflux-secondary: #475569;
+  --fieldflux-accent: #3b82f6;
+  --fieldflux-gradient-start: #1e293b;
+  --fieldflux-gradient-end: #334155;
   
   /* Base Colors */
   --background: #ffffff;
@@ -22,21 +22,21 @@
   --card-foreground: #111827;
   --popover: #ffffff;
   --popover-foreground: #111827;
-  --primary: #374151;
+  --primary: #1e293b;
   --primary-foreground: #ffffff;
-  --secondary: #F9FAFB;
-  --secondary-foreground: #374151;
-  --muted: #F9FAFB;
-  --muted-foreground: #6B7280;
-  --accent: #F0FDF4;
-  --accent-foreground: #166534;
+  --secondary: #f8fafc;
+  --secondary-foreground: #1e293b;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #eff6ff;
+  --accent-foreground: #1e40af;
   --destructive: #DC2626;
   --destructive-foreground: #ffffff;
-  --border: #E5E7EB;
-  --input: #F9FAFB;
-  --input-background: #F9FAFB;
-  --switch-background: #D1D5DB;
-  --ring: #374151;
+  --border: #e2e8f0;
+  --input: #f8fafc;
+  --input-background: #f8fafc;
+  --switch-background: #cbd5e1;
+  --ring: #1e293b;
   
   /* Professional Color Palette */
   --slate-50: #F8FAFC;
@@ -91,12 +91,12 @@
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   
-  /* Chart Colors */
-  --chart-1: #374151;
-  --chart-2: #6B7280;
-  --chart-3: #0F766E;
+  /* Chart Colors - Professional Business Palette */
+  --chart-1: #1e293b;
+  --chart-2: #3b82f6;
+  --chart-3: #64748b;
   --chart-4: #059669;
-  --chart-5: #D97706;
+  --chart-5: #dc2626;
 }
 
 .dark {
@@ -295,7 +295,7 @@
   }
   
   .gradient-text {
-    background: linear-gradient(135deg, var(--slate-700) 0%, var(--teal-600) 100%);
+    background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -362,7 +362,11 @@ html {
   }
   
   .metric-fieldservice-value {
-    @apply text-3xl font-bold text-gray-900 mt-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent;
+    @apply text-3xl font-bold text-gray-900 mt-3;
+    background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
   
   .metric-fieldservice-change {
@@ -402,9 +406,11 @@ html {
     @apply px-6 py-4 whitespace-nowrap text-sm text-gray-900;
   }
 
-/* Landing Page Specific Styles */
+/* Landing Page Specific Styles - Professional Business */
 .landing-page {
-  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%) !important;
+  background: 
+    linear-gradient(135deg, rgba(30, 41, 59, 0.02) 0%, rgba(59, 130, 246, 0.03) 100%),
+    linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
   background-attachment: fixed !important;
 }
 
@@ -455,7 +461,7 @@ html {
   left: 0;
   right: 0;
   bottom: 0;
-  background: radial-gradient(circle at 30% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+  background: radial-gradient(circle at 30% 50%, rgba(30, 41, 59, 0.04) 0%, transparent 50%);
   pointer-events: none;
   z-index: -1;
 }

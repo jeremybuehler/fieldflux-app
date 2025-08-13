@@ -84,6 +84,16 @@ export default {
           800: "var(--gray-800)",
           900: "var(--gray-900)",
         },
+        // Professional business colors
+        fieldflux: {
+          navy: '#1e293b',
+          blue: '#3b82f6', 
+          steel: '#64748b',
+          silver: '#f1f5f9',
+          primary: '#1e293b',
+          secondary: '#475569',
+          accent: '#3b82f6',
+        },
         sidebar: {
           DEFAULT: "var(--sidebar-background)",
           foreground: "var(--sidebar-foreground)",
