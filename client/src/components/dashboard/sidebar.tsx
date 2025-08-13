@@ -27,7 +27,7 @@ export default function Sidebar() {
 
       {/* Navigation Menu */}
       <nav className="flex-1 p-4 space-y-2">
-        {getNavigation().map((item) => {
+        {getNavigation(true).map((item) => {
           const Icon = item.icon;
           const isActive = location === item.href;
           return (

@@ -2,7 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import TopNavigation from "@/components/layout/top-navigation";
+import Sidebar from "@/components/dashboard/sidebar";
+import MobileSidebar from "@/components/dashboard/mobile-sidebar";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { TrendingUp, Users, Eye, Mouse, Star, MessageSquare, Calendar, Download, Filter } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -59,9 +60,22 @@ export default function Reports() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <TopNavigation title="Business Reports" />
-      <div className="max-w-7xl mx-auto p-6">
+    <div className="min-h-screen landing-page">
+      <div className="flex">
+        <Sidebar />
+        <MobileSidebar />
+        
+        <main className="flex-1 lg:ml-64">
+          <div className="sticky top-0 z-40 border-b border-white/20 glass-morphism backdrop-blur-xl">
+            <div className="flex h-16 items-center justify-between px-6 animate-protocol-slide-in">
+              <div>
+                <h1 className="text-2xl font-bold gradient-text">Business Reports</h1>
+                <p className="text-sm text-fieldflux-secondary">Comprehensive insights across all your marketing channels</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="max-w-7xl mx-auto p-6">
         
         {/* Header */}
         <div className="mb-8">
@@ -317,6 +331,9 @@ export default function Reports() {
             </div>
           </CardContent>
         </Card>
+      </div>
+          </div>
+        </main>
       </div>
     </div>
   );

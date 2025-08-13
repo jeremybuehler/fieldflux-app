@@ -8,7 +8,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Switch } from "@/components/ui/switch";
-import TopNavigation from "@/components/layout/top-navigation";
+import Sidebar from "@/components/dashboard/sidebar";
+import MobileSidebar from "@/components/dashboard/mobile-sidebar";
 import { useToast } from "@/hooks/use-toast";
 import {
   Globe,
@@ -108,11 +109,22 @@ export default function GoDaddy() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50/30">
-      <TopNavigation title="GoDaddy Configuration" />
-      <div className="flex min-h-screen">
+    <div className="min-h-screen landing-page">
+      <div className="flex">
+        <Sidebar />
+        <MobileSidebar />
+        
         <main className="flex-1 lg:ml-64">
-          <div className="p-4 lg:p-6 pt-16 lg:pt-6">
+          <div className="sticky top-0 z-40 border-b border-white/20 glass-morphism backdrop-blur-xl">
+            <div className="flex h-16 items-center justify-between px-6 animate-protocol-slide-in">
+              <div>
+                <h1 className="text-2xl font-bold gradient-text">GoDaddy Configuration</h1>
+                <p className="text-sm text-fieldflux-secondary">Connect and manage your GoDaddy domains and services</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="container mx-auto p-6">
             <div className="mb-6 lg:mb-8">
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">

@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { queryClient } from "@/lib/queryClient";
+import Sidebar from "@/components/dashboard/sidebar";
+import MobileSidebar from "@/components/dashboard/mobile-sidebar";
 import {
   Bot,
   TrendingUp,
@@ -94,18 +96,18 @@ export default function AICoach() {
   });
 
   // Fetch AI coach insights
-  const { data: insights = [], isLoading: insightsLoading } = useQuery({
+  const { data: insights = [], isLoading: insightsLoading } = useQuery<AiCoachInsight[]>({
     queryKey: ['/api/ai-coach/insights'],
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
   // Fetch user goals
-  const { data: goals = [], isLoading: goalsLoading } = useQuery({
+  const { data: goals = [], isLoading: goalsLoading } = useQuery<UserGoal[]>({
     queryKey: ['/api/ai-coach/goals'],
   });
 
   // Fetch engagement metrics
-  const { data: metrics, isLoading: metricsLoading } = useQuery({
+  const { data: metrics = {} as EngagementMetrics, isLoading: metricsLoading } = useQuery<EngagementMetrics>({
     queryKey: ['/api/ai-coach/metrics'],
   });
 
@@ -198,18 +200,24 @@ export default function AICoach() {
   };
 
   return (
-    <div className="container mx-auto p-6 space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-blue-600 rounded-xl flex items-center justify-center">
-              <Bot className="w-6 h-6 text-white" />
+    <div className="min-h-screen landing-page">
+      <div className="flex">
+        <Sidebar />
+        <MobileSidebar />
+        
+        <main className="flex-1 lg:ml-64">
+          <div className="sticky top-0 z-40 border-b border-white/20 glass-morphism backdrop-blur-xl">
+            <div className="flex h-16 items-center justify-between px-6 animate-protocol-slide-in">
+              <div>
+                <h1 className="text-2xl font-bold gradient-text">AI Coach</h1>
+                <p className="text-sm text-fieldflux-secondary">Your personal AI assistant for engagement and productivity</p>
+              </div>
             </div>
-            AI Coach
-          </h1>
-          <p className="text-gray-600 mt-2">Your personal AI assistant for engagement and productivity</p>
-        </div>
+          </div>
+
+          <div className="container mx-auto p-6 space-y-8">
+      {/* AI Coach Action Button */}
+      <div className="flex justify-end mb-6">
         <Button 
           onClick={() => generateRecommendationsMutation.mutate()}
           disabled={generateRecommendationsMutation.isPending}
@@ -571,6 +579,9 @@ export default function AICoach() {
           </Card>
         </TabsContent>
       </Tabs>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
