@@ -18,7 +18,7 @@ const AnimatedElement = ({ children, className = "", delay = 0 }: {
 
   return (
     <div
-      ref={ref}
+      ref={ref as React.RefObject<HTMLDivElement>}
       data-animate={inView}
       className={`opacity-0 translate-y-8 transition-all duration-700 ease-out data-[animate=true]:opacity-100 data-[animate=true]:translate-y-0 ${className}`}
       style={{ transitionDelay: `${delay}ms` }}
@@ -152,71 +152,71 @@ export default function PlanetScaleLanding() {
   const features = [
     {
       icon: <Zap className="w-6 h-6" />,
-      title: "Lightning-Fast Performance",
-      description: "Deliver content and process data at unprecedented speeds with our optimized infrastructure.",
-      stats: "99.9% faster than competitors"
+      title: "AI-Powered Content Creation",
+      description: "Generate compelling marketing content instantly with advanced AI that understands your field service business.",
+      stats: "10x faster content creation"
     },
     {
-      icon: <Shield className="w-6 h-6" />,
-      title: "Enterprise Security",
-      description: "Bank-grade security with SOC 2 compliance and end-to-end encryption.",
-      stats: "Zero security incidents"
+      icon: <Users className="w-6 h-6" />,
+      title: "Smart Lead Generation",
+      description: "Identify and capture high-quality leads with intelligent scoring and automated nurturing workflows.",
+      stats: "300% more qualified leads"
     },
     {
       icon: <BarChart3 className="w-6 h-6" />,
-      title: "Advanced Analytics",
-      description: "Real-time insights and actionable data to drive your business decisions.",
-      stats: "500% increase in insights"
+      title: "Unified Analytics Dashboard",
+      description: "Get complete visibility into your marketing performance with real-time insights and actionable recommendations.",
+      stats: "50% better ROI tracking"
     },
     {
-      icon: <Globe className="w-6 h-6" />,
-      title: "Global Scale",
-      description: "Deploy worldwide with our distributed infrastructure and edge computing.",
-      stats: "195+ countries supported"
+      icon: <Star className="w-6 h-6" />,
+      title: "Review Management",
+      description: "Monitor, respond to, and leverage customer reviews across all platforms to build trust and credibility.",
+      stats: "4.8★ average rating boost"
     }
   ];
 
   const comparisonData = {
-    "Performance": {
-      "Response Time": { fieldflux: "< 50ms", competitor: "200-500ms" },
-      "Uptime SLA": { fieldflux: "99.99%", competitor: "99.9%" },
-      "Global CDN": { fieldflux: "✓ 200+ locations", competitor: "✓ 50 locations" },
+    "AI & Automation": {
+      "Content Generation": { fieldflux: "✓ AI-Powered", competitor: "✗ Manual only" },
+      "Lead Scoring": { fieldflux: "✓ Smart algorithms", competitor: "✓ Basic scoring" },
+      "Review Management": { fieldflux: "✓ Automated responses", competitor: "✗ Manual replies" },
     },
-    "Features": {
-      "AI-Powered Insights": { fieldflux: "✓ Advanced AI", competitor: "✗ Basic analytics" },
-      "Real-time Sync": { fieldflux: "✓ Instant", competitor: "✓ 5min delay" },
-      "API Rate Limits": { fieldflux: "Unlimited", competitor: "10,000/hour" },
+    "Marketing Tools": {
+      "Landing Page Builder": { fieldflux: "✓ AI-Generated", competitor: "✓ Template-based" },
+      "SEO Optimization": { fieldflux: "✓ Real-time insights", competitor: "✓ Basic reports" },
+      "Social Media Management": { fieldflux: "✓ Multi-platform", competitor: "✓ Limited platforms" },
     },
-    "Support": {
-      "Response Time": { fieldflux: "< 1 hour", competitor: "24-48 hours" },
-      "Support Channels": { fieldflux: "24/7 Chat, Email, Phone", competitor: "Email only" },
-      "Dedicated Manager": { fieldflux: "✓ Enterprise", competitor: "✗ Not available" },
+    "Analytics & Insights": {
+      "Performance Tracking": { fieldflux: "✓ Real-time dashboard", competitor: "✓ Weekly reports" },
+      "ROI Measurement": { fieldflux: "✓ Advanced attribution", competitor: "✓ Basic tracking" },
+      "Competitive Analysis": { fieldflux: "✓ Market insights", competitor: "✗ Not available" },
     }
   };
 
   const testimonials = [
     {
-      company: "TechCorp",
-      logo: "TC",
-      quote: "FieldFlux transformed our operations completely. The performance gains were immediate and substantial.",
-      author: "Sarah Chen",
-      role: "CTO",
+      company: "Alpine HVAC",
+      logo: "AH",
+      quote: "FieldFlux completely transformed our lead generation. We're getting 3x more qualified leads and our content creation time dropped from hours to minutes.",
+      author: "Mike Thompson",
+      role: "Owner",
       rating: 5
     },
     {
-      company: "GlobalServices",
-      logo: "GS",
-      quote: "The best investment we've made in years. ROI was visible within the first month.",
-      author: "Michael Rodriguez",
-      role: "Operations Director",
+      company: "ProFlow Plumbing",
+      logo: "PP",
+      quote: "The AI-powered marketing tools helped us increase our revenue by 40% in just 6 months. Best investment we've made for our business.",
+      author: "Jessica Martinez",
+      role: "Marketing Manager",
       rating: 5
     },
     {
-      company: "InnovateLabs",
-      logo: "IL",
-      quote: "Exceptional support and a platform that just works. Our team couldn't be happier.",
-      author: "Emily Johnson",
-      role: "Product Manager",
+      company: "GreenScape Landscaping",
+      logo: "GL",
+      quote: "Managing reviews across all platforms used to be a nightmare. Now it's automated and our average rating went from 4.2 to 4.8 stars.",
+      author: "David Park",
+      role: "Operations Manager",
       rating: 5
     }
   ];
@@ -238,7 +238,7 @@ export default function PlanetScaleLanding() {
           <AnimatedElement delay={200}>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
               The world's fastest and most{" "}
-              <GradientText>scalable field service</GradientText>{" "}
+              <GradientText>intelligent field service</GradientText>{" "}
               platform
             </h1>
           </AnimatedElement>
@@ -246,7 +246,7 @@ export default function PlanetScaleLanding() {
           <AnimatedElement delay={400}>
             <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-4xl mx-auto leading-relaxed">
               FieldFlux brings you the fastest field service management platform available. 
-              Deliver exceptional performance with unlimited scale, powered by AI and built for the modern enterprise.
+              Unify intelligent content creation, review management, lead generation, and business analytics to streamline marketing efforts and drive business growth.
             </p>
           </AnimatedElement>
           
@@ -266,11 +266,11 @@ export default function PlanetScaleLanding() {
             <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-slate-400">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-green-400" />
-                <span>No credit card required</span>
+                <span>Free 14-day trial</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-green-400" />
-                <span>14-day free trial</span>
+                <span>No setup fees</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-4 h-4 text-green-400" />
@@ -286,14 +286,14 @@ export default function PlanetScaleLanding() {
         <div className="max-w-7xl mx-auto px-6">
           <AnimatedElement>
             <p className="text-center text-slate-400 mb-12 text-lg">
-              Trusted by industry leaders worldwide
+              Integrates seamlessly with leading field service platforms
             </p>
           </AnimatedElement>
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center opacity-60">
-            {["Microsoft", "Google", "Amazon", "Salesforce"].map((company, i) => (
+            {["ServiceTitan", "Jobber", "Housecall Pro", "FieldEdge"].map((company, i) => (
               <AnimatedElement key={company} delay={i * 100}>
-                <div className="text-2xl font-bold text-slate-400">
+                <div className="text-xl font-bold text-slate-400">
                   {company}
                 </div>
               </AnimatedElement>
@@ -311,8 +311,8 @@ export default function PlanetScaleLanding() {
                 Built for <GradientText>performance</GradientText> at scale
               </h2>
               <p className="text-xl text-slate-400 max-w-3xl mx-auto">
-                Every feature designed to deliver exceptional speed, reliability, and insights 
-                for field service teams that never compromise.
+                Every feature designed to help HVAC, plumbing, electrical, and landscaping professionals 
+                grow their business with intelligent marketing automation.
               </p>
             </div>
           </AnimatedElement>
@@ -357,7 +357,7 @@ export default function PlanetScaleLanding() {
           </AnimatedElement>
 
           <AnimatedElement>
-            <div className="overflow-x-auto" ref={tableRef}>
+            <div className="overflow-x-auto" ref={tableRef as React.RefObject<HTMLDivElement>}>
               <table className="w-full border-collapse border border-slate-700 rounded-lg overflow-hidden">
                 <thead>
                   <tr className="bg-slate-800">
