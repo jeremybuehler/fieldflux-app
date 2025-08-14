@@ -762,7 +762,7 @@ export default function LandingAuth() {
               </div>
             </CardContent>
           </Card>
-        </div>
+        </section>
 
         {/* Footer */}
         <footer className="py-16 bg-gradient-to-r from-gray-50 to-gray-100 border-t border-gray-200">
