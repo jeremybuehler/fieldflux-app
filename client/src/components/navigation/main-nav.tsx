@@ -48,7 +48,7 @@ export default function MainNav() {
             <Button 
               variant="outline" 
               size="sm" 
-              className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white"
+              className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white font-bold"
               onClick={() => window.location.href = "/api/login"}
             >
               Sign In
