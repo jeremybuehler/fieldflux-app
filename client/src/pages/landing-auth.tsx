@@ -114,7 +114,7 @@ export default function LandingAuth() {
               </div>
               <div className="min-w-0 flex-1">
                 <span className="text-lg sm:text-xl font-bold text-gray-900">FieldFlux</span>
-                <div className="text-xs text-gray-500 font-medium hidden sm:block">Intelligent Field Service Marketing</div>
+                <div className="text-xs text-gray-500 font-medium hidden sm:block">Field Service Meets Smart Marketing</div>
                 <div className="text-xs text-gray-500 font-medium sm:hidden">Smart Marketing</div>
               </div>
             </div>
