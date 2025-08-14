@@ -422,7 +422,7 @@ export default function Features() {
                         <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
                           Use AI Response
                         </Button>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" className="bg-[#1d4ed8] text-white hover:bg-[#1e40af]">
                           Write Custom
                         </Button>
                       </div>
