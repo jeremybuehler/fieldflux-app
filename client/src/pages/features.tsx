@@ -114,7 +114,7 @@ const InteractiveDemo = ({ title, description, children }: {
   return (
     <div className="bg-slate-800/30 rounded-2xl p-8 border border-slate-700">
       <div className="mb-6">
-        <h3 className="text-2xl font-bold mb-3">{title}</h3>
+        <h3 className="text-2xl font-bold mb-3 text-[#a0b1bd]">{title}</h3>
         <p className="text-slate-400">{description}</p>
       </div>
       <div className="bg-slate-900 rounded-xl p-6 border border-slate-600">
