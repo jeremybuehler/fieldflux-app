@@ -255,7 +255,7 @@ export default function Features() {
                 Start Free Trial
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-              <Button variant="outline" size="lg" className="border-slate-400 text-slate-300 hover:bg-slate-800 px-8 py-6 text-lg">
+              <Button variant="outline" size="lg" className="border-slate-400 text-slate-300 hover:bg-slate-800 hover:text-white bg-transparent px-8 py-6 text-lg">
                 Schedule Demo
               </Button>
             </div>
@@ -602,7 +602,7 @@ export default function Features() {
                 Start Free Trial
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-              <Button size="lg" variant="outline" className="border-white/50 text-white hover:bg-white/10 px-8 py-6 text-lg">
+              <Button size="lg" variant="outline" className="border-white/50 text-white hover:bg-white/10 bg-transparent px-8 py-6 text-lg">
                 Schedule Demo
               </Button>
             </div>
