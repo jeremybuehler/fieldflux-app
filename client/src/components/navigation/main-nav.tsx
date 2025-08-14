@@ -29,34 +29,35 @@ export default function MainNav() {
               </div>
             </div>
           </Link>
-          
+
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href}>
-                <span className={`cursor-pointer transition-colors ${
-                  location === item.href 
-                    ? "text-blue-400 font-medium" 
-                    : "text-slate-300 hover:text-white"
-                }`}>
+                <span
+                  className={`cursor-pointer transition-colors ${
+                    location === item.href
+                      ? "text-blue-400 font-medium"
+                      : "text-slate-300 hover:text-white"
+                  }`}
+                >
                   {item.label}
                 </span>
               </Link>
             ))}
           </div>
-          
+
           <div className="flex items-center space-x-4">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white font-bold text-[12px]"
-              onClick={() => window.location.href = "/api/login"}
+            <Button
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              onClick={() => (window.location.href = "/api/login")}
             >
               Sign In
             </Button>
-            <Button 
-              size="sm" 
+            <Button
+              size="sm"
               className="bg-blue-600 hover:bg-blue-700 text-white"
-              onClick={() => window.location.href = "/api/login"}
+              onClick={() => (window.location.href = "/api/get-started")}
             >
               Get Started
             </Button>
