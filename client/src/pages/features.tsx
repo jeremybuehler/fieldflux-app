@@ -594,7 +594,7 @@ export default function Features() {
           
           <AnimatedElement delay={400}>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="bg-white text-blue-700 hover:bg-slate-100 px-8 py-6 text-lg font-semibold">
+              <Button size="lg" variant="secondary" className="hover:bg-slate-100 px-8 py-6 text-lg font-semibold bg-[#051d36] text-[#ffffff]">
                 Start Free Trial
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
