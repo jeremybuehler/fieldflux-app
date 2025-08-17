@@ -56,7 +56,7 @@ export default function MainNav() {
             </Button>
             <Button
               size="sm"
-              className="hover:bg-blue-700 bg-[#ffffff] text-[#090f20]"
+              className="hover:bg-blue-700 text-[#090f20] bg-[#2fcbf1]"
               onClick={() => (window.location.href = "/api/get-started")}
             >
               Get Started
