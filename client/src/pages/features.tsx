@@ -587,7 +587,7 @@ export default function Features() {
           </AnimatedElement>
           
           <AnimatedElement delay={200}>
-            <p className="text-xl mb-8 opacity-90">
+            <p className="text-xl mb-8 opacity-90 text-[#edf0f5]">
               Join thousands of field service professionals already using FieldFlux to grow their business.
             </p>
           </AnimatedElement>
