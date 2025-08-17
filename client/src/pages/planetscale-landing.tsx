@@ -240,9 +240,8 @@ export default function PlanetScaleLanding() {
           
           <AnimatedElement delay={200}>
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              The world's fastest and most{" "}
-              <GradientText>intelligent field service</GradientText>{" "}
-              platform
+              <GradientText>Intelligent Marketing</GradientText>{" "}
+              for Field Service Providers
             </h1>
           </AnimatedElement>
           
