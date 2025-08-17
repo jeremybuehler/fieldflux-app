@@ -227,7 +227,7 @@ export default function PlanetScaleLanding() {
       {/* Navigation */}
       <MainNav />
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center">
+      <section className="relative py-20 md:py-32 flex items-center justify-center">
         <AuroraBackground />
         
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
