@@ -283,7 +283,6 @@ export default function PlanetScaleLanding() {
           </AnimatedElement>
         </div>
       </section>
-
       {/* Trusted By Section */}
       <section className="py-16 bg-slate-900/50">
         <div className="max-w-7xl mx-auto px-6">
@@ -304,7 +303,6 @@ export default function PlanetScaleLanding() {
           </div>
         </div>
       </section>
-
       {/* Features Section */}
       <section className="py-24 bg-slate-950">
         <div className="max-w-7xl mx-auto px-6">
@@ -344,7 +342,6 @@ export default function PlanetScaleLanding() {
           </div>
         </div>
       </section>
-
       {/* Comparison Table Section */}
       <section className="py-24 bg-slate-900/30">
         <div className="max-w-7xl mx-auto px-6">
@@ -399,7 +396,6 @@ export default function PlanetScaleLanding() {
           </AnimatedElement>
         </div>
       </section>
-
       {/* Testimonials Section */}
       <section className="py-24 bg-slate-950">
         <div className="max-w-7xl mx-auto px-6">
@@ -443,7 +439,6 @@ export default function PlanetScaleLanding() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-24 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-700 relative overflow-hidden">
         <div className="absolute inset-0 bg-black/20" />
@@ -455,7 +450,7 @@ export default function PlanetScaleLanding() {
           </AnimatedElement>
           
           <AnimatedElement delay={200}>
-            <p className="text-xl mb-8 opacity-90">
+            <p className="text-xl mb-8 opacity-90 text-[#dcdee8]">
               Join thousands of companies already using FieldFlux to deliver exceptional field service experiences.
             </p>
           </AnimatedElement>
@@ -473,7 +468,6 @@ export default function PlanetScaleLanding() {
           </AnimatedElement>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="py-12 bg-slate-950 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-6">
