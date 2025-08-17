@@ -262,7 +262,6 @@ export default function Features() {
           </AnimatedElement>
         </div>
       </section>
-
       {/* Feature Categories Tabs */}
       <section className="py-16 bg-slate-900/50">
         <div className="max-w-7xl mx-auto px-6">
@@ -518,7 +517,6 @@ export default function Features() {
           </AnimatedElement>
         </div>
       </section>
-
       {/* Main Features Grid */}
       <section className="py-24 bg-slate-950">
         <div className="max-w-7xl mx-auto px-6">
@@ -547,7 +545,6 @@ export default function Features() {
           </div>
         </div>
       </section>
-
       {/* Integrations Section */}
       <section className="py-24 bg-slate-900/30">
         <div className="max-w-7xl mx-auto px-6">
@@ -579,13 +576,12 @@ export default function Features() {
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-24 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-700 relative overflow-hidden">
         <div className="absolute inset-0 bg-black/20" />
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <AnimatedElement>
-            <h2 className="text-4xl md:text-6xl font-bold mb-6">
+            <h2 className="text-4xl md:text-6xl font-bold mb-6 text-[#0d1b33]">
               Ready to supercharge your marketing?
             </h2>
           </AnimatedElement>
