@@ -49,10 +49,10 @@ export default function MainNav() {
           <div className="flex items-center space-x-4">
             <Button
               size="sm"
-              className="hover:bg-blue-700 text-[#090f20] bg-[#2fcbf1]"
-              onClick={() => (window.location.href = "/api/get-started")}
+              className="bg-blue-600 hover:bg-blue-700 text-white"
+              onClick={() => (window.location.href = "/api/login")}
             >
-              Get Started
+              Login
             </Button>
           </div>
         </div>
