@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "wouter";
-import logoImage from "@assets/generated_images/FieldFlux_professional_logo_design_3b107157.png";
 
 const GradientText = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -24,12 +23,10 @@ export default function MainNav() {
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link href="/">
-            <div className="flex items-center space-x-3 cursor-pointer">
-              <img 
-                src={logoImage} 
-                alt="FieldFlux" 
-                className="h-8 w-auto object-contain"
-              />
+            <div className="flex items-center space-x-2 cursor-pointer">
+              <div className="text-2xl font-bold">
+                <GradientText>FieldFlux</GradientText>
+              </div>
             </div>
           </Link>
 
