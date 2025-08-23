@@ -156,28 +156,28 @@ export default function PlanetScaleLanding() {
       title: "Viral Content Creation",
       description: "Generate scroll-stopping posts, stories, and videos that get your field service business noticed across all social platforms.",
       stats: "10x more engagement",
-      gradient: "from-yellow-400 to-orange-500"
+      gradient: "from-blue-400 to-cyan-500"
     },
     {
       icon: <Users className="w-6 h-6" />,
       title: "Social Lead Magnet",
       description: "Turn followers into customers with automated DM responses, story polls, and conversion-optimized landing pages.",
       stats: "300% more leads from social",
-      gradient: "from-purple-400 to-pink-500"
+      gradient: "from-indigo-400 to-blue-500"
     },
     {
       icon: <BarChart3 className="w-6 h-6" />,
       title: "Content Performance Analytics",
       description: "Track which posts drive the most calls, bookings, and revenue with detailed social media ROI insights.",
       stats: "See exactly what converts",
-      gradient: "from-green-400 to-blue-500"
+      gradient: "from-cyan-400 to-indigo-500"
     },
     {
       icon: <Star className="w-6 h-6" />,
       title: "Multi-Platform Posting",
       description: "Schedule and publish content across Instagram, Facebook, TikTok, and YouTube from one powerful dashboard.",
       stats: "Save 15+ hours per week",
-      gradient: "from-red-400 to-pink-500"
+      gradient: "from-slate-400 to-blue-500"
     }
   ];
 
@@ -230,18 +230,18 @@ export default function PlanetScaleLanding() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 text-gray-900 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 text-gray-900 overflow-hidden">
       {/* Navigation */}
       <MainNav />
       {/* Hero Section */}
       <section className="relative py-20 md:py-28">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-100/50 via-pink-100/30 to-orange-100/50" />
-        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-64 h-64 bg-gradient-to-br from-orange-400/20 to-red-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-100/50 via-blue-100/30 to-indigo-100/50" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-indigo-400/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-64 h-64 bg-gradient-to-br from-cyan-400/20 to-blue-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
         
         <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
           <AnimatedElement>
-            <Badge className="mb-8 border-0 text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg">
+            <Badge className="mb-8 border-0 text-white bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg">
               <Rocket className="w-4 h-4 mr-2" />
               Field Service Meets Smart Marketing
             </Badge>
@@ -249,7 +249,7 @@ export default function PlanetScaleLanding() {
           
           <AnimatedElement delay={200}>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-8 leading-tight">
-              <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 bg-clip-text text-transparent">
                 Intelligent Marketing
               </span>
               <br />
@@ -266,7 +266,7 @@ export default function PlanetScaleLanding() {
           
           <AnimatedElement delay={600}>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-10 py-4 text-lg font-bold shadow-2xl hover:shadow-purple-500/25 transition-all transform hover:scale-105">
+              <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-10 py-4 text-lg font-bold shadow-2xl hover:shadow-blue-500/25 transition-all transform hover:scale-105">
                 Start Creating Content
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
@@ -305,10 +305,10 @@ export default function PlanetScaleLanding() {
           
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-items-center">
             {[
-              { name: "Instagram", color: "from-pink-500 to-purple-500" },
-              { name: "Facebook", color: "from-blue-600 to-blue-700" },
-              { name: "TikTok", color: "from-gray-900 to-gray-700" },
-              { name: "YouTube", color: "from-red-600 to-red-700" }
+              { name: "Instagram", color: "from-blue-500 to-indigo-500" },
+              { name: "Facebook", color: "from-indigo-600 to-blue-700" },
+              { name: "TikTok", color: "from-slate-700 to-slate-900" },
+              { name: "YouTube", color: "from-cyan-600 to-blue-700" }
             ].map((platform, i) => (
               <AnimatedElement key={platform.name} delay={i * 100}>
                 <div className={`text-lg font-bold text-white bg-gradient-to-r ${platform.color} px-8 py-4 rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-110`}>
@@ -321,19 +321,19 @@ export default function PlanetScaleLanding() {
           <AnimatedElement delay={500}>
             <div className="text-center mt-12">
               <p className="text-gray-600 text-lg">
-                + Connects with <span className="font-bold text-purple-600">ServiceTitan</span>, <span className="font-bold text-purple-600">Jobber</span>, <span className="font-bold text-purple-600">FieldEdge</span> & more
+                + Connects with <span className="font-bold text-blue-600">ServiceTitan</span>, <span className="font-bold text-blue-600">Jobber</span>, <span className="font-bold text-blue-600">FieldEdge</span> & more
               </p>
             </div>
           </AnimatedElement>
         </div>
       </section>
       {/* Features Section */}
-      <section className="py-24 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+      <section className="py-24 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <div className="max-w-7xl mx-auto px-6">
           <AnimatedElement>
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-extrabold mb-6">
-                Create Content That <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">Converts</span>
+                Create Content That <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 bg-clip-text text-transparent">Converts</span>
               </h2>
               <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed font-medium">
                 Stop posting and praying. Every feature is designed to turn your social media presence into 
@@ -426,7 +426,7 @@ export default function PlanetScaleLanding() {
           <AnimatedElement>
             <div className="text-center mb-16">
               <h2 className="text-4xl md:text-6xl font-extrabold mb-6">
-                Real Results from <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">Real Businesses</span>
+                Real Results from <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 bg-clip-text text-transparent">Real Businesses</span>
               </h2>
               <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed font-medium">
                 These field service pros went from social media struggles to social media success stories.
@@ -437,21 +437,21 @@ export default function PlanetScaleLanding() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, i) => (
               <AnimatedElement key={i} delay={i * 200}>
-                <Card className="bg-gradient-to-br from-white to-purple-50 border-0 shadow-xl hover:shadow-2xl transition-all duration-500 h-full transform hover:scale-105">
+                <Card className="bg-gradient-to-br from-white to-blue-50 border-0 shadow-xl hover:shadow-2xl transition-all duration-500 h-full transform hover:scale-105">
                   <CardContent className="p-8">
                     <div className="flex items-center gap-2 mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
-                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold mb-6 inline-block">
+                    <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-2 rounded-full text-sm font-bold mb-6 inline-block">
                       {testimonial.metric}
                     </div>
                     <blockquote className="text-gray-800 mb-6 leading-relaxed font-medium text-lg">
                       "{testimonial.quote}"
                     </blockquote>
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 rounded-full flex items-center justify-center font-bold text-white text-lg">
+                      <div className="w-14 h-14 bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 rounded-full flex items-center justify-center font-bold text-white text-lg">
                         {testimonial.logo}
                       </div>
                       <div>
@@ -467,7 +467,7 @@ export default function PlanetScaleLanding() {
         </div>
       </section>
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-br from-blue-600 via-indigo-600 to-cyan-600 relative overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-10 left-10 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
           <div className="absolute bottom-10 right-10 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse delay-1000" />
@@ -487,7 +487,7 @@ export default function PlanetScaleLanding() {
           
           <AnimatedElement delay={400}>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <Button size="lg" className="bg-white hover:bg-gray-100 text-purple-600 px-10 py-4 text-xl font-bold shadow-2xl hover:shadow-white/25 transition-all transform hover:scale-105">
+              <Button size="lg" className="bg-white hover:bg-gray-100 text-blue-600 px-10 py-4 text-xl font-bold shadow-2xl hover:shadow-white/25 transition-all transform hover:scale-105">
                 Start Creating Content
                 <ArrowRight className="w-6 h-6 ml-2" />
               </Button>
