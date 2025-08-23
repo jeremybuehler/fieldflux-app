@@ -124,9 +124,9 @@ export default function Reports() {
               <div>
                 <p className="text-sm text-gray-600">Website Visitors</p>
                 <p className="text-2xl font-bold" style={{color: 'var(--fx-navy-900)'}}>
-                  {metricsLoading ? "..." : metrics?.users?.toLocaleString() || "2,341"}
+                  {metricsLoading ? "..." : metrics?.users?.toLocaleString() || "0"}
                 </p>
-                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>↗ +12% vs last period</p>
+                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>{metricsLoading ? "..." : metrics?.users ? "Connected" : "Connect Analytics"}</p>
               </div>
               <Users className="w-8 h-8" style={{color: 'var(--fx-orange-600)'}} />
             </div>
@@ -137,9 +137,9 @@ export default function Reports() {
               <div>
                 <p className="text-sm text-gray-600">Page Views</p>
                 <p className="text-2xl font-bold" style={{color: 'var(--fx-navy-900)'}}>
-                  {metricsLoading ? "..." : metrics?.pageviews?.toLocaleString() || "4,567"}
+                  {metricsLoading ? "..." : metrics?.pageviews?.toLocaleString() || "0"}
                 </p>
-                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>↗ +8% vs last period</p>
+                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>{metricsLoading ? "..." : metrics?.pageviews ? "Connected" : "Connect Analytics"}</p>
               </div>
               <Eye className="w-8 h-8" style={{color: 'var(--fx-teal-600)'}} />
             </div>
@@ -150,9 +150,9 @@ export default function Reports() {
               <div>
                 <p className="text-sm text-gray-600">Lead Conversions</p>
                 <p className="text-2xl font-bold" style={{color: 'var(--fx-navy-900)'}}>
-                  {metricsLoading ? "..." : "47"}
+                  0
                 </p>
-                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>↗ +23% vs last period</p>
+                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>Connect lead tracking</p>
               </div>
               <Mouse className="w-8 h-8" style={{color: 'var(--fx-orange-600)'}} />
             </div>
@@ -163,9 +163,9 @@ export default function Reports() {
               <div>
                 <p className="text-sm text-gray-600">Avg. Review Rating</p>
                 <p className="text-2xl font-bold" style={{color: 'var(--fx-navy-900)'}}>
-                  {reviewAnalytics?.overview?.averageRating || "4.8"}
+                  {reviewAnalytics?.overview?.averageRating || "0.0"}
                 </p>
-                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>↗ +0.2 vs last period</p>
+                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>{reviewAnalytics?.overview?.averageRating ? "Active monitoring" : "Connect reviews"}</p>
               </div>
               <Star className="w-8 h-8" style={{color: 'var(--fx-yellow-500)'}} />
             </div>

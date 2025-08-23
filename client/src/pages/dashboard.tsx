@@ -61,7 +61,20 @@ export default function Dashboard() {
                 <p className="text-sm text-gray-600">Welcome back! Here's what's happening with your business.</p>
               </div>
               <div className="flex items-center space-x-3">
-                <Button variant="outline" size="sm" className="border" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="border transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2" 
+                  style={{borderColor: 'rgb(var(--fx-orange-600))', color: 'rgb(var(--fx-orange-600))'}}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-600))';
+                    e.currentTarget.style.color = 'white';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'transparent';
+                    e.currentTarget.style.color = 'rgb(var(--fx-orange-600))';
+                  }}
+                >
                   <Filter className="h-4 w-4 mr-2" />
                   Filter
                 </Button>
@@ -70,8 +83,20 @@ export default function Dashboard() {
                   size="sm"
                   onClick={handleRefresh}
                   disabled={refreshing}
-                  className="border" 
-                  style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}
+                  className="border transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none" 
+                  style={{borderColor: 'rgb(var(--fx-orange-600))', color: 'rgb(var(--fx-orange-600))'}}
+                  onMouseEnter={(e) => {
+                    if (!refreshing) {
+                      e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-600))';
+                      e.currentTarget.style.color = 'white';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!refreshing) {
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                      e.currentTarget.style.color = 'rgb(var(--fx-orange-600))';
+                    }
+                  }}
                 >
                   <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
                   Refresh
