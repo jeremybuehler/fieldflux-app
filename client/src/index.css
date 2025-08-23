@@ -5,6 +5,116 @@
 @tailwind components;
 @tailwind utilities;
 
+/* FieldFlux Brand CSS
+   Source inspiration: Illustration with safety-orange vest, navy cap, sky blues, meadow greens, and sunflower accents.
+   Purpose: Drop-in stylesheet providing tokens + common components.
+*/
+
+/* ------------------------------
+   Design Tokens
+------------------------------ */
+:root{
+  /* Core Palette */
+  --fx-orange-600:#F97316;   /* safety orange (vest) */
+  --fx-orange-700:#EA580C;
+  --fx-orange-300:#FDBA74;
+
+  --fx-navy-900:#0E2545;     /* cap/wordmark */
+  --fx-navy-700:#12365E;
+  --fx-navy-600:#1C3E66;
+
+  --fx-sky-100:#E3F6FF;      /* clouds/sky */
+  --fx-sky-300:#B9ECFF;
+  --fx-sky-500:#66C7FF;
+  --fx-sky-700:#2395D7;
+
+  --fx-grass-100:#E6F7D9;
+  --fx-grass-300:#BEE7A3;
+  --fx-grass-500:#86D26F;
+  --fx-grass-700:#3C9A4D;
+  --fx-grass-900:#236E34;
+
+  --fx-sun-400:#FFC83A;      /* sunflower petals */
+  --fx-sun-500:#FFB703;
+
+  --fx-soil-700:#5A3A1B;     /* sunflower center */
+  --fx-soil-900:#2F1E10;
+
+  --fx-mint-50:#F2FBF6;      /* card paper */
+  --fx-mint-100:#EAF7EE;
+
+  --fx-gray-50:#F8FAFC;
+  --fx-gray-100:#F1F5F9;
+  --fx-gray-200:#E2E8F0;
+  --fx-gray-300:#CBD5E1;
+  --fx-gray-400:#94A3B8;
+  --fx-gray-500:#64748B;
+  --fx-gray-700:#334155;
+  --fx-gray-900:#0F172A;
+
+  --fx-teal-500:#14B8A6;     /* chart/check icon accent */
+
+  /* Semantic Tokens */
+  --bg-page:var(--fx-sky-100);
+  --bg-surface:var(--fx-mint-50);
+  --bg-elevated:#ffffff;
+
+  --text-primary:#0F172A;
+  --text-secondary:var(--fx-gray-600, #475569);
+  --text-inverse:#ffffff;
+
+  --brand:var(--fx-navy-900);
+  --accent:var(--fx-orange-600);
+  --accent-2:var(--fx-teal-500);
+  --success:#16A34A;
+  --warning:#F59E0B;
+  --danger:#DC2626;
+  --info:var(--fx-sky-700);
+
+  --border:var(--fx-gray-200);
+  --ring:var(--fx-orange-600);
+
+  /* Radii, spacing, shadows */
+  --radius-xs:6px;
+  --radius-sm:10px;
+  --radius-md:14px;
+  --radius-lg:20px;
+  --radius-full:999px;
+
+  --shadow-sm:0 1px 2px rgba(15,23,42,.06);
+  --shadow-md:0 8px 20px rgba(16,24,40,.12);
+  --shadow-lg:0 18px 40px rgba(16,24,40,.18);
+
+  --transition-fast:160ms cubic-bezier(.2,.8,.2,1);
+  --transition-slow:320ms cubic-bezier(.2,.8,.2,1);
+
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+  --font-display: var(--font-sans);
+  --leading-tight:1.15;
+}
+
+/* Helper backgrounds mimicking the hills + grain */
+.fx-hills{
+  background:
+    radial-gradient(1200px 600px at 20% 110%, var(--fx-grass-100), transparent 70%),
+    radial-gradient(1000px 520px at 80% 115%, var(--fx-grass-300), transparent 70%),
+    linear-gradient(180deg, var(--bg-page) 0%, var(--fx-sky-300) 60%, var(--fx-grass-100) 60%, var(--fx-grass-300) 100%);
+}
+.fx-grain{
+  position:relative;
+}
+.fx-grain::after{
+  content:"";
+  pointer-events:none;
+  position:absolute; inset:-2px;
+  background-image:radial-gradient(rgba(0,0,0,.03) 1px, transparent 1px);
+  background-size:3px 3px;
+  mix-blend-mode:multiply;
+  opacity:.7;
+  border-radius:inherit;
+}
+
 /* PlanetScale-inspired custom animations */
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
