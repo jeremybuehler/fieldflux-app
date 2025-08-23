@@ -27,6 +27,7 @@ import PlanetScaleLanding from "@/pages/planetscale-landing";
 import Features from "@/pages/features";
 import StyleDemo from "@/pages/style-demo";
 import NotFound from "@/pages/not-found";
+import Felix from "@/pages/felix";
 
 function Router() {
   // Track page views when routes change
@@ -68,6 +69,7 @@ function Router() {
       <Route path="/keywords" component={Keywords} />
       <Route path="/seo" component={SEO} />
       <Route path="/website" component={Website} />
+      <Route path="/felix" component={Felix} />
       <Route path="/ai-coach" component={AICoach} />
       <Route path="/godaddy" component={GoDaddy} />
       <Route path="/settings" component={Settings} />
