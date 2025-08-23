@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 
 const GradientText = ({ children }: { children: React.ReactNode }) => {
   return (
-    <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+    <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
       {children}
     </span>
   );
@@ -19,7 +19,7 @@ export default function MainNav() {
   ];
 
   return (
-    <nav className="border-b border-gray-200 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
+    <nav className="border-b border-purple-100 bg-white/95 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           <Link href="/">
@@ -34,10 +34,10 @@ export default function MainNav() {
             {navItems.map((item) => (
               <Link key={item.href} href={item.href}>
                 <span
-                  className={`cursor-pointer transition-colors ${
+                  className={`cursor-pointer transition-colors font-medium ${
                     location === item.href
-                      ? "text-blue-600 font-medium"
-                      : "text-slate-700 hover:text-slate-900"
+                      ? "text-purple-600 font-bold"
+                      : "text-gray-700 hover:text-gray-900"
                   }`}
                 >
                   {item.label}
@@ -49,7 +49,7 @@ export default function MainNav() {
           <div className="flex items-center space-x-4">
             <Button
               size="sm"
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all"
               onClick={() => (window.location.href = "/api/login")}
             >
               Login
