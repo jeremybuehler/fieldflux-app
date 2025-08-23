@@ -47,31 +47,31 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-white" style={{ background: 'white !important' }}>
+    <div className="min-h-screen fx-hills">
       {/* Header */}
-      <header className="topnav-fieldservice">
-        <div className="container-fieldservice">
+      <header className="bg-white/90 backdrop-blur-sm border-b fx-grain" style={{borderColor: 'var(--border)'}}>
+        <div className="max-w-7xl mx-auto px-6">
           <div className="flex justify-between items-center py-6">
             <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-br from-fieldservice-blue-600 to-fieldservice-orange-500 rounded-xl flex items-center justify-center shadow-fieldservice">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style={{backgroundColor: 'var(--fx-orange-600)'}}>
                 <Bot className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-fieldservice-title text-fieldservice-blue-700">FieldFlux</h1>
-                <p className="text-fieldservice-muted">Replace 5 Marketing Tools with One</p>
+                <h1 className="text-2xl font-bold" style={{color: 'var(--fx-navy-900)'}}>FieldFlux</h1>
+                <p className="text-sm" style={{color: 'var(--text-secondary)'}}>Field Service Marketing</p>
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      <div className="container-fieldservice section-fieldservice">
+      <div className="max-w-7xl mx-auto px-6 py-20">
         {/* Hero Section */}
-        <div className="text-center mb-16 animate-fieldservice-fade-in">
-          <h2 className="text-fieldservice-display mb-6">
-            Replace 5 Marketing Tools with One
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-6xl font-extrabold mb-6" style={{color: 'var(--fx-navy-900)'}}>
+            Intelligent Marketing for <span style={{color: 'var(--fx-orange-600)'}}>Field Service Providers</span>
           </h2>
-          <p className="text-fieldservice-body max-w-3xl mx-auto">
+          <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed">
             FieldFlux consolidates your marketing tools into one affordable platform. 
             Perfect for HVAC, plumbing, electrical, landscaping, and field service 
             professionals who need content creation, social media management, lead tracking, 
@@ -81,27 +81,27 @@ export default function Landing() {
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-          <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4">
-                <BarChart3 className="w-6 h-6 text-primary" />
+          <div className="border-2 border-transparent hover:shadow-lg transition-all duration-300 bg-white rounded-xl p-6 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+            <div>
+              <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{backgroundColor: 'var(--fx-orange-100)'}}>
+                <BarChart3 className="w-6 h-6" style={{color: 'var(--fx-orange-600)'}} />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">
+              <h3 className="text-xl font-semibold mb-4" style={{color: 'var(--fx-navy-900)'}}>
                 Performance Insights
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h3>
+            </div>
+            <div>
               <p className="text-gray-600">
                 See what's working with crystal-clear analytics. Track leads,
                 measure engagement, and discover which content brings in the
                 most customers.
               </p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-hvac-orange/10 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
+          <div className="border-2 border-transparent hover:shadow-lg transition-all duration-300 bg-white rounded-xl p-6 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+            <div>
+              <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 overflow-hidden" style={{backgroundColor: 'var(--fx-orange-100)'}}>
                 {/* FieldFlux Logo */}
                 <img 
                   src={fieldFluxLogo} 
@@ -111,57 +111,57 @@ export default function Landing() {
                   onLoad={() => console.log('Logo loaded successfully')}
                 />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">
+              <h3 className="text-xl font-semibold mb-4" style={{color: 'var(--fx-navy-900)'}}>
                 Content That Converts
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h3>
+            </div>
+            <div>
               <p className="text-gray-600">
-                Never stare at a blank page again. KasamaAI creates professional
+                Never stare at a blank page again. FieldFlux AI creates professional
                 posts, helpful tips, and customer stories that showcase your
                 expertise and attract new business.
               </p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="border-2 border-transparent hover:border-primary/20 transition-all duration-300">
-            <CardHeader>
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <Shield className="w-6 h-6 text-green-600" />
+          <div className="border-2 border-transparent hover:shadow-lg transition-all duration-300 bg-white rounded-xl p-6 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+            <div>
+              <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{backgroundColor: 'var(--fx-teal-100)'}}>
+                <Shield className="w-6 h-6" style={{color: 'var(--fx-teal-600)'}} />
               </div>
-              <CardTitle className="text-xl text-hvac-gray">
+              <h3 className="text-xl font-semibold mb-4" style={{color: 'var(--fx-navy-900)'}}>
                 Smart Lead Pipeline
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
+              </h3>
+            </div>
+            <div>
               <p className="text-gray-600">
                 Turn inquiries into appointments effortlessly. Smart follow-ups,
                 automated reminders, and lead scoring help you close more deals
                 without the hassle.
               </p>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         {/* CTA Section */}
         <div className="text-center px-2">
-          <Card className="max-w-2xl mx-auto from-primary to-hvac-orange border-0">
-            <CardContent className="p-6 lg:p-8">
-              <h3 className="text-xl lg:text-2xl font-bold text-navy mb-3 lg:mb-4">
-                Stop Juggling Multiple Marketing Tools
-              </h3>
-              <p className="text-100 mb-4 lg:mb-6 text-sm lg:text-base">
-                Join thousands of field service professionals who've consolidated 
-                their marketing stack. FieldFlux replaces your content creation tool, 
-                social media scheduler, lead manager, analytics platform, and reputation 
-                management system with one affordable solution.
-              </p>
+          <div className="max-w-2xl mx-auto rounded-xl p-6 lg:p-8 fx-grain" style={{backgroundColor: 'var(--bg-elevated)', border: '2px solid var(--border)'}}>
+            <h3 className="text-xl lg:text-2xl font-bold mb-3 lg:mb-4" style={{color: 'var(--fx-navy-900)'}}>
+              Stop Juggling Multiple Marketing Tools
+            </h3>
+            <p className="text-gray-700 mb-4 lg:mb-6 text-sm lg:text-base">
+              Join thousands of field service professionals who've consolidated 
+              their marketing stack. FieldFlux replaces your content creation tool, 
+              social media scheduler, lead manager, analytics platform, and reputation 
+              management system with one affordable solution.
+            </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
                   <DialogTrigger asChild>
                     <Button
                       size="lg"
-                      className="bg-navy text-primary hover:bg-gray-50 font-semibold px-8"
+                      className="font-semibold px-8 text-white hover:shadow-lg transition-all"
+                      style={{backgroundColor: 'var(--fx-orange-600)', '&:hover': {backgroundColor: 'var(--fx-orange-700)'}}}
                     >
                       Get Started
                       <ArrowRight className="w-5 h-5 ml-2" />

@@ -49,19 +49,19 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen landing-page">
+    <div className="min-h-screen fx-hills">
       <TopNav />
       
       <main className="w-full">
-        <div className="bg-white border-b border-gray-200">
+        <div className="bg-white/90 backdrop-blur-sm border-b fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
           <div className="max-w-7xl mx-auto px-6 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl font-bold gradient-text">Dashboard</h1>
-                <p className="text-sm text-fieldflux-secondary">Welcome back! Here's what's happening with your business.</p>
+                <h1 className="text-2xl font-bold" style={{color: 'var(--fx-navy-900)'}}>Dashboard</h1>
+                <p className="text-sm text-gray-600">Welcome back! Here's what's happening with your business.</p>
               </div>
               <div className="flex items-center space-x-3">
-                <Button variant="outline" size="sm" className="glass-morphism hover-lift border-white/20">
+                <Button variant="outline" size="sm" className="border" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
                   <Filter className="h-4 w-4 mr-2" />
                   Filter
                 </Button>
@@ -70,7 +70,8 @@ export default function Dashboard() {
                   size="sm"
                   onClick={handleRefresh}
                   disabled={refreshing}
-                  className="glass-morphism hover-lift border-white/20"
+                  className="border" 
+                  style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}
                 >
                   <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
                   Refresh

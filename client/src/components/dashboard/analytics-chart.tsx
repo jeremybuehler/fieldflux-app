@@ -17,12 +17,12 @@ export default function AnalyticsChart() {
   const [data] = useState(generateTrafficData());
 
   return (
-    <Card className="bg-white shadow-sm border border-gray-200">
-      <CardHeader className="border-b border-gray-200">
+    <div className="bg-white shadow-sm border rounded-xl fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+      <div className="border-b p-6" style={{borderColor: 'var(--border)'}}>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-semibold text-hvac-gray">
+          <h3 className="text-lg font-semibold" style={{color: 'var(--fx-navy-900)'}}>
             Website Traffic
-          </CardTitle>
+          </h3>
           <Select value={period} onValueChange={setPeriod}>
             <SelectTrigger className="w-[140px] text-sm">
               <SelectValue />
@@ -34,8 +34,8 @@ export default function AnalyticsChart() {
             </SelectContent>
           </Select>
         </div>
-      </CardHeader>
-      <CardContent className="p-6">
+      </div>
+      <div className="p-6">
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={data}>
@@ -52,15 +52,15 @@ export default function AnalyticsChart() {
               <Line 
                 type="monotone" 
                 dataKey="traffic" 
-                stroke="hsl(207, 90%, 54%)"
+                stroke="var(--fx-orange-600)"
                 strokeWidth={2}
-                dot={{ fill: "hsl(207, 90%, 54%)", strokeWidth: 2, r: 4 }}
+                dot={{ fill: "var(--fx-orange-600)", strokeWidth: 2, r: 4 }}
                 activeDot={{ r: 6 }}
               />
             </LineChart>
           </ResponsiveContainer>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }
