@@ -51,7 +51,7 @@ export default function Analytics() {
               {metricsLoading ? '...' : metrics?.users.toLocaleString() || '0'}
             </div>
             <div className="text-xs" style={{color: 'var(--fx-teal-600)'}}>
-              {metricsLoading ? '...' : `${metrics?.new_users || 0} new users`}
+              {metricsLoading ? "..." : metrics?.new_users ? `${metrics.new_users} new users` : "Connect Analytics"}
             </div>
           </div>
 

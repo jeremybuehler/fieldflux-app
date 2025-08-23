@@ -6,9 +6,10 @@ import { useState } from "react";
 // Sample data - in a real app, this would come from Google Analytics API
 const generateTrafficData = () => {
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  // Return zero data to avoid displaying fictitious metrics
   return days.map(day => ({
     day,
-    traffic: Math.floor(Math.random() * 300) + 300,
+    traffic: 0,
   }));
 };
 

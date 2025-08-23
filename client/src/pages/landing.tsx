@@ -16,8 +16,14 @@ import {
   Play, 
   Shield, 
   Clock, 
-  Target 
+  Target,
+  Bot,
+  User,
+  Mail,
+  Lock
 } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import fieldFluxLogo from "@assets/fieldFlux_logo_updated_1754198391343.avif";
 import { useToast } from "@/hooks/use-toast";
 
@@ -160,8 +166,19 @@ export default function Landing() {
                   <DialogTrigger asChild>
                     <Button
                       size="lg"
-                      className="font-semibold px-8 text-white hover:shadow-lg transition-all"
-                      style={{backgroundColor: 'var(--fx-orange-600)', '&:hover': {backgroundColor: 'var(--fx-orange-700)'}}}
+                      className="font-semibold px-8 text-white transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                      style={{
+                        backgroundColor: 'rgb(var(--fx-orange-600))',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-700))';
+                        e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-600))';
+                        e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+                      }}
                     >
                       Get Started
                       <ArrowRight className="w-5 h-5 ml-2" />

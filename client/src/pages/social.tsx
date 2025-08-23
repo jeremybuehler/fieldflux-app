@@ -67,8 +67,23 @@ export default function Social() {
                   />
                   <Button 
                     onClick={() => setIsGenerating(true)} 
-                    className="text-white hover:shadow-lg transition-all"
-                    style={{backgroundColor: 'var(--fx-orange-600)'}}
+                    className="text-white transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    style={{
+                      backgroundColor: 'rgb(var(--fx-orange-600))',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isGenerating) {
+                        e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-700))';
+                        e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isGenerating) {
+                        e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-600))';
+                        e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+                      }
+                    }}
                     disabled={isGenerating}
                   >
                     {isGenerating ? (
