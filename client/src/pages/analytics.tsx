@@ -19,43 +19,41 @@ export default function Analytics() {
   });
 
   return (
-    <div className="min-h-screen landing-page">
-      <div className="max-w-6xl mx-auto p-6 container-modern">
-        <div className="mb-8 animate-protocol-fade-in">
+    <div className="min-h-screen fx-hills">
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="mb-8">
           <div className="flex items-center space-x-4 mb-4">
             <Link href="/dashboard">
-              <Button variant="ghost" size="sm" className="glass-morphism hover-lift border-white/20 text-fieldflux-secondary hover:text-fieldflux-primary">
+              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-900">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Dashboard
               </Button>
             </Link>
           </div>
           <div className="flex items-center space-x-3 mb-4">
-            <div className="w-12 h-12 gradient-accent rounded-xl flex items-center justify-center shadow-lg animate-pulse-glow">
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style={{backgroundColor: 'var(--fx-orange-600)'}}>
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold gradient-text">Analytics & Performance</h1>
-              <p className="text-fieldflux-secondary">Track your marketing performance and customer engagement</p>
+              <h1 className="text-3xl font-bold" style={{color: 'var(--fx-navy-900)'}}>Analytics & Performance</h1>
+              <p className="text-gray-600">Track your marketing performance and customer engagement</p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
-          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.1s'}}>
-            <CardContent className="p-6">
-              <div className="metric-fieldservice-header">
-                <div className="metric-fieldservice-title">Total Users</div>
-                <Users className="w-6 h-6 text-blue-600 animate-float" />
-              </div>
-              <div className="metric-fieldservice-value">
-                {metricsLoading ? '...' : metrics?.users.toLocaleString() || '0'}
-              </div>
-              <div className="metric-fieldservice-change metric-fieldservice-change-positive">
-                {metricsLoading ? '...' : `${metrics?.new_users || 0} new users`}
-              </div>
-            </CardContent>
-          </Card>
+          <div className="bg-white shadow-sm border rounded-xl p-6 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-sm text-gray-600">Total Users</div>
+              <Users className="w-6 h-6" style={{color: 'var(--fx-orange-600)'}} />
+            </div>
+            <div className="text-2xl font-bold mb-2" style={{color: 'var(--fx-navy-900)'}}>
+              {metricsLoading ? '...' : metrics?.users.toLocaleString() || '0'}
+            </div>
+            <div className="text-xs" style={{color: 'var(--fx-teal-600)'}}>
+              {metricsLoading ? '...' : `${metrics?.new_users || 0} new users`}
+            </div>
+          </div>
 
           <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.2s'}}>
             <CardContent className="p-6">

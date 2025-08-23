@@ -40,23 +40,23 @@ export default function Social() {
   };
 
   return (
-    <div className="min-h-screen landing-page">
+    <div className="min-h-screen fx-hills">
       <TopNavigation title="Social Media Management" />
 
       {/* Main Content */}
-      <div className="p-4 lg:p-8 container-modern">
-        <div className="space-y-6 animate-protocol-fade-in">
-          <Card className="glass-morphism hover-lift shadow-fieldflux animate-protocol-scale-in">
-            <CardHeader>
-              <CardTitle className="gradient-text flex items-center">
-                <Wand2 className="w-5 h-5 mr-2 text-teal-600 animate-float" />
+      <div className="p-4 lg:p-8">
+        <div className="space-y-6">
+          <div className="bg-white shadow-sm border rounded-xl fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+            <div className="p-6 border-b" style={{borderColor: 'var(--border)'}}>
+              <h3 className="text-lg font-semibold flex items-center mb-2" style={{color: 'var(--fx-navy-900)'}}>
+                <Wand2 className="w-5 h-5 mr-2" style={{color: 'var(--fx-orange-600)'}} />
                 AI Content Generation
-              </CardTitle>
-              <CardDescription className="text-fieldflux-secondary">
+              </h3>
+              <p className="text-sm text-gray-600">
                 Generate engaging social media content with AI.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div className="p-6">
               <div className="grid gap-4">
                 <div className="grid grid-cols-[1fr_110px] gap-4">
                   <textarea
@@ -67,7 +67,8 @@ export default function Social() {
                   />
                   <Button 
                     onClick={() => setIsGenerating(true)} 
-                    className="gradient-accent hover-glow text-white"
+                    className="text-white hover:shadow-lg transition-all"
+                    style={{backgroundColor: 'var(--fx-orange-600)'}}
                     disabled={isGenerating}
                   >
                     {isGenerating ? (
@@ -83,8 +84,8 @@ export default function Social() {
                   platforms.
                 </p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           <Tabs defaultValue="wizard" className="w-full">
             <TabsList className="grid w-full grid-cols-2">

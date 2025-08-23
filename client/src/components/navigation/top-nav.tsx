@@ -70,7 +70,7 @@ export default function TopNav() {
   const [location] = useLocation();
 
   return (
-    <nav className="bg-white border-b border-gray-200 px-6 py-0">
+    <nav className="bg-white border-b px-6 py-0 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
       <div className="flex items-center space-x-8 overflow-x-auto">
         {navigationItems.map((item) => {
           const Icon = item.icon;
@@ -84,9 +84,13 @@ export default function TopNav() {
               className={cn(
                 "flex items-center space-x-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors",
                 isActive 
-                  ? "text-fieldflux-blue border-fieldflux-blue" 
-                  : "text-gray-600 border-transparent hover:text-fieldflux-navy hover:border-gray-300"
+                  ? "border-2" 
+                  : "text-gray-600 border-transparent hover:text-gray-900 hover:border-gray-300"
               )}
+              style={isActive ? {
+                color: 'var(--fx-orange-600)', 
+                borderColor: 'var(--fx-orange-600)'
+              } : {}}
             >
               <Icon className="w-4 h-4" />
               <span>{item.name}</span>

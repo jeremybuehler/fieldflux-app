@@ -74,15 +74,15 @@ export default function Reports() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto p-6">
+        <div className="max-w-7xl mx-auto p-6 fx-grain" style={{backgroundColor: 'var(--bg-primary)'}}>
         
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
               <div>
-                <h2 className="text-xl font-bold gradient-text">Business Intelligence Dashboard</h2>
-                <p className="text-sm text-fieldflux-secondary">Comprehensive insights across all your marketing channels</p>
+                <h2 className="text-xl font-bold" style={{color: 'var(--fx-navy-900)'}}>Business Intelligence Dashboard</h2>
+                <p className="text-sm text-gray-600">Comprehensive insights across all your marketing channels</p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
@@ -105,13 +105,13 @@ export default function Reports() {
 
           {/* Status Indicators */}
           <div className="flex items-center space-x-2">
-            <Badge variant="default" className="bg-green-100 text-green-800">
+            <Badge variant="default" className="text-white" style={{backgroundColor: 'var(--fx-teal-600)'}}>
               Google Analytics Connected
             </Badge>
-            <Badge variant="outline" className="text-blue-600 border-blue-600">
+            <Badge variant="outline" className="border-2" style={{color: 'var(--fx-orange-600)', borderColor: 'var(--fx-orange-600)'}}>
               Search Console Active
             </Badge>
-            <Badge variant="outline" className="text-purple-600 border-purple-600">
+            <Badge variant="outline" className="border-2" style={{color: 'var(--fx-navy-900)', borderColor: 'var(--fx-navy-900)'}}>
               Reviews Monitoring
             </Badge>
           </div>
@@ -119,65 +119,57 @@ export default function Reports() {
 
         {/* Key Performance Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Website Visitors</p>
-                  <p className="text-2xl font-bold">
-                    {metricsLoading ? "..." : metrics?.users?.toLocaleString() || "2,341"}
-                  </p>
-                  <p className="text-xs text-green-600">↗ +12% vs last period</p>
-                </div>
-                <Users className="w-8 h-8 text-blue-500" />
+          <div className="bg-white shadow-sm border rounded-xl p-6 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Website Visitors</p>
+                <p className="text-2xl font-bold" style={{color: 'var(--fx-navy-900)'}}>
+                  {metricsLoading ? "..." : metrics?.users?.toLocaleString() || "2,341"}
+                </p>
+                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>↗ +12% vs last period</p>
               </div>
-            </CardContent>
-          </Card>
+              <Users className="w-8 h-8" style={{color: 'var(--fx-orange-600)'}} />
+            </div>
+          </div>
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Page Views</p>
-                  <p className="text-2xl font-bold">
-                    {metricsLoading ? "..." : metrics?.pageviews?.toLocaleString() || "4,567"}
-                  </p>
-                  <p className="text-xs text-green-600">↗ +8% vs last period</p>
-                </div>
-                <Eye className="w-8 h-8 text-green-500" />
+          <div className="bg-white shadow-sm border rounded-xl p-6 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Page Views</p>
+                <p className="text-2xl font-bold" style={{color: 'var(--fx-navy-900)'}}>
+                  {metricsLoading ? "..." : metrics?.pageviews?.toLocaleString() || "4,567"}
+                </p>
+                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>↗ +8% vs last period</p>
               </div>
-            </CardContent>
-          </Card>
+              <Eye className="w-8 h-8" style={{color: 'var(--fx-teal-600)'}} />
+            </div>
+          </div>
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Lead Conversions</p>
-                  <p className="text-2xl font-bold">
-                    {metricsLoading ? "..." : "47"}
-                  </p>
-                  <p className="text-xs text-green-600">↗ +23% vs last period</p>
-                </div>
-                <Mouse className="w-8 h-8 text-orange-500" />
+          <div className="bg-white shadow-sm border rounded-xl p-6 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Lead Conversions</p>
+                <p className="text-2xl font-bold" style={{color: 'var(--fx-navy-900)'}}>
+                  {metricsLoading ? "..." : "47"}
+                </p>
+                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>↗ +23% vs last period</p>
               </div>
-            </CardContent>
-          </Card>
+              <Mouse className="w-8 h-8" style={{color: 'var(--fx-orange-600)'}} />
+            </div>
+          </div>
 
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Avg. Review Rating</p>
-                  <p className="text-2xl font-bold">
-                    {reviewAnalytics?.overview?.averageRating || "4.8"}
-                  </p>
-                  <p className="text-xs text-green-600">↗ +0.2 vs last period</p>
-                </div>
-                <Star className="w-8 h-8 text-yellow-500" />
+          <div className="bg-white shadow-sm border rounded-xl p-6 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-sm text-gray-600">Avg. Review Rating</p>
+                <p className="text-2xl font-bold" style={{color: 'var(--fx-navy-900)'}}>
+                  {reviewAnalytics?.overview?.averageRating || "4.8"}
+                </p>
+                <p className="text-xs" style={{color: 'var(--fx-teal-600)'}}>↗ +0.2 vs last period</p>
               </div>
-            </CardContent>
-          </Card>
+              <Star className="w-8 h-8" style={{color: 'var(--fx-yellow-500)'}} />
+            </div>
+          </div>
         </div>
 
         {/* Charts Section */}

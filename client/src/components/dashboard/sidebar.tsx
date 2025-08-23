@@ -7,11 +7,11 @@ export default function Sidebar() {
   const [location] = useLocation();
 
   return (
-    <div className="hidden lg:flex fixed inset-y-0 left-0 z-50 w-64 glass-morphism shadow-protocol-lg border-r border-white/20 flex-col bg-white/95 backdrop-blur-xl">
+    <div className="hidden lg:flex fixed inset-y-0 left-0 z-50 w-64 flex-col bg-white border-r fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
       {/* Header */}
-      <div className="p-6 border-b border-white/20">
-        <div className="flex items-center space-x-3 animate-protocol-slide-in">
-          <div className="w-10 h-10 gradient-accent rounded-xl flex items-center justify-center overflow-hidden shadow-lg animate-pulse-glow">
+      <div className="p-6 border-b" style={{borderColor: 'var(--border)'}}>
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden shadow-lg" style={{backgroundColor: 'var(--fx-orange-600)'}}>
             <img 
               src={fieldFluxLogo} 
               alt="FieldFlux Logo" 
@@ -19,8 +19,8 @@ export default function Sidebar() {
             />
           </div>
           <div>
-            <h1 className="text-lg font-bold gradient-text">FieldFlux</h1>
-            <p className="text-xs text-fieldflux-secondary">Smart Marketing Platform</p>
+            <h1 className="text-lg font-bold" style={{color: 'var(--fx-navy-900)'}}>FieldFlux</h1>
+            <p className="text-xs" style={{color: 'var(--text-secondary)'}}>Field Service Marketing</p>
           </div>
         </div>
       </div>
@@ -35,14 +35,15 @@ export default function Sidebar() {
               key={item.name}
               href={item.href}
               className={cn(
-                "flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 hover-lift group",
+                "flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 group",
                 isActive
-                  ? "gradient-accent text-white shadow-lg border-l-4 border-teal-300"
-                  : "text-fieldflux-secondary hover:glass-morphism hover:text-fieldflux-primary"
+                  ? "text-white shadow-lg"
+                  : "hover:bg-gray-50"
               )}
+              style={isActive ? {backgroundColor: 'var(--fx-navy-900)'} : {}}
             >
-              <Icon className={cn("w-5 h-5 transition-transform group-hover:scale-110", isActive ? "text-white" : "text-fieldflux-accent")} />
-              <span className={cn("font-medium transition-all", isActive ? "font-semibold text-white" : "text-fieldflux-secondary group-hover:text-fieldflux-primary")}>
+              <Icon className={cn("w-5 h-5 transition-transform group-hover:scale-110")} style={{color: isActive ? 'white' : 'var(--fx-orange-600)'}} />
+              <span className={cn("font-medium transition-all", isActive ? "font-semibold text-white" : "text-gray-700 group-hover:text-gray-900")}>
                 {item.name}
               </span>
             </Link>
@@ -51,8 +52,8 @@ export default function Sidebar() {
       </nav>
 
       {/* Status Card */}
-      <div className="p-4 border-t border-white/20">
-        <div className="status-modern-online rounded-xl p-4 animate-protocol-fade-in hover-lift">
+      <div className="p-4 border-t" style={{borderColor: 'var(--border)'}}>
+        <div className="rounded-xl p-4 transition-all hover:scale-105" style={{backgroundColor: 'var(--fx-teal-500)'}}>
           <div className="flex items-center space-x-2">
             <div className="w-3 h-3 bg-white rounded-full animate-pulse-glow" />
             <span className="text-sm font-semibold text-white">AI Agent Active</span>
