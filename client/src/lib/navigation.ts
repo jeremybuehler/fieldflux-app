@@ -33,6 +33,7 @@ export const CORE_NAVIGATION: NavigationItem[] = [
 // Extended navigation with additional items for specific components
 export const EXTENDED_NAVIGATION: NavigationItem[] = [
   ...CORE_NAVIGATION.slice(0, -1), // All items except Settings
+  { name: "Chat with Felix", href: "/felix", icon: Bot },
   { name: "AI Coach", href: "/ai-coach", icon: Bot },
   { name: "GoDaddy", href: "/godaddy", icon: Globe },
   { name: "Settings", href: "/settings", icon: SettingsIcon }, // Settings always last

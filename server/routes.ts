@@ -31,6 +31,7 @@ import twilio from "twilio";
 import { googleAnalyticsService } from "./services/google-analytics";
 import { leadScoringService } from "./services/leadScoringService";
 import { aiCoachService } from "./services/aiCoachService";
+import { felixService } from "./felix/felix-service";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "default_key",
@@ -373,6 +374,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error fetching metrics:', error);
       res.status(500).json({ error: 'Failed to fetch metrics' });
+    }
+  });
+
+  // Felix AI Assistant Routes
+  app.post('/api/felix/start-task', isAuthenticated, async (req: any, res) => {
+    try {
+      const { taskId, taskTitle, taskDescription } = req.body;
+      const response = await felixService.startTask(taskId, taskTitle, taskDescription);
+      res.json(response);
+    } catch (error) {
+      console.error('Error starting Felix task:', error);
+      res.status(500).json({ error: 'Failed to start task' });
+    }
+  });
+
+  app.post('/api/felix/chat', isAuthenticated, async (req: any, res) => {
+    try {
+      const { message, currentTask, conversationHistory } = req.body;
+      const response = await felixService.processChat(message, currentTask, conversationHistory || []);
+      res.json(response);
+    } catch (error) {
+      console.error('Error processing Felix chat:', error);
+      res.status(500).json({ error: 'Failed to process chat message' });
+    }
+  });
+
+  app.post('/api/felix/generate-social-post', isAuthenticated, async (req: any, res) => {
+    try {
+      const { businessType, audience, postGoal, additionalContext } = req.body;
+      const response = await felixService.generateSocialMediaPost(businessType, audience, postGoal, additionalContext);
+      res.json(response);
+    } catch (error) {
+      console.error('Error generating social media post:', error);
+      res.status(500).json({ error: 'Failed to generate social media post' });
     }
   });
 
