@@ -153,27 +153,31 @@ export default function PlanetScaleLanding() {
   const features = [
     {
       icon: <Zap className="w-6 h-6" />,
-      title: "AI-Powered Content Creation",
-      description: "Generate compelling marketing content instantly with advanced AI that understands your field service business.",
-      stats: "10x faster content creation"
+      title: "Viral Content Creation",
+      description: "Generate scroll-stopping posts, stories, and videos that get your field service business noticed across all social platforms.",
+      stats: "10x more engagement",
+      gradient: "from-yellow-400 to-orange-500"
     },
     {
       icon: <Users className="w-6 h-6" />,
-      title: "Smart Lead Generation",
-      description: "Identify and capture high-quality leads with intelligent scoring and automated nurturing workflows.",
-      stats: "300% more qualified leads"
+      title: "Social Lead Magnet",
+      description: "Turn followers into customers with automated DM responses, story polls, and conversion-optimized landing pages.",
+      stats: "300% more leads from social",
+      gradient: "from-purple-400 to-pink-500"
     },
     {
       icon: <BarChart3 className="w-6 h-6" />,
-      title: "Unified Analytics Dashboard",
-      description: "Get complete visibility into your marketing performance with real-time insights and actionable recommendations.",
-      stats: "50% better ROI tracking"
+      title: "Content Performance Analytics",
+      description: "Track which posts drive the most calls, bookings, and revenue with detailed social media ROI insights.",
+      stats: "See exactly what converts",
+      gradient: "from-green-400 to-blue-500"
     },
     {
       icon: <Star className="w-6 h-6" />,
-      title: "Review Management",
-      description: "Monitor, respond to, and leverage customer reviews across all platforms to build trust and credibility.",
-      stats: "4.8★ average rating boost"
+      title: "Multi-Platform Posting",
+      description: "Schedule and publish content across Instagram, Facebook, TikTok, and YouTube from one powerful dashboard.",
+      stats: "Save 15+ hours per week",
+      gradient: "from-red-400 to-pink-500"
     }
   ];
 
@@ -197,125 +201,143 @@ export default function PlanetScaleLanding() {
 
   const testimonials = [
     {
-      company: "Alpine HVAC",
-      logo: "AH",
-      quote: "FieldFlux completely transformed our lead generation. We're getting 3x more qualified leads and our content creation time dropped from hours to minutes.",
-      author: "Mike Thompson",
+      company: "Elite HVAC",
+      logo: "EH",
+      quote: "Our Instagram went from 200 to 15K followers in 6 months! FieldFlux's content strategy turned us into the go-to HVAC company in our city.",
+      author: "Sarah Chen",
+      role: "Marketing Director",
+      rating: 5,
+      metric: "+7400% follower growth"
+    },
+    {
+      company: "Apex Plumbing",
+      logo: "AP",
+      quote: "We're booked 3 months out thanks to our viral TikTok videos. FieldFlux helped us create content that actually converts followers into paying customers.",
+      author: "Marcus Rodriguez",
       role: "Owner",
-      rating: 5
+      rating: 5,
+      metric: "3 month waitlist"
     },
     {
-      company: "ProFlow Plumbing",
-      logo: "PP",
-      quote: "The AI-powered marketing tools helped us increase our revenue by 40% in just 6 months. Best investment we've made for our business.",
-      author: "Jessica Martinez",
-      role: "Marketing Manager",
-      rating: 5
-    },
-    {
-      company: "GreenScape Landscaping",
-      logo: "GL",
-      quote: "Managing reviews across all platforms used to be a nightmare. Now it's automated and our average rating went from 4.2 to 4.8 stars.",
-      author: "David Park",
-      role: "Operations Manager",
-      rating: 5
+      company: "Urban Landscaping",
+      logo: "UL",
+      quote: "Social media felt impossible until FieldFlux. Now we're the most followed landscaper in our market and our DMs are full of project requests.",
+      author: "Taylor Kim",
+      role: "Creative Director",
+      rating: 5,
+      metric: "#1 in local market"
     }
   ];
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 text-gray-900 overflow-hidden">
       {/* Navigation */}
       <MainNav />
       {/* Hero Section */}
-      <section className="relative py-24 md:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-cyan-50" />
+      <section className="relative py-20 md:py-28">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-100/50 via-pink-100/30 to-orange-100/50" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-64 h-64 bg-gradient-to-br from-orange-400/20 to-red-400/20 rounded-full blur-3xl animate-pulse delay-1000" />
         
-        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
           <AnimatedElement>
-            <Badge variant="outline" className="mb-8 border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors">
+            <Badge className="mb-8 border-0 text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 transition-all shadow-lg">
               <Rocket className="w-4 h-4 mr-2" />
               Field Service Meets Smart Marketing
             </Badge>
           </AnimatedElement>
           
           <AnimatedElement delay={200}>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight tracking-tight">
-              <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold mb-8 leading-tight">
+              <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">
                 Intelligent Marketing
               </span>
               <br />
-              for Field Service Providers
+              <span className="text-gray-800">for Field Service</span>
             </h1>
           </AnimatedElement>
           
           <AnimatedElement delay={400}>
-            <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Transform your field service business with AI-powered marketing automation. 
-              Generate more leads, manage reviews, and grow your revenue with intelligent tools designed for HVAC, plumbing, electrical, and landscaping professionals.
+            <p className="text-xl md:text-2xl text-gray-700 mb-12 max-w-4xl mx-auto leading-relaxed font-medium">
+              Create viral content, boost engagement, and grow your field service business with AI-powered social media marketing. 
+              Built specifically for HVAC, plumbing, electrical, and landscaping professionals who want to dominate their local market.
             </p>
           </AnimatedElement>
           
           <AnimatedElement delay={600}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all">
-                Start Free Trial
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
+              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-10 py-4 text-lg font-bold shadow-2xl hover:shadow-purple-500/25 transition-all transform hover:scale-105">
+                Start Creating Content
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-              <Button variant="outline" size="lg" className="border-slate-300 text-slate-700 hover:bg-slate-50 bg-white px-8 py-4 text-lg font-semibold shadow-sm hover:shadow-md transition-all">
-                Watch Demo
+              <Button variant="outline" size="lg" className="border-2 border-gray-300 text-gray-800 hover:bg-gray-100 bg-white/80 backdrop-blur-sm px-10 py-4 text-lg font-bold shadow-xl hover:shadow-2xl transition-all">
+                See Success Stories
               </Button>
             </div>
           </AnimatedElement>
           
           <AnimatedElement delay={800}>
-            <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-slate-500">
-              <div className="flex items-center gap-2">
+            <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-gray-600">
+              <div className="flex items-center gap-2 bg-white/60 px-4 py-2 rounded-full backdrop-blur-sm">
                 <CheckCircle className="w-4 h-4 text-green-500" />
-                <span>Free 14-day trial</span>
+                <span className="font-semibold">Free 14-day trial</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-white/60 px-4 py-2 rounded-full backdrop-blur-sm">
                 <CheckCircle className="w-4 h-4 text-green-500" />
-                <span>No setup fees</span>
+                <span className="font-semibold">No setup fees</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-white/60 px-4 py-2 rounded-full backdrop-blur-sm">
                 <CheckCircle className="w-4 h-4 text-green-500" />
-                <span>Cancel anytime</span>
+                <span className="font-semibold">Cancel anytime</span>
               </div>
             </div>
           </AnimatedElement>
         </div>
       </section>
-      {/* Trusted By Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-6xl mx-auto px-6">
+      {/* Social Proof Section */}
+      <section className="py-20 bg-white/50 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-6">
           <AnimatedElement>
-            <p className="text-center text-slate-600 mb-12 text-lg font-medium">
-              Integrates seamlessly with leading field service platforms
+            <p className="text-center text-gray-700 mb-12 text-xl font-bold">
+              Trusted by 10,000+ field service professionals across social media
             </p>
           </AnimatedElement>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
-            {["ServiceTitan", "Jobber", "Housecall Pro", "FieldEdge"].map((company, i) => (
-              <AnimatedElement key={company} delay={i * 100}>
-                <div className="text-lg font-semibold text-slate-700 bg-white px-6 py-3 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
-                  {company}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center justify-items-center">
+            {[
+              { name: "Instagram", color: "from-pink-500 to-purple-500" },
+              { name: "Facebook", color: "from-blue-600 to-blue-700" },
+              { name: "TikTok", color: "from-gray-900 to-gray-700" },
+              { name: "YouTube", color: "from-red-600 to-red-700" }
+            ].map((platform, i) => (
+              <AnimatedElement key={platform.name} delay={i * 100}>
+                <div className={`text-lg font-bold text-white bg-gradient-to-r ${platform.color} px-8 py-4 rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-110`}>
+                  {platform.name}
                 </div>
               </AnimatedElement>
             ))}
           </div>
+          
+          <AnimatedElement delay={500}>
+            <div className="text-center mt-12">
+              <p className="text-gray-600 text-lg">
+                + Connects with <span className="font-bold text-purple-600">ServiceTitan</span>, <span className="font-bold text-purple-600">Jobber</span>, <span className="font-bold text-purple-600">FieldEdge</span> & more
+              </p>
+            </div>
+          </AnimatedElement>
         </div>
       </section>
       {/* Features Section */}
-      <section className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
+      <section className="py-24 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+        <div className="max-w-7xl mx-auto px-6">
           <AnimatedElement>
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-                Built for <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">performance</span> at scale
+              <h2 className="text-4xl md:text-6xl font-extrabold mb-6">
+                Create Content That <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">Converts</span>
               </h2>
-              <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-                Every feature designed to help HVAC, plumbing, electrical, and landscaping professionals 
-                grow their business with intelligent marketing automation.
+              <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed font-medium">
+                Stop posting and praying. Every feature is designed to turn your social media presence into 
+                a lead-generating machine for your field service business.
               </p>
             </div>
           </AnimatedElement>
@@ -323,18 +345,18 @@ export default function PlanetScaleLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, i) => (
               <AnimatedElement key={i} delay={i * 200}>
-                <Card className="bg-white border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 group h-full">
+                <Card className="bg-white/80 backdrop-blur-sm border-0 hover:bg-white hover:shadow-2xl transition-all duration-500 group h-full transform hover:scale-105">
                   <CardContent className="p-8">
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="p-3 bg-blue-50 rounded-xl text-blue-600 group-hover:bg-blue-100 transition-colors">
+                      <div className={`p-4 bg-gradient-to-r ${feature.gradient} rounded-2xl text-white group-hover:shadow-lg transition-all`}>
                         {feature.icon}
                       </div>
-                      <h3 className="text-xl font-semibold text-slate-900">{feature.title}</h3>
+                      <h3 className="text-2xl font-bold text-gray-900">{feature.title}</h3>
                     </div>
-                    <p className="text-slate-600 mb-4 leading-relaxed">
+                    <p className="text-gray-700 mb-6 leading-relaxed text-lg">
                       {feature.description}
                     </p>
-                    <div className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block">
+                    <div className={`text-sm font-bold text-white bg-gradient-to-r ${feature.gradient} px-4 py-2 rounded-full inline-block shadow-md`}>
                       {feature.stats}
                     </div>
                   </CardContent>
@@ -398,16 +420,16 @@ export default function PlanetScaleLanding() {
           </AnimatedElement>
         </div>
       </section>
-      {/* Testimonials Section */}
+      {/* Success Stories Section */}
       <section className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6">
           <AnimatedElement>
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
-                Loved by <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">teams worldwide</span>
+              <h2 className="text-4xl md:text-6xl font-extrabold mb-6">
+                Real Results from <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 bg-clip-text text-transparent">Real Businesses</span>
               </h2>
-              <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-                Join thousands of teams who have transformed their field operations with FieldFlux.
+              <p className="text-xl text-gray-700 max-w-4xl mx-auto leading-relaxed font-medium">
+                These field service pros went from social media struggles to social media success stories.
               </p>
             </div>
           </AnimatedElement>
@@ -415,23 +437,26 @@ export default function PlanetScaleLanding() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, i) => (
               <AnimatedElement key={i} delay={i * 200}>
-                <Card className="bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full">
+                <Card className="bg-gradient-to-br from-white to-purple-50 border-0 shadow-xl hover:shadow-2xl transition-all duration-500 h-full transform hover:scale-105">
                   <CardContent className="p-8">
-                    <div className="flex items-center gap-2 mb-6">
+                    <div className="flex items-center gap-2 mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
-                    <blockquote className="text-slate-700 mb-6 leading-relaxed font-medium">
+                    <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold mb-6 inline-block">
+                      {testimonial.metric}
+                    </div>
+                    <blockquote className="text-gray-800 mb-6 leading-relaxed font-medium text-lg">
                       "{testimonial.quote}"
                     </blockquote>
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full flex items-center justify-center font-bold text-white">
+                      <div className="w-14 h-14 bg-gradient-to-r from-purple-600 via-pink-600 to-orange-500 rounded-full flex items-center justify-center font-bold text-white text-lg">
                         {testimonial.logo}
                       </div>
                       <div>
-                        <div className="font-semibold text-slate-900">{testimonial.author}</div>
-                        <div className="text-sm text-slate-600">{testimonial.role} at {testimonial.company}</div>
+                        <div className="font-bold text-gray-900 text-lg">{testimonial.author}</div>
+                        <div className="text-gray-600 font-medium">{testimonial.role} at {testimonial.company}</div>
                       </div>
                     </div>
                   </CardContent>
@@ -442,30 +467,40 @@ export default function PlanetScaleLanding() {
         </div>
       </section>
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-blue-600 to-cyan-600 relative overflow-hidden">
-        <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+      <section className="py-24 bg-gradient-to-br from-purple-600 via-pink-600 to-orange-500 relative overflow-hidden">
+        <div className="absolute inset-0">
+          <div className="absolute top-10 left-10 w-64 h-64 bg-white/10 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute bottom-10 right-10 w-80 h-80 bg-white/5 rounded-full blur-3xl animate-pulse delay-1000" />
+        </div>
+        <div className="relative z-10 max-w-5xl mx-auto px-6 text-center">
           <AnimatedElement>
-            <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white tracking-tight">
-              Ready to transform your field operations?
+            <h2 className="text-4xl md:text-7xl font-extrabold mb-8 text-white leading-tight">
+              Ready to Go Viral?
             </h2>
           </AnimatedElement>
           
           <AnimatedElement delay={200}>
-            <p className="text-xl mb-12 text-blue-100 leading-relaxed">
-              Join thousands of companies already using FieldFlux to deliver exceptional field service experiences.
+            <p className="text-xl md:text-2xl mb-12 text-white/90 leading-relaxed font-medium max-w-3xl mx-auto">
+              Join 10,000+ field service professionals who've transformed their social media presence into a lead-generating machine.
             </p>
           </AnimatedElement>
           
           <AnimatedElement delay={400}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white hover:bg-gray-100 text-blue-600 px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all">
-                Start Free Trial
-                <ArrowRight className="w-5 h-5 ml-2" />
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+              <Button size="lg" className="bg-white hover:bg-gray-100 text-purple-600 px-10 py-4 text-xl font-bold shadow-2xl hover:shadow-white/25 transition-all transform hover:scale-105">
+                Start Creating Content
+                <ArrowRight className="w-6 h-6 ml-2" />
               </Button>
-              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 bg-transparent px-8 py-4 text-lg font-semibold">
-                Contact Sales
+              <Button size="lg" variant="outline" className="border-2 border-white/30 text-white hover:bg-white/10 bg-white/5 backdrop-blur-sm px-10 py-4 text-xl font-bold">
+                See Live Demo
               </Button>
             </div>
+          </AnimatedElement>
+          
+          <AnimatedElement delay={600}>
+            <p className="text-white/80 text-lg font-medium mt-8">
+              ⚡ Set up in under 5 minutes • 🎯 See results in your first week
+            </p>
           </AnimatedElement>
         </div>
       </section>
