@@ -223,59 +223,62 @@ export default function PlanetScaleLanding() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
+    <div className="min-h-screen bg-white text-slate-900 overflow-hidden">
       {/* Navigation */}
       <MainNav />
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 flex items-center justify-center">
-        <AuroraBackground />
+      <section className="relative py-24 md:py-32">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-cyan-50" />
         
-        <div className="relative z-10 max-w-7xl mx-auto px-6 text-center">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 text-center">
           <AnimatedElement>
-            <Badge variant="outline" className="mb-6 border-blue-400/50 text-blue-400 bg-blue-500/10">
+            <Badge variant="outline" className="mb-8 border-blue-200 text-blue-700 bg-blue-50 hover:bg-blue-100 transition-colors">
               <Rocket className="w-4 h-4 mr-2" />
-              Now Available: Next-Gen Platform
+              Field Service Meets Smart Marketing
             </Badge>
           </AnimatedElement>
           
           <AnimatedElement delay={200}>
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              <GradientText>Intelligent Marketing</GradientText>{" "}
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight tracking-tight">
+              <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                Intelligent Marketing
+              </span>
+              <br />
               for Field Service Providers
             </h1>
           </AnimatedElement>
           
           <AnimatedElement delay={400}>
-            <p className="text-xl md:text-2xl text-slate-300 mb-8 max-w-4xl mx-auto leading-relaxed">
-              FieldFlux brings you the fastest field service management platform available. 
-              Unify intelligent content creation, review management, lead generation, and business analytics to streamline marketing efforts and drive business growth.
+            <p className="text-lg md:text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+              Transform your field service business with AI-powered marketing automation. 
+              Generate more leads, manage reviews, and grow your revenue with intelligent tools designed for HVAC, plumbing, electrical, and landscaping professionals.
             </p>
           </AnimatedElement>
           
           <AnimatedElement delay={600}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all">
                 Start Free Trial
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-              <Button variant="outline" size="lg" className="border-slate-400 text-slate-300 hover:bg-slate-800 hover:text-white bg-transparent px-8 py-6 text-lg">
+              <Button variant="outline" size="lg" className="border-slate-300 text-slate-700 hover:bg-slate-50 bg-white px-8 py-4 text-lg font-semibold shadow-sm hover:shadow-md transition-all">
                 Watch Demo
               </Button>
             </div>
           </AnimatedElement>
           
           <AnimatedElement delay={800}>
-            <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-slate-400">
+            <div className="flex flex-wrap justify-center items-center gap-8 text-sm text-slate-500">
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-400" />
+                <CheckCircle className="w-4 h-4 text-green-500" />
                 <span>Free 14-day trial</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-400" />
+                <CheckCircle className="w-4 h-4 text-green-500" />
                 <span>No setup fees</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-4 h-4 text-green-400" />
+                <CheckCircle className="w-4 h-4 text-green-500" />
                 <span>Cancel anytime</span>
               </div>
             </div>
@@ -283,18 +286,18 @@ export default function PlanetScaleLanding() {
         </div>
       </section>
       {/* Trusted By Section */}
-      <section className="py-16 bg-slate-900/50">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-6">
           <AnimatedElement>
-            <p className="text-center text-slate-400 mb-12 text-lg">
+            <p className="text-center text-slate-600 mb-12 text-lg font-medium">
               Integrates seamlessly with leading field service platforms
             </p>
           </AnimatedElement>
           
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center opacity-60">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
             {["ServiceTitan", "Jobber", "Housecall Pro", "FieldEdge"].map((company, i) => (
               <AnimatedElement key={company} delay={i * 100}>
-                <div className="text-xl font-bold text-slate-400">
+                <div className="text-lg font-semibold text-slate-700 bg-white px-6 py-3 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
                   {company}
                 </div>
               </AnimatedElement>
@@ -303,14 +306,14 @@ export default function PlanetScaleLanding() {
         </div>
       </section>
       {/* Features Section */}
-      <section className="py-24 bg-slate-950">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
           <AnimatedElement>
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Built for <GradientText>performance</GradientText> at scale
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+                Built for <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">performance</span> at scale
               </h2>
-              <p className="text-xl text-slate-400 max-w-3xl mx-auto">
+              <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
                 Every feature designed to help HVAC, plumbing, electrical, and landscaping professionals 
                 grow their business with intelligent marketing automation.
               </p>
@@ -320,18 +323,18 @@ export default function PlanetScaleLanding() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {features.map((feature, i) => (
               <AnimatedElement key={i} delay={i * 200}>
-                <Card className="bg-slate-800/50 border-slate-700 hover:border-blue-500/50 transition-all duration-500 group h-full">
+                <Card className="bg-white border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300 group h-full">
                   <CardContent className="p-8">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="p-3 bg-blue-600/20 rounded-xl text-blue-400 group-hover:bg-blue-600/30 transition-colors">
+                    <div className="flex items-center gap-4 mb-6">
+                      <div className="p-3 bg-blue-50 rounded-xl text-blue-600 group-hover:bg-blue-100 transition-colors">
                         {feature.icon}
                       </div>
-                      <h3 className="text-xl font-semibold">{feature.title}</h3>
+                      <h3 className="text-xl font-semibold text-slate-900">{feature.title}</h3>
                     </div>
-                    <p className="text-slate-400 mb-4 leading-relaxed">
+                    <p className="text-slate-600 mb-4 leading-relaxed">
                       {feature.description}
                     </p>
-                    <div className="text-sm font-medium text-blue-400">
+                    <div className="text-sm font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block">
                       {feature.stats}
                     </div>
                   </CardContent>
@@ -342,49 +345,49 @@ export default function PlanetScaleLanding() {
         </div>
       </section>
       {/* Comparison Table Section */}
-      <section className="py-24 bg-slate-900/30">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-6">
           <AnimatedElement>
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                See how we <GradientText>compare</GradientText>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+                See how we <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">compare</span>
               </h2>
-              <p className="text-xl text-slate-400 max-w-3xl mx-auto">
+              <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
                 Don't just take our word for it. Here's how FieldFlux stacks up against the competition.
               </p>
             </div>
           </AnimatedElement>
 
           <AnimatedElement>
-            <div className="overflow-x-auto" ref={tableRef as React.RefObject<HTMLDivElement>}>
-              <table className="w-full border-collapse border border-slate-700 rounded-lg overflow-hidden">
+            <div className="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-200" ref={tableRef as React.RefObject<HTMLDivElement>}>
+              <table className="w-full border-collapse">
                 <thead>
-                  <tr className="bg-slate-800">
-                    <th className="p-4 text-left border-r border-slate-700"></th>
-                    <th className="p-4 text-left border-r border-slate-700"></th>
-                    <th className="p-4 text-center border-r border-slate-700">
-                      <ShimmerText inView={tableInView}>FieldFlux</ShimmerText>
+                  <tr className="bg-gray-50">
+                    <th className="p-4 text-left border-r border-gray-200"></th>
+                    <th className="p-4 text-left border-r border-gray-200"></th>
+                    <th className="p-4 text-center border-r border-gray-200">
+                      <span className="font-semibold text-blue-600">FieldFlux</span>
                     </th>
                     <th className="p-4 text-center">
-                      <span className="text-slate-400">Competitors</span>
+                      <span className="text-slate-600 font-medium">Competitors</span>
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {Object.entries(comparisonData).map(([section, data]) => {
                     return Object.entries(data).map(([feature, comparison], i) => (
-                      <tr key={`${section}-${feature}`} className="border-t border-slate-700 hover:bg-slate-800/50">
+                      <tr key={`${section}-${feature}`} className="border-t border-gray-100 hover:bg-gray-50/50">
                         {i === 0 && (
-                          <td rowSpan={Object.keys(data).length} className="p-4 font-semibold text-blue-400 border-r border-slate-700 align-top">
+                          <td rowSpan={Object.keys(data).length} className="p-4 font-semibold text-blue-600 border-r border-gray-200 align-top">
                             {section}
                           </td>
                         )}
-                        <td className="p-4 border-r border-slate-700 font-medium">{feature}</td>
-                        <td className="p-4 border-r border-slate-700 text-center">
-                          <span className="text-green-400 font-medium">{comparison.fieldflux}</span>
+                        <td className="p-4 border-r border-gray-200 font-medium text-slate-700">{feature}</td>
+                        <td className="p-4 border-r border-gray-200 text-center">
+                          <span className="text-green-600 font-medium">{comparison.fieldflux}</span>
                         </td>
                         <td className="p-4 text-center">
-                          <span className="text-slate-400">{comparison.competitor}</span>
+                          <span className="text-slate-500">{comparison.competitor}</span>
                         </td>
                       </tr>
                     ));
@@ -396,14 +399,14 @@ export default function PlanetScaleLanding() {
         </div>
       </section>
       {/* Testimonials Section */}
-      <section className="py-24 bg-slate-950">
-        <div className="max-w-7xl mx-auto px-6">
+      <section className="py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
           <AnimatedElement>
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6">
-                Loved by <GradientText>teams worldwide</GradientText>
+              <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+                Loved by <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">teams worldwide</span>
               </h2>
-              <p className="text-xl text-slate-400 max-w-3xl mx-auto">
+              <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
                 Join thousands of teams who have transformed their field operations with FieldFlux.
               </p>
             </div>
@@ -412,23 +415,23 @@ export default function PlanetScaleLanding() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, i) => (
               <AnimatedElement key={i} delay={i * 200}>
-                <Card className="bg-slate-800/50 border-slate-700 h-full">
+                <Card className="bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full">
                   <CardContent className="p-8">
-                    <div className="flex items-center gap-2 mb-4">
+                    <div className="flex items-center gap-2 mb-6">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                       ))}
                     </div>
-                    <blockquote className="text-slate-300 mb-6 leading-relaxed">
+                    <blockquote className="text-slate-700 mb-6 leading-relaxed font-medium">
                       "{testimonial.quote}"
                     </blockquote>
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center font-bold">
+                      <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full flex items-center justify-center font-bold text-white">
                         {testimonial.logo}
                       </div>
                       <div>
-                        <div className="font-semibold">{testimonial.author}</div>
-                        <div className="text-sm text-slate-400">{testimonial.role} at {testimonial.company}</div>
+                        <div className="font-semibold text-slate-900">{testimonial.author}</div>
+                        <div className="text-sm text-slate-600">{testimonial.role} at {testimonial.company}</div>
                       </div>
                     </div>
                   </CardContent>
@@ -439,28 +442,27 @@ export default function PlanetScaleLanding() {
         </div>
       </section>
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-700 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/20" />
+      <section className="py-24 bg-gradient-to-r from-blue-600 to-cyan-600 relative overflow-hidden">
         <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
           <AnimatedElement>
-            <h2 className="text-4xl md:text-6xl font-bold mb-6">
+            <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white tracking-tight">
               Ready to transform your field operations?
             </h2>
           </AnimatedElement>
           
           <AnimatedElement delay={200}>
-            <p className="text-xl mb-8 opacity-90 text-[#dcdee8]">
+            <p className="text-xl mb-12 text-blue-100 leading-relaxed">
               Join thousands of companies already using FieldFlux to deliver exceptional field service experiences.
             </p>
           </AnimatedElement>
           
           <AnimatedElement delay={400}>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="hover:bg-slate-100 px-8 py-6 text-lg font-semibold text-[#f5f6fa] bg-[#111829]">
+              <Button size="lg" className="bg-white hover:bg-gray-100 text-blue-600 px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all">
                 Start Free Trial
                 <ArrowRight className="w-5 h-5 ml-2" />
               </Button>
-              <Button size="lg" variant="outline" className="border-white/50 text-white hover:bg-white/10 bg-transparent px-8 py-6 text-lg">
+              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 bg-transparent px-8 py-4 text-lg font-semibold">
                 Contact Sales
               </Button>
             </div>
@@ -468,53 +470,53 @@ export default function PlanetScaleLanding() {
         </div>
       </section>
       {/* Footer */}
-      <footer className="py-12 bg-slate-950 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-6">
+      <footer className="py-12 bg-gray-50 border-t border-gray-200">
+        <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="text-2xl font-bold mb-4">
-                <GradientText>FieldFlux</GradientText>
+                <span className="bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">FieldFlux</span>
               </div>
-              <p className="text-slate-400 mb-4">
-                The world's fastest and most scalable field service platform.
+              <p className="text-slate-600 mb-4 leading-relaxed">
+                Intelligent marketing automation for field service professionals.
               </p>
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-slate-400">
-                <li><a href="/features" className="hover:text-white transition-colors">Features</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Enterprise</a></li>
+              <h4 className="font-semibold mb-4 text-slate-900">Product</h4>
+              <ul className="space-y-2 text-slate-600">
+                <li><a href="/features" className="hover:text-slate-900 transition-colors">Features</a></li>
+                <li><a href="#" className="hover:text-slate-900 transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-slate-900 transition-colors">Enterprise</a></li>
               </ul>
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-slate-400">
-                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              <h4 className="font-semibold mb-4 text-slate-900">Company</h4>
+              <ul className="space-y-2 text-slate-600">
+                <li><a href="#" className="hover:text-slate-900 transition-colors">About</a></li>
+                <li><a href="#" className="hover:text-slate-900 transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-slate-900 transition-colors">Contact</a></li>
               </ul>
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-slate-400">
-                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Status</a></li>
+              <h4 className="font-semibold mb-4 text-slate-900">Support</h4>
+              <ul className="space-y-2 text-slate-600">
+                <li><a href="#" className="hover:text-slate-900 transition-colors">Documentation</a></li>
+                <li><a href="#" className="hover:text-slate-900 transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-slate-900 transition-colors">Status</a></li>
               </ul>
             </div>
           </div>
           
-          <div className="border-t border-slate-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-slate-400 text-sm">
-              © 2024 FieldFlux. All rights reserved.
+          <div className="border-t border-gray-300 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-slate-600 text-sm">
+              © 2025 FieldFlux. All rights reserved.
             </p>
-            <div className="flex gap-6 text-slate-400 text-sm mt-4 md:mt-0">
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            <div className="flex gap-6 text-slate-600 text-sm mt-4 md:mt-0">
+              <a href="#" className="hover:text-slate-900 transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-slate-900 transition-colors">Terms of Service</a>
             </div>
           </div>
         </div>
