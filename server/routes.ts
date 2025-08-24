@@ -411,6 +411,50 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post('/api/felix/hint-action', isAuthenticated, async (req: any, res) => {
+    try {
+      const { hintId, action, timestamp } = req.body;
+      const userId = req.user?.claims?.sub;
+      
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      // Log hint action for analytics and improvement
+      console.log(`User ${userId} took action "${action}" on hint "${hintId}" at ${timestamp}`);
+      
+      // Here you could store this in a database for analytics
+      // await storage.logHintAction({ userId, hintId, action, timestamp });
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error logging hint action:', error);
+      res.status(500).json({ error: 'Failed to log hint action' });
+    }
+  });
+
+  app.post('/api/felix/hint-engagement', isAuthenticated, async (req: any, res) => {
+    try {
+      const { action, page, timestamp, context } = req.body;
+      const userId = req.user?.claims?.sub;
+      
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      // Log smart hint engagement for ML improvement
+      console.log(`Smart hint engagement - User ${userId}: action="${action}" on page="${page}" at ${timestamp}`, context);
+      
+      // This data can be used to improve hint timing and relevance
+      // await storage.logHintEngagement({ userId, action, page, timestamp, context });
+      
+      res.json({ success: true });
+    } catch (error) {
+      console.error('Error logging hint engagement:', error);
+      res.status(500).json({ error: 'Failed to log hint engagement' });
+    }
+  });
+
   app.post('/api/ai-coach/generate-recommendations', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user?.claims?.sub;

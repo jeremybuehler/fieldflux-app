@@ -12,6 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { Link, useLocation } from "wouter";
 import MultiPlatformWizard from "@/components/social/multi-platform-wizard";
 import TopNavigation from "@/components/layout/top-navigation";
+import CollaborationHints from "@/components/felix/collaboration-hints";
+import { useFelixHints } from "@/hooks/use-felix-hints";
 import {
   Wand2,
   PlusCircle,
@@ -31,6 +33,7 @@ export default function Social() {
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
   const [location] = useLocation();
+  const { activity, handleHintAction, currentPage } = useFelixHints();
 
   const handleLogout = () => {
     toast({
@@ -168,6 +171,13 @@ export default function Social() {
           </div>
         </div>
       </div>
+      
+      {/* Felix Collaboration Hints */}
+      <CollaborationHints 
+        currentPage={currentPage}
+        userActivity={activity}
+        onHintAction={handleHintAction}
+      />
     </div>
   );
 }
