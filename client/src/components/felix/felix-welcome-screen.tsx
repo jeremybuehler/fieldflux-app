@@ -29,7 +29,7 @@ export default function FelixWelcomeScreen({ onTaskSelect }: WelcomeScreenProps)
       color: "from-blue-500 to-blue-600"
     },
     {
-      id: "manage-leads",
+      id: "leads",
       title: "Manage Leads",
       description: "Track, organize, and follow up with potential customers",
       icon: Users,
@@ -37,7 +37,7 @@ export default function FelixWelcomeScreen({ onTaskSelect }: WelcomeScreenProps)
       color: "from-green-500 to-green-600"
     },
     {
-      id: "analyze-performance",
+      id: "analytics",
       title: "View Analytics",
       description: "Review your business metrics and performance insights",
       icon: BarChart3,
@@ -53,7 +53,7 @@ export default function FelixWelcomeScreen({ onTaskSelect }: WelcomeScreenProps)
       color: "from-orange-500 to-orange-600"
     },
     {
-      id: "manage-reviews",
+      id: "reviews",
       title: "Manage Reviews",
       description: "Monitor and respond to customer reviews",
       icon: MessageSquare,
@@ -61,7 +61,7 @@ export default function FelixWelcomeScreen({ onTaskSelect }: WelcomeScreenProps)
       color: "from-teal-500 to-teal-600"
     },
     {
-      id: "seo-optimization",
+      id: "seo",
       title: "SEO & Keywords",
       description: "Optimize your online presence and search rankings",
       icon: Target,

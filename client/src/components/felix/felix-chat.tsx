@@ -22,6 +22,7 @@ import {
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import FelixWelcomeScreen from "./felix-welcome-screen";
+import CanvasManager, { WINDOW_CONFIGS } from "@/components/canvas/canvas-manager";
 
 interface Message {
   id: string;
@@ -89,6 +90,7 @@ export default function FelixChat() {
   const [inputMessage, setInputMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentTask, setCurrentTask] = useState<string | null>(null);
+  const [openWindows, setOpenWindows] = useState<string[]>([]);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
 
@@ -110,6 +112,39 @@ export default function FelixChat() {
   const handleTaskSelect = async (taskId: string) => {
     const task = TASK_OPTIONS.find(t => t.id === taskId);
     if (!task) return;
+
+    // Check if this should open a canvas window
+    const windowMapping: Record<string, string> = {
+      "analyze-performance": "analytics",
+      "view-analytics": "analytics",
+      "manage-leads": "leads",
+      "lead-management": "leads",
+      "social-media": "social",
+      "create-post": "social",
+      "manage-reviews": "reviews",
+      "review-management": "reviews",
+      "seo-optimization": "seo",
+      "keywords": "seo",
+      "business-settings": "settings",
+      "settings": "settings"
+    };
+    
+    const windowId = windowMapping[taskId];
+    if (windowId && WINDOW_CONFIGS[windowId]) {
+      handleWindowOpen(windowId);
+      
+      addMessage({
+        type: 'user',
+        content: `I want to work on: ${task.title}`
+      });
+
+      addMessage({
+        type: 'felix',
+        content: `I've opened the ${WINDOW_CONFIGS[windowId].title} window for you. You can interact with it directly while continuing our conversation here. Would you like me to guide you through any specific tasks in that window?`,
+        options: []
+      });
+      return;
+    }
 
     setCurrentTask(taskId);
     addMessage({
@@ -149,6 +184,16 @@ export default function FelixChat() {
     }
     
     setIsProcessing(false);
+  };
+
+  const handleWindowOpen = (windowId: string) => {
+    if (!openWindows.includes(windowId)) {
+      setOpenWindows(prev => [...prev, windowId]);
+    }
+  };
+
+  const handleWindowClose = (windowId: string) => {
+    setOpenWindows(prev => prev.filter(id => id !== windowId));
   };
 
   const getTaskStarterMessage = (taskId: string): string => {
@@ -391,7 +436,7 @@ export default function FelixChat() {
                 variant="outline" 
                 size="sm" 
                 className="bg-white/50 hover:bg-white/80 border-gray-200/50 text-gray-600"
-                onClick={() => handleTaskSelect("manage-leads")}
+                onClick={() => handleWindowOpen("leads")}
               >
                 <Users className="w-4 h-4 mr-2" />
                 Manage Leads
@@ -409,7 +454,7 @@ export default function FelixChat() {
                 variant="outline" 
                 size="sm" 
                 className="bg-white/50 hover:bg-white/80 border-gray-200/50 text-gray-600"
-                onClick={() => handleTaskSelect("analyze-performance")}
+                onClick={() => handleWindowOpen("analytics")}
               >
                 <BarChart3 className="w-4 h-4 mr-2" />
                 View Analytics
@@ -418,7 +463,7 @@ export default function FelixChat() {
                 variant="outline" 
                 size="sm" 
                 className="bg-white/50 hover:bg-white/80 border-gray-200/50 text-gray-600"
-                onClick={() => handleTaskSelect("create-post")}
+                onClick={() => handleWindowOpen("social")}
               >
                 <PlusCircle className="w-4 h-4 mr-2" />
                 Create Content
@@ -427,6 +472,13 @@ export default function FelixChat() {
           </div>
         </div>
       </div>
+
+      {/* Canvas Manager for Windows */}
+      <CanvasManager 
+        openWindows={openWindows}
+        onWindowOpen={handleWindowOpen}
+        onWindowClose={handleWindowClose}
+      />
     </div>
   );
 }
