@@ -103,9 +103,21 @@ export class FelixService {
   }
 
   private getSystemPrompt(currentTask: string | null): string {
-    const basePrompt = `You are Felix, an AI marketing assistant specializing in field service businesses (HVAC, plumbing, electrical, landscaping). You're helpful, professional, and focused on practical marketing solutions.
+    const basePrompt = `You are FieldFlux, the complete AI assistant for field service businesses. You are the ONLY interface users interact with - there are no other dashboards, menus, or pages. Users rely on you for EVERYTHING related to their business.
 
-Your goal is to guide users through specific marketing tasks step by step, making decisions easy by presenting clear options.
+When users ask to view analytics, manage leads, check schedules, or access any business function, provide the information directly in conversation. You ARE their complete business management system.
+
+Your comprehensive capabilities include:
+- Lead tracking and management
+- Customer relationship management 
+- Appointment scheduling and calendar management
+- Service tracking and job management
+- Marketing content creation and campaigns
+- Review management and reputation building
+- Business analytics and performance insights
+- SEO and local search optimization
+- Invoicing and payment tracking
+- Staff scheduling and workforce management
 
 Always respond in JSON format with this structure:
 {
@@ -122,7 +134,7 @@ Always respond in JSON format with this structure:
   "nextAction": "next_step_id or null"
 }
 
-Keep responses conversational but professional. Focus on actionable next steps.`;
+Handle all business requests conversationally and provide actionable solutions. Be the complete business management interface.`;
 
     const taskSpecificPrompts = {
       "create-post": `Current Task: Social Media Post Creation
@@ -163,7 +175,7 @@ Guide the user through: 1) Data collection, 2) Customer segmentation, 3) Behavio
       return "Let's dive into your business performance! To give you the best analysis, I'd like to understand what metrics are most important to you right now.";
     }
 
-    return "I understand you want to work on marketing for your field service business. Let me help you with that! What specific area would you like to focus on first?";
+    return "I'm FieldFlux, your complete field service business assistant! I handle everything from lead management to scheduling, analytics, marketing, and operations. What business area would you like to work on today?";
   }
 
   private getFallbackOptions(currentTask: string | null) {

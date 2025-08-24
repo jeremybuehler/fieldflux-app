@@ -236,7 +236,7 @@ export default function FelixChat() {
       {/* Header */}
       <div className="bg-white/70 backdrop-blur-xl border-b border-gray-200/50 p-6 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-center">
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
@@ -246,18 +246,10 @@ export default function FelixChat() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                  Felix AI Assistant
+                  FieldFlux
                 </h1>
-                <p className="text-gray-600 font-medium">Intelligent Field Service Marketing</p>
+                <p className="text-gray-600 font-medium">Your Intelligent Field Service Assistant</p>
               </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <div className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
-                Online
-              </div>
-              <Button variant="outline" size="sm" className="bg-white/50 hover:bg-white/80">
-                Settings
-              </Button>
             </div>
           </div>
         </div>
@@ -394,15 +386,24 @@ export default function FelixChat() {
             </div>
             
             {/* Quick Actions */}
-            <div className="flex items-center justify-center mt-4 space-x-3">
+            <div className="flex flex-wrap items-center justify-center mt-4 gap-2">
               <Button 
                 variant="outline" 
                 size="sm" 
                 className="bg-white/50 hover:bg-white/80 border-gray-200/50 text-gray-600"
-                onClick={() => handleTaskSelect("create-post")}
+                onClick={() => handleTaskSelect("manage-leads")}
               >
-                <PlusCircle className="w-4 h-4 mr-2" />
-                Create Post
+                <Users className="w-4 h-4 mr-2" />
+                Manage Leads
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="bg-white/50 hover:bg-white/80 border-gray-200/50 text-gray-600"
+                onClick={() => handleTaskSelect("schedule-appointments")}
+              >
+                <Calendar className="w-4 h-4 mr-2" />
+                Schedule Service
               </Button>
               <Button 
                 variant="outline" 
@@ -411,16 +412,16 @@ export default function FelixChat() {
                 onClick={() => handleTaskSelect("analyze-performance")}
               >
                 <BarChart3 className="w-4 h-4 mr-2" />
-                Analyze Performance
+                View Analytics
               </Button>
               <Button 
                 variant="outline" 
                 size="sm" 
                 className="bg-white/50 hover:bg-white/80 border-gray-200/50 text-gray-600"
-                onClick={() => handleTaskSelect("generate-leads")}
+                onClick={() => handleTaskSelect("create-post")}
               >
-                <Target className="w-4 h-4 mr-2" />
-                Generate Leads
+                <PlusCircle className="w-4 h-4 mr-2" />
+                Create Content
               </Button>
             </div>
           </div>

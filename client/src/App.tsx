@@ -36,45 +36,29 @@ function Router() {
 
   return (
     <Switch>
-      {/* Landing page - always accessible */}
-      <Route path="/" component={Landing} />
-
-      {/* Demo page - accessible to everyone */}
-      <Route path="/demo" component={Demo} />
-
-      {/* Onboarding page - accessible to everyone */}
-      <Route path="/onboarding" component={Onboarding} />
-
-      {/* Pricing page - accessible to everyone */}
-      <Route path="/pricing" component={Pricing} />
-
-      {/* Subscribe page - accessible to everyone */}
-      <Route path="/subscribe" component={Subscribe} />
-
-      {/* Style Demo page - accessible to everyone */}
-      <Route path="/style-demo" component={StyleDemo} />
-      
-      {/* PlanetScale-inspired landing page */}
-      <Route path="/planetscale" component={PlanetScaleLanding} />
-      
-      {/* Features page */}
-      <Route path="/features" component={Features} />
-
-      {/* Temporarily disable auth check for development - allow access to dashboard */}
-      <Route path="/dashboard" component={Dashboard} />
-      <Route path="/social" component={Social} />
-      <Route path="/leads" component={Leads} />
-      <Route path="/reviews" component={Reviews} />
-      <Route path="/reports" component={Reports} />
-      <Route path="/keywords" component={Keywords} />
-      <Route path="/seo" component={SEO} />
-      <Route path="/website" component={Website} />
+      {/* Felix is now the main interface for everything */}
+      <Route path="/" component={Felix} />
       <Route path="/felix" component={Felix} />
-      <Route path="/ai-coach" component={AICoach} />
-      <Route path="/godaddy" component={GoDaddy} />
-      <Route path="/settings" component={Settings} />
+      
+      {/* All other routes redirect to Felix */}
+      <Route path="/dashboard" component={Felix} />
+      <Route path="/social" component={Felix} />
+      <Route path="/leads" component={Felix} />
+      <Route path="/reviews" component={Felix} />
+      <Route path="/reports" component={Felix} />
+      <Route path="/keywords" component={Felix} />
+      <Route path="/seo" component={Felix} />
+      <Route path="/website" component={Felix} />
+      <Route path="/ai-coach" component={Felix} />
+      <Route path="/settings" component={Felix} />
+      <Route path="/demo" component={Felix} />
+      <Route path="/onboarding" component={Felix} />
+      <Route path="/pricing" component={Felix} />
+      <Route path="/subscribe" component={Felix} />
+      <Route path="/features" component={Felix} />
+      <Route path="/godaddy" component={Felix} />
 
-      <Route component={NotFound} />
+      <Route component={Felix} />
     </Switch>
   );
 }
