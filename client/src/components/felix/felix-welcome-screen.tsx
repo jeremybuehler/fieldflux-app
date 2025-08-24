@@ -29,28 +29,44 @@ export default function FelixWelcomeScreen({ onTaskSelect }: WelcomeScreenProps)
       color: "from-blue-500 to-blue-600"
     },
     {
-      id: "analyze-performance",
-      title: "Analyze Performance",
-      description: "Review your marketing metrics and get actionable insights",
-      icon: BarChart3,
-      category: "Analytics",
+      id: "manage-leads",
+      title: "Manage Leads",
+      description: "Track, organize, and follow up with potential customers",
+      icon: Users,
+      category: "Lead Management",
       color: "from-green-500 to-green-600"
     },
     {
-      id: "generate-leads",
-      title: "Generate Leads",
-      description: "Develop strategies to attract new customers",
-      icon: Target,
-      category: "Marketing",
+      id: "analyze-performance",
+      title: "View Analytics",
+      description: "Review your business metrics and performance insights",
+      icon: BarChart3,
+      category: "Analytics",
       color: "from-purple-500 to-purple-600"
     },
     {
-      id: "schedule-campaign",
-      title: "Schedule Campaign",
-      description: "Plan and organize your marketing activities",
+      id: "schedule-appointments",
+      title: "Schedule Service",
+      description: "Manage appointments and service scheduling",
       icon: Calendar,
-      category: "Planning",
+      category: "Scheduling",
       color: "from-orange-500 to-orange-600"
+    },
+    {
+      id: "manage-reviews",
+      title: "Manage Reviews",
+      description: "Monitor and respond to customer reviews",
+      icon: MessageSquare,
+      category: "Reputation",
+      color: "from-teal-500 to-teal-600"
+    },
+    {
+      id: "seo-optimization",
+      title: "SEO & Keywords",
+      description: "Optimize your online presence and search rankings",
+      icon: Target,
+      category: "SEO",
+      color: "from-indigo-500 to-indigo-600"
     }
   ];
 
@@ -69,23 +85,23 @@ export default function FelixWelcomeScreen({ onTaskSelect }: WelcomeScreenProps)
         
         <div className="space-y-4">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent">
-            Welcome to Felix AI
+            Welcome to FieldFlux
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Your intelligent marketing assistant for field service professionals. I'll help you create content, analyze performance, and grow your business.
+            Your complete field service business assistant. I can help with marketing, leads, scheduling, analytics, content creation, and everything you need to grow your business.
           </p>
         </div>
 
         <div className="flex items-center justify-center space-x-2">
           <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
             <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-            AI Powered
+            Complete Business Assistant
           </Badge>
           <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">
-            Field Service Optimized
+            All-in-One Interface
           </Badge>
           <Badge variant="secondary" className="bg-purple-100 text-purple-700 border-purple-200">
-            Ready to Help
+            No Menus Required
           </Badge>
         </div>
       </div>
@@ -97,7 +113,7 @@ export default function FelixWelcomeScreen({ onTaskSelect }: WelcomeScreenProps)
           <p className="text-gray-600">Choose a task below or ask me anything in the chat</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {popularTasks.map((task) => (
             <Card
               key={task.id}
@@ -146,9 +162,9 @@ export default function FelixWelcomeScreen({ onTaskSelect }: WelcomeScreenProps)
           </div>
           
           <div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">New to Felix?</h3>
+            <h3 className="text-xl font-semibold text-gray-900 mb-2">New to FieldFlux?</h3>
             <p className="text-gray-600 mb-4">
-              Take a quick 2-minute tour to see how I can transform your field service marketing
+              Take a quick tour to see how I can help manage every aspect of your field service business
             </p>
             <Button 
               onClick={() => onTaskSelect("quick-start")}
