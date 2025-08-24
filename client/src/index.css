@@ -949,3 +949,60 @@ html {
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
+/* AI Landing Page Generator Styles */
+.felix-glassmorphism {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.felix-gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.felix-floating {
+  animation: felixFloat 3s ease-in-out infinite;
+}
+
+@keyframes felixFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.felix-pulse {
+  animation: felixPulse 2s ease-in-out infinite;
+}
+
+@keyframes felixPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.felix-slide-up {
+  animation: felixSlideUp 0.8s ease-out forwards;
+}
+
+@keyframes felixSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.felix-glow {
+  box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);
+  transition: box-shadow 0.3s ease;
+}
+
+.felix-glow:hover {
+  box-shadow: 0 0 30px rgba(102, 126, 234, 0.6);
+}
+

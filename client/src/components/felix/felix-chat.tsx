@@ -16,10 +16,12 @@ import {
   Zap,
   FileText,
   Calendar,
-  Users
+  Users,
+  ArrowRight
 } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import FelixWelcomeScreen from "./felix-welcome-screen";
 
 interface Message {
   id: string;
@@ -83,15 +85,7 @@ const TASK_OPTIONS: TaskOption[] = [
 ];
 
 export default function FelixChat() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'felix',
-      content: "👋 Hi there! I'm Felix, your AI marketing assistant for field service professionals. I'm here to help you grow your HVAC, plumbing, electrical, or landscaping business with smart marketing strategies. What would you like to work on today?",
-      timestamp: new Date(),
-      options: TASK_OPTIONS
-    }
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentTask, setCurrentTask] = useState<string | null>(null);
@@ -238,63 +232,101 @@ export default function FelixChat() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       {/* Header */}
-      <div className="border-b bg-white/80 backdrop-blur-sm p-4">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{backgroundColor: 'rgb(var(--fx-orange-600))'}}>
-            <Bot className="w-6 h-6 text-white" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-lg" style={{color: 'rgb(var(--fx-navy-900))'}}>Felix AI Assistant</h2>
-            <p className="text-sm text-gray-600">Your Field Service Marketing Expert</p>
+      <div className="bg-white/70 backdrop-blur-xl border-b border-gray-200/50 p-6 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="relative">
+                <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Bot className="w-7 h-7 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                  Felix AI Assistant
+                </h1>
+                <p className="text-gray-600 font-medium">Intelligent Field Service Marketing</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm font-medium">
+                Online
+              </div>
+              <Button variant="outline" size="sm" className="bg-white/50 hover:bg-white/80">
+                Settings
+              </Button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Chat Messages */}
-      <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
-        <div className="space-y-4 max-w-4xl mx-auto">
-          {messages.map((message) => (
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="h-full p-6" ref={scrollAreaRef}>
+          {messages.length === 0 ? (
+            <FelixWelcomeScreen onTaskSelect={handleTaskSelect} />
+          ) : (
+            <div className="max-w-5xl mx-auto space-y-6">
+            {messages.map((message) => (
             <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`flex space-x-3 max-w-3xl ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  message.type === 'felix' ? 'bg-orange-100' : 'bg-blue-100'
+              <div className={`flex space-x-4 max-w-4xl ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                <div className={`w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm ${
+                  message.type === 'felix' 
+                    ? 'bg-gradient-to-r from-orange-500 to-pink-500' 
+                    : 'bg-gradient-to-r from-blue-500 to-indigo-500'
                 }`}>
                   {message.type === 'felix' ? (
-                    <Bot className="w-5 h-5" style={{color: 'rgb(var(--fx-orange-600))'}} />
+                    <Bot className="w-6 h-6 text-white" />
                   ) : (
-                    <User className="w-5 h-5 text-blue-600" />
+                    <User className="w-6 h-6 text-white" />
                   )}
                 </div>
                 
-                <div className="space-y-3">
-                  <Card className={`${message.type === 'felix' ? 'bg-white' : 'bg-blue-50'}`}>
-                    <CardContent className="p-4">
-                      <p className="text-gray-800 whitespace-pre-wrap">{message.content}</p>
+                <div className="space-y-4 flex-1">
+                  <Card className={`shadow-sm border-0 ${
+                    message.type === 'felix' 
+                      ? 'bg-white/80 backdrop-blur-sm' 
+                      : 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white'
+                  }`}>
+                    <CardContent className="p-6">
+                      <p className={`${message.type === 'felix' ? 'text-gray-800' : 'text-white'} leading-relaxed`}>
+                        {message.content}
+                      </p>
                     </CardContent>
                   </Card>
 
                   {message.options && message.options.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {message.options.map((option) => (
                         <Card 
                           key={option.id} 
-                          className="cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-105 bg-white border-2"
-                          style={{borderColor: 'rgb(var(--fx-orange-200))'}}
+                          className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl bg-white/90 backdrop-blur-sm border border-gray-200/50 hover:border-orange-300/50"
                           onClick={() => handleTaskSelect(option.id)}
                         >
-                          <CardContent className="p-4">
-                            <div className="flex items-start space-x-3">
-                              <div className="p-2 rounded-lg" style={{backgroundColor: 'rgb(var(--fx-orange-100))'}}>
-                                <option.icon className="w-5 h-5" style={{color: 'rgb(var(--fx-orange-600))'}} />
-                              </div>
-                              <div className="flex-1">
-                                <h4 className="font-semibold text-sm mb-1">{option.title}</h4>
-                                <p className="text-xs text-gray-600">{option.description}</p>
-                                <Badge variant="outline" className="mt-2 text-xs">
+                          <CardContent className="p-5">
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-between">
+                                <div className="p-3 rounded-xl bg-gradient-to-r from-orange-100 to-pink-100 group-hover:from-orange-200 group-hover:to-pink-200 transition-all">
+                                  <option.icon className="w-6 h-6 text-orange-600" />
+                                </div>
+                                <Badge variant="secondary" className="text-xs bg-gray-100/80">
                                   {option.category}
                                 </Badge>
+                              </div>
+                              <div>
+                                <h4 className="font-semibold text-gray-900 mb-2 group-hover:text-orange-600 transition-colors">
+                                  {option.title}
+                                </h4>
+                                <p className="text-sm text-gray-600 leading-relaxed">
+                                  {option.description}
+                                </p>
+                              </div>
+                              <div className="flex items-center text-orange-600 text-sm font-medium group-hover:text-orange-700 transition-colors">
+                                <span>Get started</span>
+                                <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                               </div>
                             </div>
                           </CardContent>
@@ -309,48 +341,88 @@ export default function FelixChat() {
           
           {isProcessing && (
             <div className="flex justify-start">
-              <div className="flex space-x-3 max-w-3xl">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-orange-100">
-                  <Bot className="w-5 h-5" style={{color: 'rgb(var(--fx-orange-600))'}} />
+              <div className="flex space-x-4 max-w-4xl">
+                <div className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0 bg-gradient-to-r from-orange-500 to-pink-500 shadow-sm">
+                  <Bot className="w-6 h-6 text-white" />
                 </div>
-                <Card className="bg-white">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
+                <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-sm">
+                  <CardContent className="p-6">
+                    <div className="flex items-center space-x-3">
                       <div className="flex space-x-1">
-                        <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce"></div>
-                        <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                        <div className="w-2 h-2 rounded-full bg-gray-400 animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                        <div className="w-3 h-3 rounded-full bg-gradient-to-r from-orange-400 to-pink-400 animate-bounce"></div>
+                        <div className="w-3 h-3 rounded-full bg-gradient-to-r from-orange-400 to-pink-400 animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                        <div className="w-3 h-3 rounded-full bg-gradient-to-r from-orange-400 to-pink-400 animate-bounce" style={{animationDelay: '0.2s'}}></div>
                       </div>
-                      <span className="text-gray-600 text-sm">Felix is thinking...</span>
+                      <span className="text-gray-700 font-medium">Felix is generating your response...</span>
                     </div>
                   </CardContent>
                 </Card>
               </div>
             </div>
+            )}
+            </div>
           )}
-        </div>
-      </ScrollArea>
+        </ScrollArea>
+      </div>
 
       {/* Input Area */}
-      <div className="border-t bg-white p-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex space-x-3">
-            <Input
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder="Ask Felix about your marketing needs..."
-              className="flex-1"
-              disabled={isProcessing}
-            />
-            <Button
-              onClick={handleSendMessage}
-              disabled={!inputMessage.trim() || isProcessing}
-              className="px-6 text-white"
-              style={{backgroundColor: 'rgb(var(--fx-orange-600))'}}
-            >
-              <Send className="w-4 h-4" />
-            </Button>
+      <div className="border-t border-gray-200/50 bg-white/70 backdrop-blur-xl p-6 sticky bottom-0">
+        <div className="max-w-5xl mx-auto">
+          <div className="relative">
+            <div className="flex items-end space-x-4 bg-white rounded-2xl border border-gray-200/50 shadow-lg p-4">
+              <div className="flex-1">
+                <Input
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  placeholder="Ask Felix anything about your field service marketing..."
+                  className="border-0 bg-transparent text-lg placeholder-gray-500 focus:ring-0 focus:outline-none resize-none"
+                  disabled={isProcessing}
+                />
+              </div>
+              <Button
+                onClick={handleSendMessage}
+                disabled={!inputMessage.trim() || isProcessing}
+                className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white border-0 rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-200"
+              >
+                {isProcessing ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <Send className="w-5 h-5" />
+                )}
+              </Button>
+            </div>
+            
+            {/* Quick Actions */}
+            <div className="flex items-center justify-center mt-4 space-x-3">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="bg-white/50 hover:bg-white/80 border-gray-200/50 text-gray-600"
+                onClick={() => handleTaskSelect("create-post")}
+              >
+                <PlusCircle className="w-4 h-4 mr-2" />
+                Create Post
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="bg-white/50 hover:bg-white/80 border-gray-200/50 text-gray-600"
+                onClick={() => handleTaskSelect("analyze-performance")}
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Analyze Performance
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="bg-white/50 hover:bg-white/80 border-gray-200/50 text-gray-600"
+                onClick={() => handleTaskSelect("generate-leads")}
+              >
+                <Target className="w-4 h-4 mr-2" />
+                Generate Leads
+              </Button>
+            </div>
           </div>
         </div>
       </div>
