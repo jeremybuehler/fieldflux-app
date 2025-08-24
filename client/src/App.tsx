@@ -34,31 +34,52 @@ function Router() {
   useAnalytics();
   const { isAuthenticated, isLoading } = useAuth();
 
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 to-blue-50">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading FieldFlux...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Switch>
-      {/* Felix is now the main interface for everything */}
-      <Route path="/" component={Felix} />
-      <Route path="/felix" component={Felix} />
+      {/* Landing page for unauthenticated users */}
+      <Route path="/" component={isAuthenticated ? Felix : Landing} />
       
-      {/* All other routes redirect to Felix */}
-      <Route path="/dashboard" component={Felix} />
-      <Route path="/social" component={Felix} />
-      <Route path="/leads" component={Felix} />
-      <Route path="/reviews" component={Felix} />
-      <Route path="/reports" component={Felix} />
-      <Route path="/keywords" component={Felix} />
-      <Route path="/seo" component={Felix} />
-      <Route path="/website" component={Felix} />
-      <Route path="/ai-coach" component={Felix} />
-      <Route path="/settings" component={Felix} />
-      <Route path="/demo" component={Felix} />
-      <Route path="/onboarding" component={Felix} />
-      <Route path="/pricing" component={Felix} />
-      <Route path="/subscribe" component={Felix} />
-      <Route path="/features" component={Felix} />
-      <Route path="/godaddy" component={Felix} />
-
-      <Route component={Felix} />
+      {/* Landing page route */}
+      <Route path="/landing" component={Landing} />
+      
+      {/* All authenticated routes go to Felix */}
+      {isAuthenticated ? (
+        <>
+          <Route path="/felix" component={Felix} />
+          <Route path="/dashboard" component={Felix} />
+          <Route path="/social" component={Felix} />
+          <Route path="/leads" component={Felix} />
+          <Route path="/reviews" component={Felix} />
+          <Route path="/reports" component={Felix} />
+          <Route path="/keywords" component={Felix} />
+          <Route path="/seo" component={Felix} />
+          <Route path="/website" component={Felix} />
+          <Route path="/ai-coach" component={Felix} />
+          <Route path="/settings" component={Felix} />
+          <Route path="/demo" component={Felix} />
+          <Route path="/onboarding" component={Felix} />
+          <Route path="/pricing" component={Felix} />
+          <Route path="/subscribe" component={Felix} />
+          <Route path="/features" component={Felix} />
+          <Route path="/godaddy" component={Felix} />
+          <Route component={Felix} />
+        </>
+      ) : (
+        // Redirect all unauthenticated requests to landing
+        <Route component={Landing} />
+      )}
     </Switch>
   );
 }
