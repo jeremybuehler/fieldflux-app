@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -86,6 +87,7 @@ const TASK_OPTIONS: TaskOption[] = [
 ];
 
 export default function FelixChat() {
+  const { user, isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -93,6 +95,11 @@ export default function FelixChat() {
   const [openWindows, setOpenWindows] = useState<string[]>([]);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
+
+  // Don't render Felix if not authenticated
+  if (!isAuthenticated) {
+    return null;
+  }
 
   useEffect(() => {
     if (scrollAreaRef.current) {

@@ -11,13 +11,15 @@ FieldFlux is a comprehensive marketing automation platform for field service pro
 ## System Architecture
 FieldFlux is a full-stack TypeScript application.
 -   **Frontend**: React 18 + TypeScript + Vite, utilizing Tailwind CSS, shadcn/ui, and a custom FieldFlux design system with field service industry branding. Features include:
+    - **Authentication Flow**: Protected Felix interface requiring user login from landing page
+    - **Canvas Window System**: Draggable, resizable floating windows for business functions over Felix chat
     - **Color System**: Safety-orange primary (#F97316), navy branding (#0E2545), sky blues, meadow greens, and sunflower accents
     - **Visual Elements**: Organic outdoor textures (.fx-hills background), subtle grain effects (.fx-grain), and field service aesthetic
     - **Animations**: Modern transitions with professional hover effects and authentic field worker imagery
     - **Typography**: Strong, readable fonts that convey trust and competence for field service professionals
     State management is handled by TanStack Query, and client-side routing by Wouter.
 -   **Backend**: Express.js + TypeScript, with a PostgreSQL database managed by Drizzle ORM.
--   **Authentication**: Replit Auth with OpenID Connect.
+-   **Authentication**: Replit Auth with OpenID Connect - Felix only accessible after authentication.
 -   **Build System**: Vite for the client and esbuild for the server.
 -   **Core Design Principles**: Professional field service aesthetic with safety-orange and navy color scheme, emphasizing trust, competence, and industry authenticity. Organic outdoor elements reflect the field service environment. Key features include AI-powered content generation, lead scoring, and personalized onboarding, alongside robust analytics and communication tools optimized for HVAC, plumbing, electrical, and landscaping professionals.
 
