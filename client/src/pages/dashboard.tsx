@@ -23,6 +23,10 @@ import {
   Filter
 } from "lucide-react";
 import TopNav from "@/components/navigation/top-nav";
+import CollaborationHints from "@/components/felix/collaboration-hints";
+import SmartHintTrigger from "@/components/felix/smart-hint-trigger";
+import { useFelixHints } from "@/hooks/use-felix-hints";
+import { useSmartHints } from "@/hooks/use-smart-hints";
 
 // Enhanced Dashboard Components
 import EnhancedMetricsOverview from "@/components/dashboard/enhanced-metrics-overview";
@@ -36,6 +40,8 @@ import UpcomingTasks from "@/components/dashboard/upcoming-tasks";
 export default function Dashboard() {
   const [timeRange, setTimeRange] = useState("7d");
   const [refreshing, setRefreshing] = useState(false);
+  const { activity, handleHintAction, currentPage } = useFelixHints();
+  const { triggers, dismissTrigger, handleHintAction: handleSmartAction } = useSmartHints();
 
   useEffect(() => {
     trackEvent('dashboard_view', 'navigation', 'dashboard_page');
@@ -168,6 +174,24 @@ export default function Dashboard() {
             </Tabs>
         </div>
       </main>
+      
+      {/* Felix Collaboration Hints */}
+      <CollaborationHints 
+        currentPage={currentPage}
+        userActivity={activity}
+        onHintAction={handleHintAction}
+      />
+      
+      {/* Smart Hint Triggers */}
+      {triggers.map((trigger, index) => (
+        <SmartHintTrigger
+          key={`${trigger.type}-${index}`}
+          trigger={trigger.type}
+          context={trigger.context}
+          onDismiss={() => dismissTrigger(trigger.type)}
+          onAction={handleSmartAction}
+        />
+      ))}
     </div>
   );
 }
