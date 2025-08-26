@@ -90,6 +90,7 @@ const TASK_OPTIONS: TaskOption[] = [
 export default function FelixChat() {
   const { user, isAuthenticated } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
+  const [messageIdCounter, setMessageIdCounter] = useState(0);
   const [inputMessage, setInputMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentTask, setCurrentTask] = useState<string | null>(null);
@@ -111,9 +112,10 @@ export default function FelixChat() {
   const addMessage = (message: Omit<Message, 'id' | 'timestamp'>) => {
     const newMessage: Message = {
       ...message,
-      id: Date.now().toString(),
+      id: `msg-${messageIdCounter}-${Date.now()}`,
       timestamp: new Date()
     };
+    setMessageIdCounter(prev => prev + 1);
     setMessages(prev => [...prev, newMessage]);
   };
 
@@ -311,7 +313,7 @@ export default function FelixChat() {
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-[calc(100vh-200px)] p-4 md:p-6" ref={scrollAreaRef}>
+        <div className="h-[calc(100vh-200px)] overflow-y-auto p-4 md:p-6 md:pr-[420px]" ref={scrollAreaRef}>
           {messages.length === 0 ? (
             <FelixWelcomeScreen onTaskSelect={handleTaskSelect} />
           ) : (
@@ -408,11 +410,11 @@ export default function FelixChat() {
             )}
             </div>
           )}
-        </ScrollArea>
+        </div>
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-gray-200/50 bg-white/70 backdrop-blur-xl p-4 md:p-6 sticky bottom-0">
+      <div className="border-t border-gray-200/50 bg-white/70 backdrop-blur-xl p-4 md:p-6 md:pr-[420px] sticky bottom-0">
         <div className="max-w-5xl mx-auto">
           <div className="relative">
             <div className="flex items-end space-x-2 md:space-x-4 bg-white rounded-2xl border border-gray-200/50 shadow-lg p-3 md:p-4">
