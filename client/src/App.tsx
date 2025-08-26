@@ -55,21 +55,47 @@ function Router() {
       <Route path="/landing" component={Landing} />
       
       {/* Felix and business tools - require authentication */}
-      <Route path="/felix" component={Felix} />
-      <Route path="/dashboard" component={Felix} />
-      <Route path="/app" component={Felix} />
+      <Route path="/felix">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/dashboard">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/app">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
       
       {/* Business function routes - require authentication */}
-      <Route path="/social" component={Felix} />
-      <Route path="/leads" component={Felix} />
-      <Route path="/reviews" component={Felix} />
-      <Route path="/reports" component={Felix} />
-      <Route path="/analytics" component={Felix} />
-      <Route path="/keywords" component={Felix} />
-      <Route path="/seo" component={Felix} />
-      <Route path="/website" component={Felix} />
-      <Route path="/ai-coach" component={Felix} />
-      <Route path="/settings" component={Felix} />
+      <Route path="/social">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/leads">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/reviews">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/reports">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/analytics">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/keywords">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/seo">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/website">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/ai-coach">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/settings">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
       
       {/* Marketing pages */}
       <Route path="/demo" component={Landing} />
