@@ -110,8 +110,8 @@ export default function Demo() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="py-24 bg-gradient-to-br text-white fx-hills fx-grain" style={{ 
-        background: `linear-gradient(135deg, var(--fx-navy-900) 0%, var(--fx-navy-700) 50%, var(--fx-teal-600) 100%)`
+      <section className="py-24 text-white fx-hills fx-grain" style={{ 
+        background: `linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #0891b2 100%)`
       }}>
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
@@ -125,11 +125,11 @@ export default function Demo() {
               size="lg" 
               className="text-lg px-8 py-4 font-bold transition-all transform hover:scale-105"
               style={{ 
-                backgroundColor: "var(--fx-orange-600)",
+                backgroundColor: "#F97316",
                 color: "white"
               }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-700)"}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-600)"}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#EA580C"}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#F97316"}
               onClick={() => window.location.href = "/api/login"}
             >
               Start Free Trial
@@ -138,20 +138,12 @@ export default function Demo() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="text-lg px-8 py-4 font-bold transition-all"
+              className="text-lg px-8 py-4 font-bold transition-all text-white border-white hover:bg-white hover:text-blue-900"
               style={{
                 border: "2px solid white",
                 backgroundColor: "rgba(255, 255, 255, 0.1)",
                 color: "white",
                 backdropFilter: "blur(4px)"
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.backgroundColor = "white";
-                e.currentTarget.style.color = "var(--fx-navy-900)";
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
-                e.currentTarget.style.color = "white";
               }}
               onClick={() => setIsPlaying(!isPlaying)}
             >
@@ -186,7 +178,8 @@ export default function Demo() {
                         : 'hover:shadow-md'
                     }`}
                     style={activeSection === section.id ? {
-                      ringColor: "var(--fx-orange-600)"
+                      borderColor: "#F97316",
+                      borderWidth: "2px"
                     } : {}}
                     onClick={() => setActiveSection(section.id)}
                   >
@@ -198,7 +191,7 @@ export default function Demo() {
                             : 'bg-gray-100 text-gray-600'
                         }`}
                         style={activeSection === section.id ? {
-                          backgroundColor: "var(--fx-orange-600)"
+                          backgroundColor: "#F97316"
                         } : {}}>
                           {section.icon}
                         </div>
@@ -224,7 +217,7 @@ export default function Demo() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
                       <div className="p-2 rounded-lg text-white" style={{
-                        backgroundColor: "var(--fx-orange-600)"
+                        backgroundColor: "#F97316"
                       }}>
                         {currentSection?.icon}
                       </div>
@@ -263,7 +256,7 @@ export default function Demo() {
                             className="h-2 rounded-full transition-all duration-200" 
                             style={{ 
                               width: `${demoProgress}%`,
-                              backgroundColor: "var(--fx-orange-600)"
+                              backgroundColor: "#F97316"
                             }}
                           ></div>
                         </div>
@@ -296,7 +289,7 @@ export default function Demo() {
                       {currentSection?.features.map((feature, index) => (
                         <div key={index} className="flex items-center text-sm text-gray-700">
                           <div className="w-2 h-2 rounded-full mr-3" style={{
-                            backgroundColor: "var(--fx-orange-600)"
+                            backgroundColor: "#F97316"
                           }}></div>
                           {feature}
                         </div>
@@ -463,10 +456,10 @@ export default function Demo() {
       </section>
       {/* CTA Section */}
       <section className="py-24 text-white fx-grain" style={{ 
-        background: `linear-gradient(135deg, var(--fx-navy-900) 0%, var(--fx-navy-800) 100%)`
+        background: `linear-gradient(135deg, #0E2545 0%, #12365E 100%)`
       }}>
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <Clock className="w-16 h-16 mx-auto mb-6" style={{ color: "var(--fx-orange-600)" }} />
+          <Clock className="w-16 h-16 mx-auto mb-6" style={{ color: "#F97316" }} />
           <h2 className="text-4xl font-bold mb-6">
             Ready to See Your Business Transform?
           </h2>
@@ -478,11 +471,11 @@ export default function Demo() {
               size="lg" 
               className="text-lg px-12 py-4 font-bold transition-all transform hover:scale-105"
               style={{ 
-                backgroundColor: "var(--fx-orange-600)",
+                backgroundColor: "#F97316",
                 color: "white"
               }}
-              onMouseOver={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-700)"}
-              onMouseOut={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-600)"}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#EA580C"}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#F97316"}
               onClick={() => window.location.href = "/api/login"}
             >
               Start Free Trial
@@ -499,7 +492,7 @@ export default function Demo() {
               }}
               onMouseOver={(e) => {
                 e.currentTarget.style.backgroundColor = "white";
-                e.currentTarget.style.color = "var(--fx-navy-900)";
+                e.currentTarget.style.color = "#0E2545";
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.backgroundColor = "transparent";
