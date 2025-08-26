@@ -269,7 +269,13 @@ export default function PlanetScaleLanding() {
           
           <AnimatedElement delay={600}>
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16">
-              <button className="inline-flex items-center gap-3 px-10 py-4 text-lg font-bold text-white rounded-lg shadow-2xl transition-all transform hover:scale-105 hover:shadow-orange-500/25" style={{backgroundColor: 'var(--fx-orange-600)'}} onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--fx-orange-700)'} onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--fx-orange-600)'}>
+              <button 
+                className="inline-flex items-center gap-3 px-10 py-4 text-lg font-bold text-white rounded-lg shadow-2xl transition-all transform hover:scale-105 hover:shadow-orange-500/25" 
+                style={{backgroundColor: 'var(--fx-orange-600)'}} 
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--fx-orange-700)'} 
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'var(--fx-orange-600)'}
+                onClick={() => (window.location.href = "/api/login")}
+              >
                 Start Creating Content
                 <ArrowRight className="w-5 h-5" />
               </button>
@@ -493,7 +499,11 @@ export default function PlanetScaleLanding() {
           
           <AnimatedElement delay={400}>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
-              <button className="inline-flex items-center gap-3 px-10 py-4 text-xl font-bold shadow-2xl hover:shadow-white/25 transition-all transform hover:scale-105 rounded-lg bg-white hover:bg-gray-100" style={{color: 'var(--fx-navy-900)'}}>
+              <button 
+                className="inline-flex items-center gap-3 px-10 py-4 text-xl font-bold shadow-2xl hover:shadow-white/25 transition-all transform hover:scale-105 rounded-lg bg-white hover:bg-gray-100" 
+                style={{color: 'var(--fx-navy-900)'}}
+                onClick={() => (window.location.href = "/api/login")}
+              >
                 Start Creating Content
                 <ArrowRight className="w-6 h-6" />
               </button>
