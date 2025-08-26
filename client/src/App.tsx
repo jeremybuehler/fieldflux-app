@@ -48,38 +48,39 @@ function Router() {
 
   return (
     <Switch>
-      {/* Landing page for unauthenticated users */}
-      <Route path="/" component={isAuthenticated ? Felix : Landing} />
+      {/* Landing page - always show for root */}
+      <Route path="/" component={Landing} />
       
       {/* Landing page route */}
       <Route path="/landing" component={Landing} />
       
-      {/* All authenticated routes go to Felix */}
-      {isAuthenticated ? (
-        <>
-          <Route path="/felix" component={Felix} />
-          <Route path="/dashboard" component={Felix} />
-          <Route path="/social" component={Felix} />
-          <Route path="/leads" component={Felix} />
-          <Route path="/reviews" component={Felix} />
-          <Route path="/reports" component={Felix} />
-          <Route path="/keywords" component={Felix} />
-          <Route path="/seo" component={Felix} />
-          <Route path="/website" component={Felix} />
-          <Route path="/ai-coach" component={Felix} />
-          <Route path="/settings" component={Felix} />
-          <Route path="/demo" component={Felix} />
-          <Route path="/onboarding" component={Felix} />
-          <Route path="/pricing" component={Felix} />
-          <Route path="/subscribe" component={Felix} />
-          <Route path="/features" component={Felix} />
-          <Route path="/godaddy" component={Felix} />
-          <Route component={Felix} />
-        </>
-      ) : (
-        // Redirect all unauthenticated requests to landing
-        <Route component={Landing} />
-      )}
+      {/* Felix and business tools - require authentication */}
+      <Route path="/felix" component={Felix} />
+      <Route path="/dashboard" component={Felix} />
+      <Route path="/app" component={Felix} />
+      
+      {/* Business function routes - require authentication */}
+      <Route path="/social" component={Felix} />
+      <Route path="/leads" component={Felix} />
+      <Route path="/reviews" component={Felix} />
+      <Route path="/reports" component={Felix} />
+      <Route path="/analytics" component={Felix} />
+      <Route path="/keywords" component={Felix} />
+      <Route path="/seo" component={Felix} />
+      <Route path="/website" component={Felix} />
+      <Route path="/ai-coach" component={Felix} />
+      <Route path="/settings" component={Felix} />
+      
+      {/* Marketing pages */}
+      <Route path="/demo" component={Landing} />
+      <Route path="/onboarding" component={Landing} />
+      <Route path="/pricing" component={Landing} />
+      <Route path="/subscribe" component={Landing} />
+      <Route path="/features" component={Landing} />
+      <Route path="/godaddy" component={Landing} />
+      
+      {/* Fallback to landing */}
+      <Route component={Landing} />
     </Switch>
   );
 }

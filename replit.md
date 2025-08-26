@@ -19,7 +19,7 @@ FieldFlux is a full-stack TypeScript application.
     - **Typography**: Strong, readable fonts that convey trust and competence for field service professionals
     State management is handled by TanStack Query, and client-side routing by Wouter.
 -   **Backend**: Express.js + TypeScript, with a PostgreSQL database managed by Drizzle ORM.
--   **Authentication**: Replit Auth with OpenID Connect - Felix only accessible after authentication.
+-   **Authentication**: Replit Auth with OpenID Connect - Landing page shown at root, Felix accessible at /felix after authentication.
 -   **Build System**: Vite for the client and esbuild for the server.
 -   **Core Design Principles**: Professional field service aesthetic with safety-orange and navy color scheme, emphasizing trust, competence, and industry authenticity. Organic outdoor elements reflect the field service environment. Key features include AI-powered content generation, lead scoring, and personalized onboarding, alongside robust analytics and communication tools optimized for HVAC, plumbing, electrical, and landscaping professionals.
 
