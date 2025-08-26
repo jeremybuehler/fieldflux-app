@@ -311,7 +311,7 @@ export default function FelixChat() {
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full p-4 md:p-6" ref={scrollAreaRef}>
+        <ScrollArea className="h-[calc(100vh-200px)] p-4 md:p-6" ref={scrollAreaRef}>
           {messages.length === 0 ? (
             <FelixWelcomeScreen onTaskSelect={handleTaskSelect} />
           ) : (
