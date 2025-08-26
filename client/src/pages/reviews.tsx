@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import TopNav from "@/components/navigation/top-nav";
+
 import { ArrowLeft, Star, MessageSquare, TrendingUp, CheckCircle, AlertCircle, Search, MapPin } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -180,17 +180,6 @@ export default function Reviews() {
   if (!selectedBusiness) {
     return (
       <div className="min-h-screen landing-page">
-        <TopNav />
-        <div className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold gradient-text">Reviews Management</h1>
-                <p className="text-sm text-fieldflux-secondary">Monitor and respond to customer reviews across platforms</p>
-              </div>
-            </div>
-          </div>
-        </div>
         <div className="max-w-7xl mx-auto p-6">
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
@@ -284,21 +273,6 @@ export default function Reviews() {
   // Show reviews for selected business
   return (
     <div className="min-h-screen landing-page">
-      <TopNav />
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold gradient-text">Reviews for {selectedBusiness.name}</h1>
-              <p className="text-sm text-fieldflux-secondary">{selectedBusiness.formatted_address}</p>
-            </div>
-            <Button variant="outline" onClick={() => setSelectedBusiness(null)}>
-              <Search className="w-4 h-4 mr-2" />
-              Change Business
-            </Button>
-          </div>
-        </div>
-      </div>
       <div className="max-w-7xl mx-auto p-6">
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">

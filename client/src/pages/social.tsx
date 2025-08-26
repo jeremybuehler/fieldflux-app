@@ -11,7 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Link, useLocation } from "wouter";
 import MultiPlatformWizard from "@/components/social/multi-platform-wizard";
-import TopNavigation from "@/components/layout/top-navigation";
+
 import CollaborationHints from "@/components/felix/collaboration-hints";
 import { useFelixHints } from "@/hooks/use-felix-hints";
 import {
@@ -44,8 +44,6 @@ export default function Social() {
 
   return (
     <div className="min-h-screen fx-hills">
-      <TopNavigation title="Social Media Management" />
-
       {/* Main Content */}
       <div className="p-4 lg:p-8">
         <div className="space-y-6">

@@ -2,26 +2,13 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SEOPerformance from "@/components/dashboard/seo-performance";
-import TopNav from "@/components/navigation/top-nav";
+
 import { ArrowLeft, Search, TrendingUp, Target, BarChart3 } from "lucide-react";
 
 export default function SEO() {
   return (
     <div className="min-h-screen landing-page">
-      <TopNav />
-      
       <main className="w-full">
-        <div className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold gradient-text">SEO Optimization</h1>
-                <p className="text-sm text-fieldflux-secondary">Optimize your search engine visibility and keyword rankings</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
         <div className="max-w-7xl mx-auto p-6">
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
