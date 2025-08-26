@@ -110,7 +110,7 @@ export default function Demo() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="py-24 bg-gradient-to-br fx-hills fx-grain text-[#eff6ff]" style={{ 
+      <section className="py-24 bg-gradient-to-br text-white fx-hills fx-grain" style={{ 
         background: `linear-gradient(135deg, var(--fx-navy-900) 0%, var(--fx-navy-700) 50%, var(--fx-teal-600) 100%)`
       }}>
         <div className="max-w-6xl mx-auto px-6 text-center">
@@ -138,7 +138,21 @@ export default function Demo() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-white hover:bg-white/10 text-lg px-8 py-4 bg-[#eff6ff] text-[#101827]"
+              className="text-lg px-8 py-4 font-bold transition-all"
+              style={{
+                border: "2px solid white",
+                backgroundColor: "rgba(255, 255, 255, 0.1)",
+                color: "white",
+                backdropFilter: "blur(4px)"
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = "white";
+                e.currentTarget.style.color = "var(--fx-navy-900)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.1)";
+                e.currentTarget.style.color = "white";
+              }}
               onClick={() => setIsPlaying(!isPlaying)}
             >
               {isPlaying ? <Pause className="w-5 h-5 mr-2" /> : <Play className="w-5 h-5 mr-2" />}
@@ -168,18 +182,24 @@ export default function Demo() {
                     key={section.id}
                     className={`cursor-pointer transition-all ${
                       activeSection === section.id 
-                        ? 'ring-2 ring-blue-500 bg-blue-50' 
+                        ? 'ring-2 bg-orange-50' 
                         : 'hover:shadow-md'
                     }`}
+                    style={activeSection === section.id ? {
+                      ringColor: "var(--fx-orange-600)"
+                    } : {}}
                     onClick={() => setActiveSection(section.id)}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start space-x-3">
                         <div className={`p-2 rounded-lg ${
                           activeSection === section.id 
-                            ? 'bg-blue-500 text-white' 
+                            ? 'text-white' 
                             : 'bg-gray-100 text-gray-600'
-                        }`}>
+                        }`}
+                        style={activeSection === section.id ? {
+                          backgroundColor: "var(--fx-orange-600)"
+                        } : {}}>
                           {section.icon}
                         </div>
                         <div className="flex-1">
@@ -203,7 +223,9 @@ export default function Demo() {
                 <CardHeader>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-blue-500 rounded-lg text-white">
+                      <div className="p-2 rounded-lg text-white" style={{
+                        backgroundColor: "var(--fx-orange-600)"
+                      }}>
                         {currentSection?.icon}
                       </div>
                       <div>
@@ -273,7 +295,9 @@ export default function Demo() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                       {currentSection?.features.map((feature, index) => (
                         <div key={index} className="flex items-center text-sm text-gray-700">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+                          <div className="w-2 h-2 rounded-full mr-3" style={{
+                            backgroundColor: "var(--fx-orange-600)"
+                          }}></div>
                           {feature}
                         </div>
                       ))}
