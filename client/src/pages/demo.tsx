@@ -110,7 +110,7 @@ export default function Demo() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="py-24 bg-gradient-to-br text-white fx-hills fx-grain" style={{ 
+      <section className="py-24 bg-gradient-to-br fx-hills fx-grain text-[#eff6ff]" style={{ 
         background: `linear-gradient(135deg, var(--fx-navy-900) 0%, var(--fx-navy-700) 50%, var(--fx-teal-600) 100%)`
       }}>
         <div className="max-w-6xl mx-auto px-6 text-center">
@@ -147,7 +147,6 @@ export default function Demo() {
           </div>
         </div>
       </section>
-
       {/* Interactive Demo */}
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-6">
@@ -286,7 +285,6 @@ export default function Demo() {
           </div>
         </div>
       </section>
-
       {/* Live Results Section */}
       <section className="py-24 bg-white">
         <div className="max-w-6xl mx-auto px-6">
@@ -321,7 +319,6 @@ export default function Demo() {
           </div>
         </div>
       </section>
-
       {/* Use Cases */}
       <section className="py-24 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6">
@@ -440,7 +437,6 @@ export default function Demo() {
           </Tabs>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="py-24 text-white fx-grain" style={{ 
         background: `linear-gradient(135deg, var(--fx-navy-900) 0%, var(--fx-navy-800) 100%)`
