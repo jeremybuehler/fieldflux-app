@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import TopNav from "@/components/navigation/top-nav";
+
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 import { TrendingUp, Users, Eye, Mouse, Star, MessageSquare, Calendar, Download, Filter } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
@@ -60,19 +60,7 @@ export default function Reports() {
 
   return (
     <div className="min-h-screen landing-page">
-      <TopNav />
-      
       <main className="w-full">
-        <div className="bg-white border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl font-bold gradient-text">Business Reports</h1>
-                <p className="text-sm text-fieldflux-secondary">Comprehensive insights across all your marketing channels</p>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <div className="max-w-7xl mx-auto p-6 fx-grain" style={{backgroundColor: 'var(--bg-primary)'}}>
         
