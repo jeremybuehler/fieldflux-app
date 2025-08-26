@@ -24,6 +24,7 @@ import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import FelixWelcomeScreen from "./felix-welcome-screen";
 import CanvasManager, { WINDOW_CONFIGS } from "@/components/canvas/canvas-manager";
+import UserMenu from "@/components/navigation/user-menu";
 
 interface Message {
   id: string;
@@ -286,30 +287,31 @@ export default function FelixChat() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
       {/* Header */}
-      <div className="bg-white/70 backdrop-blur-xl border-b border-gray-200/50 p-6 sticky top-0 z-40">
+      <div className="bg-white/70 backdrop-blur-xl border-b border-gray-200/50 p-4 md:p-6 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center">
-            <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3 md:space-x-4">
               <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
-                  <Bot className="w-7 h-7 text-white" />
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-orange-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
+                  <Bot className="w-5 h-5 md:w-7 md:h-7 text-white" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-white"></div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 md:w-4 md:h-4 bg-green-400 rounded-full border-2 border-white"></div>
               </div>
               <div>
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
+                <h1 className="text-xl md:text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
                   FieldFlux
                 </h1>
-                <p className="text-gray-600 font-medium">Your Intelligent Field Service Assistant</p>
+                <p className="text-sm md:text-base text-gray-600 font-medium hidden sm:block">Your Intelligent Field Service Assistant</p>
               </div>
             </div>
+            <UserMenu />
           </div>
         </div>
       </div>
 
       {/* Chat Messages */}
       <div className="flex-1 overflow-hidden">
-        <ScrollArea className="h-full p-6" ref={scrollAreaRef}>
+        <ScrollArea className="h-full p-4 md:p-6" ref={scrollAreaRef}>
           {messages.length === 0 ? (
             <FelixWelcomeScreen onTaskSelect={handleTaskSelect} />
           ) : (
@@ -343,14 +345,14 @@ export default function FelixChat() {
                   </Card>
 
                   {message.options && message.options.length > 0 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                       {message.options.map((option) => (
                         <Card 
                           key={option.id} 
                           className="group cursor-pointer transition-all duration-300 hover:scale-105 hover:shadow-xl bg-white/90 backdrop-blur-sm border border-gray-200/50 hover:border-orange-300/50"
                           onClick={() => handleTaskSelect(option.id)}
                         >
-                          <CardContent className="p-5">
+                          <CardContent className="p-4 md:p-5">
                             <div className="space-y-3">
                               <div className="flex items-center justify-between">
                                 <div className="p-3 rounded-xl bg-gradient-to-r from-orange-100 to-pink-100 group-hover:from-orange-200 group-hover:to-pink-200 transition-all">
@@ -410,35 +412,35 @@ export default function FelixChat() {
       </div>
 
       {/* Input Area */}
-      <div className="border-t border-gray-200/50 bg-white/70 backdrop-blur-xl p-6 sticky bottom-0">
+      <div className="border-t border-gray-200/50 bg-white/70 backdrop-blur-xl p-4 md:p-6 sticky bottom-0">
         <div className="max-w-5xl mx-auto">
           <div className="relative">
-            <div className="flex items-end space-x-4 bg-white rounded-2xl border border-gray-200/50 shadow-lg p-4">
+            <div className="flex items-end space-x-2 md:space-x-4 bg-white rounded-2xl border border-gray-200/50 shadow-lg p-3 md:p-4">
               <div className="flex-1">
                 <Input
                   value={inputMessage}
                   onChange={(e) => setInputMessage(e.target.value)}
                   onKeyPress={handleKeyPress}
                   placeholder="Ask Felix anything about your field service marketing..."
-                  className="border-0 bg-transparent text-lg placeholder-gray-500 focus:ring-0 focus:outline-none resize-none"
+                  className="border-0 bg-transparent text-base md:text-lg placeholder-gray-500 focus:ring-0 focus:outline-none resize-none"
                   disabled={isProcessing}
                 />
               </div>
               <Button
                 onClick={handleSendMessage}
                 disabled={!inputMessage.trim() || isProcessing}
-                className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white border-0 rounded-xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white border-0 rounded-xl px-4 md:px-6 py-2 md:py-3 shadow-lg hover:shadow-xl transition-all duration-200"
               >
                 {isProcessing ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  <div className="w-4 h-4 md:w-5 md:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
-                  <Send className="w-5 h-5" />
+                  <Send className="w-4 h-4 md:w-5 md:h-5" />
                 )}
               </Button>
             </div>
             
-            {/* Quick Actions */}
-            <div className="flex flex-wrap items-center justify-center mt-4 gap-2">
+            {/* Quick Actions - Hidden on small mobile */}
+            <div className="hidden sm:flex flex-wrap items-center justify-center mt-4 gap-2">
               <Button 
                 variant="outline" 
                 size="sm" 
