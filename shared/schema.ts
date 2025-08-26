@@ -202,6 +202,7 @@ export const insertUserSchema = createInsertSchema(users).omit({
 });
 
 export type UpsertUser = typeof users.$inferInsert;
+export type User = typeof users.$inferSelect;
 
 export const insertWordPressPostSchema = createInsertSchema(wordpressPosts).omit({
   id: true,
