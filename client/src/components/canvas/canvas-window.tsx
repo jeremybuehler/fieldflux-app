@@ -182,8 +182,8 @@ export default function CanvasWindow({
       </div>
 
       {/* Window Content */}
-      <div className="flex-1 overflow-auto rounded-b-lg bg-white">
-        <div className={`${isMobile ? 'p-3' : 'p-4'}`}>
+      <div className={`flex-1 overflow-y-auto bg-white ${!isMobile ? 'rounded-b-lg' : ''}`}>
+        <div className={`h-full ${isMobile ? 'p-3' : 'p-4'}`}>
           {children}
         </div>
       </div>
