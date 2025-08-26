@@ -366,9 +366,7 @@ export default function PlanetScaleLanding() {
                     <p className="text-gray-700 mb-6 leading-relaxed text-lg">
                       {feature.description}
                     </p>
-                    <div className="text-sm font-bold text-white px-4 py-2 rounded-full inline-block shadow-md" style={{backgroundColor: 'var(--fx-teal-500)'}}>
-                      {feature.stats}
-                    </div>
+                    
                   </div>
                 </div>
               </AnimatedElement>
