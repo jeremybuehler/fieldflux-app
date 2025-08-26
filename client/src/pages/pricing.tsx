@@ -1,308 +1,268 @@
-import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { Check, Star, Zap, Crown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { useToast } from '@/hooks/use-toast';
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { ArrowRight, Check, Star, Zap, Crown, Rocket } from "lucide-react";
 
-interface PricingPlan {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  interval: string;
-  features: string[];
-  maxLeads?: number;
-  maxSocialPosts?: number;
-  maxEmailCampaigns?: number;
-  isPopular?: boolean;
-}
-
-const defaultPlans: PricingPlan[] = [
+const plans = [
   {
-    id: 'free',
-    name: 'Starter',
-    description: 'Perfect for small businesses getting started',
-    price: 0,
-    interval: 'month',
+    name: "Starter",
+    icon: <Rocket className="w-6 h-6" />,
+    description: "Perfect for small field service businesses just getting started",
+    monthlyPrice: 49,
+    yearlyPrice: 39,
     features: [
-      'Up to 50 leads per month',
-      'Basic AI content generation',
-      '5 social media posts per month',
-      'Email support',
-      'Basic analytics',
+      "AI Content Generation (50 posts/month)",
+      "Basic Lead Management",
+      "Social Media Scheduling",
+      "Review Monitoring (2 platforms)",
+      "Basic Analytics Dashboard",
+      "Email Support"
     ],
-    maxLeads: 50,
-    maxSocialPosts: 5,
-    maxEmailCampaigns: 2,
+    limitations: [
+      "Limited to 2 team members",
+      "Basic templates only",
+      "Standard support"
+    ],
+    cta: "Start Free Trial",
+    popular: false
   },
   {
-    id: 'pro',
-    name: 'Professional',
-    description: 'For growing businesses that need more power',
-    price: 49,
-    interval: 'month',
+    name: "Professional",
+    icon: <Star className="w-6 h-6" />,
+    description: "Advanced features for growing field service operations",
+    monthlyPrice: 99,
+    yearlyPrice: 79,
     features: [
-      'Up to 500 leads per month',
-      'Advanced AI content generation',
-      'Unlimited social media posts',
-      'Email campaigns & automation',
-      'Advanced analytics & reporting',
-      'Priority support',
-      'Lead scoring & qualification',
-      'Review management',
+      "AI Content Generation (Unlimited)",
+      "Advanced Lead Scoring & Automation",
+      "Multi-Platform Social Management",
+      "Review Management (All platforms)",
+      "Advanced Analytics & Reporting",
+      "Local SEO Optimization",
+      "Customer Journey Automation",
+      "Priority Support"
     ],
-    maxLeads: 500,
-    maxSocialPosts: -1,
-    maxEmailCampaigns: 10,
-    isPopular: true,
+    limitations: [
+      "Up to 10 team members",
+      "Custom branding available"
+    ],
+    cta: "Start Free Trial",
+    popular: true
   },
   {
-    id: 'enterprise',
-    name: 'Enterprise',
-    description: 'For established businesses with complex needs',
-    price: 149,
-    interval: 'month',
+    name: "Enterprise",
+    icon: <Crown className="w-6 h-6" />,
+    description: "Full-scale solution for large field service organizations",
+    monthlyPrice: 199,
+    yearlyPrice: 159,
     features: [
-      'Unlimited leads',
-      'White-label solutions',
-      'Custom AI training',
-      'Unlimited everything',
-      'Dedicated account manager',
-      'Custom integrations',
-      'Advanced team collaboration',
-      'Custom reporting & dashboards',
-      'Phone support',
+      "Everything in Professional",
+      "White-label Solution",
+      "Custom AI Training",
+      "Advanced API Access",
+      "Multi-location Management",
+      "Custom Integrations",
+      "Dedicated Account Manager",
+      "24/7 Phone Support",
+      "Custom Reporting",
+      "Advanced Security & Compliance"
     ],
-    maxLeads: -1,
-    maxSocialPosts: -1,
-    maxEmailCampaigns: -1,
-  },
+    limitations: [
+      "Unlimited team members",
+      "Full customization"
+    ],
+    cta: "Contact Sales",
+    popular: false
+  }
 ];
 
-export default function PricingPage() {
-  const { toast } = useToast();
-  const [loading, setLoading] = useState<string | null>(null);
+const faqs = [
+  {
+    question: "How does the free trial work?",
+    answer: "Start with a 14-day free trial on any plan. No credit card required. You'll have full access to all features during your trial period."
+  },
+  {
+    question: "Can I change plans at any time?",
+    answer: "Yes, you can upgrade or downgrade your plan at any time. Changes take effect immediately, and we'll prorate any billing differences."
+  },
+  {
+    question: "What's included in the AI content generation?",
+    answer: "Our AI creates social media posts, blog content, email campaigns, and marketing materials specifically tailored for field service businesses."
+  },
+  {
+    question: "Do you offer custom integrations?",
+    answer: "Enterprise customers get access to custom integrations. Professional and Starter plans include our standard integrations with major platforms."
+  },
+  {
+    question: "What kind of support do you provide?",
+    answer: "All plans include comprehensive onboarding. Professional gets priority support, and Enterprise includes a dedicated account manager with 24/7 phone support."
+  }
+];
 
-  const { data: plans = defaultPlans } = useQuery({
-    queryKey: ['/api/stripe/subscription-plans'],
-    queryFn: async () => {
-      const response = await fetch('/api/stripe/subscription-plans');
-      if (!response.ok) {
-        // Fall back to default plans if API fails
-        return defaultPlans;
-      }
-      return response.json();
-    },
-  });
-
-  const handleSubscribe = async (planId: string, price: number) => {
-    if (planId === 'free') {
-      toast({
-        title: 'Free Plan',
-        description: 'You are already on the free plan!',
-      });
-      return;
-    }
-
-    setLoading(planId);
-
-    try {
-      // For demo purposes, we'll create a subscription with a test price ID
-      // In production, you'd use actual Stripe price IDs
-      const testPriceIds: Record<string, string> = {
-        pro: 'price_test_pro_monthly',
-        enterprise: 'price_test_enterprise_monthly',
-      };
-
-      const response = await fetch('/api/stripe/create-subscription', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          priceId: testPriceIds[planId],
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create subscription');
-      }
-
-      const { clientSecret, subscriptionId } = await response.json();
-
-      if (clientSecret) {
-        // Redirect to Stripe payment page or handle with Stripe Elements
-        window.location.href = `/subscribe?subscription_id=${subscriptionId}&client_secret=${clientSecret}`;
-      } else {
-        toast({
-          title: 'Subscription Active',
-          description: 'You already have an active subscription!',
-        });
-      }
-    } catch (error) {
-      console.error('Subscription error:', error);
-      toast({
-        title: 'Subscription Failed',
-        description: 'Unable to start subscription. Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(null);
-    }
-  };
-
-  const getIcon = (planName: string) => {
-    switch (planName.toLowerCase()) {
-      case 'starter':
-        return <Star className="w-6 h-6" />;
-      case 'professional':
-        return <Zap className="w-6 h-6" />;
-      case 'enterprise':
-        return <Crown className="w-6 h-6" />;
-      default:
-        return <Star className="w-6 h-6" />;
-    }
-  };
+export default function Pricing() {
+  const [isYearly, setIsYearly] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="container mx-auto px-4 py-16">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <Badge variant="outline" className="mb-4">
-            💎 Pricing Plans
-          </Badge>
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Choose Your Growth Plan
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <section className="py-24 bg-gradient-to-br from-blue-600 to-cyan-600 text-white">
+        <div className="max-w-6xl mx-auto px-6 text-center">
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            Simple, Transparent Pricing
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Scale your field service marketing with plans designed for businesses of every size.
-            Start free, upgrade when you're ready to accelerate growth.
+          <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto leading-relaxed">
+            Choose the perfect plan for your field service business. Start free, scale as you grow.
           </p>
-        </div>
-
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan) => (
-            <Card
-              key={plan.id}
-              className={`relative ${
-                plan.isPopular
-                  ? 'border-2 border-blue-500 shadow-lg scale-105'
-                  : 'border border-gray-200'
-              }`}
-            >
-              {plan.isPopular && (
-                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-blue-500 text-white px-3 py-1">
-                    Most Popular
-                  </Badge>
-                </div>
-              )}
-
-              <CardHeader className="text-center pb-4">
-                <div className="flex justify-center mb-4">
-                  {getIcon(plan.name)}
-                </div>
-                <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                <CardDescription className="text-gray-600">
-                  {plan.description}
-                </CardDescription>
-                <div className="mt-6">
-                  <span className="text-4xl font-bold text-gray-900">
-                    ${plan.price}
-                  </span>
-                  <span className="text-gray-600">/{plan.interval}</span>
-                </div>
-              </CardHeader>
-
-              <CardContent>
-                <ul className="space-y-3">
-                  {plan.features.map((feature, index) => (
-                    <li key={index} className="flex items-start">
-                      <Check className="w-5 h-5 text-green-500 mr-3 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-
-              <CardFooter>
-                <Button
-                  className={`w-full ${
-                    plan.isPopular
-                      ? 'bg-blue-500 hover:bg-blue-600'
-                      : 'bg-gray-900 hover:bg-gray-800'
-                  }`}
-                  onClick={() => handleSubscribe(plan.id, plan.price)}
-                  disabled={loading === plan.id}
-                >
-                  {loading === plan.id ? (
-                    'Processing...'
-                  ) : plan.price === 0 ? (
-                    'Get Started Free'
-                  ) : (
-                    `Subscribe to ${plan.name}`
-                  )}
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-
-        {/* FAQ Section */}
-        <div className="mt-20 text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">
-            Frequently Asked Questions
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Can I change plans anytime?</h3>
-              <p className="text-gray-600">
-                Yes! You can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Is there a free trial?</h3>
-              <p className="text-gray-600">
-                Our Starter plan is completely free forever. You can also try Pro features with a 14-day free trial.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">What payment methods do you accept?</h3>
-              <p className="text-gray-600">
-                We accept all major credit cards, debit cards, and ACH bank transfers through Stripe.
-              </p>
-            </div>
-            <div className="space-y-4">
-              <h3 className="font-semibold text-gray-900">Can I cancel anytime?</h3>
-              <p className="text-gray-600">
-                Absolutely. Cancel your subscription anytime with no cancellation fees. You'll keep access until your current period ends.
-              </p>
-            </div>
+          
+          {/* Billing Toggle */}
+          <div className="flex items-center justify-center space-x-4 mb-8">
+            <span className={`text-lg ${!isYearly ? 'font-semibold' : 'text-blue-100'}`}>
+              Monthly
+            </span>
+            <Switch
+              checked={isYearly}
+              onCheckedChange={setIsYearly}
+              className="bg-blue-500"
+            />
+            <span className={`text-lg ${isYearly ? 'font-semibold' : 'text-blue-100'}`}>
+              Yearly
+            </span>
+            {isYearly && (
+              <Badge className="bg-yellow-400 text-yellow-900 ml-2">
+                Save 20%
+              </Badge>
+            )}
           </div>
         </div>
+      </section>
 
-        {/* CTA Section */}
-        <div className="mt-20 text-center bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-white">
-          <h2 className="text-3xl font-bold mb-4">
-            Ready to Transform Your Marketing?
+      {/* Pricing Plans */}
+      <section className="py-24">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {plans.map((plan, index) => (
+              <Card 
+                key={index} 
+                className={`relative h-full ${plan.popular ? 'ring-2 ring-blue-500 scale-105' : ''}`}
+              >
+                {plan.popular && (
+                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                    <Badge className="bg-blue-500 text-white px-6 py-2 text-sm font-semibold">
+                      Most Popular
+                    </Badge>
+                  </div>
+                )}
+                
+                <CardHeader className="text-center pb-8">
+                  <div className="flex items-center justify-center space-x-2 mb-4">
+                    <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
+                      {plan.icon}
+                    </div>
+                    <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                  </div>
+                  
+                  <p className="text-gray-600 mb-6">{plan.description}</p>
+                  
+                  <div className="space-y-2">
+                    <div className="flex items-baseline justify-center space-x-2">
+                      <span className="text-4xl font-bold text-gray-900">
+                        ${isYearly ? plan.yearlyPrice : plan.monthlyPrice}
+                      </span>
+                      <span className="text-gray-600">/month</span>
+                    </div>
+                    {isYearly && (
+                      <p className="text-sm text-green-600 font-medium">
+                        Save ${(plan.monthlyPrice - plan.yearlyPrice) * 12}/year
+                      </p>
+                    )}
+                  </div>
+                </CardHeader>
+                
+                <CardContent className="space-y-6">
+                  <div>
+                    <h4 className="font-semibold mb-3 text-gray-900">Features included:</h4>
+                    <ul className="space-y-2">
+                      {plan.features.map((feature, i) => (
+                        <li key={i} className="flex items-start">
+                          <Check className="w-5 h-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
+                          <span className="text-gray-700">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  
+                  <Button 
+                    className="w-full text-lg py-6"
+                    variant={plan.popular ? "default" : "outline"}
+                    onClick={() => {
+                      if (plan.cta === "Contact Sales") {
+                        window.location.href = "mailto:sales@fieldflux.com";
+                      } else {
+                        window.location.href = "/api/login";
+                      }
+                    }}
+                  >
+                    {plan.cta}
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-6 text-gray-900">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-xl text-gray-600">
+              Everything you need to know about our pricing and features
+            </p>
+          </div>
+          
+          <div className="space-y-8">
+            {faqs.map((faq, index) => (
+              <Card key={index}>
+                <CardContent className="p-6">
+                  <h3 className="text-lg font-semibold mb-3 text-gray-900">
+                    {faq.question}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {faq.answer}
+                  </p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="py-24 bg-gray-900 text-white">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <Zap className="w-16 h-16 mx-auto mb-6 text-yellow-400" />
+          <h2 className="text-4xl font-bold mb-6">
+            Ready to Supercharge Your Marketing?
           </h2>
-          <p className="text-xl mb-8 opacity-90">
-            Join thousands of field service professionals who've accelerated their growth with FieldFlux.
+          <p className="text-xl mb-8">
+            Start your free trial today. No credit card required.
           </p>
-          <Button
-            size="lg"
-            variant="secondary"
-            className="bg-white text-blue-600 hover:bg-gray-100"
-            onClick={() => handleSubscribe('pro', 49)}
+          <Button 
+            size="lg" 
+            className="bg-blue-600 hover:bg-blue-700 text-lg px-12 py-4"
+            onClick={() => window.location.href = "/api/login"}
           >
-            Start Your Free Trial
+            Start Free Trial
+            <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
