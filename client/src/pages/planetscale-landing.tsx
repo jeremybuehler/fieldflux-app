@@ -209,7 +209,7 @@ export default function PlanetScaleLanding() {
       title: "Social Lead Magnet",
       description:
         "Turn followers into customers with automated DM responses, story polls, and conversion-optimized landing pages.",
-      stats: "300% more leads from social",
+
       bgColor: "var(--fx-grass-100)",
       iconColor: "var(--fx-grass-700)",
     },
@@ -389,6 +389,7 @@ export default function PlanetScaleLanding() {
                   (e.currentTarget.style.backgroundColor =
                     "rgba(255,255,255,0.9)")
                 }
+                onClick={() => (window.location.href = "/demo")}
               >
                 Watch Demo
                 <Play className="w-5 h-5" />
@@ -735,6 +736,7 @@ export default function PlanetScaleLanding() {
                 size="lg"
                 variant="outline"
                 className="border-2 border-white/30 text-white hover:bg-white/10 bg-white/5 backdrop-blur-sm px-10 py-4 text-xl font-bold"
+                onClick={() => (window.location.href = "/demo")}
               >
                 See Live Demo
               </Button>
@@ -777,7 +779,7 @@ export default function PlanetScaleLanding() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/pricing"
                     className="hover:text-slate-900 transition-colors"
                   >
                     Pricing
@@ -785,10 +787,10 @@ export default function PlanetScaleLanding() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/demo"
                     className="hover:text-slate-900 transition-colors"
                   >
-                    Enterprise
+                    Demo
                   </a>
                 </li>
               </ul>
@@ -799,7 +801,7 @@ export default function PlanetScaleLanding() {
               <ul className="space-y-2 text-slate-600">
                 <li>
                   <a
-                    href="#"
+                    href="/about"
                     className="hover:text-slate-900 transition-colors"
                   >
                     About
@@ -807,7 +809,7 @@ export default function PlanetScaleLanding() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="mailto:careers@fieldflux.com"
                     className="hover:text-slate-900 transition-colors"
                   >
                     Careers
@@ -815,7 +817,7 @@ export default function PlanetScaleLanding() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="mailto:hello@fieldflux.com"
                     className="hover:text-slate-900 transition-colors"
                   >
                     Contact
@@ -829,15 +831,15 @@ export default function PlanetScaleLanding() {
               <ul className="space-y-2 text-slate-600">
                 <li>
                   <a
-                    href="#"
+                    href="/api/login"
                     className="hover:text-slate-900 transition-colors"
                   >
-                    Documentation
+                    Get Started
                   </a>
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="mailto:support@fieldflux.com"
                     className="hover:text-slate-900 transition-colors"
                   >
                     Help Center
@@ -845,10 +847,10 @@ export default function PlanetScaleLanding() {
                 </li>
                 <li>
                   <a
-                    href="#"
+                    href="/features"
                     className="hover:text-slate-900 transition-colors"
                   >
-                    Status
+                    Learn More
                   </a>
                 </li>
               </ul>
@@ -860,10 +862,10 @@ export default function PlanetScaleLanding() {
               © 2025 FieldFlux. All rights reserved.
             </p>
             <div className="flex gap-6 text-slate-600 text-sm mt-4 md:mt-0">
-              <a href="#" className="hover:text-slate-900 transition-colors">
+              <a href="mailto:legal@fieldflux.com" className="hover:text-slate-900 transition-colors">
                 Privacy Policy
               </a>
-              <a href="#" className="hover:text-slate-900 transition-colors">
+              <a href="mailto:legal@fieldflux.com" className="hover:text-slate-900 transition-colors">
                 Terms of Service
               </a>
             </div>

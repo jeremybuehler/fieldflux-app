@@ -28,6 +28,7 @@ import Features from "@/pages/features";
 import StyleDemo from "@/pages/style-demo";
 import NotFound from "@/pages/not-found";
 import Felix from "@/pages/felix";
+import About from "@/pages/about";
 
 function Router() {
   // Track page views when routes change
@@ -98,12 +99,13 @@ function Router() {
       </Route>
       
       {/* Marketing pages */}
-      <Route path="/demo" component={Landing} />
-      <Route path="/onboarding" component={Landing} />
-      <Route path="/pricing" component={Landing} />
-      <Route path="/subscribe" component={Landing} />
-      <Route path="/features" component={Landing} />
-      <Route path="/godaddy" component={Landing} />
+      <Route path="/demo" component={Demo} />
+      <Route path="/onboarding" component={Onboarding} />
+      <Route path="/pricing" component={Pricing} />
+      <Route path="/subscribe" component={Subscribe} />
+      <Route path="/features" component={Features} />
+      <Route path="/about" component={About} />
+      <Route path="/godaddy" component={GoDaddy} />
       
       {/* Fallback to landing */}
       <Route component={Landing} />
