@@ -157,6 +157,17 @@
 }
 
 /* Scrollbar hiding utility */
+/* Radix UI Scroll Area styles - properly scoped */
+[data-radix-scroll-area-viewport] {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+[data-radix-scroll-area-viewport]::-webkit-scrollbar {
+  display: none;
+}
+
 .scrollbar-hidden {
   -ms-overflow-style: none;
   scrollbar-width: none;
