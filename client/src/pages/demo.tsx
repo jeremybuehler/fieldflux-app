@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -84,13 +84,35 @@ const testimonials = [
 export default function Demo() {
   const [activeSection, setActiveSection] = useState("felix-chat");
   const [isPlaying, setIsPlaying] = useState(false);
+  const [demoProgress, setDemoProgress] = useState(0);
 
   const currentSection = demoSections.find(section => section.id === activeSection);
+
+  // Auto-advance demo progress when playing
+  React.useEffect(() => {
+    let interval: NodeJS.Timeout;
+    if (isPlaying) {
+      interval = setInterval(() => {
+        setDemoProgress(prev => {
+          if (prev >= 100) {
+            setIsPlaying(false);
+            return 0;
+          }
+          return prev + 2;
+        });
+      }, 100);
+    } else {
+      setDemoProgress(0);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying]);
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="py-24 bg-gradient-to-br from-blue-600 to-cyan-600 text-white">
+      <section className="py-24 bg-gradient-to-br text-white fx-hills fx-grain" style={{ 
+        background: `linear-gradient(135deg, var(--fx-navy-900) 0%, var(--fx-navy-700) 50%, var(--fx-teal-600) 100%)`
+      }}>
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             See FieldFlux in Action
@@ -101,7 +123,13 @@ export default function Demo() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
-              className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-4"
+              className="text-lg px-8 py-4 font-bold transition-all transform hover:scale-105"
+              style={{ 
+                backgroundColor: "var(--fx-orange-600)",
+                color: "white"
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-700)"}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-600)"}
               onClick={() => window.location.href = "/api/login"}
             >
               Start Free Trial
@@ -184,22 +212,60 @@ export default function Demo() {
                         <p className="text-gray-600">{currentSection?.description}</p>
                       </div>
                     </div>
-                    <Button variant="outline" size="sm">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        setIsPlaying(false);
+                        setDemoProgress(0);
+                      }}
+                    >
                       <RotateCcw className="w-4 h-4 mr-2" />
-                      Restart
+                      Reset
                     </Button>
                   </div>
                 </CardHeader>
                 <CardContent>
                   {/* Demo Screenshot/Video Area */}
-                  <div className="bg-gray-900 rounded-lg aspect-video mb-6 flex items-center justify-center">
-                    <div className="text-center text-white">
-                      <Play className="w-16 h-16 mx-auto mb-4 opacity-75" />
-                      <p className="text-lg">Interactive Demo Player</p>
-                      <p className="text-sm opacity-75">
-                        {isPlaying ? "Demo is playing..." : "Click features to explore"}
-                      </p>
-                    </div>
+                  <div className="bg-gradient-to-br from-blue-900 to-cyan-900 rounded-lg aspect-video mb-6 flex items-center justify-center relative overflow-hidden">
+                    {isPlaying ? (
+                      <div className="text-center text-white">
+                        <div className="w-20 h-20 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                        <p className="text-lg font-semibold">Running {currentSection?.title} Demo</p>
+                        <p className="text-sm opacity-75 mt-2">
+                          Showing real FieldFlux functionality...
+                        </p>
+                        
+                        {/* Progress Bar */}
+                        <div className="mt-4 w-full bg-white/20 rounded-full h-2">
+                          <div 
+                            className="h-2 rounded-full transition-all duration-200" 
+                            style={{ 
+                              width: `${demoProgress}%`,
+                              backgroundColor: "var(--fx-orange-600)"
+                            }}
+                          ></div>
+                        </div>
+                        <p className="text-xs mt-2">{Math.round(demoProgress)}% Complete</p>
+                        
+                        <div className="mt-4 bg-white/10 backdrop-blur-sm rounded-lg p-4">
+                          <p className="text-xs">
+                            {demoProgress < 30 && "✓ Initializing AI engine..."}
+                            {demoProgress >= 30 && demoProgress < 60 && "✓ Generating field service content..."}
+                            {demoProgress >= 60 && demoProgress < 90 && "✓ Analyzing customer data..."}
+                            {demoProgress >= 90 && "✓ Optimizing lead conversion..."}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center text-white">
+                        <Play className="w-16 h-16 mx-auto mb-4 opacity-75" />
+                        <p className="text-lg font-semibold">Interactive Demo Player</p>
+                        <p className="text-sm opacity-75">
+                          Click "Play Demo" above to see {currentSection?.title} in action
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   {/* Feature List */}
@@ -376,9 +442,11 @@ export default function Demo() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gray-900 text-white">
+      <section className="py-24 text-white fx-grain" style={{ 
+        background: `linear-gradient(135deg, var(--fx-navy-900) 0%, var(--fx-navy-800) 100%)`
+      }}>
         <div className="max-w-4xl mx-auto px-6 text-center">
-          <Clock className="w-16 h-16 mx-auto mb-6 text-blue-400" />
+          <Clock className="w-16 h-16 mx-auto mb-6" style={{ color: "var(--fx-orange-600)" }} />
           <h2 className="text-4xl font-bold mb-6">
             Ready to See Your Business Transform?
           </h2>
@@ -388,7 +456,13 @@ export default function Demo() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
-              className="bg-blue-600 hover:bg-blue-700 text-lg px-12 py-4"
+              className="text-lg px-12 py-4 font-bold transition-all transform hover:scale-105"
+              style={{ 
+                backgroundColor: "var(--fx-orange-600)",
+                color: "white"
+              }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-700)"}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-600)"}
               onClick={() => window.location.href = "/api/login"}
             >
               Start Free Trial
@@ -397,7 +471,20 @@ export default function Demo() {
             <Button 
               size="lg" 
               variant="outline" 
-              className="border-white text-white hover:bg-white hover:text-gray-900 text-lg px-8 py-4"
+              className="text-lg px-8 py-4 font-bold transition-all"
+              style={{
+                border: "2px solid white",
+                color: "white",
+                backgroundColor: "transparent"
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = "white";
+                e.currentTarget.style.color = "var(--fx-navy-900)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.color = "white";
+              }}
               onClick={() => window.location.href = "mailto:demo@fieldflux.com"}
             >
               Schedule Personal Demo

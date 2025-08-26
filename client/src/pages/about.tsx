@@ -63,7 +63,9 @@ export default function About() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="py-24 bg-gradient-to-br from-blue-600 to-cyan-600 text-white">
+      <section className="py-24 bg-gradient-to-br text-white fx-hills fx-grain" style={{ 
+        background: `linear-gradient(135deg, var(--fx-navy-900) 0%, var(--fx-navy-700) 50%, var(--fx-teal-600) 100%)`
+      }}>
         <div className="max-w-6xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -76,7 +78,13 @@ export default function About() {
               </p>
               <Button 
                 size="lg" 
-                className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-4"
+                className="text-lg px-8 py-4 font-bold transition-all transform hover:scale-105"
+                style={{ 
+                  backgroundColor: "var(--fx-orange-600)",
+                  color: "white"
+                }}
+                onMouseOver={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-700)"}
+                onMouseOut={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-600)"}
                 onClick={() => window.location.href = "/api/login"}
               >
                 Join Our Mission
@@ -166,10 +174,15 @@ export default function About() {
               <Card key={index} className="h-full">
                 <CardHeader>
                   <div className="flex items-center space-x-4">
-                    <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
+                    <div className="p-3 rounded-lg" style={{
+                      backgroundColor: "var(--fx-orange-100)",
+                      color: "var(--fx-orange-600)"
+                    }}>
                       {value.icon}
                     </div>
-                    <CardTitle className="text-xl">{value.title}</CardTitle>
+                    <CardTitle className="text-xl" style={{ color: "var(--fx-navy-900)" }}>
+                      {value.title}
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -199,7 +212,9 @@ export default function About() {
             {team.map((member, index) => (
               <Card key={index} className="text-center">
                 <CardContent className="p-6">
-                  <div className="w-20 h-20 bg-blue-600 rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4">
+                  <div className="w-20 h-20 rounded-full flex items-center justify-center text-white text-xl font-bold mx-auto mb-4" style={{
+                    backgroundColor: "var(--fx-navy-900)"
+                  }}>
                     {member.avatar}
                   </div>
                   <h3 className="text-xl font-bold mb-2 text-gray-900">

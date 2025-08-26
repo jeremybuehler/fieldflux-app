@@ -107,7 +107,9 @@ export default function Pricing() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="py-24 bg-gradient-to-br from-blue-600 to-cyan-600 text-white">
+      <section className="py-24 bg-gradient-to-br text-white fx-hills fx-grain" style={{ 
+        background: `linear-gradient(135deg, var(--fx-navy-900) 0%, var(--fx-navy-700) 50%, var(--fx-teal-600) 100%)`
+      }}>
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
             Simple, Transparent Pricing
@@ -157,10 +159,15 @@ export default function Pricing() {
                 
                 <CardHeader className="text-center pb-8">
                   <div className="flex items-center justify-center space-x-2 mb-4">
-                    <div className="p-3 bg-blue-100 rounded-lg text-blue-600">
+                    <div className="p-3 rounded-lg" style={{
+                      backgroundColor: "var(--fx-orange-100)",
+                      color: "var(--fx-orange-600)"
+                    }}>
                       {plan.icon}
                     </div>
-                    <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                    <CardTitle className="text-2xl" style={{ color: "var(--fx-navy-900)" }}>
+                      {plan.name}
+                    </CardTitle>
                   </div>
                   
                   <p className="text-gray-600 mb-6">{plan.description}</p>
@@ -194,8 +201,29 @@ export default function Pricing() {
                   </div>
                   
                   <Button 
-                    className="w-full text-lg py-6"
-                    variant={plan.popular ? "default" : "outline"}
+                    className="w-full text-lg py-6 font-bold transition-all transform hover:scale-105"
+                    style={plan.popular ? {
+                      backgroundColor: "var(--fx-orange-600)",
+                      color: "white"
+                    } : {
+                      border: `2px solid var(--fx-navy-900)`,
+                      color: "var(--fx-navy-900)",
+                      backgroundColor: "transparent"
+                    }}
+                    onMouseOver={(e) => {
+                      if (plan.popular) {
+                        e.currentTarget.style.backgroundColor = "var(--fx-orange-700)";
+                      } else {
+                        e.currentTarget.style.backgroundColor = "var(--fx-navy-50)";
+                      }
+                    }}
+                    onMouseOut={(e) => {
+                      if (plan.popular) {
+                        e.currentTarget.style.backgroundColor = "var(--fx-orange-600)";
+                      } else {
+                        e.currentTarget.style.backgroundColor = "transparent";
+                      }
+                    }}
                     onClick={() => {
                       if (plan.cta === "Contact Sales") {
                         window.location.href = "mailto:sales@fieldflux.com";
