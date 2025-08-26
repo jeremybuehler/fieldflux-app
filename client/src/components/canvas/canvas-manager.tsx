@@ -20,48 +20,59 @@ interface OpenWindow extends WindowConfig {
   zIndex: number;
 }
 
+// Get right-side positioning dynamically
+const getRightSidePosition = () => ({
+  x: Math.max(400, window.innerWidth - 420),
+  y: 80
+});
+
+const getRightSideSize = () => ({
+  width: 400,
+  height: window.innerHeight - 160
+});
+
 const WINDOW_CONFIGS: Record<string, WindowConfig> = {
   analytics: {
     id: "analytics",
     title: "Business Analytics & Reports",
     component: Analytics,
-    initialPosition: { x: 100, y: 100 },
-    initialSize: { width: 1000, height: 700 }
+    initialPosition: getRightSidePosition(),
+    initialSize: getRightSideSize()
   },
   leads: {
     id: "leads",
     title: "Lead Management",
     component: Leads,
-    initialPosition: { x: 150, y: 150 },
-    initialSize: { width: 900, height: 600 }
+    initialPosition: getRightSidePosition(),
+    initialSize: getRightSideSize()
   },
   social: {
     id: "social",
     title: "Social Media Management",
     component: Social,
-    initialPosition: { x: 200, y: 200 },
-    initialSize: { width: 800, height: 650 }
+    initialPosition: getRightSidePosition(),
+    initialSize: getRightSideSize()
   },
   reviews: {
     id: "reviews",
     title: "Review Management",
     component: Reviews,
-    initialPosition: { x: 250, y: 250 },
-    initialSize: { width: 850, height: 600 }
+    initialPosition: getRightSidePosition(),
+    initialSize: getRightSideSize()
   },
   seo: {
     id: "seo",
     title: "SEO & Keywords",
     component: SEO,
-    initialPosition: { x: 300, y: 300 },
-    initialSize: { width: 900, height: 650 }
+    initialPosition: getRightSidePosition(),
+    initialSize: getRightSideSize()
   },
   settings: {
     id: "settings",
     title: "Business Settings",
     component: Settings,
-    initialPosition: { x: 350, y: 350 },
-    initialSize: { width: 700, height: 500 }
+    initialPosition: getRightSidePosition(),
+    initialSize: getRightSideSize()
   }
 };
 

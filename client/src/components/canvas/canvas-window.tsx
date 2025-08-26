@@ -45,12 +45,12 @@ export default function CanvasWindow({
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Auto-maximize on mobile
+  // Auto-maximize on mobile (Gemini-style full screen)
   useEffect(() => {
     if (isMobile && !isMaximized) {
       setIsMaximized(true);
-      setPosition({ x: 0, y: 60 });
-      setSize({ width: window.innerWidth, height: window.innerHeight - 60 });
+      setPosition({ x: 0, y: 0 });
+      setSize({ width: window.innerWidth, height: window.innerHeight });
     }
   }, [isMobile]);
 
@@ -99,8 +99,13 @@ export default function CanvasWindow({
       setPosition(initialPosition);
       setSize(initialSize);
     } else {
-      setPosition({ x: 0, y: 60 });
-      setSize({ width: window.innerWidth, height: window.innerHeight - 60 });
+      if (isMobile) {
+        setPosition({ x: 0, y: 0 });
+        setSize({ width: window.innerWidth, height: window.innerHeight });
+      } else {
+        setPosition({ x: 0, y: 60 });
+        setSize({ width: window.innerWidth, height: window.innerHeight - 60 });
+      }
     }
     setIsMaximized(!isMaximized);
   };
@@ -108,7 +113,9 @@ export default function CanvasWindow({
   return (
     <div
       ref={windowRef}
-      className="fixed bg-white rounded-lg shadow-2xl border border-gray-200/50 backdrop-blur-sm"
+      className={`fixed bg-white shadow-2xl border border-gray-200/50 backdrop-blur-sm ${
+        isMobile ? 'rounded-none' : 'rounded-lg'
+      }`}
       style={{
         left: position.x,
         top: position.y,
@@ -121,13 +128,24 @@ export default function CanvasWindow({
     >
       {/* Window Header */}
       <div
-        className={`flex items-center justify-between p-3 border-b bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-lg ${
-          !isMobile ? 'cursor-grab' : ''
+        className={`flex items-center justify-between p-3 border-b bg-gradient-to-r from-gray-50 to-gray-100 ${
+          isMobile ? 'rounded-none' : 'rounded-t-lg cursor-grab'
         }`}
         onMouseDown={handleMouseDown}
       >
         <div className="flex items-center space-x-2">
-          {!isMobile && <Move className="w-4 h-4 text-gray-400" />}
+          {isMobile ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="w-8 h-8 p-0 hover:bg-gray-200"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          ) : (
+            <Move className="w-4 h-4 text-gray-400" />
+          )}
           <h3 className="font-semibold text-gray-900 text-sm truncate">{title}</h3>
         </div>
         
