@@ -110,12 +110,13 @@ export default function FelixChat() {
   }, [messages]);
 
   const addMessage = (message: Omit<Message, 'id' | 'timestamp'>) => {
+    const currentCounter = messageIdCounter;
+    setMessageIdCounter(prev => prev + 1);
     const newMessage: Message = {
       ...message,
-      id: `msg-${messageIdCounter}-${Date.now()}`,
+      id: `msg-${currentCounter}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       timestamp: new Date()
     };
-    setMessageIdCounter(prev => prev + 1);
     setMessages(prev => [...prev, newMessage]);
   };
 
