@@ -13,11 +13,11 @@ FieldFlux is a full-stack TypeScript application with a professional business ap
 -   **Frontend**: React 18 + TypeScript + Vite, utilizing Tailwind CSS, shadcn/ui, and a custom FieldFlux design system with field service industry branding. Features include:
     - **Authentication Flow**: Protected business application requiring user login from landing page
     - **Professional Dashboard Layout**: Traditional sidebar navigation with dedicated pages for each business function (Dashboard, Social Media, Leads, Reviews, Analytics, Keywords, Website, Settings)
-    - **Felix AI Assistant**: Floating chat window accessible via orange button - serves as intelligent assistant within the application to help with tasks and provide guidance
+    - **Felix AI Assistant**: Slide-in panel from the right accessible via orange button - serves as intelligent assistant within the application to help with tasks and provide guidance
     - **Business Application Pages**: Full-featured pages for social media management, lead tracking, review management, analytics dashboard, SEO tools, and website management
     - **Color System**: Safety-orange primary (#F97316), navy branding (#0E2545), with consistent FieldFlux brand colors throughout the application
     - **Visual Elements**: Professional business application aesthetic with sidebar navigation, header with user menu, and clean page layouts
-    - **Felix Integration**: AI assistant appears as draggable floating window that can be minimized/maximized while working in any application page
+    - **Felix Integration**: AI assistant appears as fixed slide-in panel from the right that can be opened/closed while working in any application page
     State management is handled by TanStack Query, and client-side routing by Wouter.
 -   **Backend**: Express.js + TypeScript, with a PostgreSQL database managed by Drizzle ORM.
 -   **Authentication**: Replit Auth with OpenID Connect - Landing page shown at root, business application accessible at /dashboard after authentication.
