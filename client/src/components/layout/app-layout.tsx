@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';
-import CanvasWindow from '@/components/canvas/canvas-window';
-import FelixChat from '@/components/felix/felix-chat';
+import { CanvasWindow } from '@/components/canvas/canvas-window';
+import { FelixChat } from '@/components/felix/felix-chat';
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { AppHeader } from '@/components/layout/app-header';
 import { Button } from '@/components/ui/button';
@@ -69,53 +69,16 @@ export function AppLayout({ children }: AppLayoutProps) {
         <CanvasWindow
           id="felix-chat"
           title="Felix - AI Assistant"
-          initialPosition={felixPosition}
-          initialSize={felixSize}
+          position={felixPosition}
+          size={felixSize}
+          onPositionChange={setFelixPosition}
+          onSizeChange={setFelixSize}
           onClose={handleCloseFelix}
           onMinimize={handleMinimizeFelix}
-          zIndex={50}
-          onFocus={() => {}}
+          isMinimized={isMinimized}
+          headerColor="#F97316"
         >
-          <div className="h-full flex flex-col">
-            {/* Felix Header */}
-            <div 
-              className="flex items-center justify-between p-3 text-white border-b border-white/20"
-              style={{ backgroundColor: "#F97316" }}
-            >
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                  <MessageCircle className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-sm">Felix</h3>
-                  <p className="text-xs opacity-75">Your AI Marketing Assistant</p>
-                </div>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleMinimizeFelix}
-                  className="h-6 w-6 p-0 text-white hover:bg-white/20"
-                >
-                  <Minimize2 className="h-3 w-3" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleCloseFelix}
-                  className="h-6 w-6 p-0 text-white hover:bg-white/20"
-                >
-                  <X className="h-3 w-3" />
-                </Button>
-              </div>
-            </div>
-            
-            {/* Felix Chat Content */}
-            <div className="flex-1 overflow-hidden">
-              <FelixChat />
-            </div>
-          </div>
+          <FelixChat />
         </CanvasWindow>
       )}
     </div>

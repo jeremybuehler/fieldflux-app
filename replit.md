@@ -9,20 +9,20 @@ FieldFlux is a comprehensive marketing automation platform for field service pro
 - **Color Palette**: Confirmed preference for authentic field service colors: safety orange, navy, sky blue, meadow green, sunflower accents
 
 ## System Architecture
-FieldFlux is a full-stack TypeScript application with a unique canvas-based interface.
+FieldFlux is a full-stack TypeScript application with a professional business application interface.
 -   **Frontend**: React 18 + TypeScript + Vite, utilizing Tailwind CSS, shadcn/ui, and a custom FieldFlux design system with field service industry branding. Features include:
-    - **Authentication Flow**: Protected Felix interface requiring user login from landing page
-    - **Canvas Interface Architecture**: Felix AI assistant as primary left-panel interface with business application windows floating as draggable, resizable canvas windows on the right
-    - **Felix Chat System**: Intelligent conversational interface that opens business function windows (Social Media, Leads, Reviews, Analytics, Keywords, Website, Settings) through user interaction
-    - **Window Management**: Each business function appears in dedicated canvas windows with color-coded headers, drag/drop positioning, minimize/maximize controls
-    - **Color System**: Safety-orange primary (#F97316), navy branding (#0E2545), with functional window colors (blue for social, green for leads, yellow for reviews, purple for analytics)
-    - **Visual Elements**: Professional chat interface with Felix branding, clean canvas workspace, and authentic field service aesthetic
-    - **Responsive Design**: Optimized for desktop with professional business application layout
+    - **Authentication Flow**: Protected business application requiring user login from landing page
+    - **Professional Dashboard Layout**: Traditional sidebar navigation with dedicated pages for each business function (Dashboard, Social Media, Leads, Reviews, Analytics, Keywords, Website, Settings)
+    - **Felix AI Assistant**: Floating chat window accessible via orange button - serves as intelligent assistant within the application to help with tasks and provide guidance
+    - **Business Application Pages**: Full-featured pages for social media management, lead tracking, review management, analytics dashboard, SEO tools, and website management
+    - **Color System**: Safety-orange primary (#F97316), navy branding (#0E2545), with consistent FieldFlux brand colors throughout the application
+    - **Visual Elements**: Professional business application aesthetic with sidebar navigation, header with user menu, and clean page layouts
+    - **Felix Integration**: AI assistant appears as draggable floating window that can be minimized/maximized while working in any application page
     State management is handled by TanStack Query, and client-side routing by Wouter.
 -   **Backend**: Express.js + TypeScript, with a PostgreSQL database managed by Drizzle ORM.
--   **Authentication**: Replit Auth with OpenID Connect - Landing page shown at root, Felix canvas interface accessible at /felix after authentication.
+-   **Authentication**: Replit Auth with OpenID Connect - Landing page shown at root, business application accessible at /dashboard after authentication.
 -   **Build System**: Vite for the client and esbuild for the server.
--   **Core Design Principles**: Felix-first conversational interface with professional canvas-based business application windows. Emphasizes AI-guided workflow with drag-and-drop window management for field service marketing tools. Each function (social media, leads, reviews, analytics) opens in dedicated floating windows with intelligent positioning and state management.
+-   **Core Design Principles**: Professional business application with Felix as an intelligent assistant. Users navigate through dedicated pages for each business function while Felix provides contextual help and guidance through a floating chat interface. Emphasizes productivity and workflow efficiency for field service marketing management.
 
 ## External Dependencies
 -   **Database**: @neondatabase/serverless (PostgreSQL), drizzle-orm
