@@ -7,8 +7,7 @@ import { useEffect } from "react";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
 import { useAuth } from "@/hooks/useAuth";
-import { AppLayout } from "@/components/layout/app-layout";
-import DashboardMain from "@/pages/dashboard-main";
+import Felix from "@/pages/felix";
 import Settings from "@/pages/settings-fixed";
 import Landing from "@/pages/planetscale-landing";
 import Social from "@/pages/social";
@@ -28,7 +27,6 @@ import PlanetScaleLanding from "@/pages/planetscale-landing";
 import Features from "@/pages/features";
 import StyleDemo from "@/pages/style-demo";
 import NotFound from "@/pages/not-found";
-import Felix from "@/pages/felix";
 import About from "@/pages/about";
 import Analytics from "@/pages/analytics";
 
@@ -57,85 +55,41 @@ function Router() {
       {/* Landing page route */}
       <Route path="/landing" component={Landing} />
       
-      {/* Authenticated App Routes with Layout */}
-      <Route path="/dashboard">
-        {isAuthenticated ? (
-          <AppLayout>
-            <DashboardMain />
-          </AppLayout>
-        ) : <Landing />}
-      </Route>
-      <Route path="/social">
-        {isAuthenticated ? (
-          <AppLayout>
-            <Social />
-          </AppLayout>
-        ) : <Landing />}
-      </Route>
-      <Route path="/leads">
-        {isAuthenticated ? (
-          <AppLayout>
-            <Leads />
-          </AppLayout>
-        ) : <Landing />}
-      </Route>
-      <Route path="/reviews">
-        {isAuthenticated ? (
-          <AppLayout>
-            <Reviews />
-          </AppLayout>
-        ) : <Landing />}
-      </Route>
-      <Route path="/analytics">
-        {isAuthenticated ? (
-          <AppLayout>
-            <Analytics />
-          </AppLayout>
-        ) : <Landing />}
-      </Route>
-      <Route path="/keywords">
-        {isAuthenticated ? (
-          <AppLayout>
-            <Keywords />
-          </AppLayout>
-        ) : <Landing />}
-      </Route>
-      <Route path="/website">
-        {isAuthenticated ? (
-          <AppLayout>
-            <Website />
-          </AppLayout>
-        ) : <Landing />}
-      </Route>
-      <Route path="/ai-coach">
-        {isAuthenticated ? (
-          <AppLayout>
-            <AICoach />
-          </AppLayout>
-        ) : <Landing />}
-      </Route>
-      <Route path="/settings">
-        {isAuthenticated ? (
-          <AppLayout>
-            <Settings />
-          </AppLayout>
-        ) : <Landing />}
-      </Route>
-      
-      {/* Legacy Felix route - redirect to dashboard */}
+      {/* Main Felix interface - primary authenticated experience */}
       <Route path="/felix">
-        {isAuthenticated ? (
-          <AppLayout>
-            <DashboardMain />
-          </AppLayout>
-        ) : <Landing />}
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/dashboard">
+        {isAuthenticated ? <Felix /> : <Landing />}
       </Route>
       <Route path="/app">
-        {isAuthenticated ? (
-          <AppLayout>
-            <DashboardMain />
-          </AppLayout>
-        ) : <Landing />}
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      
+      {/* Business function routes - all go to Felix canvas interface */}
+      <Route path="/social">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/leads">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/reviews">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/analytics">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/keywords">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/website">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/ai-coach">
+        {isAuthenticated ? <Felix /> : <Landing />}
+      </Route>
+      <Route path="/settings">
+        {isAuthenticated ? <Felix /> : <Landing />}
       </Route>
       
       {/* Marketing pages */}
