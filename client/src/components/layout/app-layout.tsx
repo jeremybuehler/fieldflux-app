@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import { CanvasWindow } from '@/components/canvas/canvas-window';
 import { FelixChat } from '@/components/felix/felix-chat';
-import { AppSidebar } from '@/components/layout/app-sidebar';
 import { AppHeader } from '@/components/layout/app-header';
 import { Button } from '@/components/ui/button';
 import { MessageCircle, X, Minimize2, Maximize2 } from 'lucide-react';
@@ -33,20 +32,14 @@ export function AppLayout({ children }: AppLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
-      <AppSidebar />
+    <div className="h-screen flex flex-col bg-gray-50">
+      {/* Header with Navigation */}
+      <AppHeader />
       
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header */}
-        <AppHeader />
-        
-        {/* Page Content */}
-        <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
-          {children}
-        </main>
-      </div>
+      <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
+        {children}
+      </main>
 
       {/* Felix Chat Button - Always visible */}
       {!isFelixOpen && (
