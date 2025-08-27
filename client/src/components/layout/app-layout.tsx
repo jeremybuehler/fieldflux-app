@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';
-import { CanvasWindow } from '@/components/canvas/canvas-window';
 import { FelixChat } from '@/components/felix/felix-chat';
 import { AppHeader } from '@/components/layout/app-header';
 import { Button } from '@/components/ui/button';
-import { MessageCircle, X, Minimize2, Maximize2 } from 'lucide-react';
+import { MessageCircle, X } from 'lucide-react';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -12,36 +11,71 @@ interface AppLayoutProps {
 
 export function AppLayout({ children }: AppLayoutProps) {
   const [isFelixOpen, setIsFelixOpen] = useState(false);
-  const [felixPosition, setFelixPosition] = useState({ x: window.innerWidth - 400, y: 100 });
-  const [felixSize, setFelixSize] = useState({ width: 380, height: 500 });
-  const [isMinimized, setIsMinimized] = useState(false);
   const [location] = useLocation();
 
   const handleToggleFelix = () => {
     setIsFelixOpen(!isFelixOpen);
-    if (isMinimized) setIsMinimized(false);
-  };
-
-  const handleMinimizeFelix = () => {
-    setIsMinimized(!isMinimized);
   };
 
   const handleCloseFelix = () => {
     setIsFelixOpen(false);
-    setIsMinimized(false);
   };
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-gray-50 relative">
       {/* Header with Navigation */}
       <AppHeader />
       
-      {/* Main Content Area */}
-      <main className="flex-1 overflow-y-auto bg-gray-50 p-6">
-        {children}
-      </main>
+      {/* Main Content Area with Felix Slide Panel */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Main Content */}
+        <main 
+          className={`flex-1 overflow-y-auto bg-gray-50 p-6 transition-all duration-300 ${
+            isFelixOpen ? 'mr-96' : 'mr-0'
+          }`}
+        >
+          {children}
+        </main>
 
-      {/* Felix Chat Button - Always visible */}
+        {/* Felix Slide-in Panel */}
+        <div 
+          className={`fixed top-0 right-0 h-full w-96 bg-white border-l border-gray-200 shadow-xl transform transition-transform duration-300 z-40 ${
+            isFelixOpen ? 'translate-x-0' : 'translate-x-full'
+          }`}
+          style={{ top: '140px' }} // Adjust based on header height
+        >
+          {/* Felix Header */}
+          <div 
+            className="flex items-center justify-between p-4 border-b border-gray-200"
+            style={{ backgroundColor: "#F97316" }}
+          >
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                <MessageCircle className="w-4 h-4 text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">Felix</h3>
+                <p className="text-xs text-white/80">Your AI Marketing Assistant</p>
+              </div>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleCloseFelix}
+              className="h-8 w-8 p-0 text-white hover:bg-white/20"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          {/* Felix Content */}
+          <div className="h-full pb-20"> {/* Account for header height */}
+            <FelixChat />
+          </div>
+        </div>
+      </div>
+
+      {/* Felix Toggle Button - Always visible */}
       {!isFelixOpen && (
         <Button
           onClick={handleToggleFelix}
@@ -57,22 +91,20 @@ export function AppLayout({ children }: AppLayoutProps) {
         </Button>
       )}
 
-      {/* Felix Chat Window */}
+      {/* Felix Tab Button - When panel is open */}
       {isFelixOpen && (
-        <CanvasWindow
-          id="felix-chat"
-          title="Felix - AI Assistant"
-          position={felixPosition}
-          size={felixSize}
-          onPositionChange={setFelixPosition}
-          onSizeChange={setFelixSize}
-          onClose={handleCloseFelix}
-          onMinimize={handleMinimizeFelix}
-          isMinimized={isMinimized}
-          headerColor="#F97316"
+        <Button
+          onClick={handleCloseFelix}
+          className="fixed top-1/2 transform -translate-y-1/2 right-96 h-12 w-6 rounded-l-lg shadow-lg z-50 transition-all"
+          style={{ 
+            backgroundColor: "#F97316",
+            color: "white",
+            writingMode: 'vertical-rl',
+            textOrientation: 'mixed'
+          }}
         >
-          <FelixChat />
-        </CanvasWindow>
+          <X className="h-4 w-4" />
+        </Button>
       )}
     </div>
   );
