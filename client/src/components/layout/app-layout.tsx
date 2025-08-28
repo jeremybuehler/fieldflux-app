@@ -69,7 +69,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           </div>
           
           {/* Felix Content */}
-          <div className="h-full pb-20"> {/* Account for header height */}
+          <div className="flex-1 flex flex-col" style={{ height: 'calc(100vh - 140px)' }}>
             <FelixChat onNavigate={(route) => console.log('Navigating to:', route)} />
           </div>
         </div>
