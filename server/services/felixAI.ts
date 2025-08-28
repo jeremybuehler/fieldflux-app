@@ -1,8 +1,25 @@
 import OpenAI from "openai";
+import Anthropic from '@anthropic-ai/sdk';
 import type { User } from "@shared/schema";
 
 // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Initialize Anthropic client if API key is available
+let anthropic: Anthropic | null = null;
+if (process.env.ANTHROPIC_API_KEY) {
+  anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+}
+
+export type AIModel = 'gpt-4o' | 'gpt-5' | 'claude-sonnet-4' | 'claude-haiku-3.5';
+
+export interface ModelInfo {
+  id: AIModel;
+  name: string;
+  provider: 'openai' | 'anthropic';
+  description: string;
+  available: boolean;
+}
 
 export interface FelixContext {
   user: User;
@@ -87,30 +104,104 @@ Key characteristics:
 
 Always provide helpful, contextual responses that guide users to take action within the platform. When appropriate, suggest specific FieldFlux features they should use.`;
 
+  getAvailableModels(): ModelInfo[] {
+    return [
+      {
+        id: 'gpt-5',
+        name: 'GPT-5',
+        provider: 'openai',
+        description: 'Most advanced OpenAI model with superior reasoning',
+        available: !!process.env.OPENAI_API_KEY
+      },
+      {
+        id: 'gpt-4o',
+        name: 'GPT-4o',
+        provider: 'openai', 
+        description: 'Fast and efficient OpenAI model',
+        available: !!process.env.OPENAI_API_KEY
+      },
+      {
+        id: 'claude-sonnet-4',
+        name: 'Claude 4.0 Sonnet',
+        provider: 'anthropic',
+        description: 'Latest Anthropic model with excellent analysis',
+        available: !!process.env.ANTHROPIC_API_KEY
+      },
+      {
+        id: 'claude-haiku-3.5',
+        name: 'Claude 3.5 Haiku',
+        provider: 'anthropic',
+        description: 'Fast Anthropic model for quick responses',
+        available: !!process.env.ANTHROPIC_API_KEY
+      }
+    ];
+  }
+
   async generateResponse(
     messages: FelixMessage[],
-    context: FelixContext
+    context: FelixContext,
+    model: AIModel = 'gpt-5'
   ): Promise<FelixResponse> {
     try {
       // Build context-aware system message
       const contextualPrompt = this.buildContextualPrompt(context);
       
-      const completion = await openai.chat.completions.create({
-        model: "gpt-5",
-        messages: [
-          { role: "system", content: this.systemPrompt },
-          { role: "system", content: contextualPrompt },
-          ...messages.map(msg => ({
-            role: msg.role as "user" | "assistant" | "system",
+      let responseText: string;
+
+      const modelInfo = this.getAvailableModels().find(m => m.id === model);
+      if (!modelInfo?.available) {
+        throw new Error(`Model ${model} is not available`);
+      }
+
+      if (modelInfo.provider === 'openai') {
+        const completion = await openai.chat.completions.create({
+          model: model === 'gpt-5' ? 'gpt-5' : 'gpt-4o',
+          messages: [
+            { role: "system", content: this.systemPrompt },
+            { role: "system", content: contextualPrompt },
+            ...messages.map(msg => ({
+              role: msg.role as "user" | "assistant" | "system",
+              content: msg.content
+            }))
+          ],
+          response_format: { type: "json_object" },
+          temperature: 0.7,
+          max_tokens: 1000,
+        });
+        responseText = completion.choices[0].message.content || '{}';
+      } else if (modelInfo.provider === 'anthropic' && anthropic) {
+        const anthropicModel = model === 'claude-sonnet-4' ? 'claude-3-5-sonnet-20241022' : 'claude-3-5-haiku-20241022';
+        
+        const systemMessage = `${this.systemPrompt}\n\n${contextualPrompt}`;
+        
+        const completion = await anthropic.messages.create({
+          model: anthropicModel,
+          max_tokens: 1000,
+          temperature: 0.7,
+          system: systemMessage,
+          messages: messages.map(msg => ({
+            role: msg.role === 'system' ? 'user' : msg.role as 'user' | 'assistant',
             content: msg.content
           }))
-        ],
-        response_format: { type: "json_object" },
-        temperature: 0.7,
-        max_tokens: 1000,
-      });
+        });
+        
+        const content = completion.content[0];
+        if (content.type === 'text') {
+          // Anthropic doesn't support JSON mode, so we need to extract JSON
+          try {
+            const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+            responseText = jsonMatch ? jsonMatch[0] : `{"message": "${content.text.replace(/"/g, '\\"')}"}`;
+          } catch {
+            responseText = `{"message": "${content.text.replace(/"/g, '\\"')}"}`;
+          }
+        } else {
+          responseText = '{"message": "I\'m here to help with your field service marketing!"}';
+        }
+      } else {
+        throw new Error(`Provider for model ${model} is not available`);
+      }
 
-      const responseData = JSON.parse(completion.choices[0].message.content || '{}');
+      const responseData = JSON.parse(responseText);
       
       return {
         message: responseData.message || "I'm here to help with your field service marketing!",

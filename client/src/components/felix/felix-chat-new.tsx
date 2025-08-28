@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Bot,
   Send,
@@ -54,6 +55,14 @@ interface QuickAction {
   route?: string;
 }
 
+interface ModelInfo {
+  id: string;
+  name: string;
+  provider: string;
+  description: string;
+  available: boolean;
+}
+
 interface FelixChatProps {
   onNavigate?: (route: string) => void;
 }
@@ -63,10 +72,31 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [selectedModel, setSelectedModel] = useState('gpt-5');
+  const [availableModels, setAvailableModels] = useState<ModelInfo[]>([]);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const { user } = useAuth() as { user: any };
   const [location, navigate] = useLocation();
   const { toast } = useToast();
+
+  // Load available models
+  useEffect(() => {
+    const loadModels = async () => {
+      try {
+        const response = await apiRequest('GET', '/api/felix/models', {});
+        const data = await response.json();
+        setAvailableModels(data.models || []);
+      } catch (error) {
+        console.error('Failed to load models:', error);
+        // Fallback models if API fails
+        setAvailableModels([
+          { id: 'gpt-5', name: 'GPT-5', provider: 'openai', description: 'Most advanced OpenAI model', available: true },
+          { id: 'gpt-4o', name: 'GPT-4o', provider: 'openai', description: 'Fast OpenAI model', available: true }
+        ]);
+      }
+    };
+    loadModels();
+  }, []);
 
   // Initialize Felix with a contextual welcome message
   useEffect(() => {
@@ -161,7 +191,8 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
             role: msg.type === 'user' ? 'user' : 'assistant',
             content: msg.content
           })),
-          currentPage: location
+          currentPage: location,
+          model: selectedModel
         }
       );
 
@@ -457,7 +488,35 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
       </ScrollArea>
 
       {/* Input Area */}
-      <div className="p-4 border-t bg-white">
+      <div className="p-4 border-t bg-white space-y-3">
+        {/* Model Selection */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <span className="text-xs font-medium text-gray-600">AI Model:</span>
+            <Select value={selectedModel} onValueChange={setSelectedModel}>
+              <SelectTrigger className="w-48 h-8 text-xs">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {availableModels.filter(model => model.available).map((model) => (
+                  <SelectItem key={model.id} value={model.id}>
+                    <div className="flex items-center space-x-2">
+                      <div className={`w-2 h-2 rounded-full ${
+                        model.provider === 'openai' ? 'bg-green-500' : 'bg-purple-500'
+                      }`} />
+                      <span className="font-medium">{model.name}</span>
+                    </div>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div className="text-xs text-gray-400">
+            {availableModels.find(m => m.id === selectedModel)?.description}
+          </div>
+        </div>
+
+        {/* Chat Input */}
         <div className="flex space-x-2">
           <Input
             value={inputValue}
