@@ -330,12 +330,11 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
   }, [messages]);
 
   return (
-    <div className="h-full flex flex-col bg-gray-50">
-      {/* Chat Header - Removed since we have one in layout */}
-
+    <div className="h-full flex flex-col bg-gray-50 overflow-hidden">
       {/* Messages */}
-      <ScrollArea className="flex-1 p-4 overflow-y-auto" ref={scrollAreaRef}>
-        <div className="space-y-4">
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="h-full p-4" ref={scrollAreaRef}>
+          <div className="space-y-4">
           {messages.map((message) => (
             <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
               {message.type === 'insight' ? (
@@ -470,8 +469,9 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
               </div>
             </div>
           )}
-        </div>
-      </ScrollArea>
+          </div>
+        </ScrollArea>
+      </div>
 
       {/* Input Area */}
       <div className="p-4 border-t bg-white space-y-3 flex-shrink-0">
