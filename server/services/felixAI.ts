@@ -172,27 +172,42 @@ Always provide helpful, contextual responses that guide users to take action wit
       } else if (modelInfo.provider === 'anthropic' && anthropic) {
         const anthropicModel = model === 'claude-sonnet-4' ? 'claude-3-5-sonnet-20241022' : 'claude-3-5-haiku-20241022';
         
-        const systemMessage = `${this.systemPrompt}\n\n${contextualPrompt}`;
+        const systemMessage = `${this.systemPrompt}\n\n${contextualPrompt}\n\nYou must respond with valid JSON in this exact format: {"message": "your response here", "suggestions": [], "quickActions": [], "insights": []}`;
         
         const completion = await anthropic.messages.create({
           model: anthropicModel,
-          max_tokens: 1000,
+          max_tokens: 1500,
           temperature: 0.7,
           system: systemMessage,
-          messages: messages.map(msg => ({
-            role: msg.role === 'system' ? 'user' : msg.role as 'user' | 'assistant',
+          messages: messages.filter(msg => msg.role !== 'system').map(msg => ({
+            role: msg.role as 'user' | 'assistant',
             content: msg.content
           }))
         });
         
         const content = completion.content[0];
         if (content.type === 'text') {
-          // Anthropic doesn't support JSON mode, so we need to extract JSON
+          // Try to extract JSON, if not found return plain text response
           try {
             const jsonMatch = content.text.match(/\{[\s\S]*\}/);
-            responseText = jsonMatch ? jsonMatch[0] : `{"message": "${content.text.replace(/"/g, '\\"')}"}`;
+            if (jsonMatch) {
+              responseText = jsonMatch[0];
+            } else {
+              // If no JSON found, create proper response
+              responseText = JSON.stringify({
+                message: content.text,
+                suggestions: this.getDefaultSuggestions(context),
+                quickActions: this.getDefaultQuickActions(context),
+                insights: []
+              });
+            }
           } catch {
-            responseText = `{"message": "${content.text.replace(/"/g, '\\"')}"}`;
+            responseText = JSON.stringify({
+              message: content.text,
+              suggestions: this.getDefaultSuggestions(context),
+              quickActions: this.getDefaultQuickActions(context),
+              insights: []
+            });
           }
         } else {
           responseText = '{"message": "I\'m here to help with your field service marketing!"}';

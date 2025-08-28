@@ -390,17 +390,17 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
                   </div>
                 ) : (
                   // Regular message styling  
-                  <div className={`max-w-[80%] ${
+                  <div className={`max-w-[85%] w-full ${
                     message.type === 'user' 
                       ? 'bg-orange-500 text-white rounded-l-lg rounded-tr-lg' 
                       : 'bg-white border rounded-r-lg rounded-tl-lg'
-                  } p-3 shadow-sm`}>
+                  } p-3 shadow-sm overflow-hidden`}>
                     <div className="flex items-start space-x-2">
                       {message.type === 'felix' && (
                         <Bot className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
                       )}
-                      <div className="flex-1 min-w-0">
-                        <p className={`text-sm whitespace-pre-wrap break-words ${message.type === 'user' ? 'text-white' : 'text-gray-900'}`}>
+                      <div className="flex-1 min-w-0 overflow-hidden">
+                        <p className={`text-sm whitespace-pre-wrap break-words word-wrap ${message.type === 'user' ? 'text-white' : 'text-gray-900'}`} style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}>
                           {message.content}
                         </p>
                       
