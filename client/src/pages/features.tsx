@@ -50,8 +50,8 @@ export default function Features() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <section className="py-24 bg-gradient-to-br text-white fx-hills fx-grain" style={{ 
-        background: `linear-gradient(135deg, var(--fx-navy-900) 0%, var(--fx-navy-700) 50%, var(--fx-teal-600) 100%)`
+      <section className="py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-teal-600 text-white" style={{ 
+        background: `linear-gradient(135deg, #0E2545 0%, #12365E 50%, #14B8A6 100%)`
       }}>
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6">
@@ -62,13 +62,7 @@ export default function Features() {
           </p>
           <Button 
             size="lg" 
-            className="text-lg px-8 py-4 font-bold transition-all transform hover:scale-105"
-            style={{ 
-              backgroundColor: "var(--fx-orange-600)",
-              color: "white"
-            }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-700)"}
-            onMouseOut={(e) => e.currentTarget.style.backgroundColor = "var(--fx-orange-600)"}
+            className="text-lg px-8 py-4 font-bold transition-all transform hover:scale-105 bg-orange-600 hover:bg-orange-700 text-white"
             onClick={() => window.location.href = "/api/login"}
           >
             Start Free Trial
@@ -94,13 +88,10 @@ export default function Features() {
               <Card key={index} className="h-full hover:shadow-lg transition-shadow">
                 <CardHeader>
                   <div className="flex items-center space-x-3 mb-4">
-                    <div className="p-3 rounded-lg" style={{
-                      backgroundColor: "var(--fx-orange-100)",
-                      color: "var(--fx-orange-600)"
-                    }}>
+                    <div className="p-3 rounded-lg bg-orange-100 text-orange-600">
                       {feature.icon}
                     </div>
-                    <CardTitle className="text-xl" style={{ color: "var(--fx-navy-900)" }}>
+                    <CardTitle className="text-xl text-slate-900">
                       {feature.title}
                     </CardTitle>
                   </div>
@@ -157,7 +148,7 @@ export default function Features() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg" 
-              className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-4"
+              className="bg-orange-600 hover:bg-orange-700 text-lg px-8 py-4"
               onClick={() => window.location.href = "/api/login"}
             >
               Start Free Trial
