@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation } from 'wouter';
-import { FelixChat } from '@/components/felix/felix-chat';
+import { FelixChat } from '@/components/felix/felix-chat-new';
 import { AppHeader } from '@/components/layout/app-header';
 import { Button } from '@/components/ui/button';
 import { MessageCircle, X } from 'lucide-react';

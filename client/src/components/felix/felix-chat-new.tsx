@@ -7,20 +7,19 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { 
-  Send, 
-  Bot, 
-  User, 
-  PlusCircle, 
-  BarChart3, 
-  MessageSquare, 
-  Settings,
-  Target,
-  Zap,
-  FileText,
-  Calendar,
+import {
+  Bot,
+  Send,
+  MessageCircle,
   Users,
   Star,
+  BarChart3,
+  MessageSquare,
+  Zap,
+  PlusCircle,
+  TrendingUp,
+  Clock,
+  Target,
   Globe,
   Search
 } from 'lucide-react';
@@ -119,6 +118,21 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
       };
       setMessages([welcomeMessage]);
       setIsInitialized(true);
+
+      // Add a sample insight after welcome
+      setTimeout(() => {
+        const insightMessage: Message = {
+          id: 'insight-' + Date.now(),
+          type: 'insight',
+          content: 'Field service businesses that use automated marketing see 40% more leads. Let me show you which processes we can automate.',
+          timestamp: new Date(),
+          insightType: 'productivity',
+          insightTitle: 'Productivity Insight',
+          impact: 'Could increase leads by 40%',
+          route: '/social'
+        };
+        setMessages(prev => [...prev, insightMessage]);
+      }, 3000);
     }
   }, [user, isInitialized]);
 
@@ -180,7 +194,7 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
           
           setTimeout(() => {
             setMessages(prev => [...prev, insightMessage]);
-          }, (index + 1) * 1500); // Stagger insights by 1.5 seconds
+          }, (index + 1) * 1500);
         });
       }
     } catch (error) {
@@ -197,21 +211,6 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
       
       setMessages(prev => [...prev, fallbackResponse]);
 
-      // Add a sample insight for fallback
-      setTimeout(() => {
-        const insightMessage: Message = {
-          id: (Date.now() + 2).toString(),
-          type: 'insight',
-          content: 'Field service businesses that use automated marketing see 40% more leads. Let me show you which processes we can automate.',
-          timestamp: new Date(),
-          insightType: 'productivity',
-          insightTitle: 'Productivity Insight',
-          impact: 'Could increase leads by 40%',
-          route: '/social'
-        };
-        setMessages(prev => [...prev, insightMessage]);
-      }, 2000);
-      
       toast({
         title: "Connection Issue",
         description: "Using offline mode. Some features may be limited.",
@@ -254,7 +253,6 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
       }
     ];
 
-    // Return relevant suggestions based on input
     const lowerInput = input.toLowerCase();
     if (lowerInput.includes('social') || lowerInput.includes('post')) {
       return [allSuggestions[0], allSuggestions[2]];
@@ -362,6 +360,7 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
                           variant="ghost"
                           size="sm"
                           className="text-gray-400 hover:text-gray-600"
+                          onClick={() => setMessages(prev => prev.filter(m => m.id !== message.id))}
                         >
                           Dismiss
                         </Button>
@@ -385,51 +384,51 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
                         {message.content}
                       </p>
                     
-                    {/* Feature Suggestions */}
-                    {message.suggestions && message.suggestions.length > 0 && (
-                      <div className="mt-3 space-y-2">
-                        <div className="text-xs font-medium text-gray-600 mb-2">Suggestions:</div>
-                        {message.suggestions.map((suggestion) => (
-                          <Button
-                            key={suggestion.id}
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleSuggestionClick(suggestion)}
-                            className="w-full justify-start text-left h-auto p-3 hover:bg-orange-50 hover:border-orange-200"
-                          >
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium text-sm">{suggestion.title}</div>
-                              <div className="text-xs text-gray-500 mt-0.5">{suggestion.description}</div>
-                            </div>
-                          </Button>
-                        ))}
-                      </div>
-                    )}
-
-                    {/* Quick Actions */}
-                    {message.quickActions && message.quickActions.length > 0 && (
-                      <div className="mt-3">
-                        <div className="text-xs font-medium text-gray-600 mb-2">Quick Actions:</div>
-                        <div className="flex flex-wrap gap-2">
-                          {message.quickActions.map((action) => {
-                            const Icon = getIconComponent(action.icon);
-                            return (
-                              <Button
-                                key={action.id}
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleQuickActionClick(action)}
-                                className="flex items-center space-x-1 text-xs hover:bg-orange-50 hover:border-orange-200"
-                                style={{ borderColor: "#F97316" }}
-                              >
-                                <Icon className="w-3 h-3" />
-                                <span>{action.label}</span>
-                              </Button>
-                            );
-                          })}
+                      {/* Feature Suggestions */}
+                      {message.suggestions && message.suggestions.length > 0 && (
+                        <div className="mt-3 space-y-2">
+                          <div className="text-xs font-medium text-gray-600 mb-2">Suggestions:</div>
+                          {message.suggestions.map((suggestion) => (
+                            <Button
+                              key={suggestion.id}
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleSuggestionClick(suggestion)}
+                              className="w-full justify-start text-left h-auto p-3 hover:bg-orange-50 hover:border-orange-200"
+                            >
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium text-sm">{suggestion.title}</div>
+                                <div className="text-xs text-gray-500 mt-0.5">{suggestion.description}</div>
+                              </div>
+                            </Button>
+                          ))}
                         </div>
-                      </div>
-                    )}
+                      )}
+
+                      {/* Quick Actions */}
+                      {message.quickActions && message.quickActions.length > 0 && (
+                        <div className="mt-3">
+                          <div className="text-xs font-medium text-gray-600 mb-2">Quick Actions:</div>
+                          <div className="flex flex-wrap gap-2">
+                            {message.quickActions.map((action) => {
+                              const Icon = getIconComponent(action.icon);
+                              return (
+                                <Button
+                                  key={action.id}
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleQuickActionClick(action)}
+                                  className="flex items-center space-x-1 text-xs hover:bg-orange-50 hover:border-orange-200"
+                                  style={{ borderColor: "#F97316" }}
+                                >
+                                  <Icon className="w-3 h-3" />
+                                  <span>{action.label}</span>
+                                </Button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className={`text-xs mt-2 ${message.type === 'user' ? 'text-white/70' : 'text-gray-400'}`}>
@@ -442,7 +441,7 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
           
           {isTyping && (
             <div className="flex justify-start">
-              <div className="bg-white border rounded-r-lg rounded-tl-lg p-3 shadow-sm">
+              <div className="bg-white border rounded-r-lg rounded-tl-lg p-3 shadow-sm max-w-[80%]">
                 <div className="flex items-center space-x-2">
                   <Bot className="w-4 h-4 text-orange-500" />
                   <div className="flex space-x-1">
@@ -457,22 +456,21 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
         </div>
       </ScrollArea>
 
-      {/* Input */}
+      {/* Input Area */}
       <div className="p-4 border-t bg-white">
         <div className="flex space-x-2">
           <Input
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            placeholder="Ask Felix anything about your field service business..."
+            placeholder="Ask Felix anything about your business..."
             onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
             className="flex-1"
           />
           <Button 
             onClick={handleSendMessage}
-            className="text-white"
-            style={{ backgroundColor: "#F97316" }}
-            onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#EA580C"}
-            onMouseOut={(e) => e.currentTarget.style.backgroundColor = "#F97316"}
+            disabled={!inputValue.trim() || isTyping}
+            style={{ backgroundColor: "#F97316", color: "white" }}
+            className="hover:opacity-90"
           >
             <Send className="w-4 h-4" />
           </Button>

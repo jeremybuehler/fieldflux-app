@@ -26,6 +26,7 @@ export interface FelixResponse {
   message: string;
   suggestions?: FeatureSuggestion[];
   quickActions?: QuickAction[];
+  insights?: BusinessInsight[];
 }
 
 export interface FeatureSuggestion {
@@ -43,6 +44,17 @@ export interface QuickAction {
   icon: string;
   action: string;
   route?: string;
+}
+
+export interface BusinessInsight {
+  id: string;
+  type: 'productivity' | 'marketing' | 'leads' | 'growth';
+  title: string;
+  message: string;
+  impact: string;
+  actionable: boolean;
+  route?: string;
+  priority: 'high' | 'medium' | 'low';
 }
 
 class FelixAIService {
@@ -103,7 +115,8 @@ Always provide helpful, contextual responses that guide users to take action wit
       return {
         message: responseData.message || "I'm here to help with your field service marketing!",
         suggestions: responseData.suggestions || this.getDefaultSuggestions(context),
-        quickActions: responseData.quickActions || this.getDefaultQuickActions(context)
+        quickActions: responseData.quickActions || this.getDefaultQuickActions(context),
+        insights: responseData.insights || this.generateInsights(context)
       };
     } catch (error) {
       console.error('Felix AI Error:', error);
@@ -222,11 +235,77 @@ Always provide helpful, contextual responses that guide users to take action wit
     ];
   }
 
+  private generateInsights(context: FelixContext): BusinessInsight[] {
+    const insights: BusinessInsight[] = [];
+    const { businessData } = context;
+
+    if (!businessData) return insights;
+
+    // Productivity insights
+    if (businessData.leads && businessData.leads > 0) {
+      insights.push({
+        id: 'productivity-automation',
+        type: 'productivity',
+        title: 'Productivity Insight',
+        message: `Field service businesses that use automated marketing see 40% more leads. Let me show you which processes we can automate.`,
+        impact: 'Could increase leads by 40%',
+        actionable: true,
+        route: '/social',
+        priority: 'high'
+      });
+    }
+
+    // Marketing insights
+    if (businessData.socialPosts && businessData.socialPosts < 5) {
+      insights.push({
+        id: 'social-consistency',
+        type: 'marketing',
+        title: 'Marketing Insight',
+        message: `Posting consistently on social media increases customer engagement by 67%. You currently have ${businessData.socialPosts} posts - let's create a content strategy.`,
+        impact: 'Boost engagement by 67%',
+        actionable: true,
+        route: '/social',
+        priority: 'medium'
+      });
+    }
+
+    // Lead insights
+    if (businessData.leads && businessData.leads > 5) {
+      insights.push({
+        id: 'lead-conversion',
+        type: 'leads',
+        title: 'Lead Management Insight',
+        message: `You have ${businessData.leads} active leads! Following up within 5 minutes increases conversion rates by 900%. Want me to help prioritize them?`,
+        impact: 'Increase conversions by 900%',
+        actionable: true,
+        route: '/leads',
+        priority: 'high'
+      });
+    }
+
+    // Growth insights
+    if (businessData.reviews && businessData.reviews > 10) {
+      insights.push({
+        id: 'review-leverage',
+        type: 'growth',
+        title: 'Growth Opportunity',
+        message: `Your ${businessData.reviews} reviews are valuable social proof! Businesses that showcase reviews get 31% more customers. Let's create content highlighting your success.`,
+        impact: '31% more customers',
+        actionable: true,
+        route: '/reviews',
+        priority: 'medium'
+      });
+    }
+
+    return insights.slice(0, 2); // Return max 2 insights at a time
+  }
+
   private getFallbackResponse(context: FelixContext): FelixResponse {
     return {
       message: `Hi ${context.user.firstName}! I'm here to help you grow your field service business. What would you like to work on today?`,
       suggestions: this.getDefaultSuggestions(context),
-      quickActions: this.getDefaultQuickActions(context)
+      quickActions: this.getDefaultQuickActions(context),
+      insights: this.generateInsights(context)
     };
   }
 
