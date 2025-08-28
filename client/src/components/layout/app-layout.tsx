@@ -39,10 +39,13 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         {/* Felix Slide-in Panel */}
         <div 
-          className={`fixed top-0 right-0 h-full w-96 bg-white border-l border-gray-200 shadow-xl transform transition-transform duration-300 z-40 ${
+          className={`fixed right-0 w-96 bg-white border-l border-gray-200 shadow-xl transform transition-transform duration-300 z-40 ${
             isFelixOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
-          style={{ top: '140px' }} // Adjust based on header height
+          style={{ 
+            top: '140px',
+            height: 'calc(100vh - 140px)'
+          }}
         >
           {/* Felix Header */}
           <div 
@@ -69,7 +72,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           </div>
           
           {/* Felix Content */}
-          <div className="flex-1 flex flex-col" style={{ height: 'calc(100vh - 140px)' }}>
+          <div className="flex-1 flex flex-col overflow-hidden">
             <FelixChat onNavigate={(route) => console.log('Navigating to:', route)} />
           </div>
         </div>
