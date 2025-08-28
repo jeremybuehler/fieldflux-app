@@ -331,24 +331,10 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
 
   return (
     <div className="h-full flex flex-col bg-gray-50">
-      {/* Chat Header */}
-      <div className="p-4 border-b bg-white">
-        <div className="flex items-center space-x-3">
-          <div 
-            className="w-10 h-10 rounded-full flex items-center justify-center text-white"
-            style={{ backgroundColor: "#F97316" }}
-          >
-            <Bot className="w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-gray-900">Felix</h2>
-            <p className="text-sm text-gray-500">Your Intelligent Field Service Assistant</p>
-          </div>
-        </div>
-      </div>
+      {/* Chat Header - Removed since we have one in layout */}
 
       {/* Messages */}
-      <ScrollArea className="flex-1 p-4" ref={scrollAreaRef}>
+      <ScrollArea className="flex-1 p-4 overflow-y-auto" ref={scrollAreaRef}>
         <div className="space-y-4">
           {messages.map((message) => (
             <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -488,7 +474,7 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
       </ScrollArea>
 
       {/* Input Area */}
-      <div className="p-4 border-t bg-white space-y-3">
+      <div className="p-4 border-t bg-white space-y-3 flex-shrink-0">
         {/* Model Selection */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
