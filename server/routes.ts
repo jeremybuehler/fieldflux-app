@@ -2117,7 +2117,7 @@ Make the page conversion-focused and industry-appropriate.`;
   app.post("/api/felix/chat", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const { messages, currentPage } = req.body;
+      const { messages, currentPage, model = 'gpt-5' } = req.body;
       
       // Get user data
       const user = await storage.getUser(userId);
@@ -2141,11 +2141,21 @@ Make the page conversion-focused and industry-appropriate.`;
         recentActivity: recentActivity.slice(0, 5).map(a => a.title)
       };
 
-      const response = await felixAI.generateResponse(messages, context);
+      const response = await felixAI.generateResponse(messages, context, model);
       res.json(response);
     } catch (error) {
       console.error("Felix chat error:", error);
       res.status(500).json({ message: "Failed to generate response" });
+    }
+  });
+
+  app.get("/api/felix/models", isAuthenticated, async (req: any, res) => {
+    try {
+      const models = felixAI.getAvailableModels();
+      res.json({ models });
+    } catch (error) {
+      console.error("Felix models error:", error);
+      res.status(500).json({ message: "Failed to get available models" });
     }
   });
 
