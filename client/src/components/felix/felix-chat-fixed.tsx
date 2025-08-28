@@ -3,15 +3,12 @@ import { useAuth } from '@/hooks/useAuth';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import {
   Bot,
   Send,
-  MessageCircle,
   Users,
   Star,
   BarChart3,
@@ -19,9 +16,6 @@ import {
   Zap,
   PlusCircle,
   TrendingUp,
-  Clock,
-  Target,
-  Globe,
   Search
 } from 'lucide-react';
 
@@ -321,7 +315,6 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
       'BarChart3': BarChart3,
       'MessageSquare': MessageSquare,
       'Search': Search,
-      'Globe': Globe,
       'Zap': Zap
     };
     return iconMap[iconName] || MessageSquare;
@@ -348,138 +341,138 @@ export function FelixChat({ onNavigate }: FelixChatProps) {
           <div className="space-y-4">
             {messages.map((message) => (
               <div key={message.id} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-              {message.type === 'insight' ? (
-                // Special insight message styling like in the screenshot
-                <div className="max-w-[90%] bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
-                  <div className="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center">
-                        <TrendingUp className="w-3 h-3 text-orange-600" />
+                {message.type === 'insight' ? (
+                  // Special insight message styling like in the screenshot
+                  <div className="max-w-[90%] bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+                    <div className="flex items-center justify-between p-4 bg-gray-50 border-b border-gray-200">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center">
+                          <TrendingUp className="w-3 h-3 text-orange-600" />
+                        </div>
+                        <div>
+                          <h4 className="font-semibold text-gray-900 text-sm">{message.insightTitle}</h4>
+                          {message.impact && (
+                            <p className="text-xs text-gray-500">{message.impact}</p>
+                          )}
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-semibold text-gray-900 text-sm">{message.insightTitle}</h4>
-                        {message.impact && (
-                          <p className="text-xs text-gray-500">{message.impact}</p>
+                      <div className="text-xs text-gray-400">2/3</div>
+                    </div>
+                    <div className="p-4">
+                      <p className="text-sm text-gray-700 mb-3">{message.content}</p>
+                      {message.route && (
+                        <div className="flex justify-between items-center">
+                          <Button
+                            onClick={() => handleSuggestionClick({ 
+                              id: message.id, 
+                              title: 'View Details', 
+                              description: '', 
+                              category: 'action',
+                              route: message.route 
+                            })}
+                            variant="outline"
+                            size="sm"
+                            className="text-orange-600 border-orange-200 hover:bg-orange-50"
+                          >
+                            Show Me How
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-gray-400 hover:text-gray-600"
+                            onClick={() => setMessages(prev => prev.filter(m => m.id !== message.id))}
+                          >
+                            Dismiss
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  // Regular message styling  
+                  <div className={`max-w-[80%] ${
+                    message.type === 'user' 
+                      ? 'bg-orange-500 text-white rounded-l-lg rounded-tr-lg' 
+                      : 'bg-white border rounded-r-lg rounded-tl-lg'
+                  } p-3 shadow-sm`}>
+                    <div className="flex items-start space-x-2">
+                      {message.type === 'felix' && (
+                        <Bot className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className={`text-sm whitespace-pre-wrap break-words ${message.type === 'user' ? 'text-white' : 'text-gray-900'}`}>
+                          {message.content}
+                        </p>
+                      
+                        {/* Feature Suggestions */}
+                        {message.suggestions && message.suggestions.length > 0 && (
+                          <div className="mt-3 space-y-2">
+                            <div className="text-xs font-medium text-gray-600 mb-2">Suggestions:</div>
+                            {message.suggestions.map((suggestion) => (
+                              <Button
+                                key={suggestion.id}
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleSuggestionClick(suggestion)}
+                                className="w-full justify-start text-left h-auto p-3 hover:bg-orange-50 hover:border-orange-200"
+                              >
+                                <div className="flex-1 min-w-0">
+                                  <div className="font-medium text-sm">{suggestion.title}</div>
+                                  <div className="text-xs text-gray-500 mt-0.5">{suggestion.description}</div>
+                                </div>
+                              </Button>
+                            ))}
+                          </div>
+                        )}
+
+                        {/* Quick Actions */}
+                        {message.quickActions && message.quickActions.length > 0 && (
+                          <div className="mt-3">
+                            <div className="text-xs font-medium text-gray-600 mb-2">Quick Actions:</div>
+                            <div className="flex flex-wrap gap-2">
+                              {message.quickActions.map((action) => {
+                                const Icon = getIconComponent(action.icon);
+                                return (
+                                  <Button
+                                    key={action.id}
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleQuickActionClick(action)}
+                                    className="flex items-center space-x-1 text-xs hover:bg-orange-50 hover:border-orange-200"
+                                    style={{ borderColor: "#F97316" }}
+                                  >
+                                    <Icon className="w-3 h-3" />
+                                    <span>{action.label}</span>
+                                  </Button>
+                                );
+                              })}
+                            </div>
+                          </div>
                         )}
                       </div>
                     </div>
-                    <div className="text-xs text-gray-400">2/3</div>
-                  </div>
-                  <div className="p-4">
-                    <p className="text-sm text-gray-700 mb-3">{message.content}</p>
-                    {message.route && (
-                      <div className="flex justify-between items-center">
-                        <Button
-                          onClick={() => handleSuggestionClick({ 
-                            id: message.id, 
-                            title: 'View Details', 
-                            description: '', 
-                            category: 'action',
-                            route: message.route 
-                          })}
-                          variant="outline"
-                          size="sm"
-                          className="text-orange-600 border-orange-200 hover:bg-orange-50"
-                        >
-                          Show Me How
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-gray-400 hover:text-gray-600"
-                          onClick={() => setMessages(prev => prev.filter(m => m.id !== message.id))}
-                        >
-                          Dismiss
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ) : (
-                // Regular message styling  
-                <div className={`max-w-[80%] ${
-                  message.type === 'user' 
-                    ? 'bg-orange-500 text-white rounded-l-lg rounded-tr-lg' 
-                    : 'bg-white border rounded-r-lg rounded-tl-lg'
-                } p-3 shadow-sm`}>
-                  <div className="flex items-start space-x-2">
-                    {message.type === 'felix' && (
-                      <Bot className="w-4 h-4 text-orange-500 mt-0.5 flex-shrink-0" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className={`text-sm whitespace-pre-wrap ${message.type === 'user' ? 'text-white' : 'text-gray-900'}`}>
-                        {message.content}
-                      </p>
-                    
-                      {/* Feature Suggestions */}
-                      {message.suggestions && message.suggestions.length > 0 && (
-                        <div className="mt-3 space-y-2">
-                          <div className="text-xs font-medium text-gray-600 mb-2">Suggestions:</div>
-                          {message.suggestions.map((suggestion) => (
-                            <Button
-                              key={suggestion.id}
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleSuggestionClick(suggestion)}
-                              className="w-full justify-start text-left h-auto p-3 hover:bg-orange-50 hover:border-orange-200"
-                            >
-                              <div className="flex-1 min-w-0">
-                                <div className="font-medium text-sm">{suggestion.title}</div>
-                                <div className="text-xs text-gray-500 mt-0.5">{suggestion.description}</div>
-                              </div>
-                            </Button>
-                          ))}
-                        </div>
-                      )}
-
-                      {/* Quick Actions */}
-                      {message.quickActions && message.quickActions.length > 0 && (
-                        <div className="mt-3">
-                          <div className="text-xs font-medium text-gray-600 mb-2">Quick Actions:</div>
-                          <div className="flex flex-wrap gap-2">
-                            {message.quickActions.map((action) => {
-                              const Icon = getIconComponent(action.icon);
-                              return (
-                                <Button
-                                  key={action.id}
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleQuickActionClick(action)}
-                                  className="flex items-center space-x-1 text-xs hover:bg-orange-50 hover:border-orange-200"
-                                  style={{ borderColor: "#F97316" }}
-                                >
-                                  <Icon className="w-3 h-3" />
-                                  <span>{action.label}</span>
-                                </Button>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
+                    <div className={`text-xs mt-2 ${message.type === 'user' ? 'text-white/70' : 'text-gray-400'}`}>
+                      {message.timestamp.toLocaleTimeString()}
                     </div>
                   </div>
-                  <div className={`text-xs mt-2 ${message.type === 'user' ? 'text-white/70' : 'text-gray-400'}`}>
-                    {message.timestamp.toLocaleTimeString()}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-          
-          {isTyping && (
-            <div className="flex justify-start">
-              <div className="bg-white border rounded-r-lg rounded-tl-lg p-3 shadow-sm max-w-[80%]">
-                <div className="flex items-center space-x-2">
-                  <Bot className="w-4 h-4 text-orange-500" />
-                  <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                    <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                )}
+              </div>
+            ))}
+            
+            {isTyping && (
+              <div className="flex justify-start">
+                <div className="bg-white border rounded-r-lg rounded-tl-lg p-3 shadow-sm max-w-[80%]">
+                  <div className="flex items-center space-x-2">
+                    <Bot className="w-4 h-4 text-orange-500" />
+                    <div className="flex space-x-1">
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                      <div className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
           </div>
         </div>
       </div>
