@@ -43,8 +43,9 @@ export function AppLayout({ children }: AppLayoutProps) {
             isFelixOpen ? 'translate-x-0' : 'translate-x-full'
           }`}
           style={{ 
-            top: '140px',
-            height: 'calc(100vh - 140px)'
+            top: '60px',
+            bottom: '20px',
+            height: 'auto'
           }}
         >
           {/* Felix Header */}
