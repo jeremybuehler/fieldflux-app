@@ -70,7 +70,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           
           {/* Felix Content */}
           <div className="h-full pb-20"> {/* Account for header height */}
-            <FelixChat />
+            <FelixChat onNavigate={(route) => console.log('Navigating to:', route)} />
           </div>
         </div>
       </div>

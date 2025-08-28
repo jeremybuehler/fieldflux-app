@@ -32,6 +32,7 @@ import { googleAnalyticsService } from "./services/google-analytics";
 import { leadScoringService } from "./services/leadScoringService";
 import { aiCoachService } from "./services/aiCoachService";
 import { felixService } from "./felix/felix-service";
+import { felixAI, type FelixContext, type FelixMessage } from "./services/felixAI";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "default_key",
@@ -2109,6 +2110,81 @@ Make the page conversion-focused and industry-appropriate.`;
         error: 'Failed to generate landing page',
         message: 'I encountered an error while generating your landing page. Please try again with a more specific description of what you need.'
       });
+    }
+  });
+
+  // Felix AI Chat Endpoints
+  app.post("/api/felix/chat", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { messages, currentPage } = req.body;
+      
+      // Get user data
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Build context data
+      const businessData = {
+        leads: (await storage.getAllLeads()).length,
+        socialPosts: (await storage.getAllSocialPosts()).length,
+        reviews: (await storage.getAllReviews()).length,
+        keywords: (await storage.getAllSeoKeywords()).length,
+      };
+
+      const recentActivity = await storage.getAllActivities();
+      const context: FelixContext = {
+        user,
+        currentPage,
+        businessData,
+        recentActivity: recentActivity.slice(0, 5).map(a => a.title)
+      };
+
+      const response = await felixAI.generateResponse(messages, context);
+      res.json(response);
+    } catch (error) {
+      console.error("Felix chat error:", error);
+      res.status(500).json({ message: "Failed to generate response" });
+    }
+  });
+
+  app.post("/api/felix/content-ideas", isAuthenticated, async (req: any, res) => {
+    try {
+      const { businessType, topic } = req.body;
+      const ideas = await felixAI.generateContentIdeas(businessType || 'field service', topic);
+      res.json({ ideas });
+    } catch (error) {
+      console.error("Content ideas error:", error);
+      res.status(500).json({ message: "Failed to generate content ideas" });
+    }
+  });
+
+  app.post("/api/felix/generate-post", isAuthenticated, async (req: any, res) => {
+    try {
+      const { prompt, platform, businessType } = req.body;
+      const content = await felixAI.generateSocialPost(prompt, platform || 'social media', businessType || 'field service');
+      res.json({ content });
+    } catch (error) {
+      console.error("Post generation error:", error);
+      res.status(500).json({ message: "Failed to generate social post" });
+    }
+  });
+
+  app.post("/api/felix/analyze-lead/:id", isAuthenticated, async (req: any, res) => {
+    try {
+      const leadId = parseInt(req.params.id);
+      const lead = await storage.getLead(leadId);
+      
+      if (!lead) {
+        return res.status(404).json({ message: "Lead not found" });
+      }
+
+      const analysis = await felixAI.analyzeLead(lead);
+      res.json(analysis);
+    } catch (error) {
+      console.error("Lead analysis error:", error);
+      res.status(500).json({ message: "Failed to analyze lead" });
     }
   });
 
