@@ -2188,6 +2188,39 @@ Make the page conversion-focused and industry-appropriate.`;
     }
   });
 
+  app.get("/api/felix/insights", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Build context for insights
+      const businessData = {
+        leads: (await storage.getAllLeads()).length,
+        socialPosts: (await storage.getAllSocialPosts()).length,
+        reviews: (await storage.getAllReviews()).length,
+        keywords: (await storage.getAllSeoKeywords()).length,
+      };
+
+      const context: FelixContext = {
+        user,
+        businessData,
+        recentActivity: (await storage.getAllActivities()).slice(0, 3).map(a => a.title)
+      };
+
+      // Generate insights based on current business state
+      const insights = felixAI.generateInsights ? felixAI.generateInsights(context) : [];
+      
+      res.json({ insights });
+    } catch (error) {
+      console.error("Felix insights error:", error);
+      res.status(500).json({ message: "Failed to generate insights" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
