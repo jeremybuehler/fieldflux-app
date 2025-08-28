@@ -1,9 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
 import { 
   Send, 
   Bot, 
@@ -27,69 +30,93 @@ interface Message {
   type: 'user' | 'felix' | 'system';
   content: string;
   timestamp: Date;
-  actions?: FeatureAction[];
+  suggestions?: FeatureSuggestion[];
+  quickActions?: QuickAction[];
 }
 
-interface FeatureAction {
+interface FeatureSuggestion {
   id: string;
   title: string;
   description: string;
-  icon: any;
   category: string;
-  onClick: () => void;
+  route?: string;
+  action?: string;
+}
+
+interface QuickAction {
+  id: string;
+  label: string;
+  icon: string;
+  action: string;
+  route?: string;
 }
 
 interface FelixChatProps {
-  onOpenWindow?: (windowType: string, config?: any) => void;
+  onNavigate?: (route: string) => void;
 }
 
-export function FelixChat({ onOpenWindow }: FelixChatProps) {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: '1',
-      type: 'felix',
-      content: 'Hello! I\'m Felix, your intelligent Field Service Assistant. I can help you manage your marketing, leads, social media, and more. What would you like to work on today?',
-      timestamp: new Date(),
-      actions: [
-        {
-          id: 'social-media',
-          title: 'Social Media Management',
-          description: 'Create and schedule social media posts',
-          icon: MessageSquare,
-          category: 'content',
-          onClick: () => onOpenWindow?.('social-media')
-        },
-        {
-          id: 'lead-management',
-          title: 'Lead Management',
-          description: 'Track and manage your leads',
-          icon: Users,
-          category: 'sales',
-          onClick: () => onOpenWindow?.('leads')
-        },
-        {
-          id: 'analytics',
-          title: 'Analytics Dashboard',
-          description: 'View your marketing performance',
-          icon: BarChart3,
-          category: 'analytics',
-          onClick: () => onOpenWindow?.('analytics')
-        },
-        {
-          id: 'reviews',
-          title: 'Review Management',
-          description: 'Monitor and respond to reviews',
-          icon: Star,
-          category: 'reputation',
-          onClick: () => onOpenWindow?.('reviews')
-        }
-      ]
-    }
-  ]);
+export function FelixChat({ onNavigate }: FelixChatProps) {
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const { user } = useAuth();
+  const { user } = useAuth() as { user: any };
+  const [location, navigate] = useLocation();
+  const { toast } = useToast();
+
+  // Initialize Felix with a contextual welcome message
+  useEffect(() => {
+    if (user && !isInitialized) {
+      const welcomeMessage: Message = {
+        id: 'welcome-' + Date.now(),
+        type: 'felix',
+        content: `Hi ${user.firstName || 'there'}! I'm Felix, your AI assistant for FieldFlux. I'm here to help you grow your field service business with intelligent marketing automation. What would you like to work on today?`,
+        timestamp: new Date(),
+        suggestions: [
+          {
+            id: 'check-leads',
+            title: 'Review New Leads',
+            description: 'Check your latest leads and get AI recommendations',
+            category: 'leads',
+            route: '/leads'
+          },
+          {
+            id: 'create-content',
+            title: 'Create Social Content',
+            description: 'Generate engaging posts for your business',
+            category: 'social',
+            route: '/social'
+          },
+          {
+            id: 'view-analytics',
+            title: 'Check Performance',
+            description: 'Review your marketing analytics',
+            category: 'analytics',
+            route: '/analytics'
+          }
+        ],
+        quickActions: [
+          {
+            id: 'new-post',
+            label: 'Create Post',
+            icon: 'PlusCircle',
+            action: 'create-social-post',
+            route: '/social'
+          },
+          {
+            id: 'check-reviews',
+            label: 'Reviews',
+            icon: 'Star',
+            action: 'view-reviews',
+            route: '/reviews'
+          }
+        ]
+      };
+      setMessages([welcomeMessage]);
+      setIsInitialized(true);
+    }
+  }, [user, isInitialized]);
 
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
@@ -102,86 +129,130 @@ export function FelixChat({ onOpenWindow }: FelixChatProps) {
     };
 
     setMessages(prev => [...prev, userMessage]);
+    const currentInput = inputValue;
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate Felix response
-    setTimeout(() => {
+    try {
+      // Send message to Felix AI backend
+      const response = await apiRequest(
+        'POST',
+        '/api/felix/chat',
+        {
+          messages: [...messages, userMessage].map(msg => ({
+            role: msg.type === 'user' ? 'user' : 'assistant',
+            content: msg.content
+          })),
+          currentPage: location
+        }
+      );
+
+      const responseData = await response.json();
+
       const felixResponse: Message = {
         id: (Date.now() + 1).toString(),
         type: 'felix',
-        content: `I understand you want to work on "${inputValue}". Let me help you with that. Which specific area would you like to focus on?`,
+        content: responseData.message,
         timestamp: new Date(),
-        actions: getRelevantActions(inputValue)
+        suggestions: responseData.suggestions || [],
+        quickActions: responseData.quickActions || []
       };
       
       setMessages(prev => [...prev, felixResponse]);
+    } catch (error) {
+      console.error('Felix chat error:', error);
+      
+      // Fallback response
+      const fallbackResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'felix',
+        content: `I understand you want to work on "${currentInput}". Let me help you with that. What specific aspect would you like to focus on?`,
+        timestamp: new Date(),
+        suggestions: getRelevantSuggestions(currentInput)
+      };
+      
+      setMessages(prev => [...prev, fallbackResponse]);
+      
+      toast({
+        title: "Connection Issue",
+        description: "Using offline mode. Some features may be limited.",
+        variant: "destructive"
+      });
+    } finally {
       setIsTyping(false);
-    }, 1000);
+    }
   };
 
-  const getRelevantActions = (input: string): FeatureAction[] => {
-    const allActions: FeatureAction[] = [
+  const getRelevantSuggestions = (input: string): FeatureSuggestion[] => {
+    const allSuggestions: FeatureSuggestion[] = [
       {
         id: 'social-media',
         title: 'Social Media Management',
         description: 'Create and schedule posts',
-        icon: MessageSquare,
         category: 'content',
-        onClick: () => onOpenWindow?.('social-media')
+        route: '/social'
       },
       {
         id: 'leads',
         title: 'Lead Management', 
         description: 'Track and convert leads',
-        icon: Users,
         category: 'sales',
-        onClick: () => onOpenWindow?.('leads')
+        route: '/leads'
       },
       {
         id: 'analytics',
         title: 'Analytics',
         description: 'Performance insights',
-        icon: BarChart3,
         category: 'analytics',
-        onClick: () => onOpenWindow?.('analytics')
+        route: '/analytics'
       },
       {
         id: 'reviews',
         title: 'Reviews',
         description: 'Manage customer reviews',
-        icon: Star,
         category: 'reputation',
-        onClick: () => onOpenWindow?.('reviews')
-      },
-      {
-        id: 'keywords',
-        title: 'SEO Keywords',
-        description: 'Track keyword rankings',
-        icon: Search,
-        category: 'seo',
-        onClick: () => onOpenWindow?.('keywords')
-      },
-      {
-        id: 'website',
-        title: 'Website Management',
-        description: 'Content and SEO tools',
-        icon: Globe,
-        category: 'web',
-        onClick: () => onOpenWindow?.('website')
+        route: '/reviews'
       }
     ];
 
-    // Return relevant actions based on input
+    // Return relevant suggestions based on input
     const lowerInput = input.toLowerCase();
     if (lowerInput.includes('social') || lowerInput.includes('post')) {
-      return [allActions[0], allActions[2]];
+      return [allSuggestions[0], allSuggestions[2]];
     }
     if (lowerInput.includes('lead') || lowerInput.includes('customer')) {
-      return [allActions[1], allActions[3]];
+      return [allSuggestions[1], allSuggestions[3]];
     }
     
-    return allActions.slice(0, 4);
+    return allSuggestions.slice(0, 3);
+  };
+
+  const handleSuggestionClick = (suggestion: FeatureSuggestion) => {
+    if (suggestion.route) {
+      navigate(suggestion.route);
+      onNavigate?.(suggestion.route);
+    }
+  };
+
+  const handleQuickActionClick = (action: QuickAction) => {
+    if (action.route) {
+      navigate(action.route);
+      onNavigate?.(action.route);
+    }
+  };
+
+  const getIconComponent = (iconName: string) => {
+    const iconMap: { [key: string]: any } = {
+      'PlusCircle': PlusCircle,
+      'Users': Users,
+      'Star': Star,
+      'BarChart3': BarChart3,
+      'MessageSquare': MessageSquare,
+      'Search': Search,
+      'Globe': Globe,
+      'Zap': Zap
+    };
+    return iconMap[iconName] || MessageSquare;
   };
 
   useEffect(() => {
@@ -227,27 +298,49 @@ export function FelixChat({ onOpenWindow }: FelixChatProps) {
                       {message.content}
                     </p>
                     
-                    {/* Action Buttons */}
-                    {message.actions && message.actions.length > 0 && (
+                    {/* Feature Suggestions */}
+                    {message.suggestions && message.suggestions.length > 0 && (
                       <div className="mt-3 space-y-2">
-                        {message.actions.map((action) => {
-                          const Icon = action.icon;
-                          return (
-                            <Button
-                              key={action.id}
-                              variant="outline"
-                              size="sm"
-                              onClick={action.onClick}
-                              className="w-full justify-start text-left h-auto p-3"
-                            >
-                              <Icon className="w-4 h-4 mr-2 flex-shrink-0" />
-                              <div className="flex-1 min-w-0">
-                                <div className="font-medium text-sm">{action.title}</div>
-                                <div className="text-xs text-gray-500 mt-0.5">{action.description}</div>
-                              </div>
-                            </Button>
-                          );
-                        })}
+                        <div className="text-xs font-medium text-gray-600 mb-2">Suggestions:</div>
+                        {message.suggestions.map((suggestion) => (
+                          <Button
+                            key={suggestion.id}
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleSuggestionClick(suggestion)}
+                            className="w-full justify-start text-left h-auto p-3 hover:bg-orange-50 hover:border-orange-200"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium text-sm">{suggestion.title}</div>
+                              <div className="text-xs text-gray-500 mt-0.5">{suggestion.description}</div>
+                            </div>
+                          </Button>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Quick Actions */}
+                    {message.quickActions && message.quickActions.length > 0 && (
+                      <div className="mt-3">
+                        <div className="text-xs font-medium text-gray-600 mb-2">Quick Actions:</div>
+                        <div className="flex flex-wrap gap-2">
+                          {message.quickActions.map((action) => {
+                            const Icon = getIconComponent(action.icon);
+                            return (
+                              <Button
+                                key={action.id}
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleQuickActionClick(action)}
+                                className="flex items-center space-x-1 text-xs hover:bg-orange-50 hover:border-orange-200"
+                                style={{ borderColor: "#F97316" }}
+                              >
+                                <Icon className="w-3 h-3" />
+                                <span>{action.label}</span>
+                              </Button>
+                            );
+                          })}
+                        </div>
                       </div>
                     )}
                   </div>
