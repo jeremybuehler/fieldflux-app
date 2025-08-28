@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Zap, Users, BarChart3, MessageSquare, Target, Rocket, Shield, Clock, Star } from "lucide-react";
+import { ArrowRight, Zap, Users, BarChart3, MessageSquare, Target, Rocket, Shield, Clock, Star, Home, ArrowLeft } from "lucide-react";
+import { Link } from "wouter";
 
 const features = [
   {
@@ -49,6 +50,38 @@ const integrations = [
 export default function Features() {
   return (
     <div className="min-h-screen bg-gray-50">
+      {/* Navigation Header */}
+      <nav className="bg-white border-b border-gray-200 py-4 sticky top-0 z-50">
+        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div 
+              className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm"
+              style={{ backgroundColor: "#F97316" }}
+            >
+              FF
+            </div>
+            <Link href="/" className="text-xl font-bold text-gray-900 hover:text-orange-600 transition-colors">
+              FieldFlux
+            </Link>
+          </div>
+          <div className="flex items-center space-x-4">
+            <Link href="/">
+              <Button variant="ghost" className="flex items-center space-x-2 text-gray-600 hover:text-gray-900">
+                <ArrowLeft className="w-4 h-4" />
+                <span>Back to Home</span>
+              </Button>
+            </Link>
+            <Button 
+              className="text-white font-semibold"
+              style={{ backgroundColor: "#F97316" }}
+              onClick={() => window.location.href = "/api/login"}
+            >
+              Get Started
+            </Button>
+          </div>
+        </div>
+      </nav>
+
       {/* Header */}
       <section className="py-24 bg-gradient-to-br from-slate-900 via-slate-800 to-teal-600 text-white" style={{ 
         background: `linear-gradient(135deg, #0E2545 0%, #12365E 50%, #14B8A6 100%)`
