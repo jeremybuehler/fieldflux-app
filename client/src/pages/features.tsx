@@ -74,9 +74,21 @@ export default function Features() {
             <Button 
               className="text-white font-semibold"
               style={{ backgroundColor: "#F97316" }}
-              onClick={() => window.location.href = "/api/login"}
+              onClick={async () => {
+                try {
+                  const response = await fetch('/api/login', { 
+                    method: 'POST',
+                    credentials: 'include'
+                  });
+                  if (response.ok) {
+                    window.location.reload();
+                  }
+                } catch (error) {
+                  console.error('Demo login failed:', error);
+                }
+              }}
             >
-              Get Started
+              Try Demo
             </Button>
           </div>
         </div>
@@ -96,9 +108,21 @@ export default function Features() {
           <Button 
             size="lg" 
             className="text-lg px-8 py-4 font-bold transition-all transform hover:scale-105 bg-orange-600 hover:bg-orange-700 text-white"
-            onClick={() => window.location.href = "/api/login"}
+            onClick={async () => {
+              try {
+                const response = await fetch('/api/login', { 
+                  method: 'POST',
+                  credentials: 'include'
+                });
+                if (response.ok) {
+                  window.location.reload();
+                }
+              } catch (error) {
+                console.error('Demo login failed:', error);
+              }
+            }}
           >
-            Start Free Trial
+            Try Demo
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </div>

@@ -10,7 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/app-layout";
 import DashboardMain from "@/pages/dashboard-main";
 import Settings from "@/pages/settings-fixed";
-import Landing from "@/pages/planetscale-landing";
+import Landing from "@/pages/landing-simple";
 import Social from "@/pages/social";
 import Leads from "@/pages/leads";
 import Reviews from "@/pages/reviews";
