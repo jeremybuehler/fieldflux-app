@@ -74,21 +74,9 @@ export default function Features() {
             <Button 
               className="text-white font-semibold"
               style={{ backgroundColor: "#F97316" }}
-              onClick={async () => {
-                try {
-                  const response = await fetch('/api/login', { 
-                    method: 'POST',
-                    credentials: 'include'
-                  });
-                  if (response.ok) {
-                    window.location.reload();
-                  }
-                } catch (error) {
-                  console.error('Demo login failed:', error);
-                }
-              }}
+              onClick={() => window.location.href = "/api/login"}
             >
-              Try Demo
+              Get Started
             </Button>
           </div>
         </div>
@@ -108,21 +96,9 @@ export default function Features() {
           <Button 
             size="lg" 
             className="text-lg px-8 py-4 font-bold transition-all transform hover:scale-105 bg-orange-600 hover:bg-orange-700 text-white"
-            onClick={async () => {
-              try {
-                const response = await fetch('/api/login', { 
-                  method: 'POST',
-                  credentials: 'include'
-                });
-                if (response.ok) {
-                  window.location.reload();
-                }
-              } catch (error) {
-                console.error('Demo login failed:', error);
-              }
-            }}
+            onClick={() => window.location.href = "/api/login"}
           >
-            Try Demo
+            Start Free Trial
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </div>
@@ -171,54 +147,24 @@ export default function Features() {
       </section>
 
       {/* Integrations */}
-      <section className="py-24 bg-gradient-to-br from-gray-50 to-orange-50">
+      <section className="py-24 bg-white">
         <div className="max-w-6xl mx-auto px-6 text-center">
           <h2 className="text-4xl font-bold mb-6 text-gray-900">
             Seamless Integrations
           </h2>
           <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
-            Connect with the tools and platforms you already use to maximize your marketing reach
+            Connect with the tools and platforms you already use
           </p>
           
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
             {integrations.map((integration, index) => (
-              <div 
-                key={index} 
-                className="group p-6 bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg hover:border-orange-200 transition-all duration-300 transform hover:-translate-y-1"
-              >
-                <div className="w-12 h-12 rounded-lg mx-auto mb-4 flex items-center justify-center group-hover:scale-110 transition-transform duration-300" style={{ backgroundColor: "#F97316" }}>
-                  <Shield className="w-6 h-6 text-white" />
+              <div key={index} className="p-6 bg-gray-50 rounded-lg text-center">
+                <div className="w-12 h-12 bg-gray-200 rounded-lg mx-auto mb-3 flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-gray-600" />
                 </div>
-                <p className="font-semibold text-gray-900 text-sm group-hover:text-orange-600 transition-colors">
-                  {integration}
-                </p>
+                <p className="font-medium text-gray-900">{integration}</p>
               </div>
             ))}
-          </div>
-          
-          {/* Integration Benefits */}
-          <div className="mt-16 grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: "#F97316" }}>
-                <Zap className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-gray-900">One-Click Setup</h3>
-              <p className="text-gray-600">Connect your existing tools in seconds with our streamlined integration process</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: "#0E2545" }}>
-                <Clock className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-gray-900">Real-Time Sync</h3>
-              <p className="text-gray-600">Keep all your data synchronized across platforms automatically</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: "#14B8A6" }}>
-                <Shield className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-gray-900">Secure & Reliable</h3>
-              <p className="text-gray-600">Enterprise-grade security with 99.9% uptime guarantee</p>
-            </div>
           </div>
         </div>
       </section>
