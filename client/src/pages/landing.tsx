@@ -162,38 +162,27 @@ export default function Landing() {
               management system with one affordable solution.
             </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button
-                  size="lg"
-                  className="font-semibold px-8 text-white transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2"
-                  style={{
-                    backgroundColor: 'rgb(var(--fx-orange-600))',
-                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-700))';
-                    e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-600))';
-                    e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
-                  }}
-                  onClick={async () => {
-                    try {
-                      const response = await fetch('/api/login', { 
-                        method: 'POST',
-                        credentials: 'include'
-                      });
-                      if (response.ok) {
-                        window.location.reload();
-                      }
-                    } catch (error) {
-                      console.error('Login failed:', error);
-                    }
-                  }}
-                >
-                  Try Demo
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </Button>
+                <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      size="lg"
+                      className="font-semibold px-8 text-white transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2"
+                      style={{
+                        backgroundColor: 'rgb(var(--fx-orange-600))',
+                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-700))';
+                        e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-600))';
+                        e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+                      }}
+                    >
+                      Get Started
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
                   </DialogTrigger>
                   <DialogContent className="sm:max-w-md">
                     <DialogHeader>
