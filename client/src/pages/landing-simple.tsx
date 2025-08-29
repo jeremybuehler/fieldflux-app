@@ -78,8 +78,8 @@ export default function Landing() {
           </div>
 
           <div className="border-2 border-transparent hover:shadow-lg transition-all duration-300 bg-white rounded-xl p-6 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
-            <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{backgroundColor: 'var(--fx-sky-300)'}}>
-              <Shield className="w-6 h-6" style={{color: 'var(--fx-teal-500)'}} />
+            <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{backgroundColor: 'var(--fx-grass-300)'}}>
+              <Shield className="w-6 h-6" style={{color: 'var(--fx-grass-700)'}} />
             </div>
             <h3 className="text-xl font-semibold mb-4" style={{color: 'var(--fx-navy-900)'}}>
               Smart Lead Pipeline
