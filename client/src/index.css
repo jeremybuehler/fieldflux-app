@@ -55,9 +55,9 @@
   --fx-teal-500:#14B8A6;     /* chart/check icon accent */
 
   /* Semantic Tokens */
-  --bg-page:var(--fx-sky-100);
-  --bg-surface:var(--fx-mint-50);
+  --bg:var(--fx-sky-100);
   --bg-elevated:#ffffff;
+  --bg-surface:var(--fx-mint-50);
 
   --text-primary:#0F172A;
   --text-secondary:var(--fx-gray-600, #475569);
