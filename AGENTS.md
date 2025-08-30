@@ -60,3 +60,9 @@
 - SPA routing: handled via `vercel.json` rewrites; all non-API paths → `index.html`.
 - Env vars: set `DATABASE_URL`, `OPENAI_API_KEY`, optional Google/Twilio; client vars use `VITE_` prefix.
 - Auth: to enable OIDC, set `OIDC_ISSUER_URL`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_CALLBACK_URL`, `SESSION_SECRET`. Use `DISABLE_AUTH=true` for local dev.
+
+## Multi‑Tenancy & Auth
+- Tenant resolution: `server/tenant.ts` maps `Host` → tenant via `tenant_domains`.
+- Per‑tenant OIDC: login routes create a strategy per tenant using `oauth_connections` (supports Auth0 Orgs via `organization`).
+- Tables: `tenants`, `tenant_domains`, `memberships`, `oauth_connections` added in `shared/schema.ts`.
+- Next steps: progressively add `tenantId` to domain tables and filter queries by `req.tenant.id`.

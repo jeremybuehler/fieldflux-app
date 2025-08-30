@@ -213,6 +213,11 @@ Quick guide: see [AGENTS.md — Deploying to Vercel](AGENTS.md#deploying-to-verc
 - Login URL: `/api/login`, Callback: `/api/callback`, Logout: `/api/logout`.
 - In development, set `DISABLE_AUTH=true` to bypass auth.
 
+### Multi-Tenancy
+- Tenant resolution: by domain via `tenant_domains` table. Add your tenant and domain(s), requests map `Host` → `tenant`.
+- Per-tenant auth: `/api/login` dynamically selects an OIDC strategy; for Auth0 Organizations, set `organization` in the tenant's `oauth_connections`.
+- Data model: new tables `tenants`, `tenant_domains`, `memberships`, `oauth_connections`. Existing domain tables will progressively adopt `tenant_id`.
+
 ### Payments (Stripe)
 - To enable subscription checkout:
   - Client: `VITE_STRIPE_PUBLIC_KEY`

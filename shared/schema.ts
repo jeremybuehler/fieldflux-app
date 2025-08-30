@@ -40,6 +40,49 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+// --- Multi-tenant core --- //
+export const tenants = pgTable("tenants", {
+  id: serial("id").primaryKey(),
+  slug: text("slug").notNull(),
+  name: text("name").notNull(),
+  primaryDomain: text("primary_domain"),
+  plan: text("plan").default("free"),
+  stripeCustomerId: text("stripe_customer_id"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const tenantDomains = pgTable(
+  "tenant_domains",
+  {
+    id: serial("id").primaryKey(),
+    tenantId: integer("tenant_id").references(() => tenants.id).notNull(),
+    domain: text("domain").notNull(),
+    verified: boolean("verified").default(false),
+    createdAt: timestamp("created_at").defaultNow(),
+  },
+  (table) => [index("tenant_domains_domain_idx").on(table.domain)],
+);
+
+export const memberships = pgTable("memberships", {
+  userId: varchar("user_id").references(() => users.id).notNull(),
+  tenantId: integer("tenant_id").references(() => tenants.id).notNull(),
+  role: text("role").notNull().default("member"), // owner|admin|member|billing
+  status: text("status").notNull().default("active"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const oauthConnections = pgTable("oauth_connections", {
+  id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id").references(() => tenants.id).notNull(),
+  provider: text("provider").notNull(), // auth0|okta|google|workos
+  issuerUrl: text("issuer_url"),
+  clientId: text("client_id"),
+  clientSecret: text("client_secret"),
+  organization: text("organization"), // Auth0 Organization ID/slug
+  metadata: jsonb("metadata"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // User onboarding and progress tracking
 export const userOnboarding = pgTable("user_onboarding", {
   id: serial("id").primaryKey(),
@@ -104,6 +147,7 @@ export const emailLogs = pgTable("email_logs", {
 
 export const wordpressPosts = pgTable("wordpress_posts", {
   id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   title: text("title").notNull(),
   content: text("content").notNull(),
   status: text("status").notNull().default("draft"),
@@ -118,6 +162,7 @@ export const wordpressPosts = pgTable("wordpress_posts", {
 
 export const reviews = pgTable("reviews", {
   id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   customerName: text("customer_name").notNull(),
   rating: integer("rating").notNull(),
   content: text("content").notNull(),
@@ -130,6 +175,7 @@ export const reviews = pgTable("reviews", {
 
 export const analyticsReports = pgTable("analytics_reports", {
   id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   period: text("period").notNull(),
   traffic: integer("traffic").notNull(),
   conversions: integer("conversions").notNull(),
@@ -141,6 +187,7 @@ export const analyticsReports = pgTable("analytics_reports", {
 
 export const socialPosts = pgTable("social_posts", {
   id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   platform: text("platform").notNull(),
   content: text("content").notNull(),
   status: text("status").notNull().default("scheduled"),
@@ -151,6 +198,7 @@ export const socialPosts = pgTable("social_posts", {
 
 export const leads = pgTable("leads", {
   id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   name: text("name").notNull(),
   email: text("email"),
   phone: text("phone"),
@@ -171,6 +219,7 @@ export const leads = pgTable("leads", {
 
 export const tasks = pgTable("tasks", {
   id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   title: text("title").notNull(),
   description: text("description"),
   type: text("type").notNull(),
@@ -182,6 +231,7 @@ export const tasks = pgTable("tasks", {
 
 export const activities = pgTable("activities", {
   id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   type: text("type").notNull(),
   title: text("title").notNull(),
   description: text("description"),
@@ -190,6 +240,7 @@ export const activities = pgTable("activities", {
 
 export const seoKeywords = pgTable("seo_keywords", {
   id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   keyword: text("keyword").notNull(),
   position: integer("position"),
   previousPosition: integer("previous_position"),

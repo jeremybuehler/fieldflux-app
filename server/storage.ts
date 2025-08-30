@@ -1,5 +1,8 @@
 import {
   users,
+  tenants,
+  tenantDomains,
+  oauthConnections,
   wordpressPosts,
   socialPosts,
   leads,
@@ -445,6 +448,23 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return user;
+  }
+
+  // Tenancy helpers
+  async getTenantByDomain(domain: string): Promise<{ id: number; slug: string; name: string } | null> {
+    if (!domain) return null;
+    const rows = await db
+      .select({ id: tenants.id, slug: tenants.slug, name: tenants.name })
+      .from(tenantDomains)
+      .leftJoin(tenants, eq(tenants.id, tenantDomains.tenantId))
+      .where(eq(tenantDomains.domain, domain))
+      .limit(1);
+    return rows?.[0] || null;
+  }
+
+  async getTenantOauthConnection(tenantId: number) {
+    const rows = await db.select().from(oauthConnections).where(eq(oauthConnections.tenantId, tenantId)).limit(1);
+    return rows?.[0] || null;
   }
 
   // WordPress methods

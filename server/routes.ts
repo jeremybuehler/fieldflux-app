@@ -2,6 +2,9 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
+import passport from "passport";
+import { tenantResolver } from "./tenant";
+import { ensureTenantOidcStrategy } from "./authManager";
 import { configureAuth } from "./auth";
 import {
   users, 
@@ -47,12 +50,41 @@ if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
 // Remove duplicate authentication middleware - using the one from replitAuth
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Resolve tenant early for all requests
+  app.use(tenantResolver);
   // Configure authentication depending on environment (Replit, dev, or strict)
   const { isAuthenticated } = await configureAuth(app);
 
   // Health check endpoint for Azure
   app.get('/api/health', (req, res) => {
     res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+  });
+
+  // Multi-tenant login endpoints (OIDC per-tenant)
+  app.get('/api/login', async (req, res, next) => {
+    try {
+      const tenant = (req as any).tenant;
+      if (!tenant) return res.status(400).json({ message: 'Unknown tenant' });
+      const strategy = await ensureTenantOidcStrategy(app, tenant.id);
+      return passport.authenticate(strategy, { prompt: 'login consent' })(req, res, next);
+    } catch (e: any) {
+      return res.status(500).json({ message: e.message || 'Login unavailable' });
+    }
+  });
+
+  app.get('/api/callback', async (req, res, next) => {
+    try {
+      const tenant = (req as any).tenant;
+      if (!tenant) return res.redirect('/');
+      const strategy = await ensureTenantOidcStrategy(app, tenant.id);
+      return passport.authenticate(strategy, { successReturnToOrRedirect: '/dashboard', failureRedirect: '/api/login' })(req, res, next);
+    } catch (e) {
+      return res.redirect('/');
+    }
+  });
+
+  app.get('/api/logout', (req, res) => {
+    (req as any).logout?.(() => res.redirect('/'));
   });
 
   // Auth routes
