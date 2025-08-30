@@ -204,7 +204,7 @@ Quick guide: see [AGENTS.md — Deploying to Vercel](AGENTS.md#deploying-to-verc
 - Build settings:
   - Build Command: `npm run build`
   - Output Directory: `dist/public`
-- Environment Variables: set in Vercel dashboard (`DATABASE_URL`, `OPENAI_API_KEY`, optional Google/Twilio; client vars use `VITE_` prefix).
+- Environment Variables: set in Vercel dashboard (`DATABASE_URL`, `OPENAI_API_KEY`; optional Google/Twilio/Stripe; client vars use `VITE_` prefix).
 - After deploy, SPA routes are served statically; API available under `/api/*`.
 
 ### Authentication (OIDC Stub)
@@ -212,6 +212,12 @@ Quick guide: see [AGENTS.md — Deploying to Vercel](AGENTS.md#deploying-to-verc
   - `OIDC_ISSUER_URL`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_CALLBACK_URL`, `SESSION_SECRET`.
 - Login URL: `/api/login`, Callback: `/api/callback`, Logout: `/api/logout`.
 - In development, set `DISABLE_AUTH=true` to bypass auth.
+
+### Payments (Stripe)
+- To enable subscription checkout:
+  - Client: `VITE_STRIPE_PUBLIC_KEY`
+  - Server: `STRIPE_SECRET_KEY` (and `STRIPE_WEBHOOK_SECRET` if using webhooks)
+- Without keys, the Subscribe page shows a friendly message and does not crash.
 
 ### Performance Considerations
 - Vite for fast client builds

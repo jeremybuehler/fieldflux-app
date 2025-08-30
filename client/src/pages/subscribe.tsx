@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
+import { loadStripe, type Stripe } from '@stripe/stripe-js';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { CheckCircle, CreditCard, Shield } from 'lucide-react';
 
-if (!import.meta.env.VITE_STRIPE_PUBLIC_KEY) {
-  throw new Error('Missing required Stripe key: VITE_STRIPE_PUBLIC_KEY');
-}
-
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+const stripePublicKey = import.meta.env.VITE_STRIPE_PUBLIC_KEY as string | undefined;
+const stripePromise: Promise<Stripe | null> | null = stripePublicKey
+  ? loadStripe(stripePublicKey)
+  : null;
 
 const CheckoutForm = () => {
   const stripe = useStripe();
@@ -84,6 +83,19 @@ const CheckoutForm = () => {
 };
 
 export default function SubscribePage() {
+  if (!stripePromise) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6 text-center">
+        <div>
+          <h1 className="text-2xl font-semibold mb-2">Subscriptions Unavailable</h1>
+          <p className="text-gray-600 max-w-lg">
+            Missing Stripe public key. Please set the environment variable <code>VITE_STRIPE_PUBLIC_KEY</code>
+            in your hosting provider (e.g., Vercel Project Settings) to enable subscriptions.
+          </p>
+        </div>
+      </div>
+    );
+  }
   const [clientSecret, setClientSecret] = useState('');
   const [subscriptionDetails, setSubscriptionDetails] = useState<any>(null);
   const { toast } = useToast();
