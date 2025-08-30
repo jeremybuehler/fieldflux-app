@@ -52,3 +52,11 @@
 - Express server with Vite in dev, bundled via esbuild for prod.
 - Postgres + Drizzle ORM (`shared/schema.ts`); migrations tracked in `migrations/`.
 - Optional integrations: OpenAI, Twilio, Google Analytics/Places.
+
+## Deploying to Vercel
+- Connect the GitHub repo in Vercel; framework preset: Vite or None.
+- Build: `npm run build`; Output: `dist/public` (configured in `vite.config.ts`).
+- API: `api/index.ts` exposes Express routes under `/api/*` (Node 18).
+- SPA routing: handled via `vercel.json` rewrites; all non-API paths → `index.html`.
+- Env vars: set `DATABASE_URL`, `OPENAI_API_KEY`, optional Google/Twilio; client vars use `VITE_` prefix.
+- Auth: to enable OIDC, set `OIDC_ISSUER_URL`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_CALLBACK_URL`, `SESSION_SECRET`. Use `DISABLE_AUTH=true` for local dev.
