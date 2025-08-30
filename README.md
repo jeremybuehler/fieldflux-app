@@ -213,6 +213,10 @@ Quick guide: see [AGENTS.md — Deploying to Vercel](AGENTS.md#deploying-to-verc
 - Login URL: `/api/login`, Callback: `/api/callback`, Logout: `/api/logout`.
 - In development, set `DISABLE_AUTH=true` to bypass auth.
 
+### Demo Login
+- Set `DEMO_MODE=true` to transparently authenticate as a demo user for the current tenant (domain‑resolved).
+- Useful for demos and trials: no explicit login needed; demo user is auto‑created and granted owner membership for that tenant.
+
 ### Multi-Tenancy
 - Tenant resolution: by domain via `tenant_domains` table. Add your tenant and domain(s), requests map `Host` → `tenant`.
 - Per-tenant auth: `/api/login` dynamically selects an OIDC strategy; for Auth0 Organizations, set `organization` in the tenant's `oauth_connections`.

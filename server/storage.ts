@@ -478,6 +478,18 @@ export class DatabaseStorage implements IStorage {
     return rows?.[0] || null;
   },
 
+  async createMembership(tenantId: number, userId: string, role: string = 'member') {
+    try {
+      const [row] = await db
+        .insert(memberships)
+        .values({ tenantId, userId, role, status: 'active' as any })
+        .returning();
+      return row;
+    } catch (e) {
+      return null;
+    }
+  },
+
   // WordPress methods
   async getAllWordPressPosts(): Promise<WordPressPost[]> {
     return await db.select().from(wordpressPosts).orderBy(wordpressPosts.createdAt);
