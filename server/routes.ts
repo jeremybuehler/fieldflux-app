@@ -55,6 +55,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Configure authentication depending on environment (Replit, dev, or strict)
   const { isAuthenticated } = await configureAuth(app);
 
+  // Require tenant membership helper
+  function requireMembership() {
+    return async (req: any, res: any, next: any) => {
+      if (process.env.DISABLE_AUTH === 'true' || req.app.get('env') === 'development') return next();
+      const tenant = req.tenant;
+      const user = req.user;
+      if (!tenant || !user) return res.status(401).json({ message: 'Unauthorized' });
+      const member = await storage.getMembership(tenant.id, user.claims?.sub || user.claims?.email || user.id);
+      if (!member) return res.status(403).json({ message: 'Forbidden' });
+      next();
+    };
+  }
+
   // Health check endpoint for Azure
   app.get('/api/health', (req, res) => {
     res.json({ status: 'healthy', timestamp: new Date().toISOString() });
@@ -117,8 +130,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Dashboard Analytics
   app.get("/api/dashboard/metrics", async (req, res) => {
     try {
-      const leads = await storage.getAllLeads();
-      const tasks = await storage.getAllTasks();
+      const tenant = (req as any).tenant;
+      const leads = (await storage.getAllLeads()).filter((l: any) => !tenant || l.tenantId === tenant.id);
+      const tasks = (await storage.getAllTasks()).filter((t: any) => !tenant || t.tenantId === tenant.id);
       const socialPosts = await storage.getAllSocialPosts();
       const seoKeywords = await storage.getAllSeoKeywords();
 
@@ -144,18 +158,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Activities
-  app.get("/api/activities", async (req, res) => {
+  app.get("/api/activities", requireMembership(), async (req, res) => {
     try {
-      const activities = await storage.getAllActivities();
+      const tenant = (req as any).tenant;
+      const activities = (await storage.getAllActivities()).filter((a: any) => !tenant || a.tenantId === tenant.id);
       res.json(activities);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch activities" });
     }
   });
 
-  app.post("/api/activities", async (req, res) => {
+  app.post("/api/activities", requireMembership(), async (req, res) => {
     try {
-      const data = insertActivitySchema.parse(req.body);
+      const tenant = (req as any).tenant;
+      const parsed = insertActivitySchema.parse(req.body);
+      const data = tenant ? { ...parsed, tenantId: tenant.id } : parsed;
       const activity = await storage.createActivity(data);
       res.json(activity);
     } catch (error) {
@@ -164,18 +181,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // WordPress Posts
-  app.get("/api/wordpress/posts", async (req, res) => {
+  app.get("/api/wordpress/posts", requireMembership(), async (req, res) => {
     try {
-      const posts = await storage.getAllWordPressPosts();
+      const tenant = (req as any).tenant;
+      const posts = (await storage.getAllWordPressPosts()).filter((p: any) => !tenant || p.tenantId === tenant.id);
       res.json(posts);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch WordPress posts" });
     }
   });
 
-  app.post("/api/wordpress/posts", async (req, res) => {
+  app.post("/api/wordpress/posts", requireMembership(), async (req, res) => {
     try {
-      const data = insertWordPressPostSchema.parse(req.body);
+      const tenant = (req as any).tenant;
+      const parsed = insertWordPressPostSchema.parse(req.body);
+      const data = tenant ? { ...parsed, tenantId: tenant.id } : parsed;
       const post = await storage.createWordPressPost(data);
       res.json(post);
     } catch (error) {
@@ -569,18 +589,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Social Media Posts
-  app.get("/api/social/posts", async (req, res) => {
+  app.get("/api/social/posts", requireMembership(), async (req, res) => {
     try {
-      const posts = await storage.getAllSocialPosts();
+      const tenant = (req as any).tenant;
+      const posts = (await storage.getAllSocialPosts()).filter((p: any) => !tenant || p.tenantId === tenant.id);
       res.json(posts);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch social posts" });
     }
   });
 
-  app.post("/api/social/posts", async (req, res) => {
+  app.post("/api/social/posts", requireMembership(), async (req, res) => {
     try {
-      const data = insertSocialPostSchema.parse(req.body);
+      const tenant = (req as any).tenant;
+      const parsed = insertSocialPostSchema.parse(req.body);
+      const data = tenant ? { ...parsed, tenantId: tenant.id } : parsed;
       const post = await storage.createSocialPost(data);
       res.json(post);
     } catch (error) {
@@ -690,18 +713,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Leads
-  app.get("/api/leads", async (req, res) => {
+  app.get("/api/leads", requireMembership(), async (req, res) => {
     try {
-      const leads = await storage.getAllLeads();
+      const tenant = (req as any).tenant;
+      const leads = (await storage.getAllLeads()).filter((l: any) => !tenant || l.tenantId === tenant.id);
       res.json(leads);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch leads" });
     }
   });
 
-  app.post("/api/leads", async (req, res) => {
+  app.post("/api/leads", requireMembership(), async (req, res) => {
     try {
-      const data = insertLeadSchema.parse(req.body);
+      const tenant = (req as any).tenant;
+      const parsed = insertLeadSchema.parse(req.body);
+      const data = tenant ? { ...parsed, tenantId: tenant.id } : parsed;
       const lead = await storage.createLead(data);
 
       // Score the lead with AI
@@ -832,9 +858,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/leads/analytics/scores", async (req, res) => {
+  app.get("/api/leads/analytics/scores", requireMembership(), async (req, res) => {
     try {
-      const leads = await storage.getAllLeads();
+      const tenant = (req as any).tenant;
+      const leads = (await storage.getAllLeads()).filter((l: any) => !tenant || l.tenantId === tenant.id);
       
       const analytics = {
         totalLeads: leads.length,
@@ -860,18 +887,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Tasks
-  app.get("/api/tasks", async (req, res) => {
+  app.get("/api/tasks", requireMembership(), async (req, res) => {
     try {
-      const tasks = await storage.getAllTasks();
+      const tenant = (req as any).tenant;
+      const tasks = (await storage.getAllTasks()).filter((t: any) => !tenant || t.tenantId === tenant.id);
       res.json(tasks);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch tasks" });
     }
   });
 
-  app.post("/api/tasks", async (req, res) => {
+  app.post("/api/tasks", requireMembership(), async (req, res) => {
     try {
-      const data = insertTaskSchema.parse(req.body);
+      const tenant = (req as any).tenant;
+      const parsed = insertTaskSchema.parse(req.body);
+      const data = tenant ? { ...parsed, tenantId: tenant.id } : parsed;
       const task = await storage.createTask(data);
       res.json(task);
     } catch (error) {
@@ -904,18 +934,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // SEO Keywords
-  app.get("/api/seo/keywords", async (req, res) => {
+  app.get("/api/seo/keywords", requireMembership(), async (req, res) => {
     try {
-      const keywords = await storage.getAllSeoKeywords();
+      const tenant = (req as any).tenant;
+      const keywords = (await storage.getAllSeoKeywords()).filter((k: any) => !tenant || k.tenantId === tenant.id);
       res.json(keywords);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch SEO keywords" });
     }
   });
 
-  app.post("/api/seo/keywords", async (req, res) => {
+  app.post("/api/seo/keywords", requireMembership(), async (req, res) => {
     try {
-      const data = insertSeoKeywordSchema.parse(req.body);
+      const tenant = (req as any).tenant;
+      const parsed = insertSeoKeywordSchema.parse(req.body);
+      const data = tenant ? { ...parsed, tenantId: tenant.id } : parsed;
       const keyword = await storage.createSeoKeyword(data);
       res.json(keyword);
     } catch (error) {

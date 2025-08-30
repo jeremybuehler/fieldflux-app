@@ -3,6 +3,7 @@ import {
   tenants,
   tenantDomains,
   oauthConnections,
+  memberships,
   wordpressPosts,
   socialPosts,
   leads,
@@ -466,6 +467,16 @@ export class DatabaseStorage implements IStorage {
     const rows = await db.select().from(oauthConnections).where(eq(oauthConnections.tenantId, tenantId)).limit(1);
     return rows?.[0] || null;
   }
+
+  async getMembership(tenantId: number, userId: string) {
+    const rows = await db
+      .select()
+      .from(memberships)
+      .where(eq(memberships.tenantId, tenantId))
+      .where(eq(memberships.userId, userId))
+      .limit(1);
+    return rows?.[0] || null;
+  },
 
   // WordPress methods
   async getAllWordPressPosts(): Promise<WordPressPost[]> {
