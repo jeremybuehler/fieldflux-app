@@ -5,6 +5,13 @@ export type AuthProvider = {
 };
 
 export async function configureAuth(app: Express): Promise<AuthProvider> {
+  // Prefer explicit generic OIDC if configured
+  if (process.env.OIDC_ISSUER_URL && process.env.OIDC_CLIENT_ID && process.env.OIDC_CLIENT_SECRET) {
+    const oidcAuth = await import("./oidcAuth");
+    await oidcAuth.setupAuth(app);
+    return { isAuthenticated: oidcAuth.isAuthenticated };
+  }
+
   // If running in a Replit OIDC environment, use the existing integration
   if (process.env.REPLIT_DOMAINS) {
     const replitAuth = await import("./replitAuth");
@@ -24,4 +31,3 @@ export async function configureAuth(app: Express): Promise<AuthProvider> {
     isAuthenticated: (_req, res, _next) => res.status(401).json({ message: "Unauthorized" }),
   };
 }
-

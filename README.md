@@ -205,6 +205,12 @@ If authentication is enabled (OIDC/session), API endpoints may require auth; dev
 - Environment Variables: set in Vercel dashboard (`DATABASE_URL`, `OPENAI_API_KEY`, optional Google/Twilio; client vars use `VITE_` prefix).
 - After deploy, SPA routes are served statically; API available under `/api/*`.
 
+### Authentication (OIDC Stub)
+- Configure a generic OIDC provider via env:
+  - `OIDC_ISSUER_URL`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_CALLBACK_URL`, `SESSION_SECRET`.
+- Login URL: `/api/login`, Callback: `/api/callback`, Logout: `/api/logout`.
+- In development, set `DISABLE_AUTH=true` to bypass auth.
+
 ### Performance Considerations
 - Vite for fast client builds
 - esbuild for optimized server bundling
