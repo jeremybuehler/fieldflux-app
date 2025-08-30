@@ -197,6 +197,8 @@ If authentication is enabled (OIDC/session), API endpoints may require auth; dev
 
 ## Deployment
 
+Quick guide: see [AGENTS.md — Deploying to Vercel](AGENTS.md#deploying-to-vercel).
+
 ### Vercel Deployment
 - Repo contains `vercel.json` and `api/index.ts` for serverless API.
 - Build settings:
