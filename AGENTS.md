@@ -66,3 +66,4 @@
 - Per‑tenant OIDC: login routes create a strategy per tenant using `oauth_connections` (supports Auth0 Orgs via `organization`).
 - Tables: `tenants`, `tenant_domains`, `memberships`, `oauth_connections` added in `shared/schema.ts`.
 - Next steps: progressively add `tenantId` to domain tables and filter queries by `req.tenant.id`.
+- Demo: set `DEMO_MODE=true` to auto‑authenticate a demo user per resolved tenant for frictionless demos.

@@ -17,7 +17,7 @@ This comprehensive onboarding plan transforms new FieldFlux users from signup to
 ## Current State Analysis
 
 ### Existing Infrastructure
-- **Authentication**: Replit Auth with PostgreSQL storage
+- **Authentication**: OIDC-ready (Auth0/Okta/Google) with per-tenant providers; demo mode supported
 - **Database**: PostgreSQL with Drizzle ORM
 - **API Integrations**: Google Analytics, Search Console, Places API, Twilio SMS
 - **Frontend**: React with TypeScript and Tailwind CSS

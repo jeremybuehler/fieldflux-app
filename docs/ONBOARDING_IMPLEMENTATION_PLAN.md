@@ -7,7 +7,7 @@ This plan outlines the complete implementation of a user onboarding system for F
 ## Current Platform Context
 
 ### Existing Infrastructure
-- **Authentication**: Replit Auth with PostgreSQL user management
+- **Authentication**: OIDC-ready (Auth0/Okta/Google) with per-tenant strategies; demo mode available
 - **Database**: PostgreSQL with Drizzle ORM
 - **Core Features**: Social media management, review management, lead generation, analytics
 - **Integrations**: Google Analytics, Search Console, Places API, Twilio SMS
@@ -16,8 +16,10 @@ This plan outlines the complete implementation of a user onboarding system for F
 ### Current User Flow
 1. Landing page with enhanced demo section
 2. "Get Started Free" call-to-action
-3. Replit authentication
-4. Direct dashboard access (no guided onboarding)
+3. Authentication:
+   - Demo: DEMO_MODE=true auto-authenticates demo user
+   - OIDC: /api/login with per-tenant provider (Auth0 Org supported)
+4. Direct dashboard access (onboarding wizard follows)
 
 ## Implementation Strategy
 
