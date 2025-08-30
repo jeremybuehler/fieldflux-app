@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import TopNavigation from "@/components/layout/top-navigation";
+
 import { ArrowLeft, Star, MessageSquare, TrendingUp, CheckCircle, AlertCircle, Search, MapPin } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -36,7 +36,7 @@ function ReviewCard({ review, businessName }) {
 
       toast({
         title: "Response Generated",
-        description: "AI-powered response ready for review",
+        description: "AI-native response ready for review",
       });
     } catch (error) {
       toast({
@@ -50,7 +50,7 @@ function ReviewCard({ review, businessName }) {
   };
 
   return (
-    <div className="border rounded-lg p-4 space-y-3">
+    <div className="glass-morphism hover-lift rounded-xl p-6 space-y-4 animate-protocol-fade-in shadow-fieldflux">
       <div className="flex items-start space-x-3">
         <img 
           src={review.reviewer.profilePhotoUrl || `https://ui-avatars.com/api/?name=${review.reviewer.displayName}&size=40&background=random`}
@@ -179,9 +179,8 @@ export default function Reviews() {
   // Show business search if no business selected
   if (!selectedBusiness) {
     return (
-      <div className="min-h-screen bg-gray-50">
-        <TopNavigation title="Reviews Management" />
-        <div className="max-w-6xl mx-auto p-6">
+      <div className="min-h-screen landing-page">
+        <div className="max-w-7xl mx-auto p-6">
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
@@ -273,9 +272,8 @@ export default function Reviews() {
 
   // Show reviews for selected business
   return (
-    <div className="min-h-screen bg-gray-50">
-      <TopNavigation title="Reviews Management" />
-      <div className="max-w-6xl mx-auto p-6">
+    <div className="min-h-screen landing-page">
+      <div className="max-w-7xl mx-auto p-6">
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-3">
@@ -353,7 +351,11 @@ export default function Reviews() {
         {/* Reviews List with Response Actions */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Reviews</CardTitle>
+            <CardTitle>
+              <h1 className="text-lg lg:text-xl font-bold text-hvac-gray">
+                  FieldFlux Reviews
+                </h1>
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {reviewsLoading ? (

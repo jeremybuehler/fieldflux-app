@@ -84,14 +84,25 @@ export async function setupAuth(app: Express) {
     verified(null, user);
   };
 
-  for (const domain of process.env
-    .REPLIT_DOMAINS!.split(",")) {
+  // Get domains, including localhost for development
+  const domains = process.env.REPLIT_DOMAINS ? 
+    process.env.REPLIT_DOMAINS.split(",") : 
+    ["localhost"];
+  
+  // Add localhost for local development if not already included
+  if (!domains.includes("localhost") && process.env.NODE_ENV === "development") {
+    domains.push("localhost");
+  }
+
+  for (const domain of domains) {
     const strategy = new Strategy(
       {
         name: `replitauth:${domain}`,
         config,
         scope: "openid email profile offline_access",
-        callbackURL: `https://${domain}/api/callback`,
+        callbackURL: domain === "localhost" ? 
+          `http://${domain}:5000/api/callback` : 
+          `https://${domain}/api/callback`,
       },
       verify,
     );
@@ -110,7 +121,7 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/callback", (req, res, next) => {
     passport.authenticate(`replitauth:${req.hostname}`, {
-      successReturnToOrRedirect: "/",
+      successReturnToOrRedirect: "/felix",
       failureRedirect: "/api/login",
     })(req, res, next);
   });

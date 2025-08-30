@@ -19,7 +19,7 @@ export default function Analytics() {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen fx-hills">
       <div className="max-w-6xl mx-auto p-6">
         <div className="mb-8">
           <div className="flex items-center space-x-4 mb-4">
@@ -31,94 +31,86 @@ export default function Analytics() {
             </Link>
           </div>
           <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-              <TrendingUp className="w-5 h-5 text-purple-600" />
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg" style={{backgroundColor: 'var(--fx-orange-600)'}}>
+              <TrendingUp className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-hvac-gray">Analytics & Performance</h1>
+              <h1 className="text-3xl font-bold" style={{color: 'var(--fx-navy-900)'}}>Analytics & Performance</h1>
               <p className="text-gray-600">Track your marketing performance and customer engagement</p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
-          <Card>
+          <div className="bg-white shadow-sm border rounded-xl p-6 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+            <div className="flex items-center justify-between mb-4">
+              <div className="text-sm text-gray-600">Total Users</div>
+              <Users className="w-6 h-6" style={{color: 'var(--fx-orange-600)'}} />
+            </div>
+            <div className="text-2xl font-bold mb-2" style={{color: 'var(--fx-navy-900)'}}>
+              {metricsLoading ? '...' : metrics?.users.toLocaleString() || '0'}
+            </div>
+            <div className="text-xs" style={{color: 'var(--fx-teal-600)'}}>
+              {metricsLoading ? "..." : metrics?.new_users ? `${metrics.new_users} new users` : "Connect Analytics"}
+            </div>
+          </div>
+
+          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.2s'}}>
             <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Total Users</p>
-                  <p className="text-2xl font-bold">
-                    {metricsLoading ? '...' : metrics?.users.toLocaleString() || '0'}
-                  </p>
-                  <p className="text-xs text-green-600">
-                    {metricsLoading ? '...' : `${metrics?.new_users || 0} new users`}
-                  </p>
-                </div>
-                <Users className="w-8 h-8 text-blue-500" />
+              <div className="metric-fieldservice-header">
+                <div className="metric-fieldservice-title">Page Views</div>
+                <Eye className="w-6 h-6 text-green-600 animate-pulse-glow" />
+              </div>
+              <div className="metric-fieldservice-value">
+                {metricsLoading ? '...' : metrics?.pageviews.toLocaleString() || '0'}
+              </div>
+              <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                {metricsLoading ? '...' : `${metrics?.sessions || 0} sessions`}
               </div>
             </CardContent>
           </Card>
-          
-          <Card>
+
+          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.3s'}}>
             <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Page Views</p>
-                  <p className="text-2xl font-bold">
-                    {metricsLoading ? '...' : metrics?.pageviews.toLocaleString() || '0'}
-                  </p>
-                  <p className="text-xs text-green-600">
-                    {metricsLoading ? '...' : `${metrics?.sessions || 0} sessions`}
-                  </p>
-                </div>
-                <Eye className="w-8 h-8 text-green-500" />
+              <div className="metric-fieldservice-header">
+                <div className="metric-fieldservice-title">Avg Session Duration</div>
+                <MousePointer className="w-6 h-6 text-orange-600 animate-float" />
+              </div>
+              <div className="metric-fieldservice-value">
+                {metricsLoading ? '...' : `${Math.round((metrics?.avg_session_duration || 0) / 60)}m`}
+              </div>
+              <div className="metric-fieldservice-change metric-fieldservice-change-neutral">
+                {metricsLoading ? '...' : `${metrics?.sessions || 0} sessions`}
               </div>
             </CardContent>
           </Card>
-          
-          <Card>
+
+          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.4s'}}>
             <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Avg Session Duration</p>
-                  <p className="text-2xl font-bold">
-                    {metricsLoading ? '...' : `${Math.round((metrics?.avg_session_duration || 0) / 60)}m`}
-                  </p>
-                  <p className="text-xs text-blue-600">
-                    {metricsLoading ? '...' : `${metrics?.sessions || 0} sessions`}
-                  </p>
-                </div>
-                <MousePointer className="w-8 h-8 text-orange-500" />
+              <div className="metric-fieldservice-header">
+                <div className="metric-fieldservice-title">Bounce Rate</div>
+                <TrendingUp className="w-6 h-6 text-red-600" />
               </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-600">Bounce Rate</p>
-                  <p className="text-2xl font-bold">
-                    {metricsLoading ? '...' : `${(metrics?.bounce_rate || 0).toFixed(1)}%`}
-                  </p>
-                  <p className="text-xs text-red-600">
-                    {metricsLoading ? '...' : 'Google Analytics data'}
-                  </p>
-                </div>
-                <TrendingUp className="w-8 h-8 text-red-500" />
+              <div className="metric-fieldservice-value">
+                {metricsLoading ? '...' : `${(metrics?.bounce_rate || 0).toFixed(1)}%`}
+              </div>
+              <div className="metric-fieldservice-change metric-fieldservice-change-neutral">
+                Google Analytics data
               </div>
             </CardContent>
           </Card>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-          <AnalyticsChart />
-          <Card>
+          <div className="animate-protocol-scale-in" style={{animationDelay: '0.5s'}}>
+            <AnalyticsChart />
+          </div>
+          <Card className="glass-morphism hover-lift shadow-fieldflux animate-protocol-scale-in" style={{animationDelay: '0.6s'}}>
             <CardHeader>
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg">Top Keywords</CardTitle>
+                <CardTitle className="gradient-text text-lg">Top Keywords</CardTitle>
                 <Link href="/keywords">
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="glass-morphism hover-lift border-white/20">
                     View All Keywords
                   </Button>
                 </Link>

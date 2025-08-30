@@ -1,145 +1,249 @@
-# FieldPulse - Replace 5 Marketing Tools with One
+
+# FieldFlux - Intelligent Field Service Marketing
 
 ## Overview
 
-FieldPulse is a comprehensive marketing automation platform designed specifically for field service businesses. It consolidates social media management, content creation, lead tracking, review monitoring, and analytics into one affordable solution for HVAC, plumbing, electrical, landscaping, and other field service professionals.
+FieldFlux is a comprehensive marketing intelligence platform designed for field service professionals to transform marketing, lead generation, and business management through advanced technological solutions. From intelligent content creation to automated lead management, FieldFlux helps professionals showcase their expertise and grow their business effortlessly.
 
-## Technology Stack
+**Tagline**: "Where Field Service Meets Smart Marketing"
 
-### Architecture
-- **Frontend**: React + TypeScript + Vite
-- **Backend**: Express.js + TypeScript  
-- **Database**: PostgreSQL + Drizzle ORM
-- **UI**: Tailwind CSS + shadcn/ui components
-- **State**: TanStack Query for server state
-- **Authentication**: Replit Auth (OpenID Connect)
+## System Architecture
 
-### Deployment
-- **Production**: Azure Container Apps + PostgreSQL Flexible Server
-- **Development**: Replit-optimized with auto-scaling
-- **Infrastructure**: Azure Bicep templates with automated CI/CD
-- **Container Registry**: GitHub Container Registry (GHCR)
+The application follows a full-stack architecture with:
+
+- **Frontend**: React 18 with TypeScript, built using Vite
+- **Backend**: Express.js server with TypeScript  
+- **Database**: PostgreSQL with Drizzle ORM
+- **UI Framework**: Tailwind CSS with shadcn/ui components
+- **State Management**: TanStack Query for server state
+- **Routing**: Wouter for client-side routing
+- **Authentication**: Replit Auth with OpenID Connect
 
 ## Key Features
 
-### Core Marketing Tools
-- **Social Media Management**: Multi-platform scheduling (Facebook, Instagram, Twitter/X, LinkedIn)
-- **AI Content Generation**: OpenAI-powered content creation for field service industries
-- **Lead Management**: Automated lead tracking, scoring, and follow-up workflows
-- **Review Monitoring**: AI-powered review response generation and sentiment analysis
-- **Analytics Dashboard**: Comprehensive reporting with Google Analytics and Search Console integration
+### Current Implementation
+- **Intelligent Content Creation**: AI-native social media posts, blog articles, and customer responses using OpenAI GPT-4
+- **Review Management**: Automated review responses with Google Places API integration
+- **Performance Analytics**: Real-time business insights with Google Analytics integration
+- **Lead Management**: Automated lead tracking and qualification system
+- **Multi-Platform Publishing**: Unified content scheduling across Facebook, Instagram, Twitter/X, and LinkedIn
+- **Keyword Tracking**: Google Search Console integration for SEO performance monitoring
+- **Business Intelligence**: Comprehensive reports and actionable recommendations
+- **SMS Communication**: Twilio integration for customer messaging
+- **Weather Integration**: Real-time weather data for location-based marketing
 
-### Field Service Integrations
-- **Google Services**: Analytics, Search Console, Places API for local SEO
-- **Twilio SMS**: Customer notifications, appointment confirmations, emergency alerts
-- **WordPress/GoDaddy**: Automated blog publishing and domain management
-- **Weather Integration**: Location-based weather data for service scheduling
+### Landing Page & Authentication
+- **Professional Landing Page**: Modern design with clear value proposition
+- **Authentication System**: Seamless Replit Auth integration
+- **Demo Access**: Try before you buy functionality
+- **Mobile Responsive**: Optimized for all devices
 
-## Database Schema
+### Modern UI/UX
+- **Protocol Design System**: Enhanced with modern Protocol template styling
+- **Glass Morphism Effects**: Modern visual design elements
+- **Responsive Design**: Mobile-first approach with adaptive layouts
+- **Dark Mode Support**: Complete dark mode implementation
+- **Professional Branding**: Clean, field service-focused design system
+- **Real-time Updates**: Live data synchronization with TanStack Query
 
-### Core Tables
-- `users` - Authentication and user management
-- `clients` - Multi-tenant client management for white-label
-- `social_posts` - Social media content scheduling
-- `leads` - Customer lead tracking and management
-- `reviews` - Review monitoring and AI response management
-- `analytics_reports` - Performance metrics and reporting
-- `seo_keywords` - Keyword tracking and Search Console integration
+## Target Market
 
-### Configuration Tables
-- `client_configurations` - Per-client API keys and settings
-- `social_media_configs` - Platform authentication tokens
-- `social_media_analytics` - Cross-platform performance metrics
+**Primary Focus**: Field Service Professionals
+- HVAC technicians and contractors
+- Plumbing and electrical services  
+- Landscaping and lawn care
+- Pest control and cleaning services
+- Home repair and maintenance
 
-## Development Commands
+**Value Proposition**: "Intelligent Field Service Marketing"
+- Replace 5+ marketing tools with one platform
+- Reduce marketing costs by 80%
+- Save 18+ hours weekly through automation
+- Increase leads by 300% with consistent engagement
 
-```bash
-# Development
-npm run dev          # Start development server (client + server)
-npm run build        # Build production client and server
-npm run start        # Start production server
-npm run check        # TypeScript type checking
+## Technical Architecture
 
-# Database
-npm run db:push      # Push schema changes to PostgreSQL
-npm run db:generate  # Generate migration files
-npm run db:migrate   # Run database migrations
+### Frontend Technologies
+- **React 18**: Modern component-based UI framework
+- **TypeScript**: Type-safe development with comprehensive error checking
+- **Tailwind CSS**: Utility-first styling with Protocol design system
+- **Vite**: Fast development server and optimized production builds
+- **TanStack Query**: Efficient server state management and caching
+- **Wouter**: Lightweight client-side routing solution
+- **shadcn/ui**: Accessible primitive components
+
+### Backend Infrastructure
+- **Express.js**: RESTful API server with middleware architecture
+- **PostgreSQL**: Robust relational database with Drizzle ORM
+- **OpenAI API**: Advanced AI content generation and processing
+- **Google APIs**: Analytics, Search Console, and Places integration
+- **Replit Auth**: Secure authentication with OpenID Connect
+- **Twilio SMS**: Customer communication and notifications
+
+### Database Schema
+- **Users & Sessions**: Authentication and user management
+- **Content Management**: WordPress posts, social media content
+- **Business Data**: Leads, tasks, activities, and analytics
+- **Reviews & Keywords**: SEO performance and reputation management
+- **SMS Communication**: Message templates and history
+
+### API Integrations
+- **Google Analytics 4**: Real-time performance metrics
+- **Google Search Console**: Keyword tracking and SEO insights
+- **Google Places API**: Business reviews and location data
+- **Twilio SMS**: Customer communication and notifications
+- **OpenAI GPT-4**: Intelligent content generation
+- **WordPress REST API**: Blog content publishing
+
+## Project Structure
+
+```
+FieldFlux/
+├── client/                 # React frontend
+│   ├── src/
+│   │   ├── components/     # Reusable UI components
+│   │   │   ├── dashboard/  # Dashboard-specific components
+│   │   │   ├── social/     # Social media components
+│   │   │   └── ui/         # shadcn/ui components
+│   │   ├── pages/          # Route pages
+│   │   ├── hooks/          # Custom React hooks
+│   │   └── lib/            # Utility libraries
+├── server/                 # Express.js backend
+│   ├── services/           # External service integrations
+│   ├── routes.ts           # API route definitions
+│   ├── storage.ts          # Database layer
+│   └── index.ts            # Server entry point
+├── shared/                 # Shared TypeScript schemas
+└── docs/                   # Documentation files
 ```
 
-## Azure Deployment
+## Getting Started
 
-### Infrastructure Components
-- **Resource Groups**: Platform (apps) + Data (database) separation
-- **Container Apps**: Scalable application hosting with managed identity
-- **PostgreSQL Flexible Server**: Managed database with SSL and high availability
-- **Key Vault**: Secure secrets management for API keys and connection strings
-- **Application Insights**: Monitoring, logging, and availability testing
-- **GitHub Actions**: Automated CI/CD with retry logic and error handling
+### Prerequisites
+- Node.js 20+ with npm package manager
+- PostgreSQL database (automatically configured in Replit)
+- API keys for Google services and OpenAI
 
-### Deployment Pipeline
-1. **Build Phase**: Multi-stage Docker build with Vite and esbuild
-2. **Infrastructure Phase**: Azure Bicep template deployment with retry logic
-3. **Application Phase**: Container Apps deployment with GHCR authentication
-4. **Database Phase**: Automated schema migrations with PostgreSQL
-5. **Validation Phase**: Health checks and end-to-end testing
+### Installation
+1. Clone the repository
+2. Install dependencies: `npm install`
+3. Configure environment variables in Replit Secrets
+4. Run database migrations: `npm run db:push`
+5. Start development server: `npm run dev`
 
-### Security Features
-- **Managed Identity**: Azure AD authentication for service-to-service communication
-- **Key Vault Integration**: Encrypted storage for sensitive configuration
-- **Container Registry**: GitHub token-based authentication for private images
-- **SSL/TLS**: End-to-end encryption with Azure-managed certificates
-
-## Recent Deployment Progress
-
-### Completed Infrastructure Fixes (2025-07-10)
-✅ **Docker Build**: Multi-stage build with Vite dependency resolution  
-✅ **PostgreSQL**: Complete SQLite → PostgreSQL schema conversion  
-✅ **Bicep Templates**: All scoping errors and cross-resource dependencies resolved  
-✅ **Authentication**: Optimized from 13 to 2 Azure logins (85% efficiency improvement)  
-✅ **Error Handling**: Comprehensive retry logic and API response management  
-✅ **Azure Resources**: Key Vault, Application Insights, PostgreSQL configuration fixes  
-✅ **Container Registry**: GitHub Container Registry authentication for private images  
-
-### Current Status
-- **Infrastructure Deployment**: All Azure resources deploying successfully
-- **Application Deployment**: Container Apps with proper GHCR authentication
-- **Database Migration**: PostgreSQL schema and connection validation
-- **Next Phase**: End-to-end health checks and production validation
-
-## Configuration
-
-### Required Environment Variables
-```bash
-# Database
-DATABASE_URL=postgresql://user:pass@host:5432/db
-
-# AI Services  
+### Environment Variables
+Set up the following in Replit Secrets:
+```
+DATABASE_URL=postgresql://...
 OPENAI_API_KEY=sk-...
-
-# Google Services
-VITE_GA_MEASUREMENT_ID=G-...
-GOOGLE_ANALYTICS_KEY=...
-GOOGLE_SEARCH_CONSOLE_KEY=...
-
-# Communication
-TWILIO_ACCOUNT_SID=AC...
+GOOGLE_ANALYTICS_PROPERTY_ID=GA_MEASUREMENT_ID
+GOOGLE_PLACES_API_KEY=...
+TWILIO_ACCOUNT_SID=...
 TWILIO_AUTH_TOKEN=...
-TWILIO_PHONE_NUMBER=+1...
-
-# Social Media (stored in database per client)
-FACEBOOK_ACCESS_TOKEN=...
-INSTAGRAM_ACCESS_TOKEN=...
-TWITTER_API_KEY=...
-LINKEDIN_ACCESS_TOKEN=...
 ```
 
-### Path Aliases
-- `@/` → `client/src/`
-- `@shared/` → `shared/`
-- `@assets/` → `attached_assets/`
+### Development Commands
+- **Development**: `npm run dev` (Vite + Express)
+- **Build**: `npm run build` (Production builds)
+- **Start**: `npm run start` (Production server)
+- **Database**: `npm run db:push` (Apply schema changes)
 
-## Company: FieldService
+## Recent Updates
 
-FieldService develops marketing automation tools specifically for field service professionals. Our mission is to help HVAC, plumbing, electrical, landscaping, and other service businesses consolidate expensive marketing subscriptions into one affordable, industry-focused platform.
+### January 2025
+- **Landing Page Redesign**: Professional marketing-focused landing page
+- **Authentication Integration**: Seamless Replit Auth implementation
+- **Protocol Design System**: Modern UI with glass morphism effects
+- **Mobile Optimization**: Enhanced responsive design across all pages
+- **Multi-Platform Scheduling**: Comprehensive social media wizard
 
-**Value Proposition**: "Replace 5 Marketing Tools with One" - Eliminate multiple expensive marketing subscriptions with our all-in-one platform for social media management, content creation, lead tracking, review monitoring, and analytics.
+### Previous Milestones
+- **Core Platform**: Built comprehensive marketing automation foundation
+- **AI Integration**: Implemented OpenAI-native content generation
+- **Google Integrations**: Added Analytics, Search Console, and Places APIs
+- **Database Migration**: Transitioned to PostgreSQL with Drizzle ORM
+- **Business Intelligence**: Enhanced reporting with real-time data
+
+## API Documentation
+
+### Core Endpoints
+- `GET /api/auth/user` - Get current user
+- `POST /api/social/posts` - Create social media post
+- `GET /api/reviews` - Fetch business reviews
+- `POST /api/ai/generate-content` - Generate AI content
+- `GET /api/analytics/reports` - Get analytics data
+- `POST /api/sms/send` - Send SMS message
+
+### Authentication
+All API endpoints require authentication via Replit Auth. The frontend automatically handles token management.
+
+## Development Guidelines
+
+### Code Standards
+- TypeScript for type safety across client and server
+- ESLint and Prettier for consistent code formatting
+- Component-based architecture with reusable UI elements
+- TanStack Query for all server state management
+- Tailwind CSS with Protocol design system
+
+### Database Operations
+- Use Drizzle ORM for all database interactions
+- Implement proper error handling and validation
+- Follow PostgreSQL best practices for performance
+- Maintain data integrity with foreign key constraints
+
+## Deployment
+
+### Replit Deployment
+- **Development**: `npm run dev` runs both client and server
+- **Production**: Automatic deployment on Replit
+- **Port**: 5000 (forwarded to 80/443 in production)
+- **Database**: PostgreSQL 16 module enabled
+- **Scaling**: Automatic scaling configuration
+
+### Performance Considerations
+- Vite for fast client builds
+- esbuild for optimized server bundling
+- TanStack Query for efficient data caching
+- PostgreSQL indexing for database performance
+
+## Future Roadmap
+
+### Planned Features
+- **Customer Onboarding**: Guided setup wizard for new users
+- **Advanced Analytics**: Machine learning insights
+- **Team Collaboration**: Multi-user workspace support
+- **White-Label Solution**: Agency customization
+- **Mobile App**: Native iOS/Android applications
+
+### Integration Expansions
+- **CRM Systems**: Salesforce, HubSpot
+- **Email Marketing**: Mailchimp, Constant Contact
+- **Calendar Systems**: Google Calendar, Outlook
+- **Payment Processing**: Stripe, PayPal
+
+## Support & Community
+
+### Documentation
+- Setup guides for all integrations
+- API documentation with examples
+- Video tutorials for key features
+- Best practices for field service marketing
+
+### Getting Help
+- GitHub Issues for bug reports
+- Community discussions for feature requests
+- Email support for enterprise customers
+- Video calls for technical implementation
+
+## License
+
+This project is proprietary software developed for field service professionals. All rights reserved.
+
+## Contributing
+
+FieldFlux is actively developed. For feature requests or bug reports, please contact the development team through the appropriate channels.
+
+---
+
+**FieldFlux - Transforming Field Service Marketing Through Intelligent Automation**

@@ -11,42 +11,29 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Link, useLocation } from "wouter";
 import MultiPlatformWizard from "@/components/social/multi-platform-wizard";
-import TopNavigation from "@/components/layout/top-navigation";
+
+import CollaborationHints from "@/components/felix/collaboration-hints";
+import { useFelixHints } from "@/hooks/use-felix-hints";
 import {
-  Bot,
-  MapPin,
   Wand2,
   PlusCircle,
-  LogOut,
   Calendar,
-  Share2,
-  Code,
-  Search,
-  Star,
-  UserPlus,
-  Settings as SettingsIcon,
-  LayoutDashboard,
+  RefreshCw,
+  BarChart3,
   TrendingUp,
+  Users,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Social Media", href: "/social", icon: Share2 },
-  { name: "Website", href: "/website", icon: Code },
-  { name: "Analytics", href: "/analytics", icon: TrendingUp },
-  { name: "SEO", href: "/seo", icon: Search },
-  { name: "Reviews", href: "/reviews", icon: Star },
-  { name: "Leads", href: "/leads", icon: UserPlus },
-  { name: "Settings", href: "/settings", icon: SettingsIcon },
-];
+// Navigation now imported from shared constants
 
 export default function Social() {
   const [generatedContent, setGeneratedContent] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const { toast } = useToast();
   const [location] = useLocation();
+  const { activity, handleHintAction, currentPage } = useFelixHints();
 
   const handleLogout = () => {
     toast({
@@ -56,20 +43,21 @@ export default function Social() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-      <TopNavigation title="Social Media Management" />
-
+    <div className="min-h-screen fx-hills">
       {/* Main Content */}
       <div className="p-4 lg:p-8">
-        <div className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>AI Content Generation</CardTitle>
-              <CardDescription>
+        <div className="space-y-6">
+          <div className="bg-white shadow-sm border rounded-xl fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
+            <div className="p-6 border-b" style={{borderColor: 'var(--border)'}}>
+              <h3 className="text-lg font-semibold flex items-center mb-2" style={{color: 'var(--fx-navy-900)'}}>
+                <Wand2 className="w-5 h-5 mr-2" style={{color: 'var(--fx-orange-600)'}} />
+                AI Content Generation
+              </h3>
+              <p className="text-sm text-gray-600">
                 Generate engaging social media content with AI.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
+              </p>
+            </div>
+            <div className="p-6">
               <div className="grid gap-4">
                 <div className="grid grid-cols-[1fr_110px] gap-4">
                   <textarea
@@ -78,7 +66,32 @@ export default function Social() {
                     rows={4}
                     onChange={(e) => setGeneratedContent(e.target.value)}
                   />
-                  <Button onClick={() => setIsGenerating(true)}>
+                  <Button 
+                    onClick={() => setIsGenerating(true)} 
+                    className="text-white transition-all duration-200 hover:scale-105 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    style={{
+                      backgroundColor: 'rgb(var(--fx-orange-600))',
+                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isGenerating) {
+                        e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-700))';
+                        e.currentTarget.style.boxShadow = '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      if (!isGenerating) {
+                        e.currentTarget.style.backgroundColor = 'rgb(var(--fx-orange-600))';
+                        e.currentTarget.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)';
+                      }
+                    }}
+                    disabled={isGenerating}
+                  >
+                    {isGenerating ? (
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Wand2 className="w-4 h-4" />
+                    )}
                     Generate
                   </Button>
                 </div>
@@ -87,8 +100,8 @@ export default function Social() {
                   platforms.
                 </p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
           <Tabs defaultValue="wizard" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
@@ -115,23 +128,54 @@ export default function Social() {
             </TabsContent>
           </Tabs>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <Card>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <Card className="glass-morphism hover-lift shadow-fieldflux animate-protocol-scale-in" style={{animationDelay: '0.1s'}}>
               <CardHeader>
-                <CardTitle>Performance Overview</CardTitle>
+                <CardTitle className="gradient-text flex items-center">
+                  <BarChart3 className="w-5 h-5 mr-2 text-teal-600" />
+                  Performance Overview
+                </CardTitle>
               </CardHeader>
-              <CardContent>Performance data here</CardContent>
+              <CardContent className="p-6">
+                <div className="metric-fieldservice-header">
+                  <div className="metric-fieldservice-title">Engagement Rate</div>
+                  <TrendingUp className="w-6 h-6 text-green-600 animate-float" />
+                </div>
+                <div className="metric-fieldservice-value">87.3%</div>
+                <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                  +15% from last month
+                </div>
+              </CardContent>
             </Card>
 
-            <Card>
+            <Card className="glass-morphism hover-lift shadow-fieldflux animate-protocol-scale-in" style={{animationDelay: '0.2s'}}>
               <CardHeader>
-                <CardTitle>Platform Performance</CardTitle>
+                <CardTitle className="gradient-text flex items-center">
+                  <Users className="w-5 h-5 mr-2 text-blue-600" />
+                  Platform Performance
+                </CardTitle>
               </CardHeader>
-              <CardContent>Platform specific data here</CardContent>
+              <CardContent className="p-6">
+                <div className="metric-fieldservice-header">
+                  <div className="metric-fieldservice-title">Total Followers</div>
+                  <Users className="w-6 h-6 text-blue-600 animate-pulse-glow" />
+                </div>
+                <div className="metric-fieldservice-value">2,347</div>
+                <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                  +124 new followers
+                </div>
+              </CardContent>
             </Card>
           </div>
         </div>
       </div>
+      
+      {/* Felix Collaboration Hints */}
+      <CollaborationHints 
+        currentPage={currentPage}
+        userActivity={activity}
+        onHintAction={handleHintAction}
+      />
     </div>
   );
 }

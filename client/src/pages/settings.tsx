@@ -11,7 +11,7 @@ import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, E
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 import { Link } from "wouter";
-import TopNavigation from "@/components/dashboard/top-navigation";
+import TopNavigation from "@/components/layout/top-navigation";
 
 interface WordPressConfig {
   siteUrl: string;
@@ -120,7 +120,7 @@ export default function Settings() {
   });
 
   const [whiteLabelConfig, setWhiteLabelConfig] = useState<WhiteLabelConfig>({
-    clientName: "FieldPulse",
+    clientName: "KasamaAI",
     clientDomain: "",
     logoUrl: "",
     primaryColor: "#3b82f6",
@@ -222,22 +222,22 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen landing-page">
       <TopNavigation title="Settings" />
 
       <div className="flex min-h-screen">
         <MobileSidebar />
 
         <main className="flex-1 lg:ml-64">
-          <div className="p-4 pt-16 lg:pt-6 lg:pl-6">
-            <div className="mb-6 lg:mb-8">
+          <div className="p-4 pt-16 lg:pt-6 lg:pl-6 container-modern">
+            <div className="mb-6 lg:mb-8 animate-protocol-fade-in">
               <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <SettingsIcon className="w-5 h-5 text-blue-600" />
+                <div className="w-12 h-12 gradient-accent rounded-xl flex items-center justify-center shadow-lg animate-pulse-glow">
+                  <SettingsIcon className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl lg:text-2xl font-bold text-hvac-gray">Settings</h1>
-                  <p className="text-gray-600 text-sm lg:text-base">Configure your integrations and preferences</p>
+                  <h1 className="text-2xl lg:text-3xl font-bold gradient-text">Settings</h1>
+                  <p className="text-fieldflux-secondary text-sm lg:text-base">Configure your integrations and preferences</p>
                 </div>
               </div>
             </div>
@@ -328,7 +328,7 @@ export default function Settings() {
                         <li>Log into your WordPress admin dashboard</li>
                         <li>Go to Users → Your Profile</li>
                         <li>Scroll down to "Application Passwords"</li>
-                        <li>Enter "FieldPulse" as the application name and click "Add New Application Password"</li>
+                        <li>Enter "FieldFlux" as the application name and click "Add New Application Password"</li>
                         <li>Copy the generated password and paste it above</li>
                         <li>Your site URL should be your main domain (e.g., https://yourbusiness.com)</li>
                       </ol>
@@ -778,7 +778,7 @@ export default function Settings() {
                       <div>
                         <CardTitle>White-label & Multi-Client Configuration</CardTitle>
                         <p className="text-sm text-gray-600 mt-1">
-                          Configure FieldPulse for white-label deployment or multi-client management
+                          Configure KasamaAI for white-label deployment or multi-client management
                         </p>
                       </div>
                       {whiteLabelConfig.isConfigured && (
@@ -881,28 +881,20 @@ export default function Settings() {
                         localStorage.setItem('whiteLabelConfig', JSON.stringify({ ...whiteLabelConfig, isConfigured: true }));
                         toast({
                           title: "White-label Configuration Saved",
-                          description: "Your white-label settings have been configured successfully.",
+                          description: "Your white-label configuration has been saved successfully."
                         });
                       }}
-                      className="w-full lg:w-auto"
+                      className="w-full"
                     >
                       Save White-label Configuration
                     </Button>
-
-                    <Alert>
-                      <AlertCircle className="h-4 w-4" />
-                      <AlertDescription>
-                        White-label mode allows you to rebrand FieldPulse with your own company colors, logo, and contact information. 
-                        Perfect for agencies offering marketing services to multiple clients.
-                      </AlertDescription>
-                    </Alert>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </main>
-      </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+          </CardContent>
+        </Card>
+      </main>
     </div>
   );
 }

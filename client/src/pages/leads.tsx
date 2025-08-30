@@ -9,8 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Progress } from "@/components/ui/progress";
-import TopNavigation from "@/components/layout/top-navigation";
-import { UserPlus, Mail, Phone, Calendar, Filter, Search, MoreVertical, MessageSquare, CheckCircle, Clock, AlertCircle, TrendingUp, Star, Target } from "lucide-react";
+
+import { UserPlus, Mail, Phone, Calendar, Filter, Search, MoreVertical, MessageSquare, CheckCircle, Clock, AlertCircle, TrendingUp, Star, Target, Brain, Zap, Trophy, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,6 +42,50 @@ export default function Leads() {
 
   const { data: leads, isLoading } = useQuery<Lead[]>({
     queryKey: ["/api/leads"],
+  });
+
+  const { data: leadAnalytics } = useQuery({
+    queryKey: ["/api/leads/analytics/scores"],
+  });
+
+  const scoreLeadMutation = useMutation({
+    mutationFn: async (leadId: number) => {
+      const response = await apiRequest("POST", `/api/leads/${leadId}/score`, {});
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/leads/analytics/scores"] });
+      toast({
+        title: "Lead Scored",
+        description: "AI scoring has been updated for this lead.",
+      });
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "Failed to score lead. Please try again.",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const { data: recommendations, refetch: refetchRecommendations } = useQuery({
+    queryKey: ["/api/leads/recommendations"],
+    enabled: false,
+  });
+
+  const getRecommendationsMutation = useMutation({
+    mutationFn: async (leadId: number) => {
+      const response = await apiRequest("GET", `/api/leads/${leadId}/recommendations`, {});
+      return response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "AI Recommendations",
+        description: `Generated ${data.recommendations.length} personalized recommendations.`,
+      });
+    },
   });
 
   const addLeadMutation = useMutation({
@@ -151,10 +195,10 @@ export default function Leads() {
     const now = new Date();
     const createdDate = new Date(date);
     const diffInHours = Math.floor((now.getTime() - createdDate.getTime()) / (1000 * 60 * 60));
-    
+
     if (diffInHours < 1) return "Less than an hour ago";
     if (diffInHours < 24) return `${diffInHours} hours ago`;
-    
+
     const diffInDays = Math.floor(diffInHours / 24);
     return `${diffInDays} days ago`;
   };
@@ -172,62 +216,117 @@ export default function Leads() {
   const stats = getLeadStats();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
-      <TopNavigation title="Lead Management" />
+    <div className="min-h-screen landing-page">
+      <main className="w-full">
+        <div className="max-w-7xl mx-auto p-6 space-y-6">
 
-      {/* Main Content */}
-      <div className="p-4 lg:p-8 space-y-6">
-        
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-blue-100 text-sm font-medium">Total Leads</p>
-                  <p className="text-2xl font-bold">{stats.total}</p>
-                </div>
-                <UserPlus className="w-8 h-8 text-blue-200" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 animate-protocol-fade-in">
+          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.1s'}}>
+            <CardContent className="p-6">
+              <div className="metric-fieldservice-header">
+                <div className="metric-fieldservice-title">Total Leads</div>
+                <UserPlus className="w-6 h-6 text-teal-600 animate-float" />
+              </div>
+              <div className="metric-fieldservice-value">{stats.total}</div>
+              <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                Active pipeline
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-white">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-yellow-100 text-sm font-medium">New Leads</p>
-                  <p className="text-2xl font-bold">{stats.newLeads}</p>
-                </div>
-                <AlertCircle className="w-8 h-8 text-yellow-200" />
+          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.2s'}}>
+            <CardContent className="p-6">
+              <div className="metric-fieldservice-header">
+                <div className="metric-fieldservice-title">New Leads</div>
+                <AlertCircle className="w-6 h-6 text-blue-600 animate-pulse-glow" />
+              </div>
+              <div className="metric-fieldservice-value">{stats.newLeads}</div>
+              <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                Awaiting contact
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-green-100 text-sm font-medium">Qualified</p>
-                  <p className="text-2xl font-bold">{stats.qualified}</p>
-                </div>
-                <Target className="w-8 h-8 text-green-200" />
+          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.3s'}}>
+            <CardContent className="p-6">
+              <div className="metric-fieldservice-header">
+                <div className="metric-fieldservice-title">Qualified</div>
+                <Target className="w-6 h-6 text-green-600" />
+              </div>
+              <div className="metric-fieldservice-value">{stats.qualified}</div>
+              <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                Ready to convert
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
-            <CardContent className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-purple-100 text-sm font-medium">Conversion Rate</p>
-                  <p className="text-2xl font-bold">{stats.conversionRate}%</p>
-                </div>
-                <TrendingUp className="w-8 h-8 text-purple-200" />
+          <Card className="metric-fieldservice hover-glow animate-protocol-scale-in" style={{animationDelay: '0.4s'}}>
+            <CardContent className="p-6">
+              <div className="metric-fieldservice-header">
+                <div className="metric-fieldservice-title">Conversion Rate</div>
+                <TrendingUp className="w-6 h-6 text-purple-600 animate-float" />
+              </div>
+              <div className="metric-fieldservice-value">{stats.conversionRate}%</div>
+              <div className="metric-fieldservice-change metric-fieldservice-change-positive">
+                Above industry avg
               </div>
             </CardContent>
           </Card>
         </div>
+
+        {/* AI Scoring Analytics Dashboard */}
+        {leadAnalytics && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <Card className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-indigo-100 text-sm font-medium">Avg Lead Score</p>
+                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgLeadScore)}/100</p>
+                  </div>
+                  <Brain className="w-8 h-8 text-indigo-200" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-r from-pink-500 to-pink-600 text-white">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-pink-100 text-sm font-medium">Avg Urgency</p>
+                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgUrgencyScore)}/100</p>
+                  </div>
+                  <Zap className="w-8 h-8 text-pink-200" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-emerald-100 text-sm font-medium">Conversion Prob</p>
+                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgConversionProbability)}%</p>
+                  </div>
+                  <Trophy className="w-8 h-8 text-emerald-200" />
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-r from-amber-500 to-amber-600 text-white">
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-amber-100 text-sm font-medium">Predicted Value</p>
+                    <p className="text-2xl font-bold">${Math.round(leadAnalytics.totalPredictedValue).toLocaleString()}</p>
+                  </div>
+                  <Star className="w-8 h-8 text-amber-200" />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Controls */}
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
@@ -241,7 +340,7 @@ export default function Leads() {
                 className="pl-10 w-full sm:w-64"
               />
             </div>
-            
+
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-full sm:w-40">
                 <SelectValue placeholder="Filter by Status" />
@@ -297,7 +396,7 @@ export default function Leads() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="email"
@@ -311,7 +410,7 @@ export default function Leads() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="phone"
@@ -325,7 +424,7 @@ export default function Leads() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="service"
@@ -339,7 +438,7 @@ export default function Leads() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="location"
@@ -353,7 +452,7 @@ export default function Leads() {
                       </FormItem>
                     )}
                   />
-                  
+
                   <FormField
                     control={form.control}
                     name="priority"
@@ -404,7 +503,11 @@ export default function Leads() {
         {/* Leads List */}
         <Card>
           <CardHeader>
-            <CardTitle>Leads ({filteredLeads.length})</CardTitle>
+            <CardTitle>
+              <h1 className="text-lg lg:text-xl font-bold text-hvac-gray">
+                  FieldFlux Leads
+                </h1>
+            </CardTitle>
             <CardDescription>
               Manage and track your business leads
             </CardDescription>
@@ -445,11 +548,39 @@ export default function Leads() {
                             {leadPriorities.find(p => p.value === lead.priority)?.label}
                           </Badge>
                         </div>
-                        
+
                         <p className="text-sm text-gray-600 mb-2">
                           {lead.service} • {lead.location}
                         </p>
-                        
+
+                        {/* AI Scoring Information */}
+                        {lead.leadScore !== null && (
+                          <div className="flex flex-wrap items-center gap-3 mb-2">
+                            <div className="flex items-center gap-1">
+                              <Brain className="w-4 h-4 text-indigo-600" />
+                              <span className="text-sm font-medium text-indigo-600">Score: {lead.leadScore}/100</span>
+                            </div>
+                            {lead.urgencyScore !== null && (
+                              <div className="flex items-center gap-1">
+                                <Zap className="w-4 h-4 text-pink-600" />
+                                <span className="text-sm font-medium text-pink-600">Urgency: {lead.urgencyScore}/100</span>
+                              </div>
+                            )}
+                            {lead.conversionProbability && (
+                              <div className="flex items-center gap-1">
+                                <Trophy className="w-4 h-4 text-emerald-600" />
+                                <span className="text-sm font-medium text-emerald-600">Conv: {Math.round(parseFloat(lead.conversionProbability))}%</span>
+                              </div>
+                            )}
+                            {lead.predictedValue && (
+                              <div className="flex items-center gap-1">
+                                <Star className="w-4 h-4 text-amber-600" />
+                                <span className="text-sm font-medium text-amber-600">Value: ${lead.predictedValue}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         <div className="flex flex-wrap items-center gap-4 text-xs text-gray-500">
                           {lead.email && (
                             <span className="flex items-center gap-1">
@@ -469,8 +600,31 @@ export default function Leads() {
                           </span>
                         </div>
                       </div>
-                      
+
                       <div className="flex flex-wrap gap-2">
+                        {/* AI Scoring Actions */}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => scoreLeadMutation.mutate(lead.id)}
+                          disabled={scoreLeadMutation.isPending}
+                          className="border-indigo-200 text-indigo-600 hover:bg-indigo-50"
+                        >
+                          <Brain className="w-4 h-4 mr-1" />
+                          {scoreLeadMutation.isPending ? "Scoring..." : "AI Score"}
+                        </Button>
+
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => getRecommendationsMutation.mutate(lead.id)}
+                          disabled={getRecommendationsMutation.isPending}
+                          className="border-purple-200 text-purple-600 hover:bg-purple-50"
+                        >
+                          <Eye className="w-4 h-4 mr-1" />
+                          {getRecommendationsMutation.isPending ? "Getting..." : "Get Tips"}
+                        </Button>
+
                         {lead.status === "new" && (
                           <Button
                             size="sm"
@@ -482,7 +636,7 @@ export default function Leads() {
                             Qualify
                           </Button>
                         )}
-                        
+
                         <Button
                           size="sm"
                           variant="outline"
@@ -495,7 +649,7 @@ export default function Leads() {
                           <MessageSquare className="w-4 h-4 mr-1" />
                           {lead.status === "contacted" ? "Mark New" : "Contact"}
                         </Button>
-                        
+
                         {lead.status !== "converted" && (
                           <Button
                             size="sm"
@@ -518,7 +672,8 @@ export default function Leads() {
             )}
           </CardContent>
         </Card>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

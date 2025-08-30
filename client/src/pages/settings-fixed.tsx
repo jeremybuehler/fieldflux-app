@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import { Link, useLocation } from "wouter";
 import { Globe, BarChart3, CheckCircle, AlertCircle, Settings as SettingsIcon, ExternalLink, ArrowLeft, MessageSquare, Facebook, Twitter, Instagram, Linkedin, Share2, Code, Search, Star, UserPlus, LayoutDashboard, TrendingUp, Bot, MapPin, LogOut } from "lucide-react";
+import BillingSettings from "@/components/settings/billing-settings";
 import { useToast } from "@/hooks/use-toast";
 import { trackEvent } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
@@ -187,25 +188,25 @@ export default function Settings() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+    <div className="min-h-screen fx-hills">
       {/* Header */}
-      <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-4 lg:px-8 py-4 lg:py-6">
+      <div className="bg-white/90 backdrop-blur-sm border-b px-4 lg:px-8 py-4 lg:py-6 fx-grain" style={{borderColor: 'var(--border)'}}>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-primary to-hvac-orange rounded-xl flex items-center justify-center">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{backgroundColor: 'var(--fx-orange-600)'}}>
                 <Bot className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h1 className="text-lg lg:text-xl font-bold text-hvac-gray">
-                  Settings & Integrations
+                <h1 className="text-lg lg:text-xl font-bold" style={{color: 'var(--fx-navy-900)'}}>
+                  FieldFlux Settings & Integrations
                 </h1>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <div className="hidden sm:flex items-center space-x-1">
-                    <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                      AI Powered
+                    <Badge variant="secondary" className="border" style={{backgroundColor: 'var(--fx-orange-100)', color: 'var(--fx-orange-700)', borderColor: 'var(--fx-orange-200)'}}>
+                      Intelligent
                     </Badge>
-                    <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
+                    <Badge variant="secondary" className="border" style={{backgroundColor: 'var(--fx-teal-100)', color: 'var(--fx-teal-700)', borderColor: 'var(--fx-teal-200)'}}>
                       <MapPin className="w-3 h-3 mr-1" />
                       Winter Haven FL
                     </Badge>
@@ -228,7 +229,7 @@ export default function Settings() {
       </div>
 
       {/* Top Navigation */}
-      <div className="bg-white border-b border-gray-200 px-4 lg:px-8 py-3">
+      <div className="bg-white border-b px-4 lg:px-8 py-3 fx-grain" style={{borderColor: 'var(--border)', backgroundColor: 'var(--bg-elevated)'}}>
         <nav className="flex space-x-1 overflow-x-auto">
           {navigation.map((item) => {
             const Icon = item.icon;
@@ -241,9 +242,10 @@ export default function Settings() {
                   className={cn(
                     "flex items-center space-x-2 whitespace-nowrap",
                     isActive 
-                      ? "bg-primary text-white" 
+                      ? "text-white" 
                       : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
                   )}
+                  style={isActive ? {backgroundColor: 'var(--fx-navy-900)'} : {}}
                 >
                   <Icon className="w-4 h-4" />
                   <span className="hidden sm:inline">{item.name}</span>
@@ -257,12 +259,18 @@ export default function Settings() {
       {/* Main Content */}
       <div className="p-4 lg:p-8">
         <Tabs defaultValue="wordpress" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 bg-gray-100 p-1 rounded-lg">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-5 p-1 rounded-lg fx-grain" style={{backgroundColor: 'var(--bg-elevated)'}}>
             <TabsTrigger 
               value="wordpress" 
               className="data-[state=active]:bg-white data-[state=active]:text-gray-900 data-[state=active]:shadow-sm text-gray-700 font-medium"
             >
               WordPress
+            </TabsTrigger>
+            <TabsTrigger 
+              value="billing" 
+              className="data-[state=active]:bg-green-600 data-[state=active]:text-white data-[state=active]:shadow-sm text-gray-700 font-medium hover:text-green-600"
+            >
+              Billing
             </TabsTrigger>
             <TabsTrigger 
               value="analytics" 
@@ -360,7 +368,7 @@ export default function Settings() {
                     <li>Log into your WordPress admin dashboard</li>
                     <li>Go to Users → Your Profile</li>
                     <li>Scroll down to "Application Passwords"</li>
-                    <li>Enter "FieldPulse" as the application name and click "Add New Application Password"</li>
+                    <li>Enter "FieldFlux" as the application name and click "Add New Application Password"</li>
                     <li>Copy the generated password and paste it above</li>
                     <li>Your site URL should be your main domain (e.g., https://yourbusiness.com)</li>
                   </ol>
@@ -672,6 +680,12 @@ export default function Settings() {
               </Alert>
             </div>
           </TabsContent>
+
+          {/* Billing Tab */}
+          <TabsContent value="billing" className="space-y-6">
+            <BillingSettings />
+          </TabsContent>
+
         </Tabs>
       </div>
     </div>

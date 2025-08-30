@@ -2,27 +2,24 @@ import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SEOPerformance from "@/components/dashboard/seo-performance";
-import TopNavigation from "@/components/layout/top-navigation";
+
 import { ArrowLeft, Search, TrendingUp, Target, BarChart3 } from "lucide-react";
 
 export default function SEO() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <TopNavigation title="SEO Optimization" />
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="mb-8">
-          <div className="flex items-center space-x-3 mb-4">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <Search className="w-5 h-5 text-green-600" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-hvac-gray">SEO Optimization</h1>
-              <p className="text-gray-600">Optimize your search engine visibility and keyword rankings</p>
+    <div className="min-h-screen landing-page">
+      <main className="w-full">
+        <div className="max-w-7xl mx-auto p-6">
+          <div className="mb-8">
+            <div className="flex items-center space-x-3 mb-4">
+              <div>
+                <h2 className="text-xl font-bold gradient-text">SEO Performance Dashboard</h2>
+                <p className="text-sm text-fieldflux-secondary">Monitor and optimize your search engine visibility</p>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-6">
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -76,9 +73,9 @@ export default function SEO() {
               </div>
             </CardContent>
           </Card>
-        </div>
+          </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
             <SEOPerformance />
           </div>
@@ -180,7 +177,8 @@ export default function SEO() {
             </Card>
           </div>
         </div>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }

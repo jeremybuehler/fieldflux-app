@@ -5,24 +5,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Link, useLocation } from "wouter";
-import { Bot, MapPin, TrendingUp, Users, MessageSquare, Star, LogOut, Calendar, Share2, Code, Search, UserPlus, Settings as SettingsIcon, LayoutDashboard, CheckCircle, Globe, Target } from "lucide-react";
+import { Bot, MapPin, TrendingUp, Users, MessageSquare, Star, LogOut, Calendar, CheckCircle, Globe, Target, Zap } from "lucide-react";
+import { useEngagementTracking } from "@/hooks/useEngagementTracking";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { getNavigation } from "@/lib/navigation";
 
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Social Media", href: "/social", icon: Share2 },
-  { name: "Website", href: "/website", icon: Code },
-  { name: "Reports", href: "/reports", icon: TrendingUp },
-  { name: "SEO", href: "/seo", icon: Search },
-  { name: "Reviews", href: "/reviews", icon: Star },
-  { name: "Leads", href: "/leads", icon: UserPlus },
-  { name: "Settings", href: "/settings", icon: SettingsIcon },
-];
+// Navigation now imported from shared constants
 
 export default function Dashboard() {
   const { toast } = useToast();
   const [location] = useLocation();
+  const { trackAction } = useEngagementTracking();
 
   useEffect(() => {
     trackEvent('dashboard_view', 'navigation', 'dashboard_page');
@@ -39,6 +33,7 @@ export default function Dashboard() {
   };
 
   const handleGenerateContent = () => {
+    trackAction("generate_content_clicked");
     toast({
       title: "Generate Content",
       description: "Content generation feature coming soon!",
@@ -46,23 +41,23 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-orange-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200 px-4 lg:px-8 py-4 lg:py-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3">
               <div className="w-10 h-10 bg-gradient-to-br from-primary to-hvac-orange rounded-xl flex items-center justify-center">
-                <Bot className="w-5 h-5 text-white" />
+                <Zap className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h1 className="text-lg lg:text-xl font-bold text-hvac-gray text-center lg:text-left">
-                  FieldPulse
+                  FieldFlux
                 </h1>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <div className="hidden sm:flex items-center space-x-1">
                     <Badge variant="secondary" className="bg-primary/10 text-primary border-primary/20">
-                      AI Powered
+                      Intelligent
                     </Badge>
                     <Badge variant="secondary" className="bg-green-100 text-green-700 border-green-200">
                       <MapPin className="w-3 h-3 mr-1" />
@@ -89,7 +84,7 @@ export default function Dashboard() {
       {/* Top Navigation */}
       <div className="bg-white border-b border-gray-200 px-4 lg:px-8 py-3">
         <nav className="flex space-x-1 overflow-x-auto">
-          {navigation.map((item) => {
+          {getNavigation(true).map((item) => {
             const Icon = item.icon;
             const isActive = location === item.href;
             return (
@@ -117,38 +112,7 @@ export default function Dashboard() {
       <div className="p-4 lg:p-8">
         <div className="max-w-7xl mx-auto space-y-8">
 
-            {/* Dashboard Header */}
-            <div className="mb-8 border-b border-gray-100 bg-white/80 backdrop-blur-sm rounded-xl p-6">
-              <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between text-center sm:text-left">
-                <div className="space-y-2">
-                  <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900">
-                    Field Service Marketing Dashboard
-                  </h1>
-                  <p className="text-sm md:text-base text-gray-600">
-                    Welcome back! Here's your field service marketing performance and activity overview.
-                  </p>
-                </div>
 
-                <div className="flex items-center space-x-3 mt-4 sm:mt-0">
-                  <Badge variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 px-4 py-2 hidden sm:flex">
-                    <Bot className="w-4 h-4 mr-2" />
-                    AI Powered
-                  </Badge>
-                  <div className="flex items-center space-x-2 bg-primary/10 rounded-lg px-3 py-2 hidden sm:flex">
-                    <MapPin className="w-4 h-4 text-primary" />
-                    <span className="text-sm font-medium text-primary">Winter Haven, FL</span>
-                  </div>
-                  <Button 
-                    onClick={() => window.location.href = '/'}
-                    variant="outline"
-                    size="sm"
-                    className="text-gray-600 hover:text-gray-900"
-                  >
-                    Logout
-                  </Button>
-                </div>
-              </div>
-            </div>
 
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -228,7 +192,7 @@ export default function Dashboard() {
                   </CardHeader>
                   <CardContent className="space-y-6 p-6">
                     <p className="text-gray-600">
-                      Create and schedule field service social media posts to boost your online presence and engage with service customers.
+                      Create and schedule social media posts to boost your online presence and engage with customers.
                     </p>
 
                     <div className="space-y-4">
@@ -237,7 +201,7 @@ export default function Dashboard() {
                           <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
                             <CheckCircle className="w-4 h-4 text-green-600" />
                           </div>
-                          <span className="font-medium">HVAC Facebook Post Scheduled</span>
+                          <span className="font-medium">Facebook Post Scheduled</span>
                         </div>
                         <Badge variant="secondary" className="bg-white/80 border-green-200">Today 2:00 PM</Badge>
                       </div>
@@ -247,7 +211,7 @@ export default function Dashboard() {
                           <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
                             <Calendar className="w-4 h-4 text-blue-600" />
                           </div>
-                          <span className="font-medium">Service Instagram Story Ready</span>
+                          <span className="font-medium">Instagram Story Ready</span>
                         </div>
                         <Badge variant="secondary" className="bg-white/80 border-blue-200">Draft</Badge>
                       </div>
@@ -257,7 +221,7 @@ export default function Dashboard() {
                           <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
                             <TrendingUp className="w-4 h-4 text-purple-600" />
                           </div>
-                          <span className="font-medium">Field Service LinkedIn Article</span>
+                          <span className="font-medium">LinkedIn Article</span>
                         </div>
                         <Badge variant="secondary" className="bg-white/80 border-purple-200">Tomorrow</Badge>
                       </div>
@@ -284,7 +248,7 @@ export default function Dashboard() {
                     <div className="space-y-5">
                       <div className="space-y-3">
                         <div className="flex justify-between items-center">
-                          <span className="font-medium">Service Content Engagement</span>
+                          <span className="font-medium">Content Engagement</span>
                           <span className="font-semibold text-green-600">87%</span>
                         </div>
                         <Progress value={87} className="h-3 bg-gray-100" />
@@ -292,7 +256,7 @@ export default function Dashboard() {
 
                       <div className="space-y-3">
                         <div className="flex justify-between items-center">
-                          <span className="font-medium">Service Lead Generation</span>
+                          <span className="font-medium">Lead Generation</span>
                           <span className="font-semibold text-blue-600">72%</span>
                         </div>
                         <Progress value={72} className="h-3 bg-gray-100" />
@@ -326,7 +290,7 @@ export default function Dashboard() {
                       <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div className="w-3 h-3 bg-green-500 rounded-full mt-2 shadow-sm"></div>
                         <div className="flex-1 space-y-1">
-                          <p className="font-medium">Field service blog post published</p>
+                          <p className="font-medium">Blog post published</p>
                           <p className="text-xs text-gray-600">2 hours ago</p>
                         </div>
                       </div>
@@ -334,7 +298,7 @@ export default function Dashboard() {
                       <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div className="w-3 h-3 bg-blue-500 rounded-full mt-2 shadow-sm"></div>
                         <div className="flex-1 space-y-1">
-                          <p className="font-medium">Field service social media scheduled</p>
+                          <p className="font-medium">Social media scheduled</p>
                           <p className="text-xs text-gray-600">4 hours ago</p>
                         </div>
                       </div>
@@ -342,7 +306,7 @@ export default function Dashboard() {
                       <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div className="w-3 h-3 bg-purple-500 rounded-full mt-2 shadow-sm"></div>
                         <div className="flex-1 space-y-1">
-                          <p className="font-medium">New customer review received</p>
+                          <p className="font-medium">New review received</p>
                           <p className="text-xs text-gray-600">1 day ago</p>
                         </div>
                       </div>
@@ -350,7 +314,7 @@ export default function Dashboard() {
                       <div className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
                         <div className="w-3 h-3 bg-orange-500 rounded-full mt-2 shadow-sm"></div>
                         <div className="flex-1 space-y-1">
-                          <p className="font-medium">Field service SEO optimization complete</p>
+                          <p className="font-medium">SEO optimization complete</p>
                           <p className="text-xs text-gray-600">2 days ago</p>
                         </div>
                       </div>
