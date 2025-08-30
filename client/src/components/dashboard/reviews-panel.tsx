@@ -112,7 +112,7 @@ export default function ReviewsPanel() {
       id: 1,
       customerName: "Jennifer Martinez",
       rating: 5,
-      content: "Excellent service! The technician was professional and fixed our AC quickly. Highly recommend!",
+      content: "Excellent service! The technician was professional and fixed our AC quickly. Highly recommend this field service company!",
       platform: "Google",
       status: "pending",
       createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000), // 3 hours ago
@@ -121,7 +121,7 @@ export default function ReviewsPanel() {
       id: 2,
       customerName: "Bob Thompson",
       rating: 4,
-      content: "Good work on our commercial HVAC system. Arrived on time and got everything working properly.",
+      content: "Good work on our commercial HVAC system. Arrived on time and got everything working properly. Great field service experience!",
       platform: "Yelp",
       status: "responded",
       aiResponse: "Thank you Bob! We're glad we could get your commercial system running smoothly. We appreciate your business!",

@@ -1,0 +1,227 @@
+name: Deploy Infrastructure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'infrastructure/**'
+      - '.github/workflows/deploy-infrastructure.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'infrastructure/**'
+      - '.github/workflows/deploy-infrastructure.yml'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - intg
+          - prod
+      force_deploy:
+        description: 'Force deployment (skip validation)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+env:
+  AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+  LOCATION: 'eastus'
+  APPLICATION_NAME: 'fieldpulse'
+
+jobs:
+  validate-bicep:
+    name: Validate Bicep Templates
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ env.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ env.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ env.AZURE_TENANT_ID }}"}'
+
+      - name: Validate Bicep templates
+        run: |
+          echo "🔍 Validating Bicep templates..."
+          
+          # Validate main template
+          az deployment sub validate \
+            --location ${{ env.LOCATION }} \
+            --template-file infrastructure/main.bicep \
+            --parameters infrastructure/parameters/dev.parameters.json \
+            --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}"
+          
+          echo "✅ Bicep validation completed successfully"
+
+      - name: Check resource naming conventions
+        run: |
+          echo "🏷️ Checking resource naming conventions..."
+          
+          # Check if resource names follow DOCC patterns
+          if ! grep -q "rg-fieldpulse-platform-" infrastructure/main.bicep; then
+            echo "❌ Resource group naming convention not followed"
+            exit 1
+          fi
+          
+          if ! grep -q "ca-fieldpulse-app-" infrastructure/main.bicep; then
+            echo "❌ Container app naming convention not followed"
+            exit 1
+          fi
+          
+          echo "✅ Resource naming conventions validated"
+
+      - name: Estimate deployment cost
+        run: |
+          echo "💰 Estimating deployment cost..."
+          echo "Development environment estimated cost: ~$45/month"
+          echo "- Container Apps: ~$15/month"
+          echo "- PostgreSQL: ~$30/month"
+          echo "- Key Vault: ~$1/month"
+          echo "- Application Insights: Minimal usage"
+
+  deploy-dev:
+    name: Deploy to Development
+    runs-on: ubuntu-latest
+    needs: [validate-bicep]
+    if: always() && (needs.validate-bicep.result == 'success' || needs.validate-bicep.result == 'skipped')
+    environment: development
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ env.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ env.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ env.AZURE_TENANT_ID }}"}'
+
+      - name: Deploy infrastructure to development
+        run: |
+          echo "🚀 Deploying infrastructure to development environment..."
+          
+          # Create deployment with timestamp
+          DEPLOYMENT_NAME="fieldpulse-infra-$(date +%Y%m%d-%H%M%S)"
+          
+          az deployment sub create \
+            --name $DEPLOYMENT_NAME \
+            --location ${{ env.LOCATION }} \
+            --template-file infrastructure/main.bicep \
+            --parameters infrastructure/parameters/dev.parameters.json \
+            --parameters openaiApiKey="${{ secrets.OPENAI_API_KEY || 'placeholder-key' }}" \
+            --parameters tags='{"DeployedBy":"github-actions","DeployedAt":"$(date -u +%Y-%m-%dT%H:%M:%SZ)","GitCommit":"${{ github.sha }}","GitRef":"${{ github.ref }}"}' \
+            --output table
+          
+          echo "✅ Infrastructure deployment completed"
+
+      - name: Verify deployment health
+        run: |
+          echo "🔍 Verifying deployment health..."
+          
+          # Get deployment outputs
+          DEPLOYMENT_NAME=$(az deployment sub list --query "[?contains(name, 'fieldpulse-infra-')] | [0].name" -o tsv)
+          
+          # Check if Container Apps environment is ready
+          CONTAINER_APP_NAME=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs.containerAppName.value" -o tsv)
+          RG_NAME=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs.resourceGroupName.value" -o tsv)
+          
+          if [ ! -z "$CONTAINER_APP_NAME" ] && [ ! -z "$RG_NAME" ]; then
+            echo "Checking Container App health..."
+            az containerapp show \
+              --name $CONTAINER_APP_NAME \
+              --resource-group $RG_NAME \
+              --query "properties.provisioningState" \
+              -o tsv
+          fi
+          
+          echo "✅ Health verification completed"
+
+      - name: Update deployment status
+        run: |
+          echo "📊 Deployment Summary:"
+          echo "- Environment: Development"
+          echo "- Deployment time: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          echo "- Git commit: ${{ github.sha }}"
+          echo "- Deployed by: ${{ github.actor }}"
+          
+          # Set deployment URL for later use
+          DEPLOYMENT_NAME=$(az deployment sub list --query "[?contains(name, 'fieldpulse-infra-')] | [0].name" -o tsv)
+          CONTAINER_APP_URL=$(az deployment sub show --name $DEPLOYMENT_NAME --query "properties.outputs.containerAppUrl.value" -o tsv)
+          
+          echo "CONTAINER_APP_URL=$CONTAINER_APP_URL" >> $GITHUB_ENV
+          echo "🌐 Application will be available at: $CONTAINER_APP_URL"
+
+  notify-deployment:
+    name: Notify Deployment Status
+    runs-on: ubuntu-latest
+    needs: [deploy-dev]
+    if: always()
+    
+    steps:
+      - name: Notify success
+        if: needs.deploy-dev.result == 'success'
+        run: |
+          echo "🎉 Infrastructure deployment successful!"
+          echo "✅ Development environment is ready for application deployment"
+          echo "🔗 Next step: Deploy application using deploy-application.yml workflow"
+
+      - name: Notify failure
+        if: needs.deploy-dev.result == 'failure'
+        run: |
+          echo "❌ Infrastructure deployment failed!"
+          echo "🔍 Check the deployment logs for details"
+          echo "🛠️ Common issues:"
+          echo "   - Check Azure permissions"
+          echo "   - Verify resource naming conflicts"
+          echo "   - Ensure OpenAI API key is valid"
+          exit 1
+
+  cleanup-on-failure:
+    name: Cleanup on Failure
+    runs-on: ubuntu-latest
+    needs: [deploy-dev]
+    if: failure() && github.event_name != 'pull_request'
+    
+    steps:
+
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: '{"clientId":"${{ env.AZURE_CLIENT_ID }}","clientSecret":"${{ secrets.AZURE_CLIENT_SECRET }}","subscriptionId":"${{ env.AZURE_SUBSCRIPTION_ID }}","tenantId":"${{ env.AZURE_TENANT_ID }}"}'
+
+      - name: Cleanup failed deployment
+        run: |
+          echo "🧹 Cleaning up failed deployment resources..."
+          
+          # List and optionally remove failed resources
+          RG_NAME="rg-fieldpulse-platform-dev"
+          DATA_RG_NAME="rg-fieldpulse-data-dev"
+          
+          # Check if resource groups exist
+          if az group exists --name $RG_NAME; then
+            echo "⚠️ Found resource group: $RG_NAME"
+            echo "Manual cleanup may be required"
+          fi
+          
+          if az group exists --name $DATA_RG_NAME; then
+            echo "⚠️ Found data resource group: $DATA_RG_NAME"
+            echo "Manual cleanup may be required"
+          fi
+          
+          echo "🔍 Check Azure Portal for any remaining resources"

@@ -86,7 +86,7 @@ To verify your setup is working:
 
 1. Enable Places API (New) in Google Cloud Console
 2. Ensure billing is enabled (required but often free)
-3. Test search in KasamaAI Reviews page
+3. Test search in FieldPulse Reviews page
 4. Should see real business results instead of demo data
 
 ## Need Help?
@@ -97,4 +97,4 @@ If you continue to see errors:
 3. Check billing account is linked
 4. Try a simple search like "McDonald's" to test
 
-Once properly configured, KasamaAI will automatically switch from demo data to real Google reviews and provide authentic business insights.
+Once properly configured, FieldPulse will automatically switch from demo data to real Google reviews and provide authentic business insights.

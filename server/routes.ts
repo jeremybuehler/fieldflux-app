@@ -2,7 +2,8 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+// Import Replit Auth conditionally
+let setupAuth: any = null;
 import {
   users, 
   wordpressPosts, 
@@ -11,7 +12,7 @@ import {
   socialPosts, 
   leads, 
   tasks, 
-  activities, 
+  activities,
   seoKeywords,
   socialMediaConfigs,
   socialMediaAnalytics,
@@ -23,11 +24,11 @@ import {
   insertTaskSchema,
   insertActivitySchema,
   insertSeoKeywordSchema,
-  insertSocialMediaConfigSchema,
-  insertSocialMediaAnalyticsSchema
+  insertSocialMediaConfigSchema
 } from "@shared/schema";
 import OpenAI from "openai";
 import twilio from "twilio";
+import { z } from "zod";
 import { googleAnalyticsService } from "./services/google-analytics";
 import { leadScoringService } from "./services/leadScoringService";
 import { aiCoachService } from "./services/aiCoachService";
@@ -47,8 +48,21 @@ if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
 // Remove duplicate authentication middleware - using the one from replitAuth
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
+  // Auth middleware - only setup Replit Auth if in Replit environment
+  if (process.env.REPLIT_DOMAINS) {
+    try {
+      const replitAuth = await import("./replitAuth");
+      setupAuth = replitAuth.setupAuth;
+      await setupAuth(app);
+    } catch (error) {
+      console.error("Failed to setup Replit Auth:", error);
+    }
+  }
+
+  // Health check endpoint for Azure
+  app.get('/api/health', (req, res) => {
+    res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+  });
 
   // Auth routes (using the isAuthenticated from replitAuth, not the removed duplicate)
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
@@ -500,11 +514,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages: [
           {
             role: "system",
-            content: "You are an expert HVAC content writer. Create engaging, SEO-optimized content for HVAC businesses serving Winter Haven, Lakeland, and surrounding Florida areas. Always include practical tips and local relevance.",
+            content: "You are an expert field service content writer specializing in HVAC, plumbing, electrical, landscaping, and pest control businesses. Create engaging, SEO-optimized content that helps field service businesses attract more customers and establish expertise. Always include practical tips and seasonal considerations for homeowners and business owners.",
           },
           {
             role: "user",
-            content: `Create a ${type} post about: ${topic}. Include an SEO-optimized title and comprehensive content (800-1000 words). Focus on residential and commercial HVAC services. Make it engaging and informative for homeowners and business owners in Central Florida.`,
+            content: `Create a ${type} post about: ${topic}. Include an SEO-optimized title and comprehensive content (800-1000 words). Focus on field service industries including HVAC, plumbing, electrical, landscaping, and pest control. Make it engaging and informative for homeowners and business owners seeking professional field service solutions.`,
           },
         ],
         response_format: { type: "json_object" },
@@ -513,8 +527,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const result = JSON.parse(completion.choices[0].message.content || '{}');
 
       const post = await storage.createWordPressPost({
-        title: result.title || `HVAC Guide: ${topic}`,
-        content: result.content || `Comprehensive guide about ${topic} for HVAC services.`,
+        title: result.title || `Field Service Guide: ${topic}`,
+        content: result.content || `Comprehensive guide about ${topic} for field service businesses.`,
         status: "draft",
       });
 
@@ -565,11 +579,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages: [
           {
             role: "system",
-            content: `You are a social media expert for HVAC businesses. Create engaging posts optimized for ${platform}. Include relevant hashtags and call-to-actions. Keep the tone ${tone} but approachable.`,
+            content: `You are a social media expert for field service businesses including HVAC, plumbing, electrical, landscaping, and pest control. Create engaging posts optimized for ${platform}. Include relevant hashtags and call-to-actions. Keep the tone ${tone} but approachable.`,
           },
           {
             role: "user",
-            content: `Create a ${platform} post about: ${topic}. Make it engaging for HVAC customers in Winter Haven and Lakeland, Florida. Include relevant hashtags and encourage engagement.`,
+            content: `Create a ${platform} post about: ${topic}. Make it engaging for field service customers including HVAC, plumbing, electrical, landscaping, and pest control. Include relevant hashtags and encourage engagement.`,
           },
         ],
         response_format: { type: "json_object" },
@@ -579,7 +593,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const post = await storage.createSocialPost({
         platform,
-        content: result.content || `Check out our latest HVAC tips about ${topic}!`,
+        content: result.content || `Check out our latest field service tips about ${topic}!`,
         status: "draft",
       });
 
@@ -900,11 +914,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         messages: [
           {
             role: "system",
-            content: "You are an SEO expert specializing in local HVAC businesses. Analyze content and provide actionable SEO recommendations.",
+            content: "You are an SEO expert specializing in local field service businesses including HVAC, plumbing, electrical, landscaping, and pest control. Analyze content and provide actionable SEO recommendations.",
           },
           {
             role: "user",
-            content: `Analyze this URL for SEO optimization: ${url}. Focus on local HVAC keywords for Winter Haven and Lakeland Florida areas. Provide specific recommendations for improving search rankings.${keywords ? ` Target keywords: ${keywords}` : ''}`,
+            content: `Analyze this URL for SEO optimization: ${url}. Focus on local field service keywords for businesses including HVAC, plumbing, electrical, landscaping, and pest control. Provide specific recommendations for improving search rankings.${keywords ? ` Target keywords: ${keywords}` : ''}`,
           },
         ],
         response_format: { type: "json_object" },
@@ -971,7 +985,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
           {
             role: "user",
-            content: `Generate a professional response to this ${review.rating}-star review: "${review.content}" from ${review.customerName}. The business is KasamaAI, a marketing automation platform.`,
+            content: `Generate a professional response to this ${review.rating}-star review: "${review.content}" from ${review.customerName}. The business is FieldPulse, a marketing platform for field service businesses.`,
           },
         ],
         response_format: { type: "json_object" },
@@ -1561,16 +1575,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const configData = insertSocialMediaConfigSchema.parse(req.body);
-
-    // Check if config already exists for this platform
-    const existing = await storage.getAllSocialMediaConfigs()
-
-    let result;
-
-    result = await storage.createSocialMediaConfig(configData);
-
-    return res.json(result);
+    try {
+      const configData = insertSocialMediaConfigSchema.parse(req.body);
+      const result = await storage.createSocialMediaConfig(configData);
+      return res.json(result);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ errors: error.errors });
+      }
+      console.error("Error creating social media config:", error);
+      return res
+        .status(500)
+        .json({ error: "Failed to create social media config" });
+    }
   });
 
   app.delete("/api/social-configs/:platform", async (req, res) => {
@@ -1617,8 +1634,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.post("/api/social/analytics", async (req, res) => {
-    const analyticsData = insertSocialMediaAnalyticsSchema.parse(req.body);
-    const result = await storage.createSocialMediaAnalytics(analyticsData);
+    // TODO: Add proper schema validation for social media analytics
+    const result = await storage.createSocialMediaAnalytics(req.body);
     return res.json(result);
   });
 
