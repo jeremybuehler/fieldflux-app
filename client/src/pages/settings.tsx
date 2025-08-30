@@ -401,7 +401,7 @@ export default function Settings() {
                         setGaConfig(prev => ({ ...prev, isConfigured: true }));
                         toast({
                           title: "Google Analytics Connected",
-                          description: "Add VITE_GA_MEASUREMENT_ID to your Replit Secrets to complete setup.",
+                          description: "Add VITE_GA_MEASUREMENT_ID to your environment variables (e.g., Vercel Project Settings).",
                         });
                       }}
                       className="w-full lg:w-auto"
@@ -416,7 +416,7 @@ export default function Settings() {
                         <li>Navigate to Admin → Data Streams → Web</li>
                         <li>Select your web stream or create a new one</li>
                         <li>Copy the Measurement ID (starts with G-)</li>
-                        <li>Add it to your Replit Secrets as VITE_GA_MEASUREMENT_ID</li>
+                        <li>Add it to your environment variables as VITE_GA_MEASUREMENT_ID</li>
                       </ol>
                     </div>
                   </CardContent>
@@ -606,7 +606,7 @@ export default function Settings() {
                           }));
                           toast({
                             title: "Facebook Connected",
-                            description: "Add your credentials to Replit Secrets: FACEBOOK_APP_ID, FACEBOOK_APP_SECRET, FACEBOOK_ACCESS_TOKEN, FACEBOOK_PAGE_ID",
+                            description: "Set environment variables: FACEBOOK_APP_ID, FACEBOOK_APP_SECRET, FACEBOOK_ACCESS_TOKEN, FACEBOOK_PAGE_ID",
                           });
                         }}
                         className="w-full lg:w-auto"
@@ -619,9 +619,9 @@ export default function Settings() {
                   {/* Alert for all social platforms */}
                   <Alert>
                     <AlertCircle className="h-4 w-4" />
-                    <AlertDescription>
-                      After configuring each platform, add the credentials to your Replit Secrets using the appropriate environment variable names for the integrations to work properly.
-                    </AlertDescription>
+                  <AlertDescription>
+                    After configuring each platform, add credentials as environment variables in your hosting provider (e.g., Vercel Project Settings).
+                  </AlertDescription>
                   </Alert>
                 </div>
               </TabsContent>

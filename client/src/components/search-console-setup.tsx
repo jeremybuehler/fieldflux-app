@@ -118,7 +118,7 @@ export default function SearchConsoleSetup() {
           {!placesStatus?.configured ? (
             <Alert>
               <AlertDescription>
-                Google Places API is not configured. Add your GOOGLE_PLACES_API_KEY to Replit Secrets to enable business search and real review data.
+                Google Places API is not configured. Set GOOGLE_PLACES_API_KEY in your environment variables (e.g., Vercel Project Settings) to enable business search and real review data.
               </AlertDescription>
             </Alert>
           ) : (

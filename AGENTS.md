@@ -43,7 +43,7 @@
   - `chore(db): generate drizzle migration for leads`
 
 ## Security & Configuration Tips
-- Copy `.env.example` to `.env`. Required: `DATABASE_URL`, `OPENAI_API_KEY`. Optional: Twilio, Google Analytics/Places, Replit.
+- Copy `.env.example` to `.env`. Required: `DATABASE_URL`, `OPENAI_API_KEY`. Optional: Twilio and Google Analytics/Places.
 - Client‑side env vars must be prefixed with `VITE_`.
 - Never commit secrets; rotate keys used for demos.
 - Validate external inputs (Twilio numbers, IDs) and avoid logging sensitive data.

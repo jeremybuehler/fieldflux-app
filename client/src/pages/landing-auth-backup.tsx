@@ -550,7 +550,7 @@ export default function LandingAuth() {
                       className="bg-white text-black hover:bg-gray-50 font-semibold px-12 py-4 text-lg"
                       onClick={handleLogin}
                     >
-                      Sign in with Replit
+                      Sign In
                       <ArrowRight className="w-5 h-5 ml-2" />
                     </Button>
                   )}
