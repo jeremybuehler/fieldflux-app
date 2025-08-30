@@ -142,6 +142,9 @@ TWILIO_ACCOUNT_SID=...
 TWILIO_AUTH_TOKEN=...
 ```
 
+Optional:
+- `DISABLE_AUTH=true` to bypass authentication in development.
+
 ### Development Commands
 - **Development**: `npm run dev` (Vite + Express)
 - **Build**: `npm run build` (Production builds)
