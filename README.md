@@ -17,7 +17,7 @@ The application follows a full-stack architecture with:
 - **UI Framework**: Tailwind CSS with shadcn/ui components
 - **State Management**: TanStack Query for server state
 - **Routing**: Wouter for client-side routing
-- **Authentication**: Replit Auth with OpenID Connect
+- **Authentication**: Optional OpenID Connect (configurable) or session-based
 
 ## Key Features
 
@@ -34,7 +34,7 @@ The application follows a full-stack architecture with:
 
 ### Landing Page & Authentication
 - **Professional Landing Page**: Modern design with clear value proposition
-- **Authentication System**: Seamless Replit Auth integration
+- **Authentication System**: OIDC-ready (configure your provider) or disabled in dev
 - **Demo Access**: Try before you buy functionality
 - **Mobile Responsive**: Optimized for all devices
 
@@ -77,7 +77,7 @@ The application follows a full-stack architecture with:
 - **PostgreSQL**: Robust relational database with Drizzle ORM
 - **OpenAI API**: Advanced AI content generation and processing
 - **Google APIs**: Analytics, Search Console, and Places integration
-- **Replit Auth**: Secure authentication with OpenID Connect
+- **Authentication (OIDC-ready)**: Secure authentication via OpenID Connect
 - **Twilio SMS**: Customer communication and notifications
 
 ### Database Schema
@@ -121,18 +121,18 @@ FieldFlux/
 
 ### Prerequisites
 - Node.js 20+ with npm package manager
-- PostgreSQL database (automatically configured in Replit)
+- PostgreSQL database (local via Docker or managed)
 - API keys for Google services and OpenAI
 
 ### Installation
 1. Clone the repository
 2. Install dependencies: `npm install`
-3. Configure environment variables in Replit Secrets
+3. Copy `.env.example` to `.env` and configure environment variables
 4. Run database migrations: `npm run db:push`
 5. Start development server: `npm run dev`
 
 ### Environment Variables
-Set up the following in Replit Secrets:
+Set the following in `.env` (local) or Vercel Project Settings → Environment Variables:
 ```
 DATABASE_URL=postgresql://...
 OPENAI_API_KEY=sk-...
@@ -152,7 +152,7 @@ TWILIO_AUTH_TOKEN=...
 
 ### January 2025
 - **Landing Page Redesign**: Professional marketing-focused landing page
-- **Authentication Integration**: Seamless Replit Auth implementation
+- **Authentication Integration**: OIDC-ready hooks and middleware (provider optional)
 - **Protocol Design System**: Modern UI with glass morphism effects
 - **Mobile Optimization**: Enhanced responsive design across all pages
 - **Multi-Platform Scheduling**: Comprehensive social media wizard
@@ -175,7 +175,7 @@ TWILIO_AUTH_TOKEN=...
 - `POST /api/sms/send` - Send SMS message
 
 ### Authentication
-All API endpoints require authentication via Replit Auth. The frontend automatically handles token management.
+If authentication is enabled (OIDC/session), API endpoints may require auth; development defaults may allow unauthenticated access.
 
 ## Development Guidelines
 
@@ -194,12 +194,13 @@ All API endpoints require authentication via Replit Auth. The frontend automatic
 
 ## Deployment
 
-### Replit Deployment
-- **Development**: `npm run dev` runs both client and server
-- **Production**: Automatic deployment on Replit
-- **Port**: 5000 (forwarded to 80/443 in production)
-- **Database**: PostgreSQL 16 module enabled
-- **Scaling**: Automatic scaling configuration
+### Vercel Deployment
+- Repo contains `vercel.json` and `api/index.ts` for serverless API.
+- Build settings:
+  - Build Command: `npm run build`
+  - Output Directory: `dist/public`
+- Environment Variables: set in Vercel dashboard (`DATABASE_URL`, `OPENAI_API_KEY`, optional Google/Twilio; client vars use `VITE_` prefix).
+- After deploy, SPA routes are served statically; API available under `/api/*`.
 
 ### Performance Considerations
 - Vite for fast client builds
