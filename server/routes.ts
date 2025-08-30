@@ -2,8 +2,7 @@ import type { Express } from "express";
 import express from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-// Import Replit Auth conditionally
-let setupAuth: any = null;
+import { configureAuth } from "./auth";
 import {
   users, 
   wordpressPosts, 
@@ -48,23 +47,15 @@ if (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) {
 // Remove duplicate authentication middleware - using the one from replitAuth
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware - only setup Replit Auth if in Replit environment
-  if (process.env.REPLIT_DOMAINS) {
-    try {
-      const replitAuth = await import("./replitAuth");
-      setupAuth = replitAuth.setupAuth;
-      await setupAuth(app);
-    } catch (error) {
-      console.error("Failed to setup Replit Auth:", error);
-    }
-  }
+  // Configure authentication depending on environment (Replit, dev, or strict)
+  const { isAuthenticated } = await configureAuth(app);
 
   // Health check endpoint for Azure
   app.get('/api/health', (req, res) => {
     res.json({ status: 'healthy', timestamp: new Date().toISOString() });
   });
 
-  // Auth routes (using the isAuthenticated from replitAuth, not the removed duplicate)
+  // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       if (!req.user || !req.user.claims) {
