@@ -1,9 +1,5 @@
 import {
   users,
-  tenants,
-  tenantDomains,
-  oauthConnections,
-  memberships,
   wordpressPosts,
   socialPosts,
   leads,
@@ -12,6 +8,8 @@ import {
   seoKeywords,
   reviews,
   analyticsReports,
+  socialMediaAnalytics,
+  socialMediaConfigs,
   type User,
   type InsertUser,
   type WordPressPost,
@@ -30,6 +28,10 @@ import {
   type InsertReview,
   type AnalyticsReport,
   type InsertAnalyticsReport,
+  type SocialMediaAnalytics,
+  type InsertSocialMediaAnalytics,
+  type SocialMediaConfig,
+  type InsertSocialMediaConfig,
   type UpsertUser,
 } from "@shared/schema";
 import { db } from "./db";
@@ -85,6 +87,17 @@ export interface IStorage {
   getAllAnalyticsReports(): Promise<AnalyticsReport[]>;
   getAnalyticsReport(id: number): Promise<AnalyticsReport | undefined>;
   createAnalyticsReport(report: InsertAnalyticsReport): Promise<AnalyticsReport>;
+
+  // Social Media Analytics methods
+  getAllSocialMediaAnalytics(): Promise<SocialMediaAnalytics[]>;
+  createSocialMediaAnalytics(
+    data: InsertSocialMediaAnalytics
+  ): Promise<SocialMediaAnalytics>;
+
+  // Social Media Config methods
+  getAllSocialMediaConfigs(): Promise<SocialMediaConfig[]>;
+  createSocialMediaConfig(config: InsertSocialMediaConfig): Promise<SocialMediaConfig>;
+  deleteSocialMediaConfig(platform: string): Promise<void>;
 }
 
 export class MemStorage implements IStorage {
@@ -97,6 +110,8 @@ export class MemStorage implements IStorage {
   private seoKeywords: Map<number, SeoKeyword>;
   private reviews: Map<number, Review>;
   private analyticsReports: Map<number, AnalyticsReport>;
+  private socialMediaAnalytics: Map<number, SocialMediaAnalytics>;
+  private socialMediaConfigs: Map<number, SocialMediaConfig>;
   private currentId: number;
 
   constructor() {
@@ -109,51 +124,44 @@ export class MemStorage implements IStorage {
     this.seoKeywords = new Map();
     this.reviews = new Map();
     this.analyticsReports = new Map();
+    this.socialMediaAnalytics = new Map();
+    this.socialMediaConfigs = new Map();
     this.currentId = 1;
   }
 
   // User methods
   async getUser(id: string): Promise<User | undefined> {
-    const userArray = Array.from(this.users.values());
-    return userArray.find(user => user.id === id);
+    for (const user of this.users.values()) {
+      if (user.id === id) {
+        return user;
+      }
+    }
+    return undefined;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
     return Array.from(this.users.values()).find(
-      (user) => user.email === username,
+      (user) => user.username === username,
     );
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const user: User = { 
-      ...insertUser,
-      email: insertUser.email || null,
-      firstName: insertUser.firstName || null,
-      lastName: insertUser.lastName || null,
-      profileImageUrl: insertUser.profileImageUrl || null,
-      stripeCustomerId: insertUser.stripeCustomerId || null,
-      stripeSubscriptionId: insertUser.stripeSubscriptionId || null,
-      subscriptionStatus: insertUser.subscriptionStatus || "free",
-      subscriptionPlan: insertUser.subscriptionPlan || "free",
-      subscriptionCurrentPeriodEnd: insertUser.subscriptionCurrentPeriodEnd || null,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    this.users.set(this.currentId++, user);
+    const id = this.currentId++;
+    const user: User = { ...insertUser, id };
+    this.users.set(id, user);
     return user;
   }
 
   async upsertUser(userData: UpsertUser): Promise<User> {
-    const existingUser = await this.getUser(userData.id);
-    if (existingUser) {
-      const updatedUser = { 
-        ...existingUser, 
-        ...userData, 
-        updatedAt: new Date() 
-      };
-      this.users.set(this.currentId++, updatedUser);
-      return updatedUser;
+    // Check if user exists
+    const existing = await this.getUser(userData.id);
+    if (existing) {
+      // Update existing user
+      const updated = { ...existing, ...userData, updatedAt: new Date() };
+      this.users.set(existing.id as number, updated);
+      return updated;
     } else {
+      // Create new user
       return this.createUser(userData);
     }
   }
@@ -174,13 +182,6 @@ export class MemStorage implements IStorage {
     const post: WordPressPost = {
       ...insertPost,
       id,
-      status: insertPost.status || "draft",
-      publishedAt: insertPost.publishedAt || null,
-      metaDescription: insertPost.metaDescription || null,
-      categories: insertPost.categories || null,
-      tags: insertPost.tags || null,
-      featuredImage: insertPost.featuredImage || null,
-      seoScore: insertPost.seoScore || null,
       createdAt: new Date(),
     };
     this.wordpressPosts.set(id, post);
@@ -212,9 +213,6 @@ export class MemStorage implements IStorage {
     const post: SocialPost = {
       ...insertPost,
       id,
-      status: insertPost.status || "scheduled",
-      scheduledFor: insertPost.scheduledFor || null,
-      publishedAt: insertPost.publishedAt || null,
       createdAt: new Date(),
     };
     this.socialPosts.set(id, post);
@@ -246,18 +244,6 @@ export class MemStorage implements IStorage {
     const lead: Lead = {
       ...insertLead,
       id,
-      email: insertLead.email || null,
-      phone: insertLead.phone || null,
-      status: insertLead.status || "new",
-      priority: insertLead.priority || "medium",
-      leadScore: insertLead.leadScore || null,
-      aiRecommendations: insertLead.aiRecommendations || null,
-      engagementLevel: insertLead.engagementLevel || "unknown",
-      predictedValue: insertLead.predictedValue || null,
-      urgencyScore: insertLead.urgencyScore || 50,
-      conversionProbability: insertLead.conversionProbability || null,
-      lastContactedAt: insertLead.lastContactedAt || null,
-      nextFollowUpAt: insertLead.nextFollowUpAt || null,
       createdAt: new Date(),
     };
     this.leads.set(id, lead);
@@ -289,10 +275,6 @@ export class MemStorage implements IStorage {
     const task: Task = {
       ...insertTask,
       id,
-      description: insertTask.description || null,
-      status: insertTask.status || "pending",
-      progress: insertTask.progress || null,
-      completedAt: null,
       createdAt: new Date(),
     };
     this.tasks.set(id, task);
@@ -320,7 +302,6 @@ export class MemStorage implements IStorage {
     const activity: Activity = {
       ...insertActivity,
       id,
-      description: insertActivity.description || null,
       createdAt: new Date(),
     };
     this.activities.set(id, activity);
@@ -339,8 +320,6 @@ export class MemStorage implements IStorage {
     const keyword: SeoKeyword = {
       ...insertKeyword,
       id,
-      position: insertKeyword.position || null,
-      previousPosition: insertKeyword.previousPosition || null,
       createdAt: new Date(),
     };
     this.seoKeywords.set(id, keyword);
@@ -372,9 +351,6 @@ export class MemStorage implements IStorage {
     const review: Review = {
       ...insertReview,
       id,
-      status: insertReview.status || "pending",
-      aiResponse: insertReview.aiResponse || null,
-      responseStatus: insertReview.responseStatus || "draft",
       createdAt: new Date(),
     };
     this.reviews.set(id, review);
@@ -406,13 +382,57 @@ export class MemStorage implements IStorage {
     const report: AnalyticsReport = {
       ...insertReport,
       id,
-      topKeywords: insertReport.topKeywords || null,
-      topPages: insertReport.topPages || null,
-      trafficSources: insertReport.trafficSources || null,
       generatedAt: new Date(),
     };
     this.analyticsReports.set(id, report);
     return report;
+  }
+
+  async getAllSocialMediaAnalytics(): Promise<SocialMediaAnalytics[]> {
+    return Array.from(this.socialMediaAnalytics.values()).sort((a, b) =>
+      new Date(b.dateRecorded!).getTime() - new Date(a.dateRecorded!).getTime()
+    );
+  }
+
+  async createSocialMediaAnalytics(
+    data: InsertSocialMediaAnalytics
+  ): Promise<SocialMediaAnalytics> {
+    const id = this.currentId++;
+    const record: SocialMediaAnalytics = {
+      ...data,
+      id,
+      dateRecorded: new Date(),
+    };
+    this.socialMediaAnalytics.set(id, record);
+    return record;
+  }
+
+  // Social Media Config methods
+  async getAllSocialMediaConfigs(): Promise<SocialMediaConfig[]> {
+    return Array.from(this.socialMediaConfigs.values()).sort((a, b) => 
+      new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+    );
+  }
+
+  async createSocialMediaConfig(insertConfig: InsertSocialMediaConfig): Promise<SocialMediaConfig> {
+    const id = this.currentId++;
+    const config: SocialMediaConfig = {
+      ...insertConfig,
+      id,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    this.socialMediaConfigs.set(id, config);
+    return config;
+  }
+
+  async deleteSocialMediaConfig(platform: string): Promise<void> {
+    for (const [id, config] of this.socialMediaConfigs.entries()) {
+      if (config.platform === platform) {
+        this.socialMediaConfigs.delete(id);
+        break;
+      }
+    }
   }
 }
 
@@ -450,45 +470,6 @@ export class DatabaseStorage implements IStorage {
       .returning();
     return user;
   }
-
-  // Tenancy helpers
-  async getTenantByDomain(domain: string): Promise<{ id: number; slug: string; name: string } | null> {
-    if (!domain) return null;
-    const rows = await db
-      .select({ id: tenants.id, slug: tenants.slug, name: tenants.name })
-      .from(tenantDomains)
-      .leftJoin(tenants, eq(tenants.id, tenantDomains.tenantId))
-      .where(eq(tenantDomains.domain, domain))
-      .limit(1);
-    return rows?.[0] || null;
-  }
-
-  async getTenantOauthConnection(tenantId: number) {
-    const rows = await db.select().from(oauthConnections).where(eq(oauthConnections.tenantId, tenantId)).limit(1);
-    return rows?.[0] || null;
-  }
-
-  async getMembership(tenantId: number, userId: string) {
-    const rows = await db
-      .select()
-      .from(memberships)
-      .where(eq(memberships.tenantId, tenantId))
-      .where(eq(memberships.userId, userId))
-      .limit(1);
-    return rows?.[0] || null;
-  },
-
-  async createMembership(tenantId: number, userId: string, role: string = 'member') {
-    try {
-      const [row] = await db
-        .insert(memberships)
-        .values({ tenantId, userId, role, status: 'active' as any })
-        .returning();
-      return row;
-    } catch (e) {
-      return null;
-    }
-  },
 
   // WordPress methods
   async getAllWordPressPosts(): Promise<WordPressPost[]> {
@@ -678,33 +659,42 @@ export class DatabaseStorage implements IStorage {
     return report;
   }
 
-  // Social Media Configuration methods
-  async getAllSocialMediaConfigs(): Promise<any[]> {
-    // TODO: Implement when needed
-    return [];
+  async getAllSocialMediaAnalytics(): Promise<SocialMediaAnalytics[]> {
+    return await db
+      .select()
+      .from(socialMediaAnalytics)
+      .orderBy(socialMediaAnalytics.dateRecorded);
   }
 
-  async createSocialMediaConfig(config: any): Promise<any> {
-    // TODO: Implement when needed
+  async createSocialMediaAnalytics(
+    data: InsertSocialMediaAnalytics
+  ): Promise<SocialMediaAnalytics> {
+    const [record] = await db
+      .insert(socialMediaAnalytics)
+      .values(data)
+      .returning();
+    return record;
+  }
+
+  // Social Media Config methods  
+  async getAllSocialMediaConfigs(): Promise<SocialMediaConfig[]> {
+    return await db.select().from(socialMediaConfigs).orderBy(socialMediaConfigs.createdAt);
+  }
+
+  async createSocialMediaConfig(insertConfig: InsertSocialMediaConfig): Promise<SocialMediaConfig> {
+    const [config] = await db
+      .insert(socialMediaConfigs)
+      .values(insertConfig)
+      .returning();
     return config;
   }
 
-  async deleteSocialMediaConfig(id: number): Promise<boolean> {
-    // TODO: Implement when needed
-    return true;
-  }
-
-  // Social Media Analytics methods
-  async getAllSocialMediaAnalytics(): Promise<any[]> {
-    // TODO: Implement when needed
-    return [];
-  }
-
-  async createSocialMediaAnalytics(analytics: any): Promise<any> {
-    // TODO: Implement when needed
-    return analytics;
+  async deleteSocialMediaConfig(platform: string): Promise<void> {
+    await db
+      .delete(socialMediaConfigs)
+      .where(eq(socialMediaConfigs.platform, platform));
   }
 }
 
-// Use MemStorage for now to avoid database connection issues
-export const storage = new DatabaseStorage();
+// Use MemStorage for testing to avoid database connection issues
+export const storage = new MemStorage();
