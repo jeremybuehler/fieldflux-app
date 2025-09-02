@@ -1,48 +1,8 @@
-# Dependencies
-node_modules/
-
-# Build outputs
-dist/
-build/
-.next/
-coverage/
-
-# Environment files
-.env
-.env.local
-.env.production.local
-.env.development.local
-
-# System files
+node_modules
+dist
 .DS_Store
-.DS_Store?
-Thumbs.db
-
-# Temporary files
-*.tmp
-*.temp
-*.log
-*.bak
-*~
-
-# Database files
-*.db
-*.sqlite
-*.sqlite3
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Misc
-*.tar.gz
 server/public
 vite.config.ts.*
-
-# Claude and development tools
-.claude/
-.snapshots/
-.kilocode/
-.playwright-mcp/
+*.tar.gz
+.env
+.env.local
