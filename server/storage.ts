@@ -476,7 +476,7 @@ export class DatabaseStorage implements IStorage {
       .where(eq(memberships.userId, userId))
       .limit(1);
     return rows?.[0] || null;
-  },
+  }
 
   async createMembership(tenantId: number, userId: string, role: string = 'member') {
     try {
@@ -488,7 +488,7 @@ export class DatabaseStorage implements IStorage {
     } catch (e) {
       return null;
     }
-  },
+  }
 
   // WordPress methods
   async getAllWordPressPosts(): Promise<WordPressPost[]> {

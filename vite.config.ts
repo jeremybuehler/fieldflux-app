@@ -26,6 +26,43 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    chunkSizeWarningLimit: 1000, // Raise limit to 1000kB since we've optimized chunks
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // React and core libraries
+          vendor: ['react', 'react-dom'],
+          // UI libraries (only existing packages)
+          ui: [
+            '@radix-ui/react-dialog', 
+            '@radix-ui/react-dropdown-menu', 
+            '@radix-ui/react-hover-card', 
+            '@radix-ui/react-label', 
+            '@radix-ui/react-menubar', 
+            '@radix-ui/react-navigation-menu', 
+            '@radix-ui/react-popover', 
+            '@radix-ui/react-progress', 
+            '@radix-ui/react-radio-group', 
+            '@radix-ui/react-scroll-area', 
+            '@radix-ui/react-select', 
+            '@radix-ui/react-separator', 
+            '@radix-ui/react-slider', 
+            '@radix-ui/react-slot', 
+            '@radix-ui/react-switch', 
+            '@radix-ui/react-tabs', 
+            '@radix-ui/react-toast', 
+            '@radix-ui/react-toggle', 
+            '@radix-ui/react-tooltip'
+          ],
+          // Icons
+          icons: ['lucide-react'],
+          // Routing and data fetching
+          routing: ['wouter', '@tanstack/react-query'],
+          // Utilities
+          utils: ['class-variance-authority', 'clsx', 'tailwind-merge'],
+        },
+      },
+    },
   },
   server: {
     fs: {

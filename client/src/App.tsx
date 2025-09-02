@@ -10,7 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/app-layout";
 import DashboardMain from "@/pages/dashboard-main";
 import Settings from "@/pages/settings-fixed";
-import Landing from "@/pages/planetscale-landing";
+import Landing from "@/pages/landing";
 import Social from "@/pages/social";
 import Leads from "@/pages/leads";
 import Reviews from "@/pages/reviews";
@@ -31,9 +31,8 @@ import NotFound from "@/pages/not-found";
 import About from "@/pages/about";
 import Analytics from "@/pages/analytics";
 
-function Router() {
-  // Track page views when routes change
-  useAnalytics();
+// Protected Route Component that only checks auth when needed
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
 
   // Show loading state while checking authentication
@@ -48,6 +47,18 @@ function Router() {
     );
   }
 
+  // If not authenticated, redirect to landing
+  if (!isAuthenticated) {
+    return <Landing />;
+  }
+
+  return <>{children}</>;
+}
+
+function Router() {
+  // Track page views when routes change
+  useAnalytics();
+
   return (
     <Switch>
       {/* Landing page - always show for root */}
@@ -58,83 +69,83 @@ function Router() {
       
       {/* Authenticated App Routes with Layout */}
       <Route path="/dashboard">
-        {isAuthenticated ? (
+        <ProtectedRoute>
           <AppLayout>
             <DashboardMain />
           </AppLayout>
-        ) : <Landing />}
+        </ProtectedRoute>
       </Route>
       <Route path="/social">
-        {isAuthenticated ? (
+        <ProtectedRoute>
           <AppLayout>
             <Social />
           </AppLayout>
-        ) : <Landing />}
+        </ProtectedRoute>
       </Route>
       <Route path="/leads">
-        {isAuthenticated ? (
+        <ProtectedRoute>
           <AppLayout>
             <Leads />
           </AppLayout>
-        ) : <Landing />}
+        </ProtectedRoute>
       </Route>
       <Route path="/reviews">
-        {isAuthenticated ? (
+        <ProtectedRoute>
           <AppLayout>
             <Reviews />
           </AppLayout>
-        ) : <Landing />}
+        </ProtectedRoute>
       </Route>
       <Route path="/analytics">
-        {isAuthenticated ? (
+        <ProtectedRoute>
           <AppLayout>
             <Analytics />
           </AppLayout>
-        ) : <Landing />}
+        </ProtectedRoute>
       </Route>
       <Route path="/keywords">
-        {isAuthenticated ? (
+        <ProtectedRoute>
           <AppLayout>
             <Keywords />
           </AppLayout>
-        ) : <Landing />}
+        </ProtectedRoute>
       </Route>
       <Route path="/website">
-        {isAuthenticated ? (
+        <ProtectedRoute>
           <AppLayout>
             <Website />
           </AppLayout>
-        ) : <Landing />}
+        </ProtectedRoute>
       </Route>
       <Route path="/ai-coach">
-        {isAuthenticated ? (
+        <ProtectedRoute>
           <AppLayout>
             <AICoach />
           </AppLayout>
-        ) : <Landing />}
+        </ProtectedRoute>
       </Route>
       <Route path="/settings">
-        {isAuthenticated ? (
+        <ProtectedRoute>
           <AppLayout>
             <Settings />
           </AppLayout>
-        ) : <Landing />}
+        </ProtectedRoute>
       </Route>
       
       {/* Legacy routes - redirect to dashboard */}
       <Route path="/felix">
-        {isAuthenticated ? (
+        <ProtectedRoute>
           <AppLayout>
             <DashboardMain />
           </AppLayout>
-        ) : <Landing />}
+        </ProtectedRoute>
       </Route>
       <Route path="/app">
-        {isAuthenticated ? (
+        <ProtectedRoute>
           <AppLayout>
             <DashboardMain />
           </AppLayout>
-        ) : <Landing />}
+        </ProtectedRoute>
       </Route>
       
       {/* Marketing pages */}
