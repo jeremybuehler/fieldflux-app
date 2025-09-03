@@ -51,7 +51,7 @@ export default function Analytics() {
               {metricsLoading ? '...' : metrics?.users.toLocaleString() || '0'}
             </div>
             <div className="text-xs" style={{color: 'var(--fx-teal-600)'}}>
-              {metricsLoading ? "..." : metrics?.new_users ? `${metrics.new_users} new users` : "Connect Analytics"}
+              {metricsLoading ? "..." : metrics?.users ? `${metrics.users} users` : "Connect Analytics"}
             </div>
           </div>
 
@@ -163,7 +163,7 @@ export default function Analytics() {
               ) : trafficSources && trafficSources.length > 0 ? (
                 trafficSources.slice(0, 5).map((source, index) => (
                   <div key={index} className="flex justify-between items-center">
-                    <span className="text-sm">{source.source} ({source.medium})</span>
+                    <span className="text-sm">{source.source}{(source as any).medium ? ` (${(source as any).medium})` : ''}</span>
                     <div className="flex items-center space-x-2">
                       <div className="w-20 bg-gray-200 rounded-full h-2">
                         <div 

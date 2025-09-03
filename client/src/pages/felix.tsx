@@ -9,7 +9,7 @@ import Reviews from "@/pages/reviews";
 import Analytics from "@/pages/analytics";
 import Keywords from "@/pages/keywords";
 import Website from "@/pages/website";
-import Settings from "@/pages/settings-fixed";
+import Settings from "@/pages/settings";
 
 interface OpenWindow {
   id: string;

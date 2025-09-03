@@ -69,8 +69,8 @@ export default function SEOPerformance() {
         ) : (
           <div className="space-y-3">
             {displayKeywords.slice(0, 5).map((item, index) => {
-              const TrendIcon = getTrendIcon(item.position, item.previousPosition);
-              const trendColor = getTrendColor(item.position, item.previousPosition);
+              const TrendIcon = getTrendIcon(item.position ?? undefined, item.previousPosition ?? undefined);
+              const trendColor = getTrendColor(item.position ?? undefined, item.previousPosition ?? undefined);
               
               return (
                 <div key={index} className="flex items-center justify-between">

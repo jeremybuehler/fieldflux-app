@@ -29,9 +29,9 @@ export class TwilioService {
 
       const result = await response.json();
       return { success: true, messageId: result.messageId };
-    } catch (error) {
+    } catch (error: any) {
       console.error('SMS send error:', error);
-      return { success: false, error: error.message };
+      return { success: false, error: error?.message || 'Unknown error' };
     }
   }
 

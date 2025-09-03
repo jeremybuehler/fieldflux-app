@@ -13,9 +13,8 @@ async function ensureInitialized() {
   initialized = true;
 }
 
-export = async function handler(req: Request, res: Response) {
+export default async function handler(req: Request, res: Response) {
   await ensureInitialized();
   // @ts-ignore Express request handler signature
   return app(req, res);
-};
-
+}

@@ -44,7 +44,7 @@ export default function Leads() {
     queryKey: ["/api/leads"],
   });
 
-  const { data: leadAnalytics } = useQuery({
+  const { data: leadAnalytics } = useQuery<{ avgLeadScore: number; avgUrgencyScore: number; avgConversionProbability: number; totalPredictedValue: number }>({
     queryKey: ["/api/leads/analytics/scores"],
   });
 
@@ -283,7 +283,7 @@ export default function Leads() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-indigo-100 text-sm font-medium">Avg Lead Score</p>
-                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgLeadScore)}/100</p>
+                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgLeadScore || 0)}/100</p>
                   </div>
                   <Brain className="w-8 h-8 text-indigo-200" />
                 </div>
@@ -295,7 +295,7 @@ export default function Leads() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-pink-100 text-sm font-medium">Avg Urgency</p>
-                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgUrgencyScore)}/100</p>
+                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgUrgencyScore || 0)}/100</p>
                   </div>
                   <Zap className="w-8 h-8 text-pink-200" />
                 </div>
@@ -307,7 +307,7 @@ export default function Leads() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-emerald-100 text-sm font-medium">Conversion Prob</p>
-                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgConversionProbability)}%</p>
+                    <p className="text-2xl font-bold">{Math.round(leadAnalytics.avgConversionProbability || 0)}%</p>
                   </div>
                   <Trophy className="w-8 h-8 text-emerald-200" />
                 </div>
@@ -319,7 +319,7 @@ export default function Leads() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-amber-100 text-sm font-medium">Predicted Value</p>
-                    <p className="text-2xl font-bold">${Math.round(leadAnalytics.totalPredictedValue).toLocaleString()}</p>
+                    <p className="text-2xl font-bold">${Math.round(leadAnalytics.totalPredictedValue || 0).toLocaleString()}</p>
                   </div>
                   <Star className="w-8 h-8 text-amber-200" />
                 </div>
@@ -404,7 +404,7 @@ export default function Leads() {
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter email address" {...field} />
+                          <Input placeholder="Enter email address" {...field} value={field.value ?? ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -418,7 +418,7 @@ export default function Leads() {
                       <FormItem>
                         <FormLabel>Phone</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter phone number" {...field} />
+                          <Input placeholder="Enter phone number" {...field} value={field.value ?? ''} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -596,7 +596,7 @@ export default function Leads() {
                           )}
                           <span className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
-                            {formatTimeAgo(lead.createdAt!)}
+                            {formatTimeAgo(new Date(lead.createdAt as any).toISOString())}
                           </span>
                         </div>
                       </div>

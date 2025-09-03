@@ -33,7 +33,7 @@ export default function BillingSettings() {
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data: user } = useQuery({
+  const { data: user } = useQuery<import('@shared/schema').User | null>({
     queryKey: ['/api/auth/user'],
   });
 

@@ -10,7 +10,7 @@ import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 
 // Individual Review Card Component with Response Actions
-function ReviewCard({ review, businessName }) {
+function ReviewCard({ review, businessName }: { review: any; businessName: string }) {
   const [isGeneratingResponse, setIsGeneratingResponse] = useState(false);
   const [showResponse, setShowResponse] = useState(false);
   const [generatedResponse, setGeneratedResponse] = useState('');
@@ -38,7 +38,7 @@ function ReviewCard({ review, businessName }) {
         title: "Response Generated",
         description: "AI-native response ready for review",
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Error",
         description: error.message,
@@ -120,14 +120,14 @@ function ReviewCard({ review, businessName }) {
 }
 
 export default function Reviews() {
-  const [selectedBusiness, setSelectedBusiness] = useState(null);
+  const [selectedBusiness, setSelectedBusiness] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+  const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
   // Get real Google reviews - only when business is selected
-  const { data: googleReviews, isLoading: reviewsLoading } = useQuery({
+  const { data: googleReviews, isLoading: reviewsLoading } = useQuery<any>({
     queryKey: ["/api/reviews/google", selectedBusiness?.name, selectedBusiness?.formatted_address],
     queryFn: async () => {
       if (!selectedBusiness) return null;
@@ -139,7 +139,7 @@ export default function Reviews() {
   });
 
   // Get real review analytics
-  const { data: reviewAnalytics, isLoading: analyticsLoading } = useQuery({
+  const { data: reviewAnalytics, isLoading: analyticsLoading } = useQuery<any>({
     queryKey: ["/api/reviews/analytics"],
   });
 
@@ -155,7 +155,7 @@ export default function Reviews() {
         title: "Search Complete",
         description: `Found ${data.length} businesses`,
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Search Error",
         description: error.message,
@@ -166,7 +166,7 @@ export default function Reviews() {
     }
   };
 
-  const handleSelectBusiness = (business) => {
+  const handleSelectBusiness = (business: any) => {
     setSelectedBusiness(business);
     setShowSearch(false);
     setSearchResults([]);
@@ -365,7 +365,7 @@ export default function Reviews() {
               </div>
             ) : googleReviews?.reviews?.length > 0 ? (
               <div className="space-y-6">
-                {googleReviews.reviews.map((review, index) => (
+                {googleReviews.reviews.map((review: any, index: number) => (
                   <ReviewCard key={review.reviewId || index} review={review} businessName={selectedBusiness.name} />
                 ))}
               </div>

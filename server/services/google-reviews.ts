@@ -25,7 +25,7 @@ export interface ReviewsResponse {
 
 export class GoogleReviewsService {
   private mybusiness: any;
-  private auth: GoogleAuth;
+  private auth!: GoogleAuth;
   private isConfigured: boolean = false;
 
   constructor() {
@@ -57,7 +57,7 @@ export class GoogleReviewsService {
       // Now using Google Business Profile API which is part of Google Maps Platform
       try {
         // Try to initialize with newer API structure
-        this.mybusiness = google.mybusinessmanagement({ version: 'v1', auth: this.auth });
+        this.mybusiness = (google as any).mybusinessmanagement({ version: 'v1', auth: this.auth });
       } catch (error) {
         console.warn('Google My Business Management API not available, using fallback');
         this.mybusiness = null;
@@ -65,7 +65,7 @@ export class GoogleReviewsService {
       
       this.isConfigured = true;
       console.log('Google Reviews service initialized successfully');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to initialize Google Reviews service:', error);
       this.isConfigured = false;
     }
@@ -169,8 +169,8 @@ export class GoogleReviewsService {
           averageRating: reviewsData.averageRating
         };
       }
-    } catch (error) {
-      console.warn('Google Places API error, falling back to demo data:', error.message);
+    } catch (error: any) {
+      console.warn('Google Places API error, falling back to demo data:', error?.message || error);
     }
 
     // Fallback to My Business API if configured
@@ -204,7 +204,7 @@ export class GoogleReviewsService {
       });
       
       return true;
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error replying to review:', error);
       return false;
     }

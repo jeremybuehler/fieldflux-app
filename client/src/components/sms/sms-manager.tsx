@@ -43,10 +43,7 @@ export default function SMSManager() {
   // Send SMS mutation
   const sendSMSMutation = useMutation({
     mutationFn: async (data: { to: string; message: string; type?: string }) => {
-      return apiRequest("/api/sms/send", {
-        method: "POST",
-        body: JSON.stringify(data),
-      });
+      return apiRequest("POST", "/api/sms/send", data);
     },
     onSuccess: () => {
       toast({

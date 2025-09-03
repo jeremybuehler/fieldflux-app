@@ -64,10 +64,7 @@ export default function EnhancedScheduler() {
 
   const createPostMutation = useMutation({
     mutationFn: async (postData: any) => {
-      return apiRequest("/api/social/posts", {
-        method: "POST",
-        body: JSON.stringify(postData),
-      });
+      return apiRequest("POST", "/api/social/posts", postData);
     },
     onSuccess: () => {
       toast({
@@ -192,8 +189,8 @@ export default function EnhancedScheduler() {
                   >
                     <div className="flex items-center space-x-2 mb-2">
                       <Checkbox 
-                        checked={isSelected}
-                        onChange={() => togglePlatform(platform.id)}
+                        checked={isSelected ?? false}
+                        onCheckedChange={() => togglePlatform(platform.id)}
                       />
                       <Icon className={`w-4 h-4 ${platform.color}`} />
                       <span className="font-medium text-sm">{platform.name}</span>
@@ -287,7 +284,7 @@ export default function EnhancedScheduler() {
           {/* Post Button */}
           <Button 
             onClick={handleSchedulePost} 
-            disabled={createPostMutation.isPending || !content || selectedPlatforms.length === 0 || (charCount && charCount.current > charCount.limit)}
+            disabled={createPostMutation.isPending || !content || selectedPlatforms.length === 0 || !!(charCount && charCount.current > charCount.limit)}
             className="w-full"
           >
             {createPostMutation.isPending ? "Processing..." : 

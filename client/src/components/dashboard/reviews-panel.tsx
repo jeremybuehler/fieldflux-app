@@ -301,7 +301,7 @@ export default function ReviewsPanel() {
                         Generate Response
                       </Button>
                     )}
-                    {review.aiResponse && review.responseStatus === "ready" && (
+                    {'responseStatus' in review && review.aiResponse && (review as any).responseStatus === "ready" && (
                       <Button
                         size="sm"
                         variant="outline"

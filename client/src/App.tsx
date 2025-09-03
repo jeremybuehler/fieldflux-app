@@ -9,7 +9,7 @@ import { useAnalytics } from "./hooks/use-analytics";
 import { useAuth } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/app-layout";
 import DashboardMain from "@/pages/dashboard-main";
-import Settings from "@/pages/settings-fixed";
+import Settings from "@/pages/settings";
 import Landing from "@/pages/landing";
 import Social from "@/pages/social";
 import Leads from "@/pages/leads";
@@ -30,6 +30,7 @@ import StyleDemo from "@/pages/style-demo";
 import NotFound from "@/pages/not-found";
 import About from "@/pages/about";
 import Analytics from "@/pages/analytics";
+import { DevHud } from "@/components/dev/DevHud";
 
 // Protected Route Component that only checks auth when needed
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -60,6 +61,8 @@ function Router() {
   useAnalytics();
 
   return (
+    <>
+    <DevHud />
     <Switch>
       {/* Landing page - always show for root */}
       <Route path="/" component={Landing} />
@@ -164,6 +167,7 @@ function Router() {
       {/* Fallback to landing */}
       <Route component={Landing} />
     </Switch>
+    </>
   );
 }
 

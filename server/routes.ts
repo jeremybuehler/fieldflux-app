@@ -38,7 +38,7 @@ import { felixService } from "./felix/felix-service";
 import { felixAI, type FelixContext, type FelixMessage } from "./services/felixAI";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY_ENV_VAR || "default_key",
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Initialize Twilio client if credentials are available
@@ -71,6 +71,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Health check endpoint for Azure
   app.get('/api/health', (req, res) => {
     res.json({ status: 'healthy', timestamp: new Date().toISOString() });
+  });
+
+  // Lightweight dev status for local visual monitoring (no auth required)
+  app.get('/api/dev/status', (req: any, res) => {
+    try {
+      const authMode = process.env.DEMO_MODE === 'true'
+        ? 'demo'
+        : process.env.DISABLE_AUTH === 'true' || app.get('env') === 'development'
+          ? 'disabled'
+          : 'enabled';
+      const storageMode = process.env.DATABASE_URL ? 'db' : 'memory';
+      const tenant = req.tenant ? { id: req.tenant.id, name: req.tenant.name } : null;
+      const user = req.user?.claims ? {
+        sub: req.user.claims.sub,
+        email: req.user.claims.email,
+        name: `${req.user.claims.first_name || ''} ${req.user.claims.last_name || ''}`.trim() || undefined,
+      } : null;
+      res.json({
+        env: app.get('env'),
+        authMode,
+        storageMode,
+        tenant,
+        user,
+        time: new Date().toISOString(),
+      });
+    } catch (e: any) {
+      res.status(200).json({ env: app.get('env'), error: e?.message || 'unknown' });
+    }
   });
 
   // Multi-tenant login endpoints (OIDC per-tenant)
@@ -131,10 +159,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/dashboard/metrics", async (req, res) => {
     try {
       const tenant = (req as any).tenant;
-      const leads = (await storage.getAllLeads()).filter((l: any) => !tenant || l.tenantId === tenant.id);
-      const tasks = (await storage.getAllTasks()).filter((t: any) => !tenant || t.tenantId === tenant.id);
-      const socialPosts = await storage.getAllSocialPosts();
-      const seoKeywords = await storage.getAllSeoKeywords();
+      const leads = await storage.getAllLeads(tenant?.id);
+      const tasks = await storage.getAllTasks(tenant?.id);
+      const socialPosts = await storage.getAllSocialPosts(tenant?.id);
+      const seoKeywords = await storage.getAllSeoKeywords(tenant?.id);
 
       // Get real Google Analytics data for dashboard
       const analyticsMetrics = await googleAnalyticsService.getMetrics('30d');
@@ -161,7 +189,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/activities", requireMembership(), async (req, res) => {
     try {
       const tenant = (req as any).tenant;
-      const activities = (await storage.getAllActivities()).filter((a: any) => !tenant || a.tenantId === tenant.id);
+      const activities = await storage.getAllActivities(tenant?.id);
       res.json(activities);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch activities" });
@@ -184,7 +212,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/wordpress/posts", requireMembership(), async (req, res) => {
     try {
       const tenant = (req as any).tenant;
-      const posts = (await storage.getAllWordPressPosts()).filter((p: any) => !tenant || p.tenantId === tenant.id);
+      const posts = await storage.getAllWordPressPosts(tenant?.id);
       res.json(posts);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch WordPress posts" });
@@ -592,7 +620,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/social/posts", requireMembership(), async (req, res) => {
     try {
       const tenant = (req as any).tenant;
-      const posts = (await storage.getAllSocialPosts()).filter((p: any) => !tenant || p.tenantId === tenant.id);
+      const posts = await storage.getAllSocialPosts(tenant?.id);
       res.json(posts);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch social posts" });
@@ -716,7 +744,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/leads", requireMembership(), async (req, res) => {
     try {
       const tenant = (req as any).tenant;
-      const leads = (await storage.getAllLeads()).filter((l: any) => !tenant || l.tenantId === tenant.id);
+      const leads = await storage.getAllLeads(tenant?.id);
       res.json(leads);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch leads" });
@@ -861,7 +889,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/leads/analytics/scores", requireMembership(), async (req, res) => {
     try {
       const tenant = (req as any).tenant;
-      const leads = (await storage.getAllLeads()).filter((l: any) => !tenant || l.tenantId === tenant.id);
+      const leads = await storage.getAllLeads(tenant?.id);
       
       const analytics = {
         totalLeads: leads.length,
@@ -890,7 +918,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/tasks", requireMembership(), async (req, res) => {
     try {
       const tenant = (req as any).tenant;
-      const tasks = (await storage.getAllTasks()).filter((t: any) => !tenant || t.tenantId === tenant.id);
+      const tasks = await storage.getAllTasks(tenant?.id);
       res.json(tasks);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch tasks" });
@@ -937,7 +965,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/seo/keywords", requireMembership(), async (req, res) => {
     try {
       const tenant = (req as any).tenant;
-      const keywords = (await storage.getAllSeoKeywords()).filter((k: any) => !tenant || k.tenantId === tenant.id);
+      const keywords = await storage.getAllSeoKeywords(tenant?.id);
       res.json(keywords);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch SEO keywords" });
@@ -998,7 +1026,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Reviews Management
   app.get("/api/reviews", async (req, res) => {
     try {
-      const reviews = await storage.getAllReviews();
+      const reviews = await storage.getAllReviews((req as any).tenant?.id);
       res.json(reviews);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch reviews" });
@@ -1025,7 +1053,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/reviews/:id/generate-response", async (req, res) => {
     try {
       const reviewId = parseInt(req.params.id);
-      const review = await storage.getReview(reviewId);
+      const review = await storage.getReview(reviewId, (req as any).tenant?.id);
 
       if (!review) {
         return res.status(404).json({ message: "Review not found" });
@@ -1388,7 +1416,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/analytics/reports", async (req, res) => {
     try {
-      const reports = await storage.getAllAnalyticsReports();
+      const reports = await storage.getAllAnalyticsReports((req as any).tenant?.id);
       res.json(reports);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch analytics reports" });
@@ -1604,7 +1632,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     // SEO Keywords endpoints
   app.get("/api/seo-keywords", async (req, res) => {
-    const keywords = await storage.getAllSeoKeywords()
+    const tenantId = (req as any).tenant?.id as number | undefined;
+    const keywords = await storage.getAllSeoKeywords(tenantId)
     return res.json({ keywords });
   });
 
@@ -1615,25 +1644,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Social Media Configuration endpoints
-  app.get("/api/social-configs", async (req, res) => {
-    const user = req.get('user');
-    if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const configs = await storage.getAllSocialMediaConfigs()
+  app.get("/api/social-configs", requireMembership(), async (req, res) => {
+    const tenantId = (req as any).tenant?.id as number | undefined;
+    const configs = await (storage as any).getAllSocialMediaConfigs?.(tenantId) ?? [];
     return res.json({ configs });
   });
 
-  app.post("/api/social-configs", async (req, res) => {
-    const user = req.get('user');
-    if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
+  app.post("/api/social-configs", requireMembership(), async (req, res) => {
     try {
-      const configData = insertSocialMediaConfigSchema.parse(req.body);
-      const result = await storage.createSocialMediaConfig(configData);
+      const tenantId = (req as any).tenant?.id as number | undefined;
+      const configData = insertSocialMediaConfigSchema.parse({ ...req.body, tenantId });
+      const result = await storage.createSocialMediaConfig(configData as any);
       return res.json(result);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -1646,25 +1667,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/social-configs/:platform", async (req, res) => {
-    const user = req.get('user');
-    if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
+  app.delete("/api/social-configs/:platform", requireMembership(), async (req, res) => {
     const platform = req.params.platform;
-    await storage.deleteSocialMediaConfig(parseInt(platform) || 0)
-
+    await storage.deleteSocialMediaConfig(parseInt(platform) || 0);
     return res.json({ success: true });
   });
 
   // Enhanced Social Media Posting
-  app.post("/api/social/schedule-multi-platform", async (req, res) => {
-    const user = req.get('user');
-    if (!user) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
+  app.post("/api/social/schedule-multi-platform", requireMembership(), async (req, res) => {
     const { platforms, content, scheduleTime } = req.body;
     const results = [];
 
@@ -1684,14 +1694,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Social Media Analytics
-  app.get("/api/social/analytics", async (req, res) => {
-    const analytics = await storage.getAllSocialMediaAnalytics();
+  app.get("/api/social/analytics", requireMembership(), async (req, res) => {
+    const tenantId = (req as any).tenant?.id as number | undefined;
+    const analytics = await (storage as any).getAllSocialMediaAnalytics?.(tenantId) ?? [];
     return res.json({ analytics });
   });
 
-  app.post("/api/social/analytics", async (req, res) => {
+  app.post("/api/social/analytics", requireMembership(), async (req, res) => {
     // TODO: Add proper schema validation for social media analytics
-    const result = await storage.createSocialMediaAnalytics(req.body);
+    const tenantId = (req as any).tenant?.id as number | undefined;
+    const result = await (storage as any).createSocialMediaAnalytics?.({ ...req.body, tenantId });
     return res.json(result);
   });
 
@@ -2199,14 +2211,15 @@ Make the page conversion-focused and industry-appropriate.`;
       }
 
       // Build context data
+      const tenant = (req as any).tenant;
       const businessData = {
-        leads: (await storage.getAllLeads()).length,
-        socialPosts: (await storage.getAllSocialPosts()).length,
-        reviews: (await storage.getAllReviews()).length,
-        keywords: (await storage.getAllSeoKeywords()).length,
+        leads: (await storage.getAllLeads(tenant.id)).length,
+        socialPosts: (await storage.getAllSocialPosts(tenant.id)).length,
+        reviews: (await storage.getAllReviews(tenant.id)).length,
+        keywords: (await storage.getAllSeoKeywords(tenant.id)).length,
       };
 
-      const recentActivity = await storage.getAllActivities();
+      const recentActivity = await storage.getAllActivities(tenant?.id);
       const context: FelixContext = {
         user,
         currentPage,
@@ -2281,21 +2294,22 @@ Make the page conversion-focused and industry-appropriate.`;
       }
 
       // Build context for insights
+      const tenant = (req as any).tenant;
       const businessData = {
-        leads: (await storage.getAllLeads()).length,
-        socialPosts: (await storage.getAllSocialPosts()).length,
-        reviews: (await storage.getAllReviews()).length,
-        keywords: (await storage.getAllSeoKeywords()).length,
+        leads: (await storage.getAllLeads(tenant.id)).length,
+        socialPosts: (await storage.getAllSocialPosts(tenant.id)).length,
+        reviews: (await storage.getAllReviews(tenant.id)).length,
+        keywords: (await storage.getAllSeoKeywords(tenant.id)).length,
       };
 
       const context: FelixContext = {
         user,
         businessData,
-        recentActivity: (await storage.getAllActivities()).slice(0, 3).map(a => a.title)
+        recentActivity: (await storage.getAllActivities(tenant.id)).slice(0, 3).map(a => a.title)
       };
 
       // Generate insights based on current business state
-      const insights = felixAI.generateInsights ? felixAI.generateInsights(context) : [];
+      const insights = felixAI.buildInsights ? felixAI.buildInsights(context) : [];
       
       res.json({ insights });
     } catch (error) {

@@ -16,7 +16,7 @@ export interface PlaceDetails {
   name: string;
   rating: number;
   user_ratings_total: number;
-  reviews: PlaceReview[];
+  reviews: any[];
   formatted_address: string;
   business_status: string;
 }
@@ -98,21 +98,21 @@ Error: ${response.data.error_message}`);
       console.log(`Successfully found ${results.length} businesses`);
       
       return results.map(place => ({
-        place_id: place.place_id,
-        name: place.name,
+        place_id: place.place_id || '',
+        name: place.name || '',
         rating: place.rating || 0,
         user_ratings_total: place.user_ratings_total || 0,
         formatted_address: place.formatted_address || ''
       }));
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error searching businesses:', error);
-      if (error.response?.data) {
+      if (error?.response?.data) {
         console.error('API Error Response:', error.response.data);
         if (error.response.status === 400) {
           throw new Error('Google Places API configuration error. Please check that Places API (New) is enabled and billing is configured.');
         }
       }
-      throw new Error(`Failed to search businesses: ${error.message}`);
+      throw new Error(`Failed to search businesses: ${error?.message || 'Unknown error'}`);
     }
   }
 
@@ -145,15 +145,15 @@ Error: ${response.data.error_message}`);
       }
 
       return {
-        place_id: place.place_id,
+        place_id: place.place_id || '',
         name: place.name || '',
         rating: place.rating || 0,
         user_ratings_total: place.user_ratings_total || 0,
-        reviews: place.reviews || [],
+        reviews: this.convertToInternalFormat((place.reviews || []) as any),
         formatted_address: place.formatted_address || '',
         business_status: place.business_status || 'OPERATIONAL'
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching place details:', error);
       throw new Error('Failed to fetch place details');
     }
@@ -202,7 +202,7 @@ Error: ${response.data.error_message}`);
           placeId: placeDetails.place_id
         }
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error getting reviews for business:', error);
       throw error;
     }

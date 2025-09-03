@@ -406,6 +406,11 @@ Always provide helpful, contextual responses that guide users to take action wit
     return insights.slice(0, 2); // Return max 2 insights at a time
   }
 
+  // Public wrapper to expose insights without revealing private method
+  buildInsights(context: FelixContext): BusinessInsight[] {
+    return this.generateInsights(context);
+  }
+
   private getFallbackResponse(context: FelixContext): FelixResponse {
     return {
       message: `Hi ${context.user.firstName}! I'm here to help you grow your field service business. What would you like to work on today?`,

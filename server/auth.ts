@@ -58,9 +58,40 @@ export async function configureAuth(app: Express): Promise<AuthProvider> {
 
   // Development or explicitly disabled auth: allow all requests
   if (process.env.DISABLE_AUTH === "true" || app.get("env") === "development") {
-    return {
-      isAuthenticated: (_req, _res, next) => next(),
+    const devHandler: RequestHandler = async (req: any, _res, next) => {
+      // Attach a predictable dev user so client routes behind login work
+      const devClaims = {
+        sub: "dev@fieldflux.local",
+        email: "dev@fieldflux.local",
+        first_name: "Dev",
+        last_name: "User",
+      };
+      req.user = { claims: devClaims };
+      try {
+        // Ensure dev user and (optional) membership exist to satisfy downstream code
+        await storage.upsertUser({
+          id: devClaims.sub,
+          email: devClaims.email,
+          firstName: devClaims.first_name,
+          lastName: devClaims.last_name,
+          profileImageUrl: null,
+          stripeCustomerId: null,
+          stripeSubscriptionId: null,
+          subscriptionStatus: "free",
+          subscriptionPlan: "free",
+          subscriptionCurrentPeriodEnd: null,
+        } as any);
+        const tenant = req.tenant;
+        if (tenant) {
+          const member = await storage.getMembership(tenant.id, devClaims.sub);
+          if (!member) {
+            await storage.createMembership(tenant.id, devClaims.sub, 'owner');
+          }
+        }
+      } catch {}
+      next();
     };
+    return { isAuthenticated: devHandler };
   }
 
   // Default: require auth (return 401). Plug in your OIDC/session here later.

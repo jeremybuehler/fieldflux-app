@@ -70,7 +70,9 @@ export default function LeadsPanel() {
     },
   });
 
-  const handleContactLead = (lead: Lead) => {
+  type DisplayLead = Partial<Lead> & { id: number; name: string; service?: string; location?: string; priority?: string; createdAt?: Date | null };
+
+  const handleContactLead = (lead: DisplayLead) => {
     trackEvent('lead_contact_attempt', 'leads', 'contact_button');
     toast({
       title: "Contacting Lead",
@@ -83,7 +85,7 @@ export default function LeadsPanel() {
     });
   };
 
-  const handleScheduleEstimate = (lead: Lead) => {
+  const handleScheduleEstimate = (lead: DisplayLead) => {
     trackEvent('lead_schedule_estimate', 'leads', 'schedule_button');
     toast({
       title: "Scheduling Estimate",
@@ -96,7 +98,7 @@ export default function LeadsPanel() {
     });
   };
 
-  const handleFollowUp = (lead: Lead) => {
+  const handleFollowUp = (lead: DisplayLead) => {
     trackEvent('lead_follow_up', 'leads', 'follow_up_button');
     toast({
       title: "Follow-up Scheduled",
@@ -180,7 +182,7 @@ export default function LeadsPanel() {
           </div>
         ) : (
           <div className="space-y-4">
-            {displayLeads.slice(0, 4).map((lead) => (
+            {displayLeads.slice(0, 4).map((lead: DisplayLead) => (
               <div key={lead.id} className="border border-gray-200 rounded-lg p-4">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -188,16 +190,16 @@ export default function LeadsPanel() {
                       <h4 className="text-sm font-semibold text-hvac-gray">
                         {lead.name}
                       </h4>
-                      <Badge variant={getPriorityColor(lead.priority)} className="text-xs">
-                        {getPriorityText(lead.priority)}
+                      <Badge variant={getPriorityColor(lead.priority || 'medium')} className="text-xs">
+                        {getPriorityText(lead.priority || 'medium')}
                       </Badge>
-                      <Badge variant={getServiceTypeColor(lead.service)} className="text-xs">
-                        {lead.service.includes("Commercial") ? "Commercial" : 
-                         lead.service.includes("install") ? "New Install" : "Service"}
+                      <Badge variant={getServiceTypeColor(lead.service || '')} className="text-xs">
+                        {(lead.service || '').includes("Commercial") ? "Commercial" : 
+                         (lead.service || '').includes("install") ? "New Install" : "Service"}
                       </Badge>
                     </div>
                     <p className="text-xs text-gray-500 mb-2">
-                      {lead.service} - {lead.location}
+                      {(lead.service || '')} - {(lead.location || '')}
                     </p>
                     <div className="flex items-center space-x-4 text-xs text-gray-400">
                       {lead.phone && (
@@ -214,7 +216,7 @@ export default function LeadsPanel() {
                       )}
                       <span className="flex items-center">
                         <Clock className="w-3 h-3 mr-1" />
-                        {formatTimeAgo(new Date(lead.createdAt!))}
+                        {formatTimeAgo(new Date(lead.createdAt ?? new Date()))}
                       </span>
                     </div>
                   </div>
@@ -227,7 +229,7 @@ export default function LeadsPanel() {
                       >
                         Contact
                       </Button>
-                    ) : lead.service.toLowerCase().includes("commercial") ? (
+                    ) : (lead.service || '').toLowerCase().includes("commercial") ? (
                       <Button 
                         size="sm" 
                         onClick={() => handleScheduleEstimate(lead)}

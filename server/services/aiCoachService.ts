@@ -69,11 +69,11 @@ export class AICoachService {
 
       // Calculate metrics
       const totalSessions = todaySessions.length;
-      const totalTimeSpent = todaySessions.reduce((sum, session) => sum + (session.duration || 0), 0);
+      const totalTimeSpent = todaySessions.reduce((sum: number, session: any) => sum + (session.duration || 0), 0);
       const averageSessionDuration = totalSessions > 0 ? totalTimeSpent / totalSessions : 0;
       
       // Get unique features used
-      const allActions = todaySessions.flatMap(session => session.actionsPerformed || []);
+      const allActions = todaySessions.flatMap((session: any) => session.actionsPerformed || []);
       const featuresUsed = Array.from(new Set(allActions));
       
       const actionsCompleted = allActions.length;
@@ -153,7 +153,7 @@ export class AICoachService {
           eq(userGoals.status, 'active')
         ));
 
-      const completedGoals = activeGoals.filter(goal => 
+      const completedGoals = activeGoals.filter((goal: any) => 
         (goal.currentValue || 0) >= (goal.targetValue || 0)
       ).length;
 
@@ -191,9 +191,9 @@ export class AICoachService {
         .where(gte(leads.createdAt, weekAgo));
 
       return {
-        contentCreated: weeklyActivities.filter(a => a.type === 'content').length,
+        contentCreated: weeklyActivities.filter((a: any) => a.type === 'content').length,
         leadsGenerated: weeklyLeads.length,
-        reviewsManaged: weeklyActivities.filter(a => a.type === 'review').length,
+        reviewsManaged: weeklyActivities.filter((a: any) => a.type === 'review').length,
         socialPosts: weeklySocialPosts.length,
       };
     } catch (error) {
@@ -288,16 +288,16 @@ export class AICoachService {
       const context = {
         recentEngagement: metrics.slice(0, 3),
         activeGoals: goals,
-        recentActivity: sessions.slice(0, 5).map(s => ({
+        recentActivity: sessions.slice(0, 5).map((s: any) => ({
           duration: s.duration,
           pages: s.pagesVisited,
           actions: s.actionsPerformed,
           timestamp: s.startTime,
         })),
         trends: {
-          avgEngagement: metrics.reduce((sum, m) => sum + (m.engagementScore || 0), 0) / Math.max(metrics.length, 1),
-          avgProductivity: metrics.reduce((sum, m) => sum + (m.productivityScore || 0), 0) / Math.max(metrics.length, 1),
-          totalActions: metrics.reduce((sum, m) => sum + (m.actionsCompleted || 0), 0),
+          avgEngagement: metrics.reduce((sum: number, m: any) => sum + (m.engagementScore || 0), 0) / Math.max(metrics.length, 1),
+          avgProductivity: metrics.reduce((sum: number, m: any) => sum + (m.productivityScore || 0), 0) / Math.max(metrics.length, 1),
+          totalActions: metrics.reduce((sum: number, m: any) => sum + (m.actionsCompleted || 0), 0),
         }
       };
 

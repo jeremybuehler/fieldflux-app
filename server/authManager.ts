@@ -20,7 +20,7 @@ export async function ensureTenantOidcStrategy(app: Express, tenantId: number) {
     throw new Error("OIDC not configured for tenant");
   }
 
-  const discovered = await oidc.Issuer.discover(issuerUrl);
+  const discovered = await (oidc as any).Issuer.discover(issuerUrl);
   const client = new discovered.Client({ client_id: clientId, client_secret: clientSecret });
 
   const verify: VerifyFunction = async (tokens, verified) => {

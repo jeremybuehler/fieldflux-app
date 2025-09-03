@@ -20,7 +20,7 @@ interface KeywordData {
 
 export default function Keywords() {
   // Fetch real keyword data from Search Console API
-  const { data: apiResponse, isLoading, error } = useQuery({
+  const { data: apiResponse, isLoading, error } = useQuery<{ keywords: KeywordData[]; meta?: { source: string } }>({
     queryKey: ['/api/analytics/keywords'],
     refetchInterval: 300000, // Refresh every 5 minutes
   });

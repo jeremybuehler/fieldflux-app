@@ -1,12 +1,12 @@
 import { useState, useCallback, useEffect } from "react";
 import * as React from "react";
-import CanvasWindow from "./canvas-window";
+import { CanvasWindow } from "./canvas-window";
 import Analytics from "@/pages/reports";
 import Leads from "@/pages/leads";
 import Social from "@/pages/social";
 import Reviews from "@/pages/reviews";
 import SEO from "@/pages/seo";
-import Settings from "@/pages/settings-fixed";
+import Settings from "@/pages/settings";
 
 interface WindowConfig {
   id: string;
@@ -132,11 +132,11 @@ export default function CanvasManager({
             <CanvasWindow
               id={window.id}
               title={window.title}
-              initialPosition={window.initialPosition}
-              initialSize={window.initialSize}
-              zIndex={window.zIndex}
+              position={window.initialPosition}
+              size={window.initialSize}
+              onPositionChange={() => {}}
+              onSizeChange={() => {}}
               onClose={() => handleWindowClose(window.id)}
-              onFocus={() => handleWindowFocus(window.id)}
             >
               <WindowComponent />
             </CanvasWindow>

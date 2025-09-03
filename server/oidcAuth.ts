@@ -56,7 +56,7 @@ export async function setupAuth(app: Express) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  const discovered = await oidc.Issuer.discover(issuerUrl);
+  const discovered = await (oidc as any).Issuer.discover(issuerUrl);
   const oidcClient = new discovered.Client({ client_id: clientId, client_secret: clientSecret });
 
   const verify: VerifyFunction = async (tokens, verified) => {
@@ -70,7 +70,7 @@ export async function setupAuth(app: Express) {
   };
 
   const strategy = new Strategy(
-    { name: "oidc", client: oidcClient, params: { scope: "openid email profile offline_access" }, callbackURL: callbackUrl },
+    { name: "oidc", client: oidcClient, params: { scope: "openid email profile offline_access" }, callbackURL: callbackUrl } as any,
     verify,
   );
   passport.use(strategy);
@@ -97,7 +97,7 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
   if (now <= user.expires_at) return next();
   try {
     const issuerUrl = process.env.OIDC_ISSUER_URL!;
-    const discovered = await oidc.Issuer.discover(issuerUrl);
+    const discovered = await (oidc as any).Issuer.discover(issuerUrl);
     const clientId = process.env.OIDC_CLIENT_ID!;
     const clientSecret = process.env.OIDC_CLIENT_SECRET!;
     const oidcClient = new discovered.Client({ client_id: clientId, client_secret: clientSecret });
@@ -111,4 +111,3 @@ export const isAuthenticated: RequestHandler = async (req, res, next) => {
     res.status(401).json({ message: "Unauthorized" });
   }
 };
-

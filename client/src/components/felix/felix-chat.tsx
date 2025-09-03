@@ -22,7 +22,8 @@ import {
   Users,
   Star,
   Globe,
-  Search
+  Search,
+  TrendingUp
 } from 'lucide-react';
 
 interface Message {
@@ -57,9 +58,10 @@ interface QuickAction {
 
 interface FelixChatProps {
   onNavigate?: (route: string) => void;
+  onOpenWindow?: (windowType: string, config?: any) => void;
 }
 
-export function FelixChat({ onNavigate }: FelixChatProps) {
+export function FelixChat({ onNavigate, onOpenWindow }: FelixChatProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);

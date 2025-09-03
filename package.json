@@ -11,7 +11,12 @@
     "db:push": "drizzle-kit push",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
-    "seed:tenants": "tsx scripts/seed-tenants.ts"
+    "seed:tenants": "tsx scripts/seed-tenants.ts",
+    "dev:bootstrap": "node scripts/dev/bootstrap.mjs",
+    "context:endpoints": "node scripts/context/generate-endpoints.mjs",
+    "context:schema": "node scripts/context/generate-schema.mjs",
+    "context:refresh": "npm run context:endpoints && npm run context:schema",
+    "security:scan": "node scripts/security/scan.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.37.0",

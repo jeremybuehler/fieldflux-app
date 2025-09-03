@@ -39,10 +39,10 @@ export default function BusinessSearch() {
         title: "Search Complete",
         description: `Found ${data.length} field service businesses`,
       });
-    } catch (error) {
+    } catch (error: any) {
       toast({
         title: "Search Error",
-        description: error.message,
+        description: error?.message || 'Search failed',
         variant: "destructive",
       });
     } finally {

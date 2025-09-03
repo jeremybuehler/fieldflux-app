@@ -299,6 +299,7 @@ export const insertSeoKeywordSchema = createInsertSchema(seoKeywords).omit({
 // Social Media Platform Configurations
 export const socialMediaConfigs = pgTable("social_media_configs", {
   id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   userId: varchar("user_id").notNull().references(() => users.id),
   platform: text("platform").notNull(), // facebook, instagram, twitter, linkedin
   appId: text("app_id"),
@@ -318,6 +319,7 @@ export const socialMediaConfigs = pgTable("social_media_configs", {
 // Social Media Post Analytics
 export const socialMediaAnalytics = pgTable("social_media_analytics", {
   id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   postId: integer("post_id").references(() => socialPosts.id),
   platform: text("platform").notNull(),
   likes: integer("likes").default(0),
@@ -508,7 +510,7 @@ export const insertClientConfigurationSchema = createInsertSchema(clientConfigur
   updatedAt: true,
 });
 
-export type User = typeof users.$inferSelect;
+// (duplicate removed above) export type User retained earlier
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type WordPressPost = typeof wordpressPosts.$inferSelect;
 export type InsertWordPressPost = z.infer<typeof insertWordPressPostSchema>;
