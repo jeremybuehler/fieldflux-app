@@ -55,16 +55,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Configure authentication depending on environment (Replit, dev, or strict)
   const { isAuthenticated } = await configureAuth(app);
 
-  // Require tenant membership helper
+  // Require tenant membership helper - SECURE VERSION (NO BYPASSES)
   function requireMembership() {
     return async (req: any, res: any, next: any) => {
-      if (process.env.DISABLE_AUTH === 'true' || req.app.get('env') === 'development') return next();
+      // 🔐 SECURITY: Never bypass authentication - always validate
       const tenant = req.tenant;
       const user = req.user;
-      if (!tenant || !user) return res.status(401).json({ message: 'Unauthorized' });
-      const member = await storage.getMembership(tenant.id, user.claims?.sub || user.claims?.email || user.id);
-      if (!member) return res.status(403).json({ message: 'Forbidden' });
-      next();
+      
+      if (!tenant) {
+        return res.status(401).json({ 
+          message: 'Unauthorized', 
+          error: 'No tenant context available' 
+        });
+      }
+      
+      if (!user || !user.claims) {
+        return res.status(401).json({ 
+          message: 'Unauthorized', 
+          error: 'User authentication required' 
+        });
+      }
+      
+      try {
+        const userId = user.claims.sub || user.claims.email || user.id;
+        const member = await storage.getMembership(tenant.id, userId);
+        
+        if (!member) {
+          return res.status(403).json({ 
+            message: 'Forbidden', 
+            error: 'User not authorized for this tenant' 
+          });
+        }
+        
+        // Attach member info for downstream use
+        req.member = member;
+        next();
+      } catch (error) {
+        console.error('Membership validation error:', error);
+        return res.status(500).json({ 
+          message: 'Internal Server Error', 
+          error: 'Membership validation failed' 
+        });
+      }
     };
   }
 
@@ -155,8 +187,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch user" });
     }
   });
-  // Dashboard Analytics
-  app.get("/api/dashboard/metrics", async (req, res) => {
+  // Dashboard Analytics - SECURED
+  app.get("/api/dashboard/metrics", requireMembership(), async (req, res) => {
     try {
       const tenant = (req as any).tenant;
       const leads = await storage.getAllLeads(tenant?.id);
@@ -571,7 +603,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/wordpress/generate-post", async (req, res) => {
+  app.post("/api/wordpress/generate-post", requireMembership(), async (req, res) => {
     try {
       const { topic, type = "blog" } = req.body;
 
@@ -984,7 +1016,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/seo/analyze", async (req, res) => {
+  app.post("/api/seo/analyze", requireMembership(), async (req, res) => {
     try {
       const { url, keywords } = req.body;
 
@@ -1023,8 +1055,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Reviews Management
-  app.get("/api/reviews", async (req, res) => {
+  // Reviews Management - SECURED
+  app.get("/api/reviews", requireMembership(), async (req, res) => {
     try {
       const reviews = await storage.getAllReviews((req as any).tenant?.id);
       res.json(reviews);
@@ -1033,7 +1065,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/reviews", async (req, res) => {
+  app.post("/api/reviews", requireMembership(), async (req, res) => {
     try {
       const data = insertReviewSchema.parse(req.body);
       const review = await storage.createReview(data);

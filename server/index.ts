@@ -3,51 +3,89 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+// Import new error handling and logging infrastructure
+import { 
+  correlationMiddleware, 
+  logger 
+} from "./lib/logger";
+import { 
+  errorHandler, 
+  notFoundHandler,
+  handleUnhandledRejection,
+  handleUncaughtException,
+  handleGracefulShutdown
+} from "./lib/errors";
+import { rateLimiters, bypassRateLimit } from "./lib/rate-limit";
 
+// Initialize error handlers
+handleUnhandledRejection();
+handleUncaughtException();
+handleGracefulShutdown();
+
+const app = express();
+
+// Trust proxy for accurate IP addresses and rate limiting
+app.set('trust proxy', 1);
+
+// Basic middleware
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+
+// Security headers
 app.use((req, res, next) => {
-  const start = Date.now();
-  const pathOnly = req.path;
-  res.on("finish", () => {
-    const duration = Date.now() - start;
-    if (pathOnly.startsWith("/api")) {
-      // Log minimal metadata; avoid payloads to prevent leaks
-      const line = `${req.method} ${pathOnly} ${res.statusCode} in ${duration}ms`;
-      log(line);
-    }
-  });
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   next();
 });
 
+// Add correlation ID to all requests and structured logging
+app.use(correlationMiddleware);
+
+// Rate limiting for API routes
+app.use('/api', bypassRateLimit); // Allow bypass in development
+app.use('/api', rateLimiters.general);
+
 (async () => {
-  const server = await registerRoutes(app);
+  try {
+    logger.info('Starting FieldFlux server', { correlationId: 'startup' });
+    
+    const server = await registerRoutes(app);
+    logger.info('Routes registered successfully', { correlationId: 'startup' });
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    // Add 404 handler for unmatched routes
+    app.use(notFoundHandler);
+    
+    // Add centralized error handler (must be last)
+    app.use(errorHandler);
 
-    console.error("Express error handler:", err);
-    res.status(status).json({ message });
-  });
+    // Setup Vite in development or serve static files in production
+    if (app.get("env") === "development") {
+      logger.info('Setting up Vite development server', { correlationId: 'startup' });
+      await setupVite(app, server);
+    } else {
+      logger.info('Serving static files for production', { correlationId: 'startup' });
+      serveStatic(app);
+    }
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
-
-  // Server configuration for Azure deployment
-  const port = process.env.PORT || 8080;
-  
-  server.listen(port, () => {
-    log(`serving on port ${port}`);
-  }).on('error', (err) => {
-    console.error('Server failed to start:', err);
+    // Server configuration for deployment
+    const port = process.env.PORT || 8080;
+    
+    server.listen(port, () => {
+      logger.info(`FieldFlux server listening on port ${port}`, {
+        correlationId: 'startup',
+        port,
+        environment: process.env.NODE_ENV || 'development',
+        version: process.env.npm_package_version || 'unknown'
+      });
+    }).on('error', (err) => {
+      logger.error('Server failed to start', { correlationId: 'startup' }, err);
+      process.exit(1);
+    });
+    
+  } catch (error) {
+    logger.error('Failed to initialize server', { correlationId: 'startup' }, error as Error);
     process.exit(1);
-  });
-})();
+  }
+});
