@@ -1,0 +1,130 @@
+# Artillery.js Stress Testing Configuration
+# Pushes the system beyond normal capacity to find breaking points
+
+config:
+  target: '{{ $env.PERF_BASE_URL || "http://localhost:5000" }}'
+  phases:
+    # Warm-up
+    - duration: 30
+      arrivalRate: 10
+      name: "Warm-up"
+    
+    # Aggressive ramp-up to stress levels
+    - duration: 60
+      arrivalRate: 50
+      rampTo: 200
+      name: "Stress ramp-up"
+    
+    # High stress sustained
+    - duration: 300
+      arrivalRate: 200
+      name: "High stress sustained"
+    
+    # Spike to breaking point
+    - duration: 60
+      arrivalRate: 200
+      rampTo: 500
+      name: "Stress spike"
+    
+    # Extreme stress
+    - duration: 120
+      arrivalRate: 500
+      name: "Extreme stress"
+    
+    # Recovery testing
+    - duration: 60
+      arrivalRate: 100
+      name: "Recovery phase"
+
+  # Stress test thresholds (more lenient than load test)
+  ensure:
+    p99: 3000   # Allow higher response times under stress
+    p95: 2000
+    median: 800
+    max: 10000  # Allow up to 10s response time
+    errorRate: 5 # Allow up to 5% error rate under stress
+
+  plugins:
+    expect: {}
+    metrics-by-endpoint: {}
+
+scenarios:
+  # Core system stress - most critical endpoints
+  - name: "Core System Stress"
+    weight: 40
+    flow:
+      - get:
+          url: "/api/health"
+          expect:
+            - statusCode: [200, 500, 503]
+      
+      - get:
+          url: "/api/dashboard/metrics"
+          expect:
+            - statusCode: [200, 401, 500, 503]
+      
+      - get:
+          url: "/api/leads"
+          expect:
+            - statusCode: [200, 401, 500, 503]
+
+  # Database intensive operations
+  - name: "Database Stress"
+    weight: 30
+    flow:
+      # Heavy read operations
+      - get:
+          url: "/api/leads"
+      - get:
+          url: "/api/social/posts"  
+      - get:
+          url: "/api/wordpress/posts"
+      
+      # Concurrent write operations
+      - post:
+          url: "/api/leads"
+          json:
+            name: "Stress Test Lead {{ $randomInt(1, 100000) }}"
+            email: "stress{{ $randomInt(1, 100000) }}@test.com"
+            phone: "555-{{ $randomInt(1000, 9999) }}"
+            source: "stress-test"
+
+  # AI/External API stress testing
+  - name: "AI Service Stress"
+    weight: 20
+    flow:
+      - post:
+          url: "/api/social/generate-post"
+          json:
+            prompt: "Stress test content generation {{ $randomInt(1, 1000) }}"
+            platform: "facebook"
+            businessType: "HVAC"
+      
+      - post:
+          url: "/api/ai/generate-blog"
+          json:
+            topic: "Stress test blog {{ $randomInt(1, 1000) }}"
+            businessType: "HVAC"
+            wordCount: 500
+
+  # Memory and resource stress
+  - name: "Resource Intensive Operations"
+    weight: 10
+    flow:
+      # Large data requests
+      - get:
+          url: "/api/analytics/generate-report"
+          json:
+            dateRange: "last-year"
+            includeCharts: true
+            detailed: true
+      
+      # Multiple concurrent analytics requests
+      - get:
+          url: "/api/analytics/metrics"
+      - get:
+          url: "/api/analytics/traffic-sources"
+      - get:
+          url: "/api/analytics/top-pages"
+      - get:
+          url: "/api/reviews/analytics"

@@ -1,0 +1,96 @@
+# Artillery.js Spike Testing Configuration
+# Tests system response to sudden traffic spikes
+
+config:
+  target: '{{ $env.PERF_BASE_URL || "http://localhost:5000" }}'
+  phases:
+    # Normal baseline load
+    - duration: 120
+      arrivalRate: 20
+      name: "Baseline load"
+    
+    # Sudden spike - simulates viral content or emergency
+    - duration: 30
+      arrivalRate: 500
+      name: "Traffic spike"
+    
+    # Return to normal
+    - duration: 60
+      arrivalRate: 20
+      name: "Post-spike normal"
+    
+    # Second spike - tests recovery capability
+    - duration: 30
+      arrivalRate: 300
+      name: "Secondary spike"
+    
+    # Extended recovery period
+    - duration: 120
+      arrivalRate: 10
+      name: "Extended recovery"
+
+  ensure:
+    # During spikes, allow degraded performance
+    p99: 5000
+    p95: 3000
+    errorRate: 10  # Allow up to 10% errors during spikes
+
+  plugins:
+    expect: {}
+    metrics-by-endpoint: {}
+
+scenarios:
+  # Simulate emergency service rush
+  - name: "Emergency Service Rush"
+    weight: 50
+    flow:
+      # Customers checking availability
+      - get:
+          url: "/api/health"
+      
+      # Lead creation surge
+      - post:
+          url: "/api/leads"
+          json:
+            name: "Emergency Customer {{ $randomInt(1, 10000) }}"
+            email: "emergency{{ $randomInt(1, 10000) }}@customer.com" 
+            phone: "555-{{ $randomInt(1000, 9999) }}"
+            source: "emergency"
+            service_type: "Emergency Repair"
+            message: "URGENT: No heat/AC, need immediate service"
+            priority: "high"
+
+  # Social media viral content scenario
+  - name: "Viral Content Scenario"
+    weight: 30
+    flow:
+      # High content generation demand
+      - post:
+          url: "/api/social/generate-post"
+          json:
+            prompt: "Emergency HVAC tips for extreme weather"
+            platform: "facebook"
+            businessType: "HVAC"
+            urgent: true
+      
+      # Analytics spike from viral content
+      - get:
+          url: "/api/analytics/metrics"
+      - get:
+          url: "/api/analytics/traffic-sources"
+
+  # Business owner panic - checking all metrics
+  - name: "Business Owner Panic Check"
+    weight: 20
+    flow:
+      # Rapid dashboard checks
+      - get:
+          url: "/api/dashboard/metrics"
+      - get:
+          url: "/api/leads"  
+      - get:
+          url: "/api/social/posts"
+      - get:
+          url: "/api/reviews/analytics"
+      - get:
+          url: "/api/analytics/traffic-sources"

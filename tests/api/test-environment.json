@@ -1,0 +1,73 @@
+{
+  "id": "test-environment",
+  "name": "FieldFlux Test Environment",
+  "values": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "api_base",
+      "value": "http://localhost:5000/api",
+      "type": "default", 
+      "enabled": true
+    },
+    {
+      "key": "auth_token",
+      "value": "test-bearer-token",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "test_user_email",
+      "value": "test@fieldflux.com",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "test_client_id",
+      "value": "test-client-123",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "openai_api_key",
+      "value": "test-openai-key",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "google_analytics_property_id",
+      "value": "test-ga-property",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "twilio_account_sid",
+      "value": "test-twilio-sid",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "twilio_auth_token",
+      "value": "test-twilio-token",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "database_url",
+      "value": "postgresql://test:test@localhost:5432/fieldflux_test",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "webhook_secret",
+      "value": "test-webhook-secret-key",
+      "type": "secret",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment"
+}

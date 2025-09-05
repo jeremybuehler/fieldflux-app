@@ -1,0 +1,231 @@
+# Artillery.js API Load Testing Configuration
+# Tests critical FieldFlux API endpoints under various load conditions
+
+config:
+  target: '{{ $env.PERF_BASE_URL || "http://localhost:5000" }}'
+  phases:
+    # Warm-up phase
+    - duration: 30
+      arrivalRate: 5
+      name: "Warm-up phase"
+    
+    # Ramp-up phase  
+    - duration: 60
+      arrivalRate: 10
+      rampTo: 50
+      name: "Load ramp-up"
+    
+    # Sustained load phase
+    - duration: 120
+      arrivalRate: 50
+      name: "Sustained load"
+    
+    # Peak load phase
+    - duration: 60
+      arrivalRate: 100
+      name: "Peak load"
+    
+    # Cool-down phase
+    - duration: 30
+      arrivalRate: 10
+      name: "Cool-down"
+
+  # Performance expectations and SLA thresholds
+  ensure:
+    p99: 1000  # 99th percentile response time < 1s
+    p95: 500   # 95th percentile response time < 500ms
+    median: 200 # median response time < 200ms
+    max: 2000  # max response time < 2s
+    errorRate: 1 # error rate < 1%
+
+  # Load testing plugins
+  plugins:
+    expect: {}
+    metrics-by-endpoint: {}
+    publish-metrics:
+      - type: cloudwatch
+        exclude:
+          - artillery.engine_http.response_time
+
+  # Custom variables for dynamic testing
+  variables:
+    leadSources:
+      - "website" 
+      - "facebook"
+      - "google"
+      - "referral"
+      - "direct"
+    platforms:
+      - "facebook"
+      - "instagram" 
+      - "twitter"
+      - "linkedin"
+
+scenarios:
+  # Health check and basic endpoints
+  - name: "Health and Status Checks"
+    weight: 20
+    flow:
+      - get:
+          url: "/api/health"
+          expect:
+            - statusCode: 200
+            - hasProperty: "status"
+      
+      - get:
+          url: "/api/dev/status"
+          expect:
+            - statusCode: 200
+
+  # Authentication flow testing
+  - name: "Authentication Flow"
+    weight: 15
+    flow:
+      - get:
+          url: "/api/login"
+          expect:
+            - statusCode: [200, 302]
+      
+      - think: 1
+      
+      - get:
+          url: "/api/auth/user"
+          expect:
+            - statusCode: [200, 401]
+
+  # Dashboard and metrics endpoints
+  - name: "Dashboard Metrics"
+    weight: 25
+    flow:
+      - get:
+          url: "/api/dashboard/metrics"
+          expect:
+            - statusCode: [200, 401]
+      
+      - get:
+          url: "/api/activities"
+          expect:
+            - statusCode: [200, 401]
+
+  # Lead management operations
+  - name: "Lead Management"
+    weight: 20
+    flow:
+      # Get leads list
+      - get:
+          url: "/api/leads"
+          expect:
+            - statusCode: [200, 401]
+      
+      - think: 2
+      
+      # Create new lead
+      - post:
+          url: "/api/leads"
+          json:
+            name: "{{ $randomString() }}"
+            email: "test-{{ $randomInt(1, 10000) }}@example.com"
+            phone: "555-{{ $randomInt(1000, 9999) }}"
+            source: "{{ $randomItem(leadSources) }}"
+            service_type: "HVAC Maintenance"
+            message: "Performance test lead"
+          expect:
+            - statusCode: [200, 201, 401]
+
+  # Social media content operations  
+  - name: "Social Media Management"
+    weight: 15
+    flow:
+      # Get social posts
+      - get:
+          url: "/api/social/posts"
+          expect:
+            - statusCode: [200, 401]
+      
+      - think: 1
+      
+      # Generate social post
+      - post:
+          url: "/api/social/generate-post"
+          json:
+            prompt: "Create a seasonal HVAC maintenance tip"
+            platform: "{{ $randomItem(platforms) }}"
+            businessType: "HVAC"
+            tone: "professional"
+          expect:
+            - statusCode: [200, 401]
+            - contentType: "application/json"
+
+  # Content and WordPress operations
+  - name: "Content Management"
+    weight: 10
+    flow:
+      # Get WordPress posts
+      - get:
+          url: "/api/wordpress/posts"
+          expect:
+            - statusCode: [200, 401]
+      
+      - think: 3
+      
+      # Generate blog content
+      - post:
+          url: "/api/ai/generate-blog"
+          json:
+            topic: "Winter HVAC Maintenance Tips"
+            businessType: "HVAC"
+            targetAudience: "homeowners"
+            wordCount: 800
+          expect:
+            - statusCode: [200, 401]
+
+  # Analytics and reporting
+  - name: "Analytics and Reports"
+    weight: 8
+    flow:
+      # Get analytics metrics
+      - get:
+          url: "/api/analytics/metrics"
+          expect:
+            - statusCode: [200, 500]
+      
+      - get:
+          url: "/api/analytics/traffic-sources"
+          expect:
+            - statusCode: [200, 500]
+      
+      - get:
+          url: "/api/reviews/analytics" 
+          expect:
+            - statusCode: [200, 500]
+
+  # External API integrations
+  - name: "External API Integrations"
+    weight: 7
+    flow:
+      # Weather API
+      - get:
+          url: "/api/weather/winter-haven"
+          expect:
+            - statusCode: [200, 500]
+      
+      - think: 1
+      
+      # Places search
+      - get:
+          url: "/api/places/search?query=HVAC+contractor&location=Winter+Haven,+FL"
+          expect:
+            - statusCode: [200, 400, 500]
+
+# Custom functions for realistic test data
+functions:
+  randomBusinessType:
+    - return ['HVAC', 'Plumbing', 'Electrical', 'Landscaping'][Math.floor(Math.random() * 4)]
+  
+  randomServiceType:
+    - |
+      const services = [
+        'Emergency Repair', 'Maintenance', 'Installation', 
+        'Inspection', 'Consultation', 'System Upgrade'
+      ]
+      return services[Math.floor(Math.random() * services.length)]

@@ -1,0 +1,60 @@
+# FieldFlux Performance Testing Configuration
+# Local configuration file for performance tests
+# Override these values by setting environment variables
+
+# Base URL for testing
+PERF_BASE_URL=http://localhost:5000
+
+# Test duration settings (in milliseconds)
+QUICK_TEST_DURATION=30000    # 30 seconds
+STANDARD_TEST_DURATION=120000  # 2 minutes
+EXTENDED_TEST_DURATION=300000  # 5 minutes
+
+# Load testing parameters
+MAX_VIRTUAL_USERS=100
+RAMP_UP_DURATION=30
+
+# Memory profiling settings
+MEMORY_SAMPLING_INTERVAL=1000  # 1 second
+GC_MONITORING=true
+
+# CPU profiling settings
+CPU_SAMPLING_RATE=100
+FLAME_GRAPH_OUTPUT=true
+
+# Database testing settings
+DB_STRESS_TEST_DURATION=60000  # 1 minute
+MAX_DB_CONNECTIONS=50
+
+# Frontend testing settings
+LIGHTHOUSE_THROTTLING=true
+LIGHTHOUSE_MOBILE_TEST=true
+BUNDLE_SIZE_BUDGET=500000  # 500KB
+
+# Report settings
+GENERATE_HTML_REPORTS=true
+GENERATE_JSON_REPORTS=true
+GENERATE_CSV_REPORTS=false
+AUTO_OPEN_REPORTS=true
+
+# CI/CD settings
+CI_MODE=false
+PERFORMANCE_BUDGET_ENFORCEMENT=true
+REGRESSION_THRESHOLD=10  # Percentage increase to trigger regression alert
+
+# Artillery settings
+ARTILLERY_QUIET_MODE=false
+ARTILLERY_OUTPUT_FORMAT=json
+
+# k6 settings
+K6_QUIET_MODE=false
+K6_DURATION=2m
+K6_VUS=50
+
+# Lighthouse settings
+LIGHTHOUSE_CHROME_FLAGS="--headless --no-sandbox --disable-gpu"
+LIGHTHOUSE_THROTTLING_METHOD=simulate
+
+# Archive settings
+ARCHIVE_RESULTS=true
+MAX_ARCHIVE_DAYS=30

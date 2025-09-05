@@ -1,0 +1,713 @@
+{
+  "info": {
+    "name": "FieldFlux API Tests",
+    "description": "Comprehensive API testing collection for FieldFlux platform",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "api_base",
+      "value": "{{base_url}}/api",
+      "type": "string"
+    },
+    {
+      "key": "test_user_email",
+      "value": "test@fieldflux.com",
+      "type": "string"
+    },
+    {
+      "key": "test_lead_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "test_post_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Server is healthy', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/auth/me",
+              "host": ["{{api_base}}"],
+              "path": ["auth", "me"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('User authentication check', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "if (pm.response.code === 200) {",
+                  "    const user = pm.response.json();",
+                  "    pm.test('User has required fields', function () {",
+                  "        pm.expect(user).to.have.property('id');",
+                  "        pm.expect(user).to.have.property('email');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Analytics",
+      "item": [
+        {
+          "name": "Get Analytics Overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/analytics/overview",
+              "host": ["{{api_base}}"],
+              "path": ["analytics", "overview"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Analytics overview loads successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('Response has analytics data structure', function () {",
+                  "    const analytics = pm.response.json();",
+                  "    pm.expect(analytics).to.have.property('success', true);",
+                  "    pm.expect(analytics).to.have.property('data');",
+                  "});",
+                  "",
+                  "pm.test('Response time is reasonable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Website Analytics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/analytics/website?period=7d",
+              "host": ["{{api_base}}"],
+              "path": ["analytics", "website"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "7d"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Website analytics loads', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const analytics = pm.response.json();",
+                  "pm.test('Contains expected metrics', function () {",
+                  "    if (analytics.success) {",
+                  "        pm.expect(analytics.data).to.be.an('object');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get SEO Keywords",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/analytics/seo/keywords?limit=10",
+              "host": ["{{api_base}}"],
+              "path": ["analytics", "seo", "keywords"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('SEO keywords endpoint responds', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "if (response.success && response.data) {",
+                  "    pm.test('Keywords are properly formatted', function () {",
+                  "        pm.expect(response.data).to.be.an('array');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Leads Management",
+      "item": [
+        {
+          "name": "Get All Leads",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/leads?page=1&limit=10",
+              "host": ["{{api_base}}"],
+              "path": ["leads"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Leads list loads successfully', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "pm.test('Response has pagination structure', function () {",
+                  "    pm.expect(response).to.have.property('success');",
+                  "    if (response.success) {",
+                  "        pm.expect(response).to.have.property('data');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create New Lead",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Test Lead {{$timestamp}}\",\n  \"email\": \"testlead{{$timestamp}}@example.com\",\n  \"phone\": \"+1234567890\",\n  \"service\": \"HVAC Repair\",\n  \"source\": \"API Test\",\n  \"status\": \"new\",\n  \"notes\": \"Created via API testing\"\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/leads",
+              "host": ["{{api_base}}"],
+              "path": ["leads"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Lead created successfully', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "if (response.success && response.data) {",
+                  "    pm.test('Lead has required properties', function () {",
+                  "        pm.expect(response.data).to.have.property('id');",
+                  "        pm.expect(response.data).to.have.property('name');",
+                  "        pm.expect(response.data).to.have.property('email');",
+                  "    });",
+                  "    ",
+                  "    // Store lead ID for later tests",
+                  "    pm.collectionVariables.set('test_lead_id', response.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Lead by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/leads/{{test_lead_id}}",
+              "host": ["{{api_base}}"],
+              "path": ["leads", "{{test_lead_id}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Lead retrieval by ID works', function () {",
+                  "    if (pm.collectionVariables.get('test_lead_id')) {",
+                  "        pm.response.to.have.status(200);",
+                  "        const lead = pm.response.json();",
+                  "        pm.expect(lead.data).to.have.property('id');",
+                  "    } else {",
+                  "        pm.test.skip('No test lead ID available');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Lead Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"contacted\",\n  \"notes\": \"Updated via API test\"\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/leads/{{test_lead_id}}",
+              "host": ["{{api_base}}"],
+              "path": ["leads", "{{test_lead_id}}"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.collectionVariables.get('test_lead_id')) {",
+                  "    pm.test('Lead update successful', function () {",
+                  "        pm.response.to.have.status(200);",
+                  "    });",
+                  "} else {",
+                  "    pm.test.skip('No test lead ID for update');",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Social Media",
+      "item": [
+        {
+          "name": "Get Social Posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/social/posts?status=scheduled",
+              "host": ["{{api_base}}"],
+              "path": ["social", "posts"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "scheduled"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Social posts endpoint responds', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "pm.test('Posts have expected structure', function () {",
+                  "    if (response.success && response.data) {",
+                  "        pm.expect(response.data).to.be.an('array');",
+                  "    }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Social Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"content\": \"Test social media post created via API {{$timestamp}}\",\n  \"platforms\": [\"facebook\", \"instagram\"],\n  \"schedule_time\": \"{{$isoTimestamp}}\",\n  \"status\": \"draft\",\n  \"tags\": [\"test\", \"api\"]\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/social/posts",
+              "host": ["{{api_base}}"],
+              "path": ["social", "posts"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Social post created', function () {",
+                  "    pm.response.to.have.status(201);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "if (response.success && response.data) {",
+                  "    pm.test('Post has required fields', function () {",
+                  "        pm.expect(response.data).to.have.property('id');",
+                  "        pm.expect(response.data).to.have.property('content');",
+                  "        pm.expect(response.data).to.have.property('platforms');",
+                  "    });",
+                  "    ",
+                  "    pm.collectionVariables.set('test_post_id', response.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Social Analytics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/social/analytics?period=7d",
+              "host": ["{{api_base}}"],
+              "path": ["social", "analytics"],
+              "query": [
+                {
+                  "key": "period",
+                  "value": "7d"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Social analytics loads', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "if (response.success) {",
+                  "    pm.test('Analytics data structure is valid', function () {",
+                  "        pm.expect(response).to.have.property('data');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "AI Content Generation",
+      "item": [
+        {
+          "name": "Generate Content",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"social_post\",\n  \"prompt\": \"Create a social media post about HVAC maintenance tips for spring\",\n  \"tone\": \"professional\",\n  \"length\": \"short\",\n  \"include_hashtags\": true\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/ai/generate",
+              "host": ["{{api_base}}"],
+              "path": ["ai", "generate"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('AI content generation responds', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "pm.test('AI response time is acceptable', function () {",
+                  "    pm.expect(pm.response.responseTime).to.be.below(30000);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "if (response.success) {",
+                  "    pm.test('Generated content exists', function () {",
+                  "        pm.expect(response.data).to.have.property('content');",
+                  "        pm.expect(response.data.content).to.be.a('string');",
+                  "        pm.expect(response.data.content.length).to.be.above(10);",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Reviews Management",
+      "item": [
+        {
+          "name": "Get Reviews",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/reviews?source=all&limit=10",
+              "host": ["{{api_base}}"],
+              "path": ["reviews"],
+              "query": [
+                {
+                  "key": "source",
+                  "value": "all"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Reviews endpoint responds', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const response = pm.response.json();",
+                  "if (response.success && response.data) {",
+                  "    pm.test('Reviews data structure is valid', function () {",
+                  "        pm.expect(response.data).to.be.an('array');",
+                  "    });",
+                  "}"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Error Handling",
+      "item": [
+        {
+          "name": "Test 404 Endpoint",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{api_base}}/nonexistent-endpoint",
+              "host": ["{{api_base}}"],
+              "path": ["nonexistent-endpoint"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Non-existent endpoint returns 404', function () {",
+                  "    pm.response.to.have.status(404);",
+                  "});",
+                  "",
+                  "pm.test('Error response has proper structure', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('success', false);",
+                  "    pm.expect(response).to.have.property('error');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Test Invalid Data",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"invalid\": \"data\",\n  \"missing_required_fields\": true\n}"
+            },
+            "url": {
+              "raw": "{{api_base}}/leads",
+              "host": ["{{api_base}}"],
+              "path": ["leads"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Invalid data returns validation error', function () {",
+                  "    pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "pm.test('Validation error has proper format', function () {",
+                  "    const response = pm.response.json();",
+                  "    pm.expect(response).to.have.property('success', false);",
+                  "    pm.expect(response).to.have.property('error');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "exec": [
+          "// Set up authentication token if available",
+          "const token = pm.environment.get('auth_token');",
+          "if (token) {",
+          "    pm.request.headers.add({",
+          "        key: 'Authorization',",
+          "        value: 'Bearer ' + token",
+          "    });",
+          "}"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "exec": [
+          "// Global test for all requests",
+          "pm.test('Response time is reasonable', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(10000);",
+          "});",
+          "",
+          "// Check for proper content type on successful responses",
+          "if (pm.response.code >= 200 && pm.response.code < 300) {",
+          "    pm.test('Response has proper content type', function () {",
+          "        pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+          "    });",
+          "}"
+        ]
+      }
+    }
+  ]
+}

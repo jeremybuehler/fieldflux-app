@@ -1,344 +1,473 @@
-# FieldFlux Testing Infrastructure
+# FieldFlux Testing Framework
 
-This document provides comprehensive information about the testing infrastructure implemented for FieldFlux.
+This directory contains comprehensive unit tests for the FieldFlux application, implementing best practices for testing React components, hooks, backend services, and utility functions.
 
-## Overview
+## 🏗️ Testing Architecture
 
-FieldFlux now includes a robust testing infrastructure with:
-- **Unit Tests**: Fast, isolated tests for individual components and functions
-- **Integration Tests**: API endpoint testing with mocked external services
-- **Error Handling**: Comprehensive error management and logging
-- **Rate Limiting**: API protection against abuse
-- **Request Validation**: Type-safe input validation using Zod
-
-## Test Structure
-
+### Test Structure
 ```
 tests/
-├── setup/
-│   ├── unit.setup.ts           # Unit test configuration and mocks
-│   └── integration.setup.ts    # Integration test helpers and MSW setup
-├── unit/
-│   └── lib/
-│       ├── errors.test.ts      # Error handling tests
-│       ├── logger.test.ts      # Logging system tests
-│       └── validation.test.ts  # Request validation tests
-├── integration/
-│   ├── analytics.test.ts       # Analytics API integration tests
-│   ├── leads.test.ts          # Lead management API tests
-│   └── social.test.ts         # Social media API tests
-└── e2e/
-    └── playwright.config.ts    # End-to-end test configuration
+├── components/           # React component tests
+│   ├── dashboard/       # Dashboard component tests
+│   └── forms/           # Form component tests
+├── hooks/               # Custom React hooks tests
+├── services/            # Backend service tests
+├── lib/                 # Utility function tests
+├── api/                 # API service layer tests
+├── setup/               # Test configuration
+└── utils/               # Testing utilities and helpers
 ```
 
-## Running Tests
+### Key Features
 
-### All Tests
+- **🧪 Comprehensive Coverage**: Tests for components, hooks, services, and utilities
+- **♿ Accessibility Testing**: Built-in accessibility validation and keyboard navigation tests
+- **🎭 Realistic Mocking**: Proper mocking strategies for external dependencies
+- **⚡ Performance Testing**: Render time measurement and performance validation
+- **🔍 Edge Case Coverage**: Extensive testing of error conditions and boundary cases
+- **📱 Responsive Testing**: Viewport size testing for mobile/desktop compatibility
+
+## 🚀 Quick Start
+
+### Running Tests
+
 ```bash
+# Run all tests
 npm test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run specific test file
+npm test -- SocialScheduler.test.tsx
+
+# Run tests matching pattern
+npm test -- --grep "validation"
 ```
 
-### Unit Tests Only
-```bash
-npm run test:unit
+### Writing Your First Test
+
+```typescript
+import { describe, it, expect, vi } from 'vitest';
+import { renderWithProviders } from '../utils/test-utils';
+import MyComponent from '@/components/MyComponent';
+
+describe('MyComponent', () => {
+  it('should render correctly', () => {
+    const { getByRole } = renderWithProviders(<MyComponent />);
+    
+    expect(getByRole('button')).toBeInTheDocument();
+  });
+});
 ```
 
-### Integration Tests Only
-```bash
-npm run test:integration
+## 📋 Testing Patterns
+
+### 1. React Component Testing
+
+**Example**: `components/dashboard/SocialScheduler.test.tsx`
+
+Key patterns demonstrated:
+- Component rendering and structure validation
+- User interaction testing with `userEvent`
+- Form validation and submission
+- Loading states and error handling
+- Accessibility compliance testing
+- Performance optimization validation
+
+```typescript
+// Test component rendering
+it('should render the social scheduler component', () => {
+  renderWithProviders(<SocialScheduler />);
+  
+  expect(screen.getByRole('heading', { name: /social scheduler/i }))
+    .toBeInTheDocument();
+});
+
+// Test user interactions
+it('should open dialog when create post button is clicked', async () => {
+  const { user } = renderWithProviders(<SocialScheduler />);
+  
+  await user.click(screen.getByRole('button', { name: /create post/i }));
+  
+  expect(screen.getByRole('dialog')).toBeInTheDocument();
+});
 ```
 
-### End-to-End Tests
-```bash
-npm run test:e2e
+### 2. Custom Hook Testing
+
+**Example**: `hooks/useAuth.test.ts`
+
+Key patterns demonstrated:
+- Hook behavior testing with `renderHook`
+- State change validation
+- Error handling scenarios
+- Performance and stability testing
+
+```typescript
+// Test hook initial state
+it('should return initial loading state', () => {
+  const { result } = renderHook(() => useAuth(), {
+    wrapper: createWrapper(queryClient),
+  });
+
+  expect(result.current.isLoading).toBe(true);
+  expect(result.current.isAuthenticated).toBe(false);
+});
 ```
 
-### Test Coverage
+### 3. Backend Service Testing
+
+**Example**: `services/felixAI.test.ts`
+
+Key patterns demonstrated:
+- Service method testing with proper mocking
+- API integration testing
+- Error handling and resilience
+- Multiple provider support testing
+
+```typescript
+// Test service method
+it('should generate response using GPT-5', async () => {
+  mockOpenAI.chat.completions.create.mockResolvedValue(mockResponse);
+
+  const response = await felixAI.generateResponse(mockMessages, mockContext);
+
+  expect(mockOpenAI.chat.completions.create).toHaveBeenCalledWith(
+    expect.objectContaining({ model: 'gpt-5' })
+  );
+});
+```
+
+### 4. Form Validation Testing
+
+**Example**: `components/forms/LeadForm.test.tsx`
+
+Key patterns demonstrated:
+- Input validation testing
+- Error message display
+- Accessibility compliance
+- User experience flow testing
+
+```typescript
+// Test form validation
+it('should show validation error for empty name', async () => {
+  const { user } = renderWithProviders(<LeadForm />);
+  
+  await user.click(screen.getByRole('button', { name: /submit/i }));
+  
+  await waitFor(() => {
+    expect(screen.getByText('Name is required')).toBeInTheDocument();
+  });
+});
+```
+
+### 5. API Service Testing
+
+**Example**: `api/queryClient.test.ts`
+
+Key patterns demonstrated:
+- HTTP client testing
+- Request/response handling
+- Error scenario coverage
+- Authentication and authorization
+
+```typescript
+// Test API request
+it('should make POST request with data', async () => {
+  const requestData = { name: 'John Doe' };
+  mockFetch.mockResolvedValueOnce(mockSuccessResponse);
+
+  await apiRequest('POST', '/api/users', requestData);
+
+  expect(mockFetch).toHaveBeenCalledWith('/api/users', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(requestData),
+  });
+});
+```
+
+## 🛠️ Testing Utilities
+
+### Custom Render Functions
+
+```typescript
+// Render with providers
+const { user } = renderWithProviders(<Component />);
+
+// Create test query client
+const queryClient = createTestQueryClient();
+```
+
+### Mock Data Generators
+
+```typescript
+// Single mock objects
+const user = createMockUser({ name: 'John Doe' });
+const lead = createMockLead({ urgency: 'high' });
+
+// Bulk mock data
+const users = createMockUsers(10);
+const posts = createMockSocialPosts(5, { platform: 'facebook' });
+```
+
+### API Response Mocking
+
+```typescript
+// Success response
+mockFetch.mockResolvedValueOnce(mockSuccessResponse(data));
+
+// Error response
+mockFetch.mockResolvedValueOnce(mockErrorResponse(404, 'Not found'));
+```
+
+### Accessibility Testing
+
+```typescript
+// Check for accessibility violations
+const violations = getAccessibilityViolations(container);
+expect(violations).toHaveLength(0);
+```
+
+## 🎯 Testing Best Practices
+
+### 1. Test Structure (AAA Pattern)
+
+```typescript
+it('should update user profile successfully', async () => {
+  // Arrange
+  const userData = { name: 'Updated Name' };
+  const mockUpdate = vi.fn().mockResolvedValue(userData);
+  
+  // Act
+  await userService.updateProfile(userData);
+  
+  // Assert
+  expect(mockUpdate).toHaveBeenCalledWith(userData);
+});
+```
+
+### 2. Descriptive Test Names
+
+✅ **Good**:
+```typescript
+it('should show validation error when email format is invalid')
+it('should call onSubmit with form data when validation passes')
+it('should disable submit button during form submission')
+```
+
+❌ **Bad**:
+```typescript
+it('should work')
+it('should test form')
+it('should validate')
+```
+
+### 3. Comprehensive Error Testing
+
+```typescript
+describe('Error Handling', () => {
+  it('should handle API errors gracefully', async () => {
+    mockApiRequest.mockRejectedValue(new Error('Network error'));
+    
+    const response = await service.getData();
+    
+    expect(response.error).toBeDefined();
+    expect(mockToast).toHaveBeenCalledWith({
+      title: 'Error',
+      variant: 'destructive'
+    });
+  });
+});
+```
+
+### 4. Edge Case Coverage
+
+```typescript
+describe('Edge Cases', () => {
+  it('should handle empty content gracefully', () => {
+    const component = renderWithProviders(<Component content="" />);
+    expect(component.container).toBeInTheDocument();
+  });
+
+  it('should handle special characters in input', async () => {
+    const { user } = renderWithProviders(<Form />);
+    await user.type(input, 'José García-Smith');
+    expect(input).toHaveValue('José García-Smith');
+  });
+});
+```
+
+### 5. Accessibility Testing
+
+```typescript
+describe('Accessibility', () => {
+  it('should have proper ARIA labels', () => {
+    renderWithProviders(<Component />);
+    
+    expect(screen.getByRole('button')).toHaveAttribute('aria-label');
+    expect(screen.getByRole('textbox')).toHaveAttribute('aria-invalid');
+  });
+
+  it('should support keyboard navigation', async () => {
+    const { user } = renderWithProviders(<Component />);
+    
+    await user.tab();
+    expect(screen.getByRole('button')).toHaveFocus();
+  });
+});
+```
+
+## 🔧 Configuration
+
+### Vitest Configuration
+
+The testing framework uses Vitest with the following key configurations:
+
+- **Environment**: jsdom for DOM testing
+- **Setup Files**: Automatic setup for React Testing Library
+- **Mocking**: Comprehensive mocking for external dependencies
+- **Coverage**: Istanbul for coverage reporting
+
+### Mock Setup
+
+Global mocks are configured in `tests/setup/unit.setup.ts`:
+
+- **Fetch API**: Global fetch mocking
+- **React Router**: Navigation and routing mocks
+- **External Libraries**: Third-party service mocks
+- **Environment Variables**: Test environment configuration
+
+## 📊 Coverage Goals
+
+| Category | Target Coverage |
+|----------|----------------|
+| Components | ≥ 90% |
+| Hooks | ≥ 95% |
+| Services | ≥ 85% |
+| Utilities | ≥ 95% |
+| Overall | ≥ 90% |
+
+### Running Coverage
+
 ```bash
 npm run test:coverage
 ```
 
-### Watch Mode (Development)
-```bash
-npm run test:watch
-```
+Coverage reports are generated in the `coverage/` directory with HTML reports available at `coverage/index.html`.
 
-### Test UI (Interactive)
-```bash
-npm run test:ui
-```
+## 🚨 Common Testing Scenarios
 
-## Error Handling Infrastructure
-
-### Features Implemented
-
-1. **Centralized Error Handling**
-   - Custom error classes for different scenarios
-   - Consistent error response format
-   - Safe error messages (no internal details leaked)
-   - Stack traces only in development
-
-2. **Structured Logging**
-   - Correlation IDs for request tracing
-   - JSON structured logs in production
-   - Human-readable logs in development
-   - Automatic request/response logging
-
-3. **Request Validation**
-   - Zod-based schema validation
-   - Type-safe request parsing
-   - Detailed validation error messages
-   - Sanitization helpers for security
-
-4. **Rate Limiting**
-   - Configurable rate limits per endpoint type
-   - Memory-based storage (production should use Redis)
-   - Tenant and user-scoped rate limiting
-   - Bypass mechanism for development
-
-### Error Types
-
-- `ValidationError` (400) - Invalid input data
-- `UnauthorizedError` (401) - Authentication required
-- `ForbiddenError` (403) - Access denied
-- `NotFoundError` (404) - Resource not found
-- `ConflictError` (409) - Resource already exists
-- `RateLimitError` (429) - Too many requests
-- `ExternalServiceError` (502) - Third-party API failure
-- `DatabaseError` (500) - Database operation failure
-
-### Usage Examples
+### Testing Async Operations
 
 ```typescript
-import { ValidationError, asyncHandler } from '@server/lib/errors';
-import { validators } from '@server/lib/validation';
-
-// Route with validation and error handling
-app.post('/api/leads', 
-  validators.createLead,
-  asyncHandler(async (req, res) => {
-    const lead = await createLead(req.body);
-    res.status(201).json({ success: true, data: lead });
-  })
-);
-```
-
-## Testing Best Practices
-
-### Unit Tests
-
-1. **Test Structure**: Use AAA pattern (Arrange, Act, Assert)
-2. **Mocking**: Mock external dependencies and services
-3. **Isolation**: Each test should be independent
-4. **Coverage**: Aim for 70%+ code coverage
-
-Example:
-```typescript
-describe('ValidationError', () => {
-  it('should create error with correct status code', () => {
-    // Arrange
-    const message = 'Invalid input';
-    const metadata = { field: 'email' };
-    
-    // Act
-    const error = new ValidationError(message, metadata);
-    
-    // Assert
-    expect(error.statusCode).toBe(400);
-    expect(error.code).toBe('VALIDATION_ERROR');
-    expect(error.metadata).toEqual(metadata);
+it('should handle async data loading', async () => {
+  const mockData = { users: [] };
+  mockApiRequest.mockResolvedValue(mockData);
+  
+  renderWithProviders(<UserList />);
+  
+  await waitFor(() => {
+    expect(screen.getByText('No users found')).toBeInTheDocument();
   });
 });
 ```
 
-### Integration Tests
+### Testing Error Boundaries
 
-1. **Database Setup**: Use test database with clean state
-2. **External APIs**: Mock with MSW (Mock Service Worker)
-3. **Authentication**: Use test auth headers
-4. **Performance**: Include performance assertions
-
-Example:
 ```typescript
-describe('POST /api/leads', () => {
-  it('should create lead successfully', async () => {
-    const leadData = TestApiHelper.createTestLead();
-    
-    const response = await request(app)
-      .post('/api/leads')
-      .set(TestApiHelper.getAuthHeaders())
-      .send(leadData)
-      .expect(201);
-    
-    expect(response.body.success).toBe(true);
-    expect(response.body.data.email).toBe(leadData.email);
+it('should catch and display errors', () => {
+  const ThrowError = () => {
+    throw new Error('Test error');
+  };
+  
+  const onError = vi.fn();
+  
+  render(
+    <TestErrorBoundary onError={onError}>
+      <ThrowError />
+    </TestErrorBoundary>
+  );
+  
+  expect(onError).toHaveBeenCalledWith(expect.any(Error));
+  expect(screen.getByTestId('error-boundary')).toBeInTheDocument();
+});
+```
+
+### Testing Loading States
+
+```typescript
+it('should show loading state during data fetch', () => {
+  // Mock never-resolving promise
+  mockApiRequest.mockImplementation(() => new Promise(() => {}));
+  
+  renderWithProviders(<DataComponent />);
+  
+  expect(screen.getByText(/loading/i)).toBeInTheDocument();
+});
+```
+
+### Testing Performance
+
+```typescript
+it('should render within performance budget', () => {
+  const { time } = measureRenderTime(() => {
+    renderWithProviders(<ComplexComponent />);
   });
+  
+  expect(time).toBeLessThan(100); // 100ms budget
 });
 ```
 
-## Configuration Files
+## 🔍 Debugging Tests
 
-### Vitest Unit Config (`vitest.config.unit.ts`)
-- Environment: jsdom for React component testing
-- Setup files for mocks and custom matchers
-- Coverage thresholds at 70%
-- 10-second test timeout
+### Debug Helpers
 
-### Vitest Integration Config (`vitest.config.integration.ts`)
-- Environment: node for server testing
-- Sequential execution for database consistency
-- 30-second timeout for API calls
-- Separate process isolation
-
-## Custom Test Utilities
-
-### Custom Matchers
-- `toBeValidUUID()` - Validates UUID format
-- `toBeValidEmail()` - Validates email format
-- `toHaveValidStructure(structure)` - Validates object shape
-
-### Test Helpers
-- `TestApiHelper` - Creates test data and auth headers
-- `TestDatabase` - Database setup and cleanup utilities
-- `PerformanceHelper` - Measures and asserts execution times
-
-### Mock Responses
-Pre-configured mock responses for:
-- OpenAI API responses
-- Google Analytics data
-- Twilio SMS responses
-- Social media API responses
-
-## Rate Limiting Configuration
-
-### Default Limits
-- **General API**: 100 requests per 15 minutes
-- **Authentication**: 5 attempts per 15 minutes
-- **AI Generation**: 50 requests per hour
-- **Social Posting**: 20 posts per hour
-- **Email Sending**: 10 emails per hour
-
-### Custom Rate Limiters
 ```typescript
-import { createTenantRateLimit } from '@server/lib/rate-limit';
+import { debugElement, screen } from '../utils/test-utils';
 
-const customRateLimit = createTenantRateLimit({
-  windowMs: 60 * 60 * 1000, // 1 hour
-  max: 50, // 50 requests per tenant per hour
-  message: 'Tenant rate limit exceeded'
-});
+// Debug specific element
+debugElement(screen.getByRole('button'));
 
-app.use('/api/custom', customRateLimit);
+// Debug screen output
+screen.debug();
+
+// Debug specific element
+screen.debug(screen.getByTestId('complex-element'));
 ```
-
-## Environment Variables for Testing
-
-```env
-NODE_ENV=test
-DATABASE_URL=postgresql://test:test@localhost:5432/fieldflux_test
-OPENAI_API_KEY=test-openai-key
-GOOGLE_ANALYTICS_PROPERTY_ID=test-ga-property
-TWILIO_ACCOUNT_SID=test-twilio-sid
-TWILIO_AUTH_TOKEN=test-twilio-token
-```
-
-## CI/CD Integration
-
-### GitHub Actions Example
-```yaml
-name: Test
-on: [push, pull_request]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: npm ci
-      - run: npm run test:coverage
-      - uses: codecov/codecov-action@v3
-```
-
-## Production Considerations
-
-### Logging
-- Use structured JSON logging in production
-- Implement log aggregation (ELK, Splunk, etc.)
-- Set up monitoring and alerting on error logs
-
-### Rate Limiting
-- Replace memory storage with Redis for distributed systems
-- Implement sliding window rate limiting
-- Add rate limit monitoring and alerting
-
-### Error Handling
-- Integrate with error tracking services (Sentry, Rollbar)
-- Implement error recovery mechanisms
-- Set up health checks and circuit breakers
-
-### Database Testing
-- Use separate test databases
-- Implement database seeding and migration testing
-- Test database connection pooling and failover
-
-## Troubleshooting
 
 ### Common Issues
 
-1. **Tests failing with "Module not found"**
-   - Check path aliases in vitest config
-   - Ensure mock files exist and are properly imported
+1. **Element Not Found**: Use `screen.debug()` to see actual DOM
+2. **Async Timing**: Use `waitFor()` or `findBy*` queries
+3. **Mock Issues**: Verify mock setup with `expect(mock).toHaveBeenCalled()`
+4. **State Updates**: Ensure React state updates with `act()` when needed
 
-2. **Integration tests timing out**
-   - Check if test database is running
-   - Verify external service mocks are configured
-   - Increase timeout values if needed
+## 📚 Resources
 
-3. **Coverage reports missing files**
-   - Update coverage exclude patterns
-   - Check file naming conventions
-   - Ensure test files are in correct directories
+- [Testing Library Documentation](https://testing-library.com/docs/react-testing-library/intro/)
+- [Vitest Documentation](https://vitest.dev/)
+- [Jest DOM Matchers](https://github.com/testing-library/jest-dom)
+- [MSW (Mock Service Worker)](https://mswjs.io/)
+- [React Testing Patterns](https://kentcdodds.com/blog/common-mistakes-with-react-testing-library)
 
-### Debugging Tests
+## 🤝 Contributing
 
-1. **Use test.only() for focused testing**
-2. **Enable verbose logging with VITEST_SUPPRESS_LOGS=false**
-3. **Use the interactive test UI with npm run test:ui**
-4. **Add console.log statements (removed by test setup by default)**
+When adding new tests:
 
-## Future Enhancements
+1. Follow the established patterns in existing tests
+2. Include accessibility testing for UI components
+3. Test error conditions and edge cases
+4. Use descriptive test names and organize with `describe` blocks
+5. Add documentation for complex testing scenarios
+6. Ensure tests are deterministic and don't rely on external state
 
-1. **Database Integration Testing**
-   - Real database testing with Docker
-   - Migration testing
-   - Performance testing with large datasets
+---
 
-2. **End-to-End Testing**
-   - Playwright configuration for full user flows
-   - Visual regression testing
-   - Cross-browser testing
+**Happy Testing! 🧪✨**
 
-3. **Load Testing**
-   - Artillery or k6 integration
-   - Performance benchmarking
-   - Scalability testing
-
-4. **Security Testing**
-   - Automated security scans
-   - Penetration testing integration
-   - Dependency vulnerability scanning
-
-## Contributing
-
-When adding new features:
-
-1. **Add unit tests** for all new functions and classes
-2. **Add integration tests** for new API endpoints
-3. **Update validation schemas** for new input types
-4. **Document any new error types** or rate limits
-5. **Ensure tests pass** before submitting PRs
-
-For questions or issues with the testing infrastructure, please refer to the test files for examples or create an issue in the repository.
+This testing framework provides a solid foundation for maintaining code quality and preventing regressions in the FieldFlux application.

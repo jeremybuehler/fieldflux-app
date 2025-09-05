@@ -1,0 +1,137 @@
+# Artillery.js Endurance Testing Configuration
+# Tests system stability over extended periods (memory leaks, degradation)
+
+config:
+  target: '{{ $env.PERF_BASE_URL || "http://localhost:5000" }}'
+  phases:
+    # Initial load
+    - duration: 300  # 5 minutes
+      arrivalRate: 30
+      name: "Initial sustained load"
+    
+    # Extended endurance phase 1
+    - duration: 900  # 15 minutes
+      arrivalRate: 50
+      name: "Endurance phase 1"
+    
+    # Extended endurance phase 2  
+    - duration: 1800 # 30 minutes
+      arrivalRate: 40
+      name: "Endurance phase 2"
+    
+    # Memory pressure phase
+    - duration: 600  # 10 minutes
+      arrivalRate: 60
+      name: "Memory pressure phase"
+    
+    # Final endurance
+    - duration: 1200 # 20 minutes
+      arrivalRate: 35
+      name: "Final endurance phase"
+
+  # Endurance test focuses on stability over time
+  ensure:
+    p99: 2000   # Should remain consistent
+    p95: 1000
+    median: 400
+    errorRate: 2  # Should not degrade over time
+
+  plugins:
+    expect: {}
+    metrics-by-endpoint: {}
+    # Memory monitoring plugin would go here if available
+
+scenarios:
+  # Realistic business operation simulation
+  - name: "Daily Business Operations"
+    weight: 60
+    flow:
+      # Morning dashboard check
+      - get:
+          url: "/api/dashboard/metrics"
+          expect:
+            - statusCode: [200, 401]
+      
+      - think: 5
+      
+      # Process leads throughout day
+      - get:
+          url: "/api/leads"
+      - post:
+          url: "/api/leads"
+          json:
+            name: "Endurance Customer {{ $randomInt(1, 50000) }}"
+            email: "endurance{{ $randomInt(1, 50000) }}@test.com"
+            phone: "555-{{ $randomInt(1000, 9999) }}"
+            source: "website"
+      
+      - think: 10
+      
+      # Social media management
+      - get:
+          url: "/api/social/posts"
+      - post:
+          url: "/api/social/generate-post"
+          json:
+            prompt: "Daily HVAC maintenance tip"
+            platform: "facebook"
+            businessType: "HVAC"
+      
+      - think: 15
+      
+      # Check analytics periodically
+      - get:
+          url: "/api/analytics/metrics"
+
+  # Content creation workflow
+  - name: "Content Creation Workflow"  
+    weight: 25
+    flow:
+      # Blog content creation
+      - post:
+          url: "/api/ai/generate-blog"
+          json:
+            topic: "Seasonal maintenance tips {{ $randomInt(1, 1000) }}"
+            businessType: "HVAC"
+            wordCount: 800
+      
+      - think: 30  # Content creation takes time
+      
+      # WordPress publishing
+      - get:
+          url: "/api/wordpress/posts"
+      - post:
+          url: "/api/wordpress/posts"
+          json:
+            title: "Endurance Test Post {{ $randomInt(1, 1000) }}"
+            content: "Generated content for endurance testing"
+            status: "draft"
+      
+      - think: 60  # Review and editing time
+
+  # Administrative and monitoring tasks
+  - name: "Administrative Tasks"
+    weight: 15
+    flow:
+      # Review system status
+      - get:
+          url: "/api/health"
+      
+      - think: 30
+      
+      # Check reviews and respond
+      - get:
+          url: "/api/reviews"
+      - get:
+          url: "/api/reviews/analytics"
+      
+      - think: 45
+      
+      # Generate reports
+      - post:
+          url: "/api/analytics/generate-report"
+          json:
+            dateRange: "last-month"
+            includeCharts: false
+      
+      - think: 120  # Report generation and review

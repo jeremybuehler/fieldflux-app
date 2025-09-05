@@ -24,7 +24,24 @@
     "context:endpoints": "node scripts/context/generate-endpoints.mjs",
     "context:schema": "node scripts/context/generate-schema.mjs",
     "context:refresh": "npm run context:endpoints && npm run context:schema",
-    "security:scan": "node scripts/security/scan.mjs"
+    "security:scan": "node scripts/security/scan.mjs",
+    "perf:install": "npm install -g artillery k6",
+    "perf:load": "npm run perf:api && npm run perf:db && npm run perf:frontend",
+    "perf:api": "artillery run tests/performance/artillery/api-load-test.yml",
+    "perf:api:k6": "k6 run tests/performance/k6/api-load-test.js",
+    "perf:db": "tsx tests/performance/database/db-performance-test.ts",
+    "perf:frontend": "npm run perf:lighthouse && npm run perf:bundle",
+    "perf:lighthouse": "lighthouse http://localhost:5173 --output=html --output-path=tests/performance/reports/lighthouse-report.html --chrome-flags=\"--headless\"",
+    "perf:bundle": "tsx tests/performance/frontend/bundle-analyzer.ts",
+    "perf:memory": "tsx tests/performance/profiling/memory-profiler.ts",
+    "perf:cpu": "tsx tests/performance/profiling/cpu-profiler.ts",
+    "perf:stress": "artillery run tests/performance/artillery/stress-test.yml",
+    "perf:spike": "artillery run tests/performance/artillery/spike-test.yml",
+    "perf:endurance": "artillery run tests/performance/artillery/endurance-test.yml",
+    "perf:regression": "tsx tests/performance/regression/performance-regression.ts",
+    "perf:report": "tsx tests/performance/reporting/generate-report.ts",
+    "perf:ci": "npm run perf:api:k6 && npm run perf:db && npm run perf:regression",
+    "perf:dev": "concurrently \"npm run dev\" \"sleep 10 && npm run perf:load\""
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.37.0",
@@ -144,7 +161,16 @@
     "playwright": "^1.40.1",
     "@playwright/test": "^1.40.1",
     "newman": "^6.0.0",
-    "cross-env": "^7.0.3"
+    "cross-env": "^7.0.3",
+    "artillery": "^2.0.15",
+    "lighthouse": "^12.0.0",
+    "clinic": "^13.0.0",
+    "autocannon": "^7.15.0",
+    "0x": "^5.7.0",
+    "concurrently": "^8.2.2",
+    "chart.js": "^4.4.1",
+    "webpack-bundle-analyzer": "^4.10.1",
+    "bundlesize": "^0.18.2"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"
