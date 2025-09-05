@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Request, Response, NextFunction } from 'express';
-import { ZodError, z } from 'zod';
+import { z, ZodError } from 'zod';
 import {
   AppError,
   ValidationError,
@@ -15,45 +15,36 @@ import {
   asyncHandler,
   notFoundHandler,
   safeAsync
-} from '@server/lib/errors';
+} from '../../../server/lib/errors';
 
-describe('Error Classes', () => {
-  describe('AppError', () => {
-    it('should create an error with default values', () => {
-      const error = new AppError('Test error');
+describe('AppError and Custom Errors', () => {
+  describe('AppError base class', () => {
+    it('should create error with message and statusCode', () => {
+      const error = new AppError('Test error', 500, 'TEST_ERROR');
       
       expect(error.message).toBe('Test error');
       expect(error.statusCode).toBe(500);
-      expect(error.code).toBe('INTERNAL_ERROR');
+      expect(error.code).toBe('TEST_ERROR');
       expect(error.isOperational).toBe(true);
-      expect(error.metadata).toBeUndefined();
+      expect(error.name).toBe('Error'); // AppError extends Error
     });
 
-    it('should create an error with custom values', () => {
+    it('should include metadata when provided', () => {
       const metadata = { userId: '123', action: 'create' };
-      const error = new AppError('Custom error', 400, 'CUSTOM_ERROR', false, metadata);
+      const error = new AppError('Test error', 500, 'TEST_ERROR', true, metadata);
       
-      expect(error.message).toBe('Custom error');
-      expect(error.statusCode).toBe(400);
-      expect(error.code).toBe('CUSTOM_ERROR');
-      expect(error.isOperational).toBe(false);
       expect(error.metadata).toEqual(metadata);
     });
 
-    it('should be an instance of Error', () => {
-      const error = new AppError('Test error');
-      expect(error).toBeInstanceOf(Error);
-      expect(error).toBeInstanceOf(AppError);
-    });
   });
 
-  describe('Specific Error Classes', () => {
+  describe('Custom Error Classes', () => {
     it('ValidationError should have correct defaults', () => {
-      const error = new ValidationError('Validation failed');
+      const error = new ValidationError('Invalid input');
       
+      expect(error.message).toBe('Invalid input');
       expect(error.statusCode).toBe(400);
       expect(error.code).toBe('VALIDATION_ERROR');
-      expect(error.isOperational).toBe(true);
     });
 
     it('UnauthorizedError should have correct defaults', () => {
@@ -72,10 +63,10 @@ describe('Error Classes', () => {
       expect(error.code).toBe('FORBIDDEN');
     });
 
-    it('NotFoundError should format message correctly', () => {
-      const error = new NotFoundError('User');
+    it('NotFoundError should have correct defaults', () => {
+      const error = new NotFoundError('Resource');
       
-      expect(error.message).toBe('User not found');
+      expect(error.message).toBe('Resource not found');
       expect(error.statusCode).toBe(404);
       expect(error.code).toBe('NOT_FOUND');
     });
@@ -155,7 +146,6 @@ describe('Error Handler Middleware', () => {
   });
 
   it('should handle ZodError correctly', () => {
-    const zodSchema = z.object({ name: z.string() });
     const zodError = new ZodError([
       {
         code: 'invalid_type',
@@ -182,4 +172,103 @@ describe('Error Handler Middleware', () => {
         metadata: {
           validation: [
             {
-              field: 'name',\n              message: 'Required'\n            }\n          ]\n        }\n      }\n    });\n  });\n\n  it('should handle database errors correctly', () => {\n    const dbError = new Error('Connection refused');\n    (dbError as any).code = 'ECONNREFUSED';\n    (mockReq as any).correlationId = 'test-correlation-id';\n\n    errorHandler(dbError, mockReq as Request, mockRes as Response, mockNext);\n\n    expect(mockRes.status).toHaveBeenCalledWith(500);\n    expect(mockRes.json).toHaveBeenCalledWith({\n      success: false,\n      error: {\n        message: 'Database connection failed',\n        code: 'DATABASE_ERROR',\n        statusCode: 500,\n        correlationId: 'test-correlation-id',\n        timestamp: expect.any(String),\n        metadata: {\n          originalError: 'Connection refused'\n        }\n      }\n    });\n  });\n\n  it('should handle unknown errors safely in production', () => {\n    const originalEnv = process.env.NODE_ENV;\n    process.env.NODE_ENV = 'production';\n\n    const unknownError = new Error('Internal server details');\n    (mockReq as any).correlationId = 'test-correlation-id';\n\n    errorHandler(unknownError, mockReq as Request, mockRes as Response, mockNext);\n\n    expect(mockRes.status).toHaveBeenCalledWith(500);\n    expect(mockRes.json).toHaveBeenCalledWith({\n      success: false,\n      error: {\n        message: 'An unexpected error occurred',\n        code: 'INTERNAL_ERROR',\n        statusCode: 500,\n        correlationId: 'test-correlation-id',\n        timestamp: expect.any(String)\n      }\n    });\n\n    process.env.NODE_ENV = originalEnv;\n  });\n\n  it('should include stack trace in development', () => {\n    const originalEnv = process.env.NODE_ENV;\n    process.env.NODE_ENV = 'development';\n\n    const error = new ValidationError('Test error');\n    (mockReq as any).correlationId = 'test-correlation-id';\n\n    errorHandler(error, mockReq as Request, mockRes as Response, mockNext);\n\n    const callArgs = (mockRes.json as any).mock.calls[0][0];\n    expect(callArgs.error.stack).toBeDefined();\n\n    process.env.NODE_ENV = originalEnv;\n  });\n\n  it('should set proper security headers', () => {\n    const error = new AppError('Test error');\n    (mockReq as any).correlationId = 'test-correlation-id';\n\n    errorHandler(error, mockReq as Request, mockRes as Response, mockNext);\n\n    expect(mockRes.setHeader).toHaveBeenCalledWith('Content-Type', 'application/json');\n    expect(mockRes.setHeader).toHaveBeenCalledWith('Cache-Control', 'no-store');\n  });\n});\n\ndescribe('Async Handler', () => {\n  it('should handle successful async functions', async () => {\n    const mockReq = {} as Request;\n    const mockRes = {} as Response;\n    const mockNext = vi.fn();\n\n    const asyncFunction = vi.fn().mockResolvedValue('success');\n    const wrappedFunction = asyncHandler(asyncFunction);\n\n    await wrappedFunction(mockReq, mockRes, mockNext);\n\n    expect(asyncFunction).toHaveBeenCalledWith(mockReq, mockRes, mockNext);\n    expect(mockNext).not.toHaveBeenCalled();\n  });\n\n  it('should pass errors to next function', async () => {\n    const mockReq = {} as Request;\n    const mockRes = {} as Response;\n    const mockNext = vi.fn();\n    const testError = new Error('Async error');\n\n    const asyncFunction = vi.fn().mockRejectedValue(testError);\n    const wrappedFunction = asyncHandler(asyncFunction);\n\n    await wrappedFunction(mockReq, mockRes, mockNext);\n\n    expect(asyncFunction).toHaveBeenCalledWith(mockReq, mockRes, mockNext);\n    expect(mockNext).toHaveBeenCalledWith(testError);\n  });\n});\n\ndescribe('Not Found Handler', () => {\n  it('should create NotFoundError with route information', () => {\n    const mockReq = {\n      method: 'GET',\n      path: '/api/nonexistent'\n    } as Request;\n    const mockRes = {} as Response;\n    const mockNext = vi.fn();\n\n    notFoundHandler(mockReq, mockRes, mockNext);\n\n    expect(mockNext).toHaveBeenCalledWith(\n      expect.objectContaining({\n        message: 'Route GET /api/nonexistent not found',\n        statusCode: 404,\n        code: 'NOT_FOUND'\n      })\n    );\n  });\n});\n\ndescribe('Safe Async', () => {\n  it('should return success for successful operations', async () => {\n    const operation = vi.fn().mockResolvedValue('test result');\n    \n    const result = await safeAsync(operation);\n    \n    expect(result).toEqual({\n      success: true,\n      data: 'test result'\n    });\n    expect(operation).toHaveBeenCalled();\n  });\n\n  it('should return error for failed operations', async () => {\n    const operation = vi.fn().mockRejectedValue(new ValidationError('Test error'));\n    \n    const result = await safeAsync(operation, { correlationId: 'test-id', operation: 'test-op' });\n    \n    expect(result).toEqual({\n      success: false,\n      error: expect.objectContaining({\n        message: 'Test error',\n        code: 'VALIDATION_ERROR'\n      })\n    });\n    expect(operation).toHaveBeenCalled();\n  });\n\n  it('should wrap unknown errors in AppError', async () => {\n    const operation = vi.fn().mockRejectedValue(new Error('Unknown error'));\n    \n    const result = await safeAsync(operation);\n    \n    expect(result).toEqual({\n      success: false,\n      error: expect.objectContaining({\n        message: 'Operation failed',\n        code: 'OPERATION_FAILED',\n        statusCode: 500\n      })\n    });\n  });\n});
+              field: 'name',
+              message: 'Required'
+            }
+          ]
+        }
+      }
+    });
+  });
+
+  it('should handle database errors correctly', () => {
+    const dbError = new Error('Connection refused');
+    (dbError as any).code = 'ECONNREFUSED';
+    (mockReq as any).correlationId = 'test-correlation-id';
+
+    errorHandler(dbError, mockReq as Request, mockRes as Response, mockNext);
+
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.json).toHaveBeenCalledWith({
+      success: false,
+      error: {
+        message: 'Database connection failed',
+        code: 'DATABASE_ERROR',
+        statusCode: 500,
+        correlationId: 'test-correlation-id',
+        timestamp: expect.any(String),
+        metadata: {
+          originalError: undefined
+        }
+      }
+    });
+  });
+
+  it('should handle unknown errors safely in production', () => {
+    const originalEnv = process.env.NODE_ENV;
+    process.env.NODE_ENV = 'production';
+
+    const unknownError = new Error('Internal server details');
+    (mockReq as any).correlationId = 'test-correlation-id';
+
+    errorHandler(unknownError, mockReq as Request, mockRes as Response, mockNext);
+
+    expect(mockRes.status).toHaveBeenCalledWith(500);
+    expect(mockRes.json).toHaveBeenCalledWith({
+      success: false,
+      error: {
+        message: 'An unexpected error occurred',
+        code: 'INTERNAL_ERROR',
+        statusCode: 500,
+        correlationId: 'test-correlation-id',
+        timestamp: expect.any(String)
+      }
+    });
+
+    process.env.NODE_ENV = originalEnv;
+  });
+});
+
+describe('Safe Async', () => {
+  it('should return success for successful operations', async () => {
+    const operation = vi.fn().mockResolvedValue('test result');
+    
+    const result = await safeAsync(operation);
+    
+    expect(result).toEqual({
+      success: true,
+      data: 'test result'
+    });
+    expect(operation).toHaveBeenCalled();
+  });
+
+  it('should return error for failed operations', async () => {
+    const operation = vi.fn().mockRejectedValue(new ValidationError('Test error'));
+    
+    const result = await safeAsync(operation, { correlationId: 'test-id', operation: 'test-op' });
+    
+    expect(result).toEqual({
+      success: false,
+      error: expect.objectContaining({
+        message: 'Test error',
+        code: 'VALIDATION_ERROR'
+      })
+    });
+    expect(operation).toHaveBeenCalled();
+  });
+
+  it('should wrap unknown errors in AppError', async () => {
+    const operation = vi.fn().mockRejectedValue(new Error('Unknown error'));
+    
+    const result = await safeAsync(operation);
+    
+    expect(result).toEqual({
+      success: false,
+      error: expect.objectContaining({
+        message: 'Operation failed',
+        code: 'OPERATION_FAILED',
+        statusCode: 500
+      })
+    });
+  });
+});

@@ -496,6 +496,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Felix AI Assistant Routes
+  app.get('/api/felix/models', isAuthenticated, async (req: any, res) => {
+    try {
+      const models = felixAI.getAvailableModels();
+      res.json({ models });
+    } catch (error) {
+      console.error('Error fetching Felix models:', error);
+      res.status(500).json({ error: 'Failed to fetch models' });
+    }
+  });
+
   app.post('/api/felix/start-task', isAuthenticated, async (req: any, res) => {
     try {
       const { taskId, taskTitle, taskDescription } = req.body;
@@ -509,8 +519,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/felix/chat', isAuthenticated, async (req: any, res) => {
     try {
-      const { message, currentTask, conversationHistory } = req.body;
-      const response = await felixService.processChat(message, currentTask, conversationHistory || []);
+      const { messages, currentPage, model } = req.body;
+      const userId = req.user?.claims?.sub;
+      
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      // Get user data for context
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      // Build context for Felix
+      const context: FelixContext = {
+        user,
+        currentPage,
+        businessData: {
+          leads: 5, // TODO: Get real data from storage
+          socialPosts: 12,
+          reviews: 8,
+          keywords: 15
+        },
+        recentActivity: [
+          'Created social media post',
+          'Updated lead status', 
+          'Responded to review'
+        ]
+      };
+
+      // Convert messages to Felix format
+      const felixMessages: FelixMessage[] = messages.map((msg: any) => ({
+        role: msg.role,
+        content: msg.content,
+        timestamp: new Date()
+      }));
+
+      const response = await felixAI.generateResponse(felixMessages, context, model);
       res.json(response);
     } catch (error) {
       console.error('Error processing Felix chat:', error);
