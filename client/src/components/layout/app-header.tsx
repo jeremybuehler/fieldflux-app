@@ -9,8 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAuth } from '@/hooks/useAuth';
-import type { User } from '@shared/schema';
+import { useAuth } from '@/contexts/AuthContext';
 import { 
   Bell, 
   ChevronDown, 
@@ -112,7 +111,7 @@ const pageMap: Record<string, { title: string; subtitle: string }> = {
 
 export function AppHeader() {
   const [location] = useLocation();
-  const { user } = useAuth() as { user: User | null };
+  const { user, logout } = useAuth();
   
   const currentPage = pageMap[location] || { 
     title: 'FieldFlux', 
@@ -158,7 +157,6 @@ export function AppHeader() {
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="flex items-center space-x-2 hover:bg-gray-50">
                   <Avatar className="h-7 w-7">
-                    <AvatarImage src={user?.profileImageUrl || undefined} />
                     <AvatarFallback className="text-xs">{userInitials}</AvatarFallback>
                   </Avatar>
                   <div className="text-left">
@@ -185,7 +183,14 @@ export function AppHeader() {
                 </Link>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem 
-                  onClick={() => window.location.href = '/api/logout'}
+                  onClick={async () => {
+                    try {
+                      await logout();
+                    } catch (error) {
+                      console.error('Logout error:', error);
+                      window.location.href = '/login';
+                    }
+                  }}
                   className="text-red-600"
                 >
                   <LogOut className="mr-2 h-4 w-4" />

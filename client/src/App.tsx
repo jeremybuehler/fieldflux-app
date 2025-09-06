@@ -6,8 +6,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { useEffect, lazy, Suspense } from "react";
 import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
-import { useAuth } from "@/hooks/useAuth";
+import { AuthProvider, useRequireAuth } from "@/contexts/AuthContext";
 import { AppLayout } from "@/components/layout/app-layout";
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import DashboardMain from "@/pages/dashboard-main";
 import Settings from "@/pages/settings";
 import Landing from "@/pages/landing";
@@ -30,12 +31,19 @@ import StyleDemo from "@/pages/style-demo";
 import NotFound from "@/pages/not-found";
 import About from "@/pages/about";
 import Analytics from "@/pages/analytics";
+
+// Auth Pages
+import LoginPage from "@/pages/auth/LoginPage";
+import RegisterPage from "@/pages/auth/RegisterPage";
+import ForgotPasswordPage from "@/pages/auth/ForgotPasswordPage";
+import ResetPasswordPage from "@/pages/auth/ResetPasswordPage";
+import VerifyEmailPage from "@/pages/auth/VerifyEmailPage";
 import { DevHud } from "@/components/dev/DevHud";
 
-// Protected Route Component that only checks auth when needed
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, isLoading } = useAuth();
-
+// Legacy Protected Route Component (replaced with new ProtectedRoute from components/auth)
+function LegacyProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated, isLoading } = useRequireAuth();
+  
   // Show loading state while checking authentication
   if (isLoading) {
     return (
@@ -47,12 +55,12 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
       </div>
     );
   }
-
-  // If not authenticated, redirect to landing
+  
+  // If not authenticated, redirection is handled by useRequireAuth
   if (!isAuthenticated) {
-    return <Landing />;
+    return null;
   }
-
+  
   return <>{children}</>;
 }
 
@@ -64,6 +72,13 @@ function Router() {
     <>
     <DevHud />
     <Switch>
+      {/* Authentication routes */}
+      <Route path="/login" component={LoginPage} />
+      <Route path="/register" component={RegisterPage} />
+      <Route path="/forgot-password" component={ForgotPasswordPage} />
+      <Route path="/reset-password/:token" component={ResetPasswordPage} />
+      <Route path="/verify-email/:token" component={VerifyEmailPage} />
+      
       {/* Landing page - always show for root */}
       <Route path="/" component={Landing} />
       
@@ -186,10 +201,12 @@ function App() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Router />
-        <Toaster />
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Router />
+          <Toaster />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }

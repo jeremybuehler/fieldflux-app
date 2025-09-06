@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { getNavigation } from "@/lib/navigation";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Bot,
   MapPin,
@@ -17,13 +18,20 @@ interface TopNavigationProps {
 export default function TopNavigation({ title }: TopNavigationProps) {
   const { toast } = useToast();
   const [location] = useLocation();
+  const { logout } = useAuth();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     toast({
       title: "Logging Out",
       description: "You are being logged out.",
     });
-    window.location.href = "/api/logout";
+    
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+      window.location.href = "/login";
+    }
   };
 
   return (

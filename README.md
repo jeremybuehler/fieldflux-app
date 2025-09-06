@@ -17,7 +17,7 @@ The application follows a full-stack architecture with:
 - **UI Framework**: Tailwind CSS with shadcn/ui components
 - **State Management**: TanStack Query for server state
 - **Routing**: Wouter for client-side routing
-- **Authentication**: Optional OpenID Connect (configurable) or session-based
+- **Authentication**: Comprehensive JWT-based authentication system with session management
 
 ## Key Features
 
@@ -32,9 +32,14 @@ The application follows a full-stack architecture with:
 - **SMS Communication**: Twilio integration for customer messaging
 - **Weather Integration**: Real-time weather data for location-based marketing
 
-### Landing Page & Authentication
+### Authentication & User Management
+- **Complete Authentication System**: JWT-based with secure session management
+- **User Registration**: Email verification, strong password requirements
+- **Password Management**: Reset via email tokens, change password functionality  
+- **Profile Management**: User profiles with role-based access control
+- **Protected Routes**: Route-level authentication and authorization
+- **Multi-tenant Support**: Organization memberships and tenant resolution
 - **Professional Landing Page**: Modern design with clear value proposition
-- **Authentication System**: OIDC-ready (configure your provider) or disabled in dev
 - **Demo Access**: Try before you buy functionality
 - **Mobile Responsive**: Optimized for all devices
 
@@ -75,13 +80,17 @@ The application follows a full-stack architecture with:
 ### Backend Infrastructure
 - **Express.js**: RESTful API server with middleware architecture
 - **PostgreSQL**: Robust relational database with Drizzle ORM
+- **JWT Authentication**: Secure token-based authentication system
+- **Email Services**: Password reset and email verification
+- **Role-Based Access Control**: Admin, manager, and user permissions
 - **OpenAI API**: Advanced AI content generation and processing
 - **Google APIs**: Analytics, Search Console, and Places integration
-- **Authentication (OIDC-ready)**: Secure authentication via OpenID Connect
 - **Twilio SMS**: Customer communication and notifications
 
 ### Database Schema
-- **Users & Sessions**: Authentication and user management
+- **Authentication**: Users, sessions, JWT tokens, and email verification
+- **User Management**: Profiles, roles, permissions, and password history
+- **Multi-Tenancy**: Tenants, memberships, and domain resolution
 - **Content Management**: WordPress posts, social media content
 - **Business Data**: Leads, tasks, activities, and analytics
 - **Reviews & Keywords**: SEO performance and reputation management
@@ -102,15 +111,22 @@ FieldFlux/
 ├── client/                 # React frontend
 │   ├── src/
 │   │   ├── components/     # Reusable UI components
+│   │   │   ├── auth/       # Authentication components
 │   │   │   ├── dashboard/  # Dashboard-specific components
 │   │   │   ├── social/     # Social media components
 │   │   │   └── ui/         # shadcn/ui components
+│   │   ├── contexts/       # React contexts (AuthContext)
 │   │   ├── pages/          # Route pages
+│   │   │   └── auth/       # Authentication pages
 │   │   ├── hooks/          # Custom React hooks
 │   │   └── lib/            # Utility libraries
 ├── server/                 # Express.js backend
 │   ├── services/           # External service integrations
-│   ├── routes.ts           # API route definitions
+│   │   └── authService.ts  # Authentication service layer
+│   ├── middleware/         # Express middleware
+│   │   └── authMiddleware.ts # Authentication middleware
+│   ├── routes/             # API route definitions
+│   │   └── authRoutes.ts   # Authentication routes
 │   ├── storage.ts          # Database layer
 │   └── index.ts            # Server entry point
 ├── shared/                 # Shared TypeScript schemas
@@ -134,7 +150,22 @@ FieldFlux/
 ### Environment Variables
 Set the following in `.env` (local) or Vercel Project Settings → Environment Variables:
 ```
+# Database
 DATABASE_URL=postgresql://...
+
+# Authentication
+JWT_SECRET=your-jwt-secret-key
+JWT_REFRESH_SECRET=your-jwt-refresh-secret
+SESSION_SECRET=your-session-secret
+
+# Email Service (for password reset/verification)
+EMAIL_FROM=noreply@yourdomain.com
+SMTP_HOST=smtp.youremailprovider.com
+SMTP_PORT=587
+SMTP_USER=your-smtp-username
+SMTP_PASS=your-smtp-password
+
+# API Keys
 OPENAI_API_KEY=sk-...
 GOOGLE_ANALYTICS_PROPERTY_ID=GA_MEASUREMENT_ID
 GOOGLE_PLACES_API_KEY=...
@@ -142,8 +173,9 @@ TWILIO_ACCOUNT_SID=...
 TWILIO_AUTH_TOKEN=...
 ```
 
-Optional:
-- `DISABLE_AUTH=true` to bypass authentication in development.
+Optional Development:
+- `NODE_ENV=development` for development mode
+- `DISABLE_AUTH=true` to bypass authentication (dev only)
 
 ### Development Commands
 - **Development**: `npm run dev` (Vite + Express)
@@ -154,8 +186,12 @@ Optional:
 ## Recent Updates
 
 ### January 2025
+- **Complete Authentication System**: JWT-based authentication with comprehensive user management
+- **User Registration & Login**: Secure registration, email verification, password reset flows
+- **Profile Management**: User profile updates, password changes, account settings
+- **Role-Based Security**: Admin, manager, user roles with protected routes
+- **Multi-Tenant Architecture**: Organization memberships and domain-based tenant resolution
 - **Landing Page Redesign**: Professional marketing-focused landing page
-- **Authentication Integration**: OIDC-ready hooks and middleware (provider optional)
 - **Protocol Design System**: Modern UI with glass morphism effects
 - **Mobile Optimization**: Enhanced responsive design across all pages
 - **Multi-Platform Scheduling**: Comprehensive social media wizard
@@ -169,16 +205,33 @@ Optional:
 
 ## API Documentation
 
-### Core Endpoints
-- `GET /api/auth/user` - Get current user
+### Authentication Endpoints
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/login` - User login
+- `POST /api/auth/logout` - User logout
+- `POST /api/auth/refresh` - Refresh JWT token
+- `GET /api/auth/user` - Get current user profile
+- `PUT /api/auth/profile` - Update user profile
+- `POST /api/auth/change-password` - Change password
+- `POST /api/auth/forgot-password` - Request password reset
+- `POST /api/auth/reset-password` - Reset password with token
+- `POST /api/auth/verify-email` - Verify email address
+- `POST /api/auth/resend-verification` - Resend verification email
+
+### Core Application Endpoints
 - `POST /api/social/posts` - Create social media post
 - `GET /api/reviews` - Fetch business reviews
 - `POST /api/ai/generate-content` - Generate AI content
 - `GET /api/analytics/reports` - Get analytics data
 - `POST /api/sms/send` - Send SMS message
 
-### Authentication
-If authentication is enabled (OIDC/session), API endpoints may require auth; development defaults may allow unauthenticated access.
+### Authentication & Authorization
+All API endpoints (except public auth endpoints) require JWT authentication:
+- **JWT Tokens**: Access tokens with 15-minute expiry
+- **Refresh Tokens**: Long-lived tokens for session renewal
+- **Role-Based Access**: Admin, manager, user permission levels
+- **Protected Routes**: Automatic authentication checking
+- **Email Verification**: Required for full account access
 
 ## Development Guidelines
 
@@ -207,11 +260,16 @@ Quick guide: see [AGENTS.md — Deploying to Vercel](AGENTS.md#deploying-to-verc
 - Environment Variables: set in Vercel dashboard (`DATABASE_URL`, `OPENAI_API_KEY`; optional Google/Twilio/Stripe; client vars use `VITE_` prefix).
 - After deploy, SPA routes are served statically; API available under `/api/*`.
 
-### Authentication (OIDC Stub)
-- Configure a generic OIDC provider via env:
-  - `OIDC_ISSUER_URL`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `OIDC_CALLBACK_URL`, `SESSION_SECRET`.
-- Login URL: `/api/login`, Callback: `/api/callback`, Logout: `/api/logout`.
-- In development, set `DISABLE_AUTH=true` to bypass auth.
+### Authentication System
+- **JWT-Based Authentication**: Secure token-based authentication
+- **User Management**: Registration, login, password reset, email verification
+- **Session Management**: Refresh tokens, remember me functionality
+- **Role-Based Access Control**: Admin, manager, user permission levels
+- **Protected Routes**: Client-side route protection with loading states
+- **Profile Management**: User settings, password changes, account information
+- **Multi-Tenant Support**: Organization memberships and tenant resolution
+- Authentication Pages: `/login`, `/register`, `/forgot-password`, `/reset-password/:token`, `/verify-email/:token`
+- In development, set `DISABLE_AUTH=true` to bypass authentication.
 
 ### Demo Login
 - Set `DEMO_MODE=true` to transparently authenticate as a demo user for the current tenant (domain‑resolved).

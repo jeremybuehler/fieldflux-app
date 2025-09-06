@@ -18,6 +18,7 @@ import { AnalyticsSection, type GoogleAnalyticsConfig } from "./settings/section
 import { TwilioSection, type TwilioConfig } from "./settings/sections/TwilioSection";
 import { SocialSection, type SocialConfig } from "./settings/sections/SocialSection";
 import { BusinessSection, type BusinessConfig as BusinessSectionConfig } from "./settings/sections/BusinessSection";
+import UserProfile from "@/components/auth/UserProfile";
 
 interface BusinessConfig {
   businessName: string;
@@ -202,15 +203,20 @@ export default function Settings() {
               </div>
             </div>
 
-            <Tabs defaultValue="wordpress" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6">
+            <Tabs defaultValue="profile" className="w-full">
+              <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
+                <TabsTrigger value="profile">Profile</TabsTrigger>
                 <TabsTrigger value="wordpress">WordPress</TabsTrigger>
                 <TabsTrigger value="analytics">Analytics</TabsTrigger>
                 <TabsTrigger value="business">Business</TabsTrigger>
                 <TabsTrigger value="twilio">SMS</TabsTrigger>
                 <TabsTrigger value="social">Social</TabsTrigger>
-                <TabsTrigger value="whitelabel">White-label</TabsTrigger>
-              </TabsList>
+                       </TabsList>
+
+              {/* User Profile */}
+              <TabsContent value="profile" className="space-y-6">
+                <UserProfile />
+              </TabsContent>
 
               {/* WordPress Configuration */}
               {/* WordPress Configuration */}
