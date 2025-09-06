@@ -9,20 +9,39 @@ import { storage } from "./storage";
 function getSession() {
   const sessionTtl = 7 * 24 * 60 * 60 * 1000; // 1 week
   const PgStore = connectPg(session);
+  const isProduction = process.env.NODE_ENV === "production";
+  
+  // 🔐 SECURITY: Validate session secret in production
+  const sessionSecret = process.env.SESSION_SECRET;
+  if (isProduction && (!sessionSecret || sessionSecret === "change-me")) {
+    throw new Error("Production requires a secure SESSION_SECRET. Please set a random 32+ character string.");
+  }
+  
   const store = process.env.DATABASE_URL
-    ? new PgStore({ conString: process.env.DATABASE_URL, ttl: sessionTtl, tableName: "sessions" })
+    ? new PgStore({ 
+        conString: process.env.DATABASE_URL, 
+        ttl: Math.floor(sessionTtl / 1000), // Convert to seconds for PostgreSQL
+        tableName: "sessions",
+        createTableIfMissing: false // Security: Require table to be created manually
+      })
     : undefined;
 
+  if (isProduction && !store) {
+    console.warn("⚠️  SESSION WARNING: Using memory store in production. Sessions will not persist across restarts.");
+  }
+
   return session({
-    secret: process.env.SESSION_SECRET || "change-me",
+    secret: sessionSecret || "dev-secret-change-in-production",
     store,
     resave: false,
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: true,
+      secure: isProduction, // Only require HTTPS in production
       maxAge: sessionTtl,
+      sameSite: isProduction ? 'strict' : 'lax', // Stricter CSRF protection in production
     },
+    name: 'fieldflux.sid', // Custom session name for security
   });
 }
 
@@ -44,11 +63,28 @@ export async function setupAuth(app: Express) {
   const issuerUrl = process.env.OIDC_ISSUER_URL;
   const clientId = process.env.OIDC_CLIENT_ID;
   const clientSecret = process.env.OIDC_CLIENT_SECRET;
-  const callbackUrl =
-    process.env.OIDC_CALLBACK_URL || `${process.env.BASE_URL || "http://localhost:8080"}/api/callback`;
+  const baseUrl = process.env.BASE_URL || process.env.VERCEL_URL || "http://localhost:8080";
+  const callbackUrl = process.env.OIDC_CALLBACK_URL || `${baseUrl}/api/callback`;
 
+  // 🔐 SECURITY: Strict validation of OIDC configuration
   if (!issuerUrl || !clientId || !clientSecret) {
-    throw new Error("Missing OIDC_ISSUER_URL, OIDC_CLIENT_ID, or OIDC_CLIENT_SECRET");
+    console.error("❌ OIDC CONFIGURATION ERROR:");
+    console.error(`   OIDC_ISSUER_URL: ${issuerUrl ? '✓ Set' : '❌ Missing'}`);
+    console.error(`   OIDC_CLIENT_ID: ${clientId ? '✓ Set' : '❌ Missing'}`);
+    console.error(`   OIDC_CLIENT_SECRET: ${clientSecret ? '✓ Set' : '❌ Missing'}`);
+    throw new Error("OIDC authentication requires OIDC_ISSUER_URL, OIDC_CLIENT_ID, and OIDC_CLIENT_SECRET");
+  }
+  
+  console.log("🔐 Configuring OIDC authentication:");
+  console.log(`   Issuer: ${issuerUrl}`);
+  console.log(`   Client ID: ${clientId.substring(0, 8)}...`);
+  console.log(`   Callback URL: ${callbackUrl}`);
+  
+  // Validate issuer URL format
+  try {
+    new URL(issuerUrl);
+  } catch (error) {
+    throw new Error(`Invalid OIDC_ISSUER_URL format: ${issuerUrl}`);
   }
 
   app.set("trust proxy", 1);
@@ -56,8 +92,33 @@ export async function setupAuth(app: Express) {
   app.use(passport.initialize());
   app.use(passport.session());
 
-  const discovered = await (oidc as any).Issuer.discover(issuerUrl);
+  // 🔌 OIDC Discovery with retry logic
+  let discovered;
+  let attempts = 0;
+  const maxAttempts = 3;
+  
+  while (attempts < maxAttempts) {
+    try {
+      console.log(`🔍 Discovering OIDC configuration from ${issuerUrl} (attempt ${attempts + 1}/${maxAttempts})`);
+      discovered = await (oidc as any).Issuer.discover(issuerUrl);
+      console.log("✅ OIDC discovery successful");
+      break;
+    } catch (error) {
+      attempts++;
+      console.error(`❌ OIDC discovery attempt ${attempts} failed:`, error instanceof Error ? error.message : error);
+      
+      if (attempts >= maxAttempts) {
+        console.error("❌ OIDC discovery failed after all attempts");
+        throw new Error(`OIDC discovery failed: Unable to discover ${issuerUrl}. Please verify the issuer URL is correct and accessible.`);
+      }
+      
+      // Wait before retry (exponential backoff)
+      await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempts) * 1000));
+    }
+  }
+  
   const oidcClient = new discovered.Client({ client_id: clientId, client_secret: clientSecret });
+  console.log("✅ OIDC client initialized successfully");
 
   const verify: VerifyFunction = async (tokens, verified) => {
     const user: any = {};

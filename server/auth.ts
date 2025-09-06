@@ -1,11 +1,16 @@
 import type { Express, RequestHandler } from "express";
 import { storage } from "./storage";
+import { enforceProductionSecurity } from "./config/envValidation";
 
 export type AuthProvider = {
   isAuthenticated: RequestHandler;
 };
 
 export async function configureAuth(app: Express): Promise<AuthProvider> {
+  // 🔐 SECURITY: Validate production environment configuration
+  const envConfig = enforceProductionSecurity();
+  const { isProduction, hasOIDC, hasReplit } = envConfig;
+
   // Demo mode: transparently authenticate as demo user
   if (process.env.DEMO_MODE === "true") {
     const demoHandler: RequestHandler = async (req: any, _res, next) => {
@@ -43,21 +48,28 @@ export async function configureAuth(app: Express): Promise<AuthProvider> {
     return { isAuthenticated: demoHandler };
   }
   // Prefer explicit generic OIDC if configured
-  if (process.env.OIDC_ISSUER_URL && process.env.OIDC_CLIENT_ID && process.env.OIDC_CLIENT_SECRET) {
+  if (hasOIDC) {
     const oidcAuth = await import("./oidcAuth");
     await oidcAuth.setupAuth(app);
     return { isAuthenticated: oidcAuth.isAuthenticated };
   }
 
   // If running in a Replit OIDC environment, use the existing integration
-  if (process.env.REPLIT_DOMAINS) {
+  if (hasReplit) {
     const replitAuth = await import("./replitAuth");
     await replitAuth.setupAuth(app);
     return { isAuthenticated: replitAuth.isAuthenticated };
   }
 
-  // Development or explicitly disabled auth: allow all requests
+  // Development or explicitly disabled auth: allow all requests (NON-PRODUCTION ONLY)
   if (process.env.DISABLE_AUTH === "true" || app.get("env") === "development") {
+    // 🔐 SECURITY: Prevent auth bypass in production
+    if (isProduction) {
+      console.error("❌ PRODUCTION SECURITY ERROR:");
+      console.error("   DISABLE_AUTH=true is not allowed in production environments.");
+      console.error("   Authentication bypass blocked for security.");
+      throw new Error("Authentication bypass disabled in production. Please configure OIDC.");
+    }
     const devHandler: RequestHandler = async (req: any, _res, next) => {
       // Attach a predictable dev user so client routes behind login work
       const devClaims = {
@@ -94,8 +106,19 @@ export async function configureAuth(app: Express): Promise<AuthProvider> {
     return { isAuthenticated: devHandler };
   }
 
-  // Default: require auth (return 401). Plug in your OIDC/session here later.
+  // 🔐 FALLBACK SECURITY: Strict authentication required
+  // This fallback should only be reached in misconfigured environments
+  console.warn("⚠️  AUTHENTICATION WARNING: No auth provider configured, defaulting to strict mode");
   return {
-    isAuthenticated: (_req, res, _next) => res.status(401).json({ message: "Unauthorized" }),
+    isAuthenticated: (_req, res, _next) => {
+      console.error("Authentication required but no provider configured");
+      res.status(401).json({ 
+        message: "Unauthorized", 
+        error: "Authentication provider not configured",
+        hint: isProduction 
+          ? "Production requires OIDC_ISSUER_URL, OIDC_CLIENT_ID, and OIDC_CLIENT_SECRET" 
+          : "Development mode: set DISABLE_AUTH=true or configure OIDC"
+      });
+    },
   };
 }
