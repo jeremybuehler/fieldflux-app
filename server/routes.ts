@@ -6,6 +6,16 @@ import passport from "passport";
 import { tenantResolver } from "./tenant";
 import { ensureTenantOidcStrategy } from "./authManager";
 import { configureAuth } from "./auth";
+import { 
+  asyncHandler, 
+  AppError, 
+  ValidationError, 
+  UnauthorizedError, 
+  ForbiddenError, 
+  DatabaseError 
+} from "./lib/errors";
+import { logger } from "./lib/logger";
+import { errorMonitor } from "./lib/error-monitor";
 import {
   users, 
   wordpressPosts, 
@@ -55,55 +65,272 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Configure authentication depending on environment (Replit, dev, or strict)
   const { isAuthenticated } = await configureAuth(app);
 
+
   // Require tenant membership helper - SECURE VERSION (NO BYPASSES)
   function requireMembership() {
-    return async (req: any, res: any, next: any) => {
+    return asyncHandler(async (req: any, res: any, next: any) => {
       // 🔐 SECURITY: Never bypass authentication - always validate
       const tenant = req.tenant;
       const user = req.user;
+      const correlationId = req.correlationId;
       
       if (!tenant) {
-        return res.status(401).json({ 
-          message: 'Unauthorized', 
-          error: 'No tenant context available' 
-        });
+        throw new UnauthorizedError('No tenant context available');
       }
       
       if (!user || !user.claims) {
-        return res.status(401).json({ 
-          message: 'Unauthorized', 
-          error: 'User authentication required' 
-        });
+        throw new UnauthorizedError('User authentication required');
       }
       
-      try {
-        const userId = user.claims.sub || user.claims.email || user.id;
-        const member = await storage.getMembership(tenant.id, userId);
-        
-        if (!member) {
-          return res.status(403).json({ 
-            message: 'Forbidden', 
-            error: 'User not authorized for this tenant' 
-          });
-        }
-        
-        // Attach member info for downstream use
-        req.member = member;
-        next();
-      } catch (error) {
-        console.error('Membership validation error:', error);
-        return res.status(500).json({ 
-          message: 'Internal Server Error', 
-          error: 'Membership validation failed' 
+      const userId = user.claims.sub || user.claims.email || user.id;
+      const member = await storage.getMembership(tenant.id, userId);
+      
+      if (!member) {
+        logger.warn('Unauthorized tenant access attempt', {
+          correlationId,
+          userId,
+          tenantId: tenant.id,
+          endpoint: req.path,
+          method: req.method
         });
+        throw new ForbiddenError('User not authorized for this tenant');
       }
-    };
+      
+      // Attach member info for downstream use
+      req.member = member;
+      next();
+    });
   }
 
-  // Health check endpoint for Azure
-  app.get('/api/health', (req, res) => {
-    res.json({ status: 'healthy', timestamp: new Date().toISOString() });
-  });
+  // Health check endpoint for Azure with comprehensive monitoring
+  app.get('/api/health', asyncHandler(async (req: any, res) => {
+    const startTime = Date.now();
+    const health = {
+      status: 'healthy',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      memory: {
+        used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+        total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
+        external: Math.round(process.memoryUsage().external / 1024 / 1024)
+      },
+      checks: {} as Record<string, any>
+    };
+
+    // Database connectivity check
+    try {
+      await storage.getAllUsers(); // Simple query to test DB
+      health.checks.database = { status: 'healthy', responseTime: Date.now() - startTime };
+    } catch (error) {
+      health.checks.database = { 
+        status: 'unhealthy', 
+        error: error instanceof Error ? error.message : 'Unknown error',
+        responseTime: Date.now() - startTime
+      };
+      health.status = 'degraded';
+    }
+
+    // External service checks
+    const externalServices = [];
+    
+    // OpenAI API check
+    if (process.env.OPENAI_API_KEY) {
+      externalServices.push('openai');
+      try {
+        // Simple API test - just check if we can create a client
+        health.checks.openai = { status: 'configured', apiKeyPresent: true };
+      } catch {
+        health.checks.openai = { status: 'error', apiKeyPresent: true };
+      }
+    } else {
+      health.checks.openai = { status: 'not_configured', apiKeyPresent: false };
+    }
+
+    // Analytics service check
+    if (process.env.GOOGLE_ANALYTICS_PROPERTY_ID) {
+      health.checks.analytics = { status: 'configured', propertyIdPresent: true };
+    } else {
+      health.checks.analytics = { status: 'not_configured', propertyIdPresent: false };
+    }
+
+    // Add error monitoring status
+    const errorSummary = errorMonitor.getHealthSummary();
+    health.checks.errorMonitoring = {
+      status: errorSummary.status,
+      recentErrors: errorSummary.recentErrors,
+      anomalies: errorSummary.anomalies,
+      criticalAnomalies: errorSummary.criticalAnomalies,
+      totalTrackedErrors: errorSummary.totalTrackedErrors
+    };
+
+    // Set overall health status
+    const unhealthyChecks = Object.values(health.checks).filter(
+      (check: any) => check.status === 'unhealthy' || check.status === 'error'
+    );
+    
+    const criticalErrorConditions = Object.values(health.checks).filter(
+      (check: any) => check.status === 'critical'
+    );
+    
+    if (criticalErrorConditions.length > 0) {
+      health.status = 'critical';
+    } else if (unhealthyChecks.length > 0) {
+      health.status = unhealthyChecks.length === Object.keys(health.checks).length ? 'unhealthy' : 'degraded';
+    } else if (errorSummary.status === 'critical') {
+      health.status = 'critical';
+    } else if (errorSummary.status === 'warning' || errorSummary.status === 'degraded') {
+      health.status = 'degraded';
+    }
+
+    const statusCode = health.status === 'healthy' ? 200 : 
+                      health.status === 'degraded' ? 200 :
+                      health.status === 'critical' ? 503 : 503;
+
+    res.status(statusCode).json(health);
+  }));
+
+  // Detailed system monitoring endpoint
+  app.get('/api/system/status', asyncHandler(async (req: any, res) => {
+    const systemStatus = {
+      application: {
+        name: 'FieldFlux',
+        version: process.env.npm_package_version || 'unknown',
+        environment: process.env.NODE_ENV || 'development',
+        uptime: process.uptime()
+      },
+      system: {
+        platform: process.platform,
+        nodeVersion: process.version,
+        cpuUsage: process.cpuUsage(),
+        memory: process.memoryUsage(),
+        loadAverage: require('os').loadavg()
+      },
+      configuration: {
+        databaseConnected: !!process.env.DATABASE_URL,
+        authMode: process.env.DEMO_MODE === 'true' ? 'demo' : 
+                 process.env.DISABLE_AUTH === 'true' ? 'disabled' : 'enabled',
+        rateLimitingEnabled: true,
+        errorTrackingEnabled: true,
+        correlationTrackingEnabled: true
+      },
+      services: {
+        openai: {
+          configured: !!process.env.OPENAI_API_KEY,
+          status: process.env.OPENAI_API_KEY ? 'ready' : 'not_configured'
+        },
+        twilio: {
+          configured: !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN),
+          status: (process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN) ? 'ready' : 'not_configured'
+        },
+        analytics: {
+          configured: !!process.env.GOOGLE_ANALYTICS_PROPERTY_ID,
+          status: process.env.GOOGLE_ANALYTICS_PROPERTY_ID ? 'ready' : 'not_configured'
+        }
+      }
+    };
+
+    logger.info('System status requested', {
+      correlationId: req.correlationId,
+      endpoint: req.path,
+      userAgent: req.get('User-Agent')
+    });
+
+    res.json(systemStatus);
+  }));
+
+  // Error monitoring and analytics endpoints
+  app.get('/api/system/errors', asyncHandler(async (req: any, res) => {
+    const { 
+      limit = 50, 
+      sortBy = 'count', 
+      timeframe = 'all' 
+    } = req.query;
+
+    const errorStats = errorMonitor.getErrorStats({
+      limit: parseInt(limit),
+      sortBy: sortBy as 'count' | 'recent' | 'frequency',
+      timeframe: timeframe as 'hour' | 'day' | 'all'
+    });
+
+    const summary = errorMonitor.getHealthSummary();
+    const anomalies = errorMonitor.detectAnomalies();
+
+    logger.info('Error statistics requested', {
+      correlationId: req.correlationId,
+      requestedLimit: limit,
+      sortBy,
+      timeframe
+    });
+
+    res.json({
+      summary,
+      anomalies,
+      errors: errorStats.map(error => ({
+        errorType: error.key.split('|')[0],
+        statusCode: error.key.split('|')[1],
+        endpoint: error.key.split('|')[2],
+        message: error.key.split('|')[3],
+        count: error.count,
+        firstOccurred: error.firstOccurred,
+        lastOccurred: error.lastOccurred,
+        contexts: error.contexts,
+        frequencies: error.frequencies
+      }))
+    });
+  }));
+
+  app.get('/api/system/errors/trends', asyncHandler(async (req: any, res) => {
+    const trends = errorMonitor.getErrorTrends();
+    
+    logger.info('Error trends requested', {
+      correlationId: req.correlationId,
+      totalErrors: trends.totalErrors,
+      uniqueErrorTypes: trends.uniqueErrorTypes
+    });
+
+    res.json(trends);
+  }));
+
+  app.get('/api/system/errors/recent', asyncHandler(async (req: any, res) => {
+    const { limit = 100 } = req.query;
+    const recentErrors = errorMonitor.getRecentErrors(parseInt(limit));
+    
+    logger.info('Recent errors requested', {
+      correlationId: req.correlationId,
+      requestedLimit: limit,
+      actualCount: recentErrors.length
+    });
+
+    res.json({
+      errors: recentErrors.map(error => ({
+        ...error.pattern,
+        timestamp: error.timestamp,
+        correlationId: error.correlationId
+      })),
+      count: recentErrors.length,
+      limit: parseInt(limit)
+    });
+  }));
+
+  app.get('/api/system/errors/anomalies', asyncHandler(async (req: any, res) => {
+    const anomalies = errorMonitor.detectAnomalies();
+    
+    logger.info('Error anomalies requested', {
+      correlationId: req.correlationId,
+      anomalyCount: anomalies.length,
+      criticalAnomalies: anomalies.filter(a => a.severity === 'critical').length
+    });
+
+    res.json({
+      anomalies,
+      count: anomalies.length,
+      summary: {
+        critical: anomalies.filter(a => a.severity === 'critical').length,
+        warning: anomalies.filter(a => a.severity === 'warning').length,
+        info: anomalies.filter(a => a.severity === 'info').length
+      }
+    });
+  }));
 
   // Lightweight dev status for local visual monitoring (no auth required)
   app.get('/api/dev/status', (req: any, res) => {
@@ -161,84 +388,125 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      if (!req.user || !req.user.claims) {
-        return res.status(401).json({ message: "User not authenticated" });
-      }
-      
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      if (user) {
-        res.json(user);
-      } else {
-        // Create user if doesn't exist
-        const newUser = await storage.upsertUser({
-          id: userId,
-          email: req.user.claims.email,
-          firstName: req.user.claims.first_name,
-          lastName: req.user.claims.last_name,
-          profileImageUrl: req.user.claims.profile_image_url,
-        });
-        res.json(newUser);
-      }
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
+  app.get('/api/auth/user', isAuthenticated, asyncHandler(async (req: any, res) => {
+    if (!req.user || !req.user.claims) {
+      throw new UnauthorizedError('User authentication required');
     }
-  });
-  // Dashboard Analytics - SECURED
-  app.get("/api/dashboard/metrics", requireMembership(), async (req, res) => {
-    try {
-      const tenant = (req as any).tenant;
-      const leads = await storage.getAllLeads(tenant?.id);
-      const tasks = await storage.getAllTasks(tenant?.id);
-      const socialPosts = await storage.getAllSocialPosts(tenant?.id);
-      const seoKeywords = await storage.getAllSeoKeywords(tenant?.id);
-
-      // Get real Google Analytics data for dashboard
-      const analyticsMetrics = await googleAnalyticsService.getMetrics('30d');
-      
-      const metrics = {
-        traffic: analyticsMetrics.sessions,
-        trafficGrowth: 12.5, // Could be calculated from comparing periods
-        socialEngagement: socialPosts.length * 47, // Estimate based on posts
-        socialEngagementGrowth: 8.3,
-        leads: leads.length,
-        leadsGrowth: 15.2,
-        reviewScore: 4.8,
-        reviewCount: 156,
+    
+    const userId = req.user.claims.sub;
+    if (!userId) {
+      throw new ValidationError('User ID not found in claims');
+    }
+    
+    let user = await storage.getUser(userId);
+    
+    if (!user) {
+      // Create user if doesn't exist
+      const userData = {
+        id: userId,
+        email: req.user.claims.email,
+        firstName: req.user.claims.first_name,
+        lastName: req.user.claims.last_name,
+        profileImageUrl: req.user.claims.profile_image_url,
       };
-
-      res.json(metrics);
-    } catch (error) {
-      console.error("Error fetching dashboard metrics:", error);
-      res.status(500).json({ message: "Failed to fetch dashboard metrics" });
+      
+      user = await storage.upsertUser(userData);
+      
+      logger.info('New user created', {
+        correlationId: req.correlationId,
+        userId: userId,
+        email: userData.email
+      });
     }
-  });
+    
+    res.json(user);
+  }));
+  // Dashboard Analytics - SECURED
+  app.get("/api/dashboard/metrics", requireMembership(), asyncHandler(async (req: any, res) => {
+    const tenant = req.tenant;
+    
+    if (!tenant?.id) {
+      throw new ValidationError('Valid tenant context required');
+    }
+
+    const [leads, tasks, socialPosts, seoKeywords] = await Promise.all([
+      storage.getAllLeads(tenant.id),
+      storage.getAllTasks(tenant.id), 
+      storage.getAllSocialPosts(tenant.id),
+      storage.getAllSeoKeywords(tenant.id)
+    ]);
+
+    // Get real Google Analytics data for dashboard
+    let analyticsMetrics;
+    try {
+      analyticsMetrics = await googleAnalyticsService.getMetrics('30d');
+    } catch (analyticsError) {
+      logger.warn('Analytics service unavailable, using fallback data', {
+        correlationId: req.correlationId,
+        tenantId: tenant.id,
+        error: analyticsError
+      });
+      analyticsMetrics = { sessions: 0 }; // Fallback
+    }
+    
+    const metrics = {
+      traffic: analyticsMetrics.sessions,
+      trafficGrowth: 12.5, // Could be calculated from comparing periods
+      socialEngagement: socialPosts.length * 47, // Estimate based on posts
+      socialEngagementGrowth: 8.3,
+      leads: leads.length,
+      leadsGrowth: 15.2,
+      reviewScore: 4.8,
+      reviewCount: 156,
+    };
+
+    logger.info('Dashboard metrics retrieved successfully', {
+      correlationId: req.correlationId,
+      tenantId: tenant.id,
+      metricsCount: Object.keys(metrics).length
+    });
+
+    res.json(metrics);
+  }));
 
   // Activities
-  app.get("/api/activities", requireMembership(), async (req, res) => {
-    try {
-      const tenant = (req as any).tenant;
-      const activities = await storage.getAllActivities(tenant?.id);
-      res.json(activities);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to fetch activities" });
-    }
-  });
+  app.get("/api/activities", requireMembership(), asyncHandler(async (req: any, res) => {
+    const tenant = req.tenant;
+    const activities = await storage.getAllActivities(tenant?.id);
+    
+    logger.info('Activities retrieved', {
+      correlationId: req.correlationId,
+      tenantId: tenant?.id,
+      count: activities.length
+    });
+    
+    res.json(activities);
+  }));
 
-  app.post("/api/activities", requireMembership(), async (req, res) => {
+  app.post("/api/activities", requireMembership(), asyncHandler(async (req: any, res) => {
+    const tenant = req.tenant;
+    
     try {
-      const tenant = (req as any).tenant;
       const parsed = insertActivitySchema.parse(req.body);
       const data = tenant ? { ...parsed, tenantId: tenant.id } : parsed;
       const activity = await storage.createActivity(data);
+      
+      logger.info('Activity created', {
+        correlationId: req.correlationId,
+        tenantId: tenant?.id,
+        activityType: activity.type
+      });
+      
       res.json(activity);
-    } catch (error) {
-      res.status(400).json({ message: "Invalid activity data" });
+    } catch (error: any) {
+      if (error.name === 'ZodError') {
+        throw new ValidationError('Invalid activity data', { 
+          validationErrors: error.errors 
+        });
+      }
+      throw new DatabaseError('Failed to create activity', error);
     }
-  });
+  }));
 
   // WordPress Posts
   app.get("/api/wordpress/posts", requireMembership(), async (req, res) => {

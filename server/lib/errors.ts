@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { ZodError } from 'zod';
 import { logger } from './logger';
+import { trackError } from './error-monitor';
 
 // Base application error class
 export class AppError extends Error {
@@ -215,6 +216,16 @@ export function errorHandler(
       isOperational: appError.isOperational
     }
   );
+
+  // Track error for monitoring and analysis
+  trackError(error, {
+    correlationId,
+    endpoint: req.path,
+    method: req.method,
+    statusCode: appError.statusCode,
+    userId: (req as any).user?.id,
+    tenantId: (req as any).tenant?.id
+  });
 
   // Create response
   const errorResponse = createErrorResponse(appError, correlationId, isDevelopment);
