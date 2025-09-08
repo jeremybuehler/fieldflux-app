@@ -14,7 +14,7 @@ export default defineConfig({
     ['list']
   ],
   use: {
-    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:5000',
+    baseURL: process.env.PLAYWRIGHT_BASE_URL || 'http://localhost:8080',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -83,17 +83,17 @@ export default defineConfig({
     },
   ],
   webServer: process.env.CI ? undefined : {
-    command: 'npm run dev',
-    url: 'http://localhost:5000',
+    command: process.env.PLAYWRIGHT_USE_PROD ? 'npm start' : 'npm run build && npm start',
+    url: 'http://localhost:8080',
     reuseExistingServer: !process.env.CI,
-    timeout: 120 * 1000,
+    timeout: 180 * 1000,
     env: {
-      NODE_ENV: 'development',
-      PORT: '5000',
+      NODE_ENV: process.env.PLAYWRIGHT_USE_PROD ? 'production' : 'production',
+      PORT: '8080',
       DATABASE_URL: process.env.PLAYWRIGHT_DATABASE_URL || process.env.DATABASE_URL,
       OPENAI_API_KEY: 'test-openai-key',
       GOOGLE_ANALYTICS_PROPERTY_ID: 'test-ga-property',
-      TWILIO_ACCOUNT_SID: 'test-twilio-sid',
+      TWILIO_ACCOUNT_SID: 'AC_test_sid',
       TWILIO_AUTH_TOKEN: 'test-twilio-token'
     }
   },

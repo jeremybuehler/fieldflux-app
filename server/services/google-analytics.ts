@@ -67,14 +67,14 @@ export class GoogleAnalyticsService {
           auth,
         });
         
-        console.log('Google Analytics and Search Console services initialized');
+        console.log('Google Analytics and Search Console services initialized successfully');
       } catch (error) {
-        console.error('Failed to initialize Google services:', error);
+        console.warn('Google services not configured or failed to initialize:', error.message || error);
         this.analyticsData = new BetaAnalyticsDataClient();
         this.searchConsole = null;
       }
     } else {
-      console.warn('Google Analytics Service Account Key not configured');
+      console.log('Google Analytics Service Account Key not configured - using demo data');
       this.analyticsData = new BetaAnalyticsDataClient();
       this.searchConsole = null;
     }

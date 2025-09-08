@@ -3,7 +3,9 @@ import Anthropic from '@anthropic-ai/sdk';
 import type { User } from "@shared/schema";
 
 // the newest OpenAI model is "gpt-5" which was released August 7, 2025. do not change this unless explicitly requested by the user
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = process.env.OPENAI_API_KEY
+  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  : null as any;
 
 // Initialize Anthropic client if API key is available
 let anthropic: Anthropic | null = null;

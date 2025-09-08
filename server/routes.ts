@@ -46,10 +46,19 @@ import { leadScoringService } from "./services/leadScoringService";
 import { aiCoachService } from "./services/aiCoachService";
 import { felixService } from "./felix/felix-service";
 import { felixAI, type FelixContext, type FelixMessage } from "./services/felixAI";
+// Use simplified analytics authentication for now
+import {
+  authenticateAnalyticsJWT,
+  requireAnalyticsScope as requireEnhancedAnalyticsScope,
+  auditAnalyticsAccess,
+  ANALYTICS_SCOPES,
+} from "./middleware/analyticsAuthMiddleware";
+import analyticsAuthRoutes from "./routes/analyticsAuthRoutes";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize OpenAI only if an API key is configured to avoid startup failures in tests
+const openai = process.env.OPENAI_API_KEY
+  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  : null as any;
 
 // Initialize Twilio client if credentials are available
 let twilioClient: any = null;
@@ -64,7 +73,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(tenantResolver);
   // Configure authentication depending on environment (Replit, dev, or strict)
   const { isAuthenticated } = await configureAuth(app);
-
 
   // Require tenant membership helper - SECURE VERSION (NO BYPASSES)
   function requireMembership() {
@@ -188,6 +196,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     res.status(statusCode).json(health);
   }));
+
+  // Mount analytics auth routes (token, refresh, api-key, revoke, validate)
+  app.use('/api/analytics/auth', analyticsAuthRoutes);
 
   // Detailed system monitoring endpoint
   app.get('/api/system/status', asyncHandler(async (req: any, res) => {
@@ -1572,8 +1583,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Google Analytics API Integration
-  app.get("/api/analytics/metrics", async (req, res) => {
+  // Google Analytics API Integration with JWT Authentication
+  app.get("/api/analytics/metrics",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.READ_METRICS),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const period = req.query.period as '7d' | '30d' | '90d' || '30d';
       const metrics = await googleAnalyticsService.getMetrics(period);
@@ -1584,7 +1599,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/analytics/traffic-sources", async (req, res) => {
+  app.get("/api/analytics/traffic-sources",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.READ_TRAFFIC),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const period = req.query.period as '7d' | '30d' | '90d' || '30d';
       const sources = await googleAnalyticsService.getTrafficSources(period);
@@ -1595,7 +1614,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/analytics/top-pages", async (req, res) => {
+  app.get("/api/analytics/top-pages",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.READ_PAGES),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const period = req.query.period as '7d' | '30d' | '90d' || '30d';
       const pages = await googleAnalyticsService.getTopPages(period);
@@ -1606,7 +1629,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/analytics/locations", async (req, res) => {
+  app.get("/api/analytics/locations",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.READ_LOCATIONS),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const period = req.query.period as '7d' | '30d' | '90d' || '30d';
       const locations = await googleAnalyticsService.getLocationData(period);
@@ -1617,7 +1644,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/analytics/devices", async (req, res) => {
+  app.get("/api/analytics/devices",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.READ_DEVICES),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const period = req.query.period as '7d' | '30d' | '90d' || '30d';
       const devices = await googleAnalyticsService.getDeviceData(period);
@@ -1628,7 +1659,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/analytics/realtime", async (req, res) => {
+  app.get("/api/analytics/realtime",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.READ_REALTIME),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const realtime = await googleAnalyticsService.getRealtimeData();
       res.json(realtime);
@@ -1638,7 +1673,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/analytics/keywords", async (req, res) => {
+  app.get("/api/analytics/keywords",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.READ_KEYWORDS),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const period = (req.query.period as '7d' | '30d' | '90d') || '30d';
       const keywords = await googleAnalyticsService.getSearchConsoleKeywords(period);
@@ -1661,7 +1700,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/search-console/status", async (req, res) => {
+  app.get("/api/search-console/status",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.ADMIN_CONFIG),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const status = await googleAnalyticsService.getSearchConsoleStatus();
       res.json(status);
@@ -1671,7 +1714,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/analytics/keyword-opportunities", async (req, res) => {
+  app.get("/api/analytics/keyword-opportunities",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.READ_KEYWORDS),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const keywords = await googleAnalyticsService.getSearchConsoleKeywords('30d');
       
@@ -1692,7 +1739,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/analytics/reviews", async (req, res) => {
+  app.get("/api/analytics/reviews",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.READ_REVIEWS),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const period = (req.query.period as '7d' | '30d' | '90d') || '30d';
       const reviews = await googleAnalyticsService.getReviewsAnalytics(period);
@@ -1703,7 +1754,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/analytics/status", async (req, res) => {
+  app.get("/api/analytics/status",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.ADMIN_CONFIG),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const hasServiceAccount = !!process.env.GOOGLE_ANALYTICS_SERVICE_ACCOUNT_KEY;
       const hasPropertyId = !!process.env.GOOGLE_ANALYTICS_PROPERTY_ID;
@@ -1725,7 +1780,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Enhanced Analytics Reporting
-  app.post("/api/analytics/generate-report", async (req, res) => {
+  app.post("/api/analytics/generate-report",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.GENERATE_REPORTS),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const { period = "30d" } = req.body;
 
@@ -1760,7 +1819,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/analytics/reports", async (req, res) => {
+  app.get("/api/analytics/reports",
+    authenticateAnalyticsJWT,
+    requireEnhancedAnalyticsScope(ANALYTICS_SCOPES.GENERATE_REPORTS),
+    auditAnalyticsAccess,
+    async (req, res) => {
     try {
       const reports = await storage.getAllAnalyticsReports((req as any).tenant?.id);
       res.json(reports);

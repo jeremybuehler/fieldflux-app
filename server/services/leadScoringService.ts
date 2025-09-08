@@ -1,7 +1,9 @@
 import OpenAI from "openai";
 import type { Lead } from "@shared/schema";
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+const openai = process.env.OPENAI_API_KEY
+  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  : null as any;
 
 export interface LeadScoringResult {
   leadScore: number;

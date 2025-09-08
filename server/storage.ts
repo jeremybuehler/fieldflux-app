@@ -856,3 +856,14 @@ export class DatabaseStorage implements IStorage {
 
 // Use MemStorage for now to avoid database connection issues
 export const storage = process.env.DATABASE_URL ? new DatabaseStorage() : new MemStorage();
+
+// Import analytics storage extensions after `storage` is initialized to avoid ESM TDZ
+void import('./storage-extensions')
+  .then((m) => {
+    if (typeof m.attachAnalyticsExtensions === 'function') {
+      m.attachAnalyticsExtensions(storage);
+    }
+  })
+  .catch(() => {
+    // No-op if extension fails to load in certain environments
+  });

@@ -265,6 +265,22 @@ export function getRateLimitStatus() {
   };
 }
 
+// Create dynamic rate limiter based on config
+export function createDynamicRateLimiter(config: RateLimitConfig & { 
+  standardHeaders?: boolean; 
+  legacyHeaders?: boolean; 
+}) {
+  const { standardHeaders = true, legacyHeaders = false, ...rateLimitConfig } = config;
+  
+  return createRateLimit({
+    ...rateLimitConfig,
+    keyGenerator: config.keyGenerator || defaultKeyGenerator
+  });
+}
+
+// Export default rate limiter
+export const rateLimiter = rateLimiters.general;
+
 // Graceful shutdown
 export function shutdownRateLimit() {
   store.destroy();

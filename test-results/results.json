@@ -1,0 +1,192 @@
+{
+  "config": {
+    "configFile": "/Users/buehler/code/fieldflux-app/playwright.config.ts",
+    "rootDir": "/Users/buehler/code/fieldflux-app/tests/e2e",
+    "forbidOnly": false,
+    "fullyParallel": true,
+    "globalSetup": "/Users/buehler/code/fieldflux-app/tests/setup/e2e.global-setup.ts",
+    "globalTeardown": "/Users/buehler/code/fieldflux-app/tests/setup/e2e.global-teardown.ts",
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "test-results/results.json"
+        }
+      ],
+      [
+        "junit",
+        {
+          "outputFile": "test-results/results.xml"
+        }
+      ],
+      [
+        "list",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/buehler/code/fieldflux-app/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "setup",
+        "name": "setup",
+        "testDir": "/Users/buehler/code/fieldflux-app/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "/.*\\.setup\\.ts/"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/buehler/code/fieldflux-app/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/buehler/code/fieldflux-app/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/buehler/code/fieldflux-app/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "firefox",
+        "name": "firefox",
+        "testDir": "/Users/buehler/code/fieldflux-app/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/buehler/code/fieldflux-app/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "webkit",
+        "name": "webkit",
+        "testDir": "/Users/buehler/code/fieldflux-app/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/buehler/code/fieldflux-app/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Mobile Chrome",
+        "name": "Mobile Chrome",
+        "testDir": "/Users/buehler/code/fieldflux-app/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/buehler/code/fieldflux-app/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Mobile Safari",
+        "name": "Mobile Safari",
+        "testDir": "/Users/buehler/code/fieldflux-app/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/buehler/code/fieldflux-app/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "iPad",
+        "name": "iPad",
+        "testDir": "/Users/buehler/code/fieldflux-app/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      },
+      {
+        "outputDir": "/Users/buehler/code/fieldflux-app/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "id": "Microsoft Edge",
+        "name": "Microsoft Edge",
+        "testDir": "/Users/buehler/code/fieldflux-app/tests/e2e",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.55.0",
+    "workers": 4,
+    "webServer": {
+      "command": "npm start",
+      "url": "http://localhost:8080",
+      "reuseExistingServer": true,
+      "timeout": 180000,
+      "env": {
+        "NODE_ENV": "production",
+        "PORT": "8080",
+        "DATABASE_URL": "postgresql://neondb_owner:npg_ewZSknmc5D1g@ep-lingering-water-adocohyh.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require",
+        "OPENAI_API_KEY": "test-openai-key",
+        "GOOGLE_ANALYTICS_PROPERTY_ID": "test-ga-property",
+        "TWILIO_ACCOUNT_SID": "AC_test_sid",
+        "TWILIO_AUTH_TOKEN": "test-twilio-token"
+      }
+    }
+  },
+  "suites": [],
+  "errors": [
+    {
+      "message": "Error: Timed out waiting 180000ms from config.webServer.",
+      "stack": "Error: Timed out waiting 180000ms from config.webServer."
+    }
+  ],
+  "stats": {
+    "startTime": "2025-09-07T22:36:51.559Z",
+    "duration": 180372.145,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

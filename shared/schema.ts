@@ -36,6 +36,11 @@ export const users = pgTable("users", {
   subscriptionStatus: text("subscription_status").default("free"), // free, active, past_due, canceled
   subscriptionPlan: text("subscription_plan").default("free"), // free, pro, enterprise
   subscriptionCurrentPeriodEnd: timestamp("subscription_current_period_end"),
+  // Authentication fields
+  emailVerified: boolean("email_verified").default(false),
+  isActive: boolean("is_active").default(true),
+  analyticsEnabled: boolean("analytics_enabled").default(true),
+  role: text("role").default("member"), // viewer, member, admin, owner
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

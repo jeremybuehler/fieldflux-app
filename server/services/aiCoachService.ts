@@ -14,9 +14,9 @@ import {
 } from "@shared/schema";
 import { eq, desc, and, sql, gte } from "drizzle-orm";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "",
-});
+const openai = process.env.OPENAI_API_KEY
+  ? new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+  : null as any;
 
 export class AICoachService {
   // Track user engagement session

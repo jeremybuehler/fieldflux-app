@@ -137,7 +137,7 @@ FieldFlux/
 
 ### Prerequisites
 - Node.js 20+ with npm package manager
-- PostgreSQL database (local via Docker or managed)
+- PostgreSQL database (local or managed)
 - API keys for Google services and OpenAI
 
 ### Installation
