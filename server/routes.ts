@@ -51,7 +51,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
 
   // Auth routes (using the isAuthenticated from replitAuth, not the removed duplicate)
-  app.get('/api/auth/user', async (req: any, res) => {
+  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       // Return null if no user session (landing page can show)
       if (!req.user || !req.user.claims) {
