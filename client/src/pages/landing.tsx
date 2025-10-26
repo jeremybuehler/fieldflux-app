@@ -151,16 +151,17 @@ export default function Landing() {
 
         {/* CTA Section */}
         <div className="text-center px-2">
-          <div className="max-w-2xl mx-auto rounded-xl p-6 lg:p-8 fx-grain" style={{backgroundColor: 'var(--bg-elevated)', border: '2px solid var(--border)'}}>
-            <h3 className="text-xl lg:text-2xl font-bold mb-3 lg:mb-4" style={{color: 'var(--fx-navy-900)'}}>
-              Stop Juggling Multiple Marketing Tools
-            </h3>
-            <p className="text-gray-700 mb-4 lg:mb-6 text-sm lg:text-base">
-              Join thousands of field service professionals who've consolidated 
-              their marketing stack. FieldFlux replaces your content creation tool, 
-              social media scheduler, lead manager, analytics platform, and reputation 
-              management system with one affordable solution.
-            </p>
+          <Card className="max-w-2xl mx-auto fx-grain" style={{backgroundColor: 'var(--bg-elevated)', border: '2px solid var(--border)'}}>
+            <CardContent className="p-6 lg:p-8">
+              <h3 className="text-xl lg:text-2xl font-bold mb-3 lg:mb-4" style={{color: 'var(--fx-navy-900)'}}>
+                Stop Juggling Multiple Marketing Tools
+              </h3>
+              <p className="text-gray-700 mb-4 lg:mb-6 text-sm lg:text-base">
+                Join thousands of field service professionals who've consolidated
+                their marketing stack. FieldFlux replaces your content creation tool,
+                social media scheduler, lead manager, analytics platform, and reputation
+                management system with one affordable solution.
+              </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Dialog open={isAuthOpen} onOpenChange={setIsAuthOpen}>
                   <DialogTrigger asChild>

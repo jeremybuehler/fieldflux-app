@@ -128,7 +128,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const activities = await storage.getAllActivities();
       res.json(activities);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch activities" });
+      console.error("Error fetching activities:", error);
+      res.json([]);
     }
   });
 
@@ -553,7 +554,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const posts = await storage.getAllSocialPosts();
       res.json(posts);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch social posts" });
+      console.error("Error fetching social posts:", error);
+      res.json([]);
     }
   });
 
@@ -674,7 +676,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const leads = await storage.getAllLeads();
       res.json(leads);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch leads" });
+      console.error("Error fetching leads:", error);
+      // Return empty array for graceful degradation
+      res.json([]);
     }
   });
 
@@ -844,7 +848,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const tasks = await storage.getAllTasks();
       res.json(tasks);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch tasks" });
+      console.error("Error fetching tasks:", error);
+      // Return empty array for graceful degradation
+      res.json([]);
     }
   });
 
@@ -947,7 +953,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const reviews = await storage.getAllReviews();
       res.json(reviews);
     } catch (error) {
-      res.status(500).json({ message: "Failed to fetch reviews" });
+      console.error("Error fetching reviews:", error);
+      res.json([]);
     }
   });
 

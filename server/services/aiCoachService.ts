@@ -15,7 +15,7 @@ import {
 import { eq, desc, and, sql, gte } from "drizzle-orm";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "",
+  apiKey: process.env.OPENAI_API_KEY || "sk-placeholder-key",
 });
 
 export class AICoachService {

@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git reset:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm install)",
+      "Bash(DATABASE_URL=\"file:./local.db\" npm run dev:*)",
+      "Bash(DATABASE_URL=\"file:./local.db\" REPLIT_DOMAINS=\"localhost:5000\" npm run dev:*)",
+      "Bash(DATABASE_URL=\"file:./local.db\" REPLIT_DOMAINS=\"localhost:5000\" OPENAI_API_KEY=\"sk-test-local\" npm run dev:*)",
+      "Bash(DATABASE_URL=\"file:./local.db\" REPLIT_DOMAINS=\"localhost:5000\" OPENAI_API_KEY=\"sk-test-local\" REPLIT_CLIENT_ID=\"test-client-id\" REPLIT_CLIENT_SECRET=\"test-client-secret\" npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:password@localhost:5432/fieldflux\" REPLIT_DOMAINS=\"localhost:5000\" OPENAI_API_KEY=\"sk-test-local\" REPLIT_CLIENT_ID=\"test-client-id\" REPLIT_CLIENT_SECRET=\"test-client-secret\" npm run dev:*)",
+      "Bash(awk:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs:*)",
+      "Bash(DATABASE_URL=\"postgresql://postgres:password@localhost:5432/fieldflux\" OPENAI_API_KEY=\"sk-test-local\" npm run dev:*)",
+      "Bash(npm run build:*)",
+      "Bash(PGPASSWORD=password psql:*)",
+      "Bash(DATABASE_URL=\"postgresql://localhost:5432/fieldflux\" npm run dev:*)",
+      "Bash(test:*)",
+      "Bash(npm run check:*)",
+      "Bash(brew services:*)",
+      "Bash(cat:*)",
+      "Bash(npx tsc:*)",
+      "Bash(psql:*)",
+      "Bash(createdb:*)",
+      "Bash(npm run db:push:*)",
+      "Bash(npm install:*)",
+      "Bash(pkill:*)",
+      "Bash(./start.sh)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

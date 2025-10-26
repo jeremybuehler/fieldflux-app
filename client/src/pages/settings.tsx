@@ -888,13 +888,13 @@ export default function Settings() {
                     >
                       Save White-label Configuration
                     </Button>
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </div>
-          </CardContent>
-        </Card>
-      </main>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
