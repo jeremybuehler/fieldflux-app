@@ -59,10 +59,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      if (user) {
-        res.json(user);
-      } else {
+      try {
+        const user = await storage.getUser(userId);
+        if (user) {
+          return res.json(user);
+        }
         // Create user if doesn't exist
         const newUser = await storage.upsertUser({
           id: userId,
@@ -71,7 +72,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
           lastName: req.user.claims.last_name,
           profileImageUrl: req.user.claims.profile_image_url,
         });
-        res.json(newUser);
+        return res.json(newUser);
+      } catch (dbError) {
+        // If database operation fails, return the session user object as fallback
+        console.log("Database unavailable, returning session user");
+        return res.json({
+          id: req.user.claims.sub,
+          email: req.user.claims.email,
+          firstName: req.user.claims.first_name,
+          lastName: req.user.claims.last_name,
+          profileImageUrl: req.user.claims.profile_image_url,
+        });
       }
     } catch (error) {
       console.error("Error fetching user:", error);
