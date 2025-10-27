@@ -8,6 +8,7 @@ import { initGA } from "./lib/analytics";
 import { useAnalytics } from "./hooks/use-analytics";
 import { useAuth } from "@/hooks/useAuth";
 import { AppLayout } from "@/components/layout/app-layout";
+import { ErrorBoundary } from "@/components/errors/error-boundary";
 import DashboardMain from "@/pages/dashboard-main";
 import Settings from "@/pages/settings-fixed";
 import Landing from "@/pages/planetscale-landing";
@@ -166,12 +167,14 @@ function App() {
   }, []);
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Router />
-        <Toaster />
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <Router />
+          <Toaster />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 

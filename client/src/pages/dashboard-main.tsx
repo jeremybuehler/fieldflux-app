@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { 
-  TrendingUp, 
-  Users, 
-  Star, 
+import {
+  TrendingUp,
+  Users,
+  Star,
   Calendar,
   ArrowRight,
   Target,
@@ -16,6 +16,10 @@ import {
   AlertTriangle,
   Clock
 } from 'lucide-react';
+import { SkeletonStatsCard } from '@/components/loaders/skeleton-stats-card';
+import { SkeletonActivityCard } from '@/components/loaders/skeleton-activity-card';
+import { SkeletonTasksCard } from '@/components/loaders/skeleton-tasks-card';
+import { SkeletonQuickActions } from '@/components/loaders/skeleton-quick-actions';
 
 const statsCards = [
   {
@@ -112,6 +116,18 @@ const upcomingTasks = [
 ];
 
 export default function DashboardMain() {
+  // Loading state for demonstrating skeleton loaders
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Simulate data loading with artificial delay (2 seconds)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
@@ -125,7 +141,7 @@ export default function DashboardMain() {
               Here's what's happening with your marketing today.
             </p>
           </div>
-          <Button 
+          <Button
             className="text-white"
             style={{ backgroundColor: "#F97316" }}
             onMouseOver={(e) => e.currentTarget.style.backgroundColor = "#EA580C"}
@@ -137,140 +153,167 @@ export default function DashboardMain() {
         </div>
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats Cards with Loading State */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statsCards.map((stat, index) => {
-          const Icon = stat.icon;
-          return (
-            <Card key={index} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600 mb-1">{stat.title}</p>
-                    <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
-                    <div className="flex items-center mt-2">
-                      <span className={`text-sm font-medium ${
-                        stat.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
-                      }`}>
-                        {stat.change}
-                      </span>
-                      <span className="text-sm text-gray-500 ml-1">{stat.description}</span>
+        {isLoading ? (
+          <>
+            {[1, 2, 3, 4].map((i) => (
+              <SkeletonStatsCard key={i} />
+            ))}
+          </>
+        ) : (
+          statsCards.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <Card key={index} className="hover:shadow-md transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-gray-600 mb-1">{stat.title}</p>
+                      <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                      <div className="flex items-center mt-2">
+                        <span className={`text-sm font-medium ${
+                          stat.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
+                        }`}>
+                          {stat.change}
+                        </span>
+                        <span className="text-sm text-gray-500 ml-1">{stat.description}</span>
+                      </div>
+                    </div>
+                    <div
+                      className="p-3 rounded-lg"
+                      style={{ backgroundColor: "#F97316" }}
+                    >
+                      <Icon className="h-6 w-6 text-white" />
                     </div>
                   </div>
-                  <div 
-                    className="p-3 rounded-lg"
-                    style={{ backgroundColor: "#F97316" }}
-                  >
-                    <Icon className="h-6 w-6 text-white" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+                </CardContent>
+              </Card>
+            );
+          })
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Recent Activity */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              Recent Activity
-              <Button variant="ghost" size="sm">
-                View All
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {recentActivities.map((activity, index) => (
-              <div key={index} className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                <div className={`p-2 rounded-full ${
-                  activity.type === 'lead' ? 'bg-blue-100 text-blue-600' :
-                  activity.type === 'review' ? 'bg-yellow-100 text-yellow-600' :
-                  activity.type === 'social' ? 'bg-green-100 text-green-600' :
-                  'bg-purple-100 text-purple-600'
-                }`}>
-                  {activity.type === 'lead' && <Users className="h-4 w-4" />}
-                  {activity.type === 'review' && <Star className="h-4 w-4" />}
-                  {activity.type === 'social' && <MessageSquare className="h-4 w-4" />}
-                  {activity.type === 'analytics' && <BarChart3 className="h-4 w-4" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between">
-                    <p className="font-medium text-gray-900">{activity.title}</p>
-                    <Badge variant={
-                      activity.priority === 'high' ? 'destructive' :
-                      activity.priority === 'medium' ? 'default' : 'secondary'
-                    }>
-                      {activity.priority}
-                    </Badge>
-                  </div>
-                  <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
-                  <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Upcoming Tasks */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Upcoming Tasks</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {upcomingTasks.map((task, index) => (
-              <div key={index} className="space-y-3">
-                <div className="flex items-start space-x-3">
-                  <div className={`p-1.5 rounded-full mt-0.5 ${
-                    task.priority === 'high' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'
+        {/* Recent Activity with Loading State */}
+        {isLoading ? (
+          <SkeletonActivityCard />
+        ) : (
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                Recent Activity
+                <Button variant="ghost" size="sm">
+                  View All
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {recentActivities.map((activity, index) => (
+                <div key={index} className="flex items-start space-x-4 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div className={`p-2 rounded-full ${
+                    activity.type === 'lead' ? 'bg-blue-100 text-blue-600' :
+                    activity.type === 'review' ? 'bg-yellow-100 text-yellow-600' :
+                    activity.type === 'social' ? 'bg-green-100 text-green-600' :
+                    'bg-purple-100 text-purple-600'
                   }`}>
-                    {task.priority === 'high' ? <AlertTriangle className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
+                    {activity.type === 'lead' && <Users className="h-4 w-4" />}
+                    {activity.type === 'review' && <Star className="h-4 w-4" />}
+                    {activity.type === 'social' && <MessageSquare className="h-4 w-4" />}
+                    {activity.type === 'analytics' && <BarChart3 className="h-4 w-4" />}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-gray-900 text-sm">{task.title}</p>
-                    <p className="text-xs text-gray-600 mt-1">{task.description}</p>
-                    <p className="text-xs text-gray-500 mt-1">{task.dueTime}</p>
+                    <div className="flex items-center justify-between">
+                      <p className="font-medium text-gray-900">{activity.title}</p>
+                      <Badge variant={
+                        activity.priority === 'high' ? 'destructive' :
+                        activity.priority === 'medium' ? 'default' : 'secondary'
+                      }>
+                        {activity.priority}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-gray-600 mt-1">{activity.description}</p>
+                    <p className="text-xs text-gray-500 mt-1">{activity.time}</p>
                   </div>
                 </div>
-                {index < upcomingTasks.length - 1 && <hr className="border-gray-100" />}
-              </div>
-            ))}
-            <Button variant="outline" className="w-full mt-4">
-              View All Tasks
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardContent>
-        </Card>
+              ))}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Upcoming Tasks with Loading State */}
+        {isLoading ? (
+          <SkeletonTasksCard />
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Upcoming Tasks</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {upcomingTasks.map((task, index) => (
+                <div key={index} className="space-y-3">
+                  <div className="flex items-start space-x-3">
+                    <div className={`p-1.5 rounded-full mt-0.5 ${
+                      task.priority === 'high' ? 'bg-red-100 text-red-600' : 'bg-orange-100 text-orange-600'
+                    }`}>
+                      {task.priority === 'high' ? <AlertTriangle className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-900 text-sm">{task.title}</p>
+                      <p className="text-xs text-gray-600 mt-1">{task.description}</p>
+                      <p className="text-xs text-gray-500 mt-1">{task.dueTime}</p>
+                    </div>
+                  </div>
+                  {index < upcomingTasks.length - 1 && <hr className="border-gray-100" />}
+                </div>
+              ))}
+              <Button variant="outline" className="w-full mt-4">
+                View All Tasks
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
-      {/* Quick Actions */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <Button variant="outline" className="h-20 flex-col space-y-2">
-              <MessageSquare className="h-6 w-6" />
-              <span className="text-sm">Create Social Post</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex-col space-y-2">
-              <Users className="h-6 w-6" />
-              <span className="text-sm">Add New Lead</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex-col space-y-2">
-              <Star className="h-6 w-6" />
-              <span className="text-sm">Manage Reviews</span>
-            </Button>
-            <Button variant="outline" className="h-20 flex-col space-y-2">
-              <BarChart3 className="h-6 w-6" />
-              <span className="text-sm">View Analytics</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Quick Actions with Loading State */}
+      {isLoading ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SkeletonQuickActions />
+          </CardContent>
+        </Card>
+      ) : (
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+              <Button variant="outline" className="h-20 flex-col space-y-2">
+                <MessageSquare className="h-6 w-6" />
+                <span className="text-sm">Create Social Post</span>
+              </Button>
+              <Button variant="outline" className="h-20 flex-col space-y-2">
+                <Users className="h-6 w-6" />
+                <span className="text-sm">Add New Lead</span>
+              </Button>
+              <Button variant="outline" className="h-20 flex-col space-y-2">
+                <Star className="h-6 w-6" />
+                <span className="text-sm">Manage Reviews</span>
+              </Button>
+              <Button variant="outline" className="h-20 flex-col space-y-2">
+                <BarChart3 className="h-6 w-6" />
+                <span className="text-sm">View Analytics</span>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
