@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,9 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { useToast } from "@/hooks/use-toast";
 import { Calendar, Facebook, Instagram, Linkedin, Wand2, Settings, AlertCircle, Clock, Smartphone } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
+import { toast } from "@/lib/toast-service";
+import { socialPostSchema } from "@/lib/validation/schemas/social-post";
 
 interface SocialPlatform {
   id: string;
@@ -23,13 +27,19 @@ interface SocialPlatform {
 }
 
 export default function EnhancedScheduler() {
-  const [content, setContent] = useState("");
-  const [selectedPlatforms, setSelectedPlatforms] = useState<string[]>([]);
-  const [scheduledTime, setScheduledTime] = useState("");
-  const [postType, setPostType] = useState("now");
   const [isGenerating, setIsGenerating] = useState(false);
-  const { toast } = useToast();
   const queryClient = useQueryClient();
+
+  const form = useForm({
+    resolver: zodResolver(socialPostSchema),
+    mode: "onBlur",
+    defaultValues: {
+      content: "",
+      platforms: [],
+      scheduledDate: undefined,
+      includeImage: false,
+    },
+  });
 
   // Platform configurations
   const platforms: SocialPlatform[] = [
@@ -64,27 +74,21 @@ export default function EnhancedScheduler() {
 
   const createPostMutation = useMutation({
     mutationFn: async (postData: any) => {
-      return apiRequest("/api/social/posts", {
+      const response = await fetch("/api/social/posts", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(postData),
       });
+      if (!response.ok) throw new Error("Failed to schedule post");
+      return response.json();
     },
     onSuccess: () => {
-      toast({
-        title: "Post Scheduled",
-        description: "Your post has been scheduled successfully!",
-      });
-      setContent("");
-      setSelectedPlatforms([]);
-      setScheduledTime("");
+      toast.success("Post Scheduled", "Your post has been scheduled successfully!");
+      form.reset();
       queryClient.invalidateQueries({ queryKey: ["/api/social/posts"] });
     },
     onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to schedule post. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Error", "Failed to schedule post. Please try again.");
     },
   });
 
@@ -97,45 +101,41 @@ export default function EnhancedScheduler() {
         body: JSON.stringify({ type: "social", industry: "field_service" }),
       });
       const data = await response.json();
-      setContent(data.topic || "Share a tip about your field service expertise!");
+      form.setValue("content", data.topic || "Share a tip about your field service expertise!");
+      toast.info("Idea Generated", "AI suggestion added to your post content");
     } catch (error) {
       console.error("Failed to generate idea:", error);
+      toast.error("Generation Failed", "Could not generate idea. Please try again.");
     }
     setIsGenerating(false);
   };
 
-  const handleSchedulePost = async () => {
-    if (!content || selectedPlatforms.length === 0) {
-      toast({
-        title: "Missing Information",
-        description: "Please enter content and select at least one platform.",
-        variant: "destructive",
-      });
-      return;
-    }
-
+  const handleSchedulePost = (data: z.infer<typeof socialPostSchema>) => {
     const postData = {
-      content,
-      platforms: selectedPlatforms,
-      scheduledTime: scheduledTime || new Date().toISOString(),
-      status: postType === "now" ? "published" : "scheduled",
-      postType,
+      content: data.content,
+      platforms: data.platforms,
+      scheduledTime: data.scheduledDate || new Date().toISOString(),
+      status: "scheduled",
+      includeImage: data.includeImage,
     };
 
     createPostMutation.mutate(postData);
   };
 
   const togglePlatform = (platformId: string) => {
-    setSelectedPlatforms(prev => 
-      prev.includes(platformId) 
-        ? prev.filter(id => id !== platformId)
-        : [...prev, platformId]
-    );
+    const currentPlatforms: any[] = form.getValues("platforms") || [];
+    if (currentPlatforms.includes(platformId)) {
+      form.setValue("platforms", currentPlatforms.filter(id => id !== platformId) as any);
+    } else {
+      form.setValue("platforms", [...currentPlatforms, platformId] as any);
+    }
   };
 
   const getCharacterCount = () => {
+    const selectedPlatforms = form.getValues("platforms");
+    const content = form.getValues("content");
     if (selectedPlatforms.length === 0) return null;
-    const limits = selectedPlatforms.map(id => 
+    const limits = selectedPlatforms.map(id =>
       platforms.find(p => p.id === id)?.characterLimit || 0
     );
     const minLimit = Math.min(...limits);
@@ -143,6 +143,9 @@ export default function EnhancedScheduler() {
   };
 
   const charCount = getCharacterCount();
+  const selectedPlatforms = form.getValues("platforms");
+  const content = form.getValues("content");
+  const postTypeValue = form.getValues("scheduledDate") ? "schedule" : "now";
 
   return (
     <Card className="bg-white shadow-sm border border-gray-200">
@@ -173,25 +176,34 @@ export default function EnhancedScheduler() {
         <div className="space-y-4">
           {/* Platform Selection */}
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-3 block">
-              Select Platforms
-            </label>
+            <div className="flex items-center justify-between mb-3">
+              <label className="text-sm font-medium text-gray-700">
+                Select Platforms
+              </label>
+              {form.formState.errors.platforms && (
+                <span className="text-xs text-red-600 flex items-center space-x-1">
+                  <AlertCircle className="w-3 h-3" />
+                  <span>{form.formState.errors.platforms.message}</span>
+                </span>
+              )}
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               {platforms.map((platform) => {
                 const Icon = platform.icon;
-                const isSelected = selectedPlatforms.includes(platform.id);
+                // @ts-ignore - Zod array type inference
+                const isSelected = selectedPlatforms.includes(platform.id as any);
                 return (
                   <div
                     key={platform.id}
                     className={`border rounded-lg p-3 cursor-pointer transition-all ${
-                      isSelected 
-                        ? 'border-primary bg-primary/5' 
+                      isSelected
+                        ? 'border-primary bg-primary/5'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
                     onClick={() => togglePlatform(platform.id)}
                   >
                     <div className="flex items-center space-x-2 mb-2">
-                      <Checkbox 
+                      <Checkbox
                         checked={isSelected}
                         onChange={() => togglePlatform(platform.id)}
                       />
@@ -217,20 +229,31 @@ export default function EnhancedScheduler() {
               <label className="text-sm font-medium text-gray-700">
                 Content
               </label>
-              {charCount && (
-                <span className={`text-xs ${
-                  charCount.current > charCount.limit ? 'text-red-500' : 'text-gray-500'
-                }`}>
-                  {charCount.current} / {charCount.limit.toLocaleString()}
-                </span>
-              )}
+              <div className="flex items-center space-x-2">
+                {charCount && (
+                  <span className={`text-xs ${
+                    charCount.current > charCount.limit ? 'text-red-500' : 'text-gray-500'
+                  }`}>
+                    {charCount.current} / {charCount.limit.toLocaleString()}
+                  </span>
+                )}
+                {form.formState.errors.content && (
+                  <span className="text-xs text-red-600 flex items-center space-x-1">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{form.formState.errors.content.message}</span>
+                  </span>
+                )}
+              </div>
             </div>
             <div className="relative">
               <Textarea
                 placeholder="What's happening in your field service business? Share updates, tips, success stories, or behind-the-scenes content..."
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
-                className="min-h-[120px] pr-20"
+                onChange={(e) => form.setValue("content", e.target.value)}
+                onBlur={() => form.trigger("content")}
+                className={`min-h-[120px] pr-20 ${
+                  form.formState.errors.content ? 'border-red-500' : ''
+                }`}
               />
               <Button
                 size="sm"
@@ -249,51 +272,67 @@ export default function EnhancedScheduler() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium text-gray-700 mb-2 block">
-                Timing
+                Post Now or Schedule
               </label>
-              <Select value={postType} onValueChange={setPostType}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="now">Post Now</SelectItem>
-                  <SelectItem value="schedule">Schedule for Later</SelectItem>
-                  <SelectItem value="optimal">Optimal Time (AI Recommended)</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="space-y-2">
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <Checkbox
+                    checked={!form.getValues("scheduledDate")}
+                    onChange={(checked) => {
+                      if (checked) form.setValue("scheduledDate", undefined);
+                    }}
+                  />
+                  <span className="text-sm">Post immediately</span>
+                </label>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <Checkbox
+                    checked={!!form.getValues("scheduledDate")}
+                    onChange={(checked) => {
+                      if (checked) form.setValue("scheduledDate", new Date() as any);
+                    }}
+                  />
+                  <span className="text-sm">Schedule for later</span>
+                </label>
+              </div>
             </div>
 
-            {postType === "schedule" && (
+            {form.getValues("scheduledDate") && (
               <div>
                 <label className="text-sm font-medium text-gray-700 mb-2 block">
                   Date & Time
                 </label>
                 <Input
                   type="datetime-local"
-                  value={scheduledTime}
-                  onChange={(e) => setScheduledTime(e.target.value)}
+                  value={
+                    form.getValues("scheduledDate")
+                      ? new Date(form.getValues("scheduledDate") as any).toISOString().slice(0, 16)
+                      : ""
+                  }
+                  onChange={(e) => {
+                    const newDate = e.target.value ? new Date(e.target.value) : (undefined as any);
+                    form.setValue("scheduledDate", newDate);
+                  }}
+                  className={form.formState.errors.scheduledDate ? 'border-red-500' : ''}
                 />
-              </div>
-            )}
-
-            {postType === "optimal" && (
-              <div className="flex items-center space-x-2 mt-6">
-                <Clock className="w-4 h-4 text-blue-500" />
-                <span className="text-sm text-blue-600">AI will choose the best time based on your audience</span>
+                {form.formState.errors.scheduledDate && (
+                  <p className="text-xs text-red-600 mt-1 flex items-center space-x-1">
+                    <AlertCircle className="w-3 h-3" />
+                    <span>{form.formState.errors.scheduledDate.message}</span>
+                  </p>
+                )}
               </div>
             )}
           </div>
 
           {/* Post Button */}
-          <Button 
-            onClick={handleSchedulePost} 
-            disabled={createPostMutation.isPending || !content || selectedPlatforms.length === 0 || (charCount && charCount.current > charCount.limit)}
+          <Button
+            onClick={form.handleSubmit(handleSchedulePost)}
+            disabled={createPostMutation.isPending || !form.formState.isValid}
             className="w-full"
           >
-            {createPostMutation.isPending ? "Processing..." : 
-             postType === "now" ? `Post to ${selectedPlatforms.length} Platform(s)` :
-             postType === "schedule" ? "Schedule Post" :
-             "Schedule at Optimal Time"}
+            {createPostMutation.isPending ? "Processing..." :
+             form.getValues("scheduledDate") ? "Schedule Post" :
+             `Post to ${selectedPlatforms.length} Platform(s)`}
           </Button>
 
           {/* Configuration Reminder */}

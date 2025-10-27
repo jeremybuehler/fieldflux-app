@@ -11,12 +11,12 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Progress } from "@/components/ui/progress";
 
 import { UserPlus, Mail, Phone, Calendar, Filter, Search, MoreVertical, MessageSquare, CheckCircle, Clock, AlertCircle, TrendingUp, Star, Target, Brain, Zap, Trophy, Eye } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertLeadSchema, type Lead, type InsertLead } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { trackEvent } from "@/lib/analytics";
+import { toast } from "@/lib/toast-service";
 
 const leadStatuses = [
   { value: "new", label: "New", color: "bg-blue-100 text-blue-800" },
@@ -33,7 +33,6 @@ const leadPriorities = [
 ];
 
 export default function Leads() {
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -56,17 +55,10 @@ export default function Leads() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
       queryClient.invalidateQueries({ queryKey: ["/api/leads/analytics/scores"] });
-      toast({
-        title: "Lead Scored",
-        description: "AI scoring has been updated for this lead.",
-      });
+      toast.success("Lead Scored", "AI scoring has been updated for this lead.");
     },
     onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to score lead. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Error", "Failed to score lead. Please try again.");
     },
   });
 
@@ -81,10 +73,10 @@ export default function Leads() {
       return response.json();
     },
     onSuccess: (data) => {
-      toast({
-        title: "AI Recommendations",
-        description: `Generated ${data.recommendations.length} personalized recommendations.`,
-      });
+      toast.success("AI Recommendations", `Generated ${data.recommendations.length} personalized recommendations.`);
+    },
+    onError: () => {
+      toast.error("Error", "Failed to get recommendations. Please try again.");
     },
   });
 
@@ -97,18 +89,12 @@ export default function Leads() {
       queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
       queryClient.invalidateQueries({ queryKey: ["/api/activities"] });
       setIsAddDialogOpen(false);
-      toast({
-        title: "Lead Added",
-        description: "New lead has been added successfully.",
-      });
+      form.reset();
+      toast.success("Lead Added", "New lead has been added successfully.");
       trackEvent('lead_added', 'leads', 'manual_entry');
     },
-    onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to add lead. Please try again.",
-        variant: "destructive",
-      });
+    onError: (error) => {
+      toast.error("Error", "Failed to add lead. Please try again.");
     },
   });
 
@@ -120,17 +106,10 @@ export default function Leads() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
       queryClient.invalidateQueries({ queryKey: ["/api/activities"] });
-      toast({
-        title: "Lead Updated",
-        description: "Lead has been updated successfully.",
-      });
+      toast.success("Lead Updated", "Lead has been updated successfully.");
     },
     onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to update lead. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Error", "Failed to update lead. Please try again.");
     },
   });
 
@@ -142,18 +121,11 @@ export default function Leads() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/leads"] });
       queryClient.invalidateQueries({ queryKey: ["/api/activities"] });
-      toast({
-        title: "Lead Qualified",
-        description: "Lead has been automatically qualified based on criteria.",
-      });
+      toast.success("Lead Qualified", "Lead has been automatically qualified based on criteria.");
       trackEvent('lead_qualified', 'leads', 'auto_qualification');
     },
     onError: () => {
-      toast({
-        title: "Error",
-        description: "Failed to qualify lead. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Error", "Failed to qualify lead. Please try again.");
     },
   });
 

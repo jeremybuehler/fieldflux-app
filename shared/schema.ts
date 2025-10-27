@@ -224,10 +224,20 @@ export const insertSocialPostSchema = createInsertSchema(socialPosts).omit({
   createdAt: true,
 });
 
-export const insertLeadSchema = createInsertSchema(leads).omit({
-  id: true,
-  createdAt: true,
-});
+export const insertLeadSchema = createInsertSchema(leads)
+  .omit({
+    id: true,
+    createdAt: true,
+  })
+  .extend({
+    name: z.string().min(1, "Lead name is required").max(255, "Lead name must be less than 255 characters"),
+    email: z.string().email("Please enter a valid email address").optional().or(z.literal("")),
+    phone: z.string().optional().or(z.literal("")),
+    service: z.string().min(1, "Service type is required").max(255, "Service type must be less than 255 characters"),
+    location: z.string().min(1, "Location is required").max(255, "Location must be less than 255 characters"),
+    priority: z.enum(["low", "medium", "high"]).default("medium"),
+    status: z.enum(["new", "contacted", "qualified", "converted", "lost"]).default("new"),
+  });
 
 export const insertTaskSchema = createInsertSchema(tasks).omit({
   id: true,

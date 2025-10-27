@@ -1,5 +1,7 @@
 import { z } from "zod"
 
+const platformEnum = z.enum(["facebook", "twitter", "instagram", "linkedin", "tiktok"])
+
 export const socialPostSchema = z.object({
   content: z
     .string()
@@ -10,20 +12,20 @@ export const socialPostSchema = z.object({
       "Post content cannot be empty or whitespace only"
     ),
   platforms: z
-    .array(z.enum(["facebook", "twitter", "instagram", "linkedin", "tiktok"]))
+    .array(platformEnum)
     .min(1, "Select at least one platform"),
   scheduledDate: z
     .date()
-    .refine(
-      (date) => date > new Date(),
-      "Scheduled date must be in the future"
-    )
     .optional()
-    .or(z.literal("")),
+    .refine(
+      (date) => !date || date > new Date(),
+      "Scheduled date must be in the future"
+    ),
   includeImage: z.boolean().default(false),
 })
 
 export type SocialPostFormData = z.infer<typeof socialPostSchema>
+export type SocialPlatform = z.infer<typeof platformEnum>
 
 /**
  * Character count validation per platform

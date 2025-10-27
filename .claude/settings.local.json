@@ -29,7 +29,8 @@
       "Bash(pkill:*)",
       "Bash(./start.sh)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Read(//Users/buehlerdev/**)"
     ],
     "deny": [],
     "ask": []
