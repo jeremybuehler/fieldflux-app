@@ -30,9 +30,14 @@
       "Bash(./start.sh)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Read(//Users/buehlerdev/**)"
+      "Read(//Users/buehlerdev/**)",
+      "mcp__sequential-thinking__sequentialthinking",
+      "WebSearch",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "outputStyle": "Explanatory"
 }
